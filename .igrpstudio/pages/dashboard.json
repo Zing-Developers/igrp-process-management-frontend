@@ -1,0 +1,931 @@
+{
+    "type": "page",
+    "pageName": "dashboard",
+    "path": "dashboard",
+    "description": "Dashboard",
+    "forceDynamic": false,
+    "id": "rl24ap0bil",
+    "types": [],
+    "states": [],
+    "functions": [],
+    "args": [],
+    "components": {
+        "id": "page_dsxi5x",
+        "componentName": "page",
+        "label": "page",
+        "properties": {
+            "variant": "default",
+            "commonProperties": {
+                "generateReference": false
+            }
+        },
+        "children": [
+            {
+                "id": "section_qouira",
+                "componentName": "section",
+                "label": "section",
+                "properties": {
+                    "spaceX": "3",
+                    "spaceY": "3",
+                    "commonProperties": {}
+                },
+                "children": [
+                    {
+                        "id": "pageheader_ox6qre",
+                        "tag": "pageHeader1",
+                        "componentName": "pageHeader",
+                        "label": "Page Header",
+                        "type": "group",
+                        "children": [],
+                        "interactions": {},
+                        "allowTypes": false,
+                        "data": {},
+                        "properties": {
+                            "title": "Dashboard",
+                            "description": "Visão geral do sistema de gestão de processos",
+                            "variant": "h3",
+                            "iconProperties": {
+                                "iconBackButton": "Search"
+                            },
+                            "commonProperties": {
+                                "generateReference": false
+                            }
+                        },
+                        "childProperties": {}
+                    }
+                ],
+                "tag": "section1",
+                "data": {},
+                "interactions": {},
+                "childProperties": {},
+                "style": {}
+            },
+            {
+                "id": "section_s7tdun",
+                "componentName": "section",
+                "label": "section",
+                "properties": {},
+                "children": [
+                    {
+                        "id": "grid_d077la",
+                        "tag": "grid2",
+                        "componentName": "grid",
+                        "label": "Grid",
+                        "type": "group",
+                        "children": [
+                            {
+                                "id": "statscard_pm2tw6",
+                                "tag": "statsCard1",
+                                "componentName": "statsCard",
+                                "label": "Stats Card",
+                                "type": "group",
+                                "children": [],
+                                "interactions": {
+                                    "onClick": {
+                                        "type": "navigate",
+                                        "function": {
+                                            "fnCustomSet": "() => {}",
+                                            "type": "function",
+                                            "fnCustomCode": {
+                                                "imports": []
+                                            }
+                                        },
+                                        "action": {
+                                            "actionCustomSet": "() => {}"
+                                        },
+                                        "navigate": {
+                                            "path": "(process)/processmap",
+                                            "name": "goToprocessMap"
+                                        }
+                                    }
+                                },
+                                "allowTypes": false,
+                                "data": {
+                                    "value": {
+                                        "state": {
+                                            "id": "",
+                                            "type": "string | number",
+                                            "name": "statstatsCard1Value",
+                                            "defaultValue": "0",
+                                            "imports": [],
+                                            "generate": true
+                                        },
+                                        "value": {
+                                            "id": "",
+                                            "code": ""
+                                        }
+                                    }
+                                },
+                                "properties": {
+                                    "cardBorderPosition": "none",
+                                    "cardBorder": "rounded-md",
+                                    "cardVariant": "success",
+                                    "iconBackground": "none",
+                                    "title": "Total de Processos",
+                                    "titleSize": "sm",
+                                    "valueSize": "2xl",
+                                    "iconProperties": {
+                                        "showIcon": true,
+                                        "iconName": "ListChecks",
+                                        "iconSize": "md",
+                                        "iconVariant": "primary",
+                                        "iconPlacement": "end"
+                                    },
+                                    "itemPlacement": "end",
+                                    "commonProperties": {
+                                        "generateReference": false
+                                    }
+                                },
+                                "childProperties": {},
+                                "style": {}
+                            },
+                            {
+                                "id": "statscard_kxo4o8",
+                                "tag": "statsCard2",
+                                "componentName": "statsCard",
+                                "label": "Stats Card",
+                                "type": "group",
+                                "children": [],
+                                "interactions": {
+                                    "onClick": {
+                                        "type": "navigate",
+                                        "function": {
+                                            "fnCustomSet": "() => {}",
+                                            "type": "function",
+                                            "fnCustomCode": {
+                                                "imports": []
+                                            }
+                                        },
+                                        "action": {
+                                            "actionCustomSet": "() => {}"
+                                        },
+                                        "navigate": {
+                                            "path": "(process)/instances",
+                                            "name": "goToinstances"
+                                        }
+                                    }
+                                },
+                                "allowTypes": false,
+                                "data": {
+                                    "value": {
+                                        "state": {
+                                            "id": "",
+                                            "type": "string | number",
+                                            "name": "statstatsCard2Value",
+                                            "defaultValue": "0",
+                                            "imports": [],
+                                            "generate": true
+                                        },
+                                        "value": {
+                                            "id": "",
+                                            "code": ""
+                                        }
+                                    }
+                                },
+                                "properties": {
+                                    "cardBorderPosition": "none",
+                                    "cardBorder": "rounded-md",
+                                    "cardVariant": "warning",
+                                    "iconBackground": "none",
+                                    "title": "Total de Tarefas",
+                                    "titleSize": "sm",
+                                    "valueSize": "2xl",
+                                    "iconProperties": {
+                                        "showIcon": true,
+                                        "iconName": "TimerReset",
+                                        "iconSize": "md",
+                                        "iconVariant": "primary",
+                                        "iconPlacement": "end"
+                                    },
+                                    "itemPlacement": "end",
+                                    "commonProperties": {
+                                        "generateReference": false
+                                    }
+                                },
+                                "childProperties": {}
+                            },
+                            {
+                                "id": "statscard_3zj5qp",
+                                "tag": "statsCard3",
+                                "componentName": "statsCard",
+                                "label": "Stats Card",
+                                "type": "group",
+                                "children": [],
+                                "interactions": {
+                                    "onClick": {
+                                        "type": "navigate",
+                                        "function": {
+                                            "fnCustomSet": "() => {}",
+                                            "fnCustomCode": {
+                                                "imports": []
+                                            },
+                                            "type": "function"
+                                        },
+                                        "action": {
+                                            "actionCustomSet": "() => {}"
+                                        },
+                                        "navigate": {
+                                            "path": "mytasks",
+                                            "name": "goTomyTasks",
+                                            "params": {}
+                                        }
+                                    }
+                                },
+                                "allowTypes": false,
+                                "data": {
+                                    "value": {
+                                        "state": {
+                                            "id": "",
+                                            "type": "string | number",
+                                            "name": "statstatsCard3Value",
+                                            "defaultValue": "0",
+                                            "imports": [],
+                                            "generate": true
+                                        },
+                                        "value": {
+                                            "id": "",
+                                            "code": ""
+                                        }
+                                    }
+                                },
+                                "properties": {
+                                    "cardBorderPosition": "none",
+                                    "cardBorder": "rounded-lg",
+                                    "cardVariant": "info",
+                                    "iconBackground": "none",
+                                    "title": "Minhas Tarefas",
+                                    "titleSize": "sm",
+                                    "valueSize": "2xl",
+                                    "iconProperties": {
+                                        "showIcon": true,
+                                        "iconName": "ClipboardList",
+                                        "iconSize": "sm",
+                                        "iconVariant": "success",
+                                        "iconPlacement": "start"
+                                    },
+                                    "itemPlacement": "end",
+                                    "commonProperties": {
+                                        "generateReference": false
+                                    }
+                                },
+                                "childProperties": {}
+                            },
+                            {
+                                "id": "statscard_l7l03q",
+                                "tag": "statsCard4",
+                                "componentName": "statsCard",
+                                "label": "Stats Card",
+                                "type": "group",
+                                "children": [],
+                                "interactions": {
+                                    "onClick": {
+                                        "type": "navigate",
+                                        "function": {
+                                            "fnCustomSet": "() => {}",
+                                            "type": "function",
+                                            "fnCustomCode": {
+                                                "imports": []
+                                            }
+                                        },
+                                        "action": {
+                                            "actionCustomSet": "() => {}"
+                                        },
+                                        "navigate": {
+                                            "path": "(task)/taskmanagement",
+                                            "name": "goTotaskManagement"
+                                        }
+                                    }
+                                },
+                                "allowTypes": false,
+                                "data": {
+                                    "value": {
+                                        "state": {
+                                            "id": "",
+                                            "type": "string | number",
+                                            "name": "statstatsCard4Value",
+                                            "defaultValue": "0",
+                                            "imports": [],
+                                            "generate": true
+                                        },
+                                        "value": {
+                                            "id": "",
+                                            "code": ""
+                                        }
+                                    }
+                                },
+                                "properties": {
+                                    "cardBorderPosition": "none",
+                                    "cardBorder": "rounded-xl",
+                                    "cardVariant": "destructive",
+                                    "iconBackground": "none",
+                                    "title": "Tarefas Disponíveis",
+                                    "titleSize": "sm",
+                                    "valueSize": "2xl",
+                                    "iconProperties": {
+                                        "showIcon": true,
+                                        "iconName": "Settings",
+                                        "iconSize": "md",
+                                        "iconVariant": "primary",
+                                        "iconPlacement": "end"
+                                    },
+                                    "itemPlacement": "end",
+                                    "commonProperties": {
+                                        "generateReference": false
+                                    }
+                                },
+                                "childProperties": {},
+                                "style": {}
+                            }
+                        ],
+                        "interactions": {},
+                        "allowTypes": false,
+                        "data": {},
+                        "properties": {
+                            "gap": "4",
+                            "variant": {
+                                "default": "cols1",
+                                "md": "cols2",
+                                "lg": "cols4"
+                            },
+                            "commonProperties": {
+                                "generateReference": false
+                            }
+                        },
+                        "childProperties": {
+                            "className": "col-span-1"
+                        }
+                    }
+                ],
+                "tag": "",
+                "data": {},
+                "interactions": {}
+            },
+            {
+                "id": "section_g4ef9w",
+                "componentName": "section",
+                "label": "section",
+                "properties": {
+                    "spaceX": "6",
+                    "spaceY": "6",
+                    "commonProperties": {
+                        "generateReference": false
+                    }
+                },
+                "children": [],
+                "tag": "",
+                "data": {},
+                "interactions": {},
+                "childProperties": {},
+                "style": {}
+            },
+            {
+                "id": "section_166jqc",
+                "tag": "section2",
+                "componentName": "section",
+                "label": "Section",
+                "type": "group",
+                "children": [
+                    {
+                        "id": "headline_qbvm8z",
+                        "tag": "headline1",
+                        "componentName": "headline",
+                        "label": "Headline",
+                        "type": "group",
+                        "children": [],
+                        "interactions": {},
+                        "allowTypes": false,
+                        "data": {},
+                        "properties": {
+                            "title": "Recent processes",
+                            "description": "",
+                            "variant": "h6",
+                            "roleColor": "solid",
+                            "color": "primary",
+                            "iconProperties": {
+                                "showIcon": false
+                            },
+                            "commonProperties": {
+                                "generateReference": false
+                            }
+                        },
+                        "childProperties": {}
+                    },
+                    {
+                        "id": "table_mtupxs",
+                        "tag": "processes",
+                        "componentName": "table",
+                        "label": "Table",
+                        "type": "group",
+                        "children": [
+                            {
+                                "id": "tablecolumns_axoz6c",
+                                "tag": "tableColumns",
+                                "componentName": "tableColumns",
+                                "label": "Table Column",
+                                "children": [
+                                    {
+                                        "id": "tabletextcell_dsdrya",
+                                        "tag": "tableTextCell1",
+                                        "componentName": "tableTextCell",
+                                        "label": "Text Column",
+                                        "type": "",
+                                        "children": [],
+                                        "interactions": {},
+                                        "allowTypes": false,
+                                        "data": {},
+                                        "properties": {
+                                            "headerTitle": "Name",
+                                            "dataProperties": {
+                                                "isVirtual": false,
+                                                "isType": true
+                                            },
+                                            "variant": "default",
+                                            "commonProperties": {}
+                                        },
+                                        "childProperties": {}
+                                    },
+                                    {
+                                        "id": "tabletextcell_sdqkmp",
+                                        "tag": "tableTextCell2",
+                                        "componentName": "tableTextCell",
+                                        "label": "Text Column",
+                                        "type": "",
+                                        "children": [],
+                                        "interactions": {},
+                                        "allowTypes": false,
+                                        "data": {},
+                                        "properties": {
+                                            "headerTitle": "Key",
+                                            "dataProperties": {
+                                                "isVirtual": false,
+                                                "isType": true
+                                            },
+                                            "variant": "default",
+                                            "commonProperties": {
+                                                "generateReference": false
+                                            }
+                                        },
+                                        "childProperties": {}
+                                    },
+                                    {
+                                        "id": "tabletextcell_4ghe34",
+                                        "tag": "tableTextCell7",
+                                        "componentName": "tableTextCell",
+                                        "label": "Text Column",
+                                        "type": "",
+                                        "children": [],
+                                        "interactions": {},
+                                        "allowTypes": false,
+                                        "data": {},
+                                        "properties": {
+                                            "headerTitle": "Version",
+                                            "dataProperties": {
+                                                "isVirtual": false,
+                                                "isType": true
+                                            },
+                                            "variant": "default",
+                                            "commonProperties": {
+                                                "generateReference": false
+                                            }
+                                        },
+                                        "childProperties": {}
+                                    },
+                                    {
+                                        "id": "tableactionlistcell_bt71s7",
+                                        "tag": "tableActionListCell1",
+                                        "componentName": "tableActionListCell",
+                                        "label": "Actions Column",
+                                        "type": "",
+                                        "children": [
+                                            {
+                                                "id": "tablelinkaction_yfuclm",
+                                                "tag": "tableLinkAction1",
+                                                "componentName": "tableLinkAction",
+                                                "label": "Link Action",
+                                                "type": "",
+                                                "children": [],
+                                                "interactions": {
+                                                    "action": {
+                                                        "type": "navigate",
+                                                        "function": {
+                                                            "fnCustomCode": {
+                                                                "imports": []
+                                                            }
+                                                        },
+                                                        "navigate": {
+                                                            "path": "startprocess",
+                                                            "name": "goTostartProcess",
+                                                            "params": {
+                                                                "pam": "cv"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "allowTypes": false,
+                                                "data": {},
+                                                "properties": {
+                                                    "labelTrigger": "Start",
+                                                    "iconProperties": {
+                                                        "iconName": "Play"
+                                                    },
+                                                    "variant": "default",
+                                                    "type": "link",
+                                                    "href": "(process)/processmap/[id]/startprocess",
+                                                    "commonProperties": {
+                                                        "generateReference": false
+                                                    },
+                                                    "segments": [
+                                                        {
+                                                            "name": "[id]",
+                                                            "tag": "tableHiddenCell1"
+                                                        }
+                                                    ]
+                                                },
+                                                "childProperties": {}
+                                            },
+                                            {
+                                                "id": "tablelinkaction_437jap",
+                                                "tag": "tableLinkAction2",
+                                                "componentName": "tableLinkAction",
+                                                "label": "Link Action",
+                                                "type": "",
+                                                "children": [],
+                                                "interactions": {
+                                                    "action": {
+                                                        "type": "function",
+                                                        "function": {
+                                                            "fnCustomSet": "(e) => {}",
+                                                            "type": "function"
+                                                        },
+                                                        "action": {}
+                                                    }
+                                                },
+                                                "allowTypes": false,
+                                                "data": {},
+                                                "properties": {
+                                                    "labelTrigger": "Instances",
+                                                    "iconProperties": {
+                                                        "iconName": "ChartNoAxesColumn"
+                                                    },
+                                                    "variant": "default",
+                                                    "type": "link",
+                                                    "href": "(process)/instances",
+                                                    "commonProperties": {
+                                                        "generateReference": false
+                                                    },
+                                                    "segments": []
+                                                },
+                                                "childProperties": {}
+                                            }
+                                        ],
+                                        "interactions": {},
+                                        "allowTypes": false,
+                                        "data": {},
+                                        "properties": {
+                                            "headerTitle": "Actions Column",
+                                            "type": "inline",
+                                            "commonProperties": {
+                                                "generateReference": false
+                                            }
+                                        },
+                                        "childProperties": {}
+                                    },
+                                    {
+                                        "id": "tablehiddencell_5ue7lk",
+                                        "tag": "tableHiddenCell1",
+                                        "componentName": "tableHiddenCell",
+                                        "label": "Hidden Column",
+                                        "type": "",
+                                        "children": [],
+                                        "interactions": {},
+                                        "allowTypes": false,
+                                        "data": {},
+                                        "properties": {
+                                            "headerTitle": "processId",
+                                            "dataProperties": {
+                                                "isVirtual": false,
+                                                "isType": true
+                                            },
+                                            "commonProperties": {
+                                                "generateReference": false
+                                            }
+                                        },
+                                        "childProperties": {}
+                                    }
+                                ],
+                                "interactions": {},
+                                "allowTypes": false,
+                                "data": {},
+                                "properties": {},
+                                "childProperties": {}
+                            },
+                            {
+                                "id": "tablefilters_to26v2",
+                                "tag": "tableFilters2",
+                                "componentName": "tableFilters",
+                                "label": "Table Filter",
+                                "children": [],
+                                "interactions": {},
+                                "allowTypes": false,
+                                "data": {},
+                                "properties": {
+                                    "commonProperties": {}
+                                }
+                            }
+                        ],
+                        "interactions": {},
+                        "allowTypes": true,
+                        "data": {
+                            "data": {
+                                "state": {
+                                    "id": "",
+                                    "type": "any[]",
+                                    "name": "contentTabletable2",
+                                    "defaultValue": "[]",
+                                    "imports": [],
+                                    "generate": true
+                                },
+                                "value": {
+                                    "id": "",
+                                    "code": ""
+                                }
+                            }
+                        },
+                        "properties": {
+                            "commonProperties": {
+                                "generateReference": false
+                            }
+                        },
+                        "childProperties": {}
+                    }
+                ],
+                "interactions": {},
+                "allowTypes": false,
+                "data": {},
+                "properties": {
+                    "spaceX": "6",
+                    "spaceY": "6",
+                    "commonProperties": {}
+                }
+            },
+            {
+                "id": "section_ijmq8p",
+                "componentName": "section",
+                "label": "section",
+                "properties": {},
+                "children": [
+                    {
+                        "id": "headline_tkzwlv",
+                        "tag": "headline2",
+                        "componentName": "headline",
+                        "label": "Headline",
+                        "type": "group",
+                        "children": [],
+                        "interactions": {},
+                        "allowTypes": false,
+                        "data": {},
+                        "properties": {
+                            "title": "Active Instances",
+                            "description": "",
+                            "variant": "h6",
+                            "roleColor": "solid",
+                            "color": "primary",
+                            "iconProperties": {
+                                "showIcon": false
+                            },
+                            "commonProperties": {
+                                "generateReference": false
+                            }
+                        },
+                        "childProperties": {}
+                    },
+                    {
+                        "id": "table_pjyhmd",
+                        "tag": "table1",
+                        "componentName": "table",
+                        "label": "Table",
+                        "type": "group",
+                        "children": [
+                            {
+                                "id": "tablecolumns_ajsxlg",
+                                "tag": "tableColumns1",
+                                "componentName": "tableColumns",
+                                "label": "Table Column",
+                                "children": [
+                                    {
+                                        "id": "tabletextcell_um070x",
+                                        "tag": "tableTextCell3",
+                                        "componentName": "tableTextCell",
+                                        "label": "Text Column",
+                                        "type": "",
+                                        "children": [],
+                                        "interactions": {},
+                                        "allowTypes": false,
+                                        "data": {},
+                                        "properties": {
+                                            "headerTitle": "Process",
+                                            "dataProperties": {
+                                                "isVirtual": false,
+                                                "isType": true
+                                            },
+                                            "variant": "default",
+                                            "commonProperties": {
+                                                "generateReference": false
+                                            }
+                                        },
+                                        "childProperties": {}
+                                    },
+                                    {
+                                        "id": "tabletextcell_iuczf9",
+                                        "tag": "tableTextCell4",
+                                        "componentName": "tableTextCell",
+                                        "label": "Text Column",
+                                        "type": "",
+                                        "children": [],
+                                        "interactions": {},
+                                        "allowTypes": false,
+                                        "data": {},
+                                        "properties": {
+                                            "headerTitle": "Business Key",
+                                            "dataProperties": {
+                                                "isVirtual": false,
+                                                "isType": true
+                                            },
+                                            "variant": "default",
+                                            "commonProperties": {
+                                                "generateReference": false
+                                            }
+                                        },
+                                        "childProperties": {}
+                                    },
+                                    {
+                                        "id": "tabletextcell_tjhd8e",
+                                        "tag": "tableTextCell5",
+                                        "componentName": "tableTextCell",
+                                        "label": "Text Column",
+                                        "type": "",
+                                        "children": [],
+                                        "interactions": {},
+                                        "allowTypes": false,
+                                        "data": {},
+                                        "properties": {
+                                            "headerTitle": "Started By",
+                                            "dataProperties": {
+                                                "isVirtual": false,
+                                                "isType": true
+                                            },
+                                            "variant": "default",
+                                            "commonProperties": {
+                                                "generateReference": false
+                                            }
+                                        },
+                                        "childProperties": {}
+                                    },
+                                    {
+                                        "id": "tabletextcell_kld1tp",
+                                        "tag": "tableTextCell6",
+                                        "componentName": "tableTextCell",
+                                        "label": "Text Column",
+                                        "type": "",
+                                        "children": [],
+                                        "interactions": {},
+                                        "allowTypes": false,
+                                        "data": {},
+                                        "properties": {
+                                            "headerTitle": "Started At",
+                                            "dataProperties": {
+                                                "isVirtual": false,
+                                                "isType": true
+                                            },
+                                            "variant": "default",
+                                            "commonProperties": {
+                                                "generateReference": false
+                                            }
+                                        },
+                                        "childProperties": {}
+                                    },
+                                    {
+                                        "id": "tablebadgecell_jvl45a",
+                                        "tag": "tableBadgeCell1",
+                                        "componentName": "tableBadgeCell",
+                                        "label": "Badge Column",
+                                        "type": "",
+                                        "children": [],
+                                        "interactions": {
+                                            "customize": {
+                                                "type": "function",
+                                                "function": {
+                                                    "fnName": "getTaskStatusColor",
+                                                    "fnCustomCode": {
+                                                        "imports": [
+                                                            {
+                                                                "namespace": "import {getTaskStatusColor} from '@/app/[locale]/(myapp)/store/statusBadge'",
+                                                                "id": "tf94qv4j0q"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "type": "function"
+                                                },
+                                                "action": {}
+                                            }
+                                        },
+                                        "allowTypes": false,
+                                        "data": {},
+                                        "properties": {
+                                            "headerTitle": "Status",
+                                            "dataProperties": {
+                                                "isVirtual": false,
+                                                "isType": true
+                                            },
+                                            "iconProperties": {
+                                                "showIcon": false,
+                                                "iconName": "Info",
+                                                "iconPlacement": "start"
+                                            },
+                                            "variant": "soft",
+                                            "commonProperties": {
+                                                "generateReference": false
+                                            }
+                                        },
+                                        "childProperties": {}
+                                    }
+                                ],
+                                "interactions": {},
+                                "allowTypes": false,
+                                "data": {},
+                                "properties": {
+                                    "commonProperties": {}
+                                }
+                            },
+                            {
+                                "id": "tablefilters_eampyz",
+                                "tag": "tableFilters1",
+                                "componentName": "tableFilters",
+                                "label": "Table Filter",
+                                "children": [],
+                                "interactions": {},
+                                "allowTypes": false,
+                                "data": {},
+                                "properties": {
+                                    "commonProperties": {}
+                                }
+                            }
+                        ],
+                        "interactions": {},
+                        "allowTypes": true,
+                        "data": {
+                            "data": {
+                                "state": {
+                                    "id": "",
+                                    "type": "{{type}}[]",
+                                    "name": "contentTable{{id}}",
+                                    "defaultValue": "[]",
+                                    "imports": [],
+                                    "generate": true
+                                }
+                            }
+                        },
+                        "properties": {
+                            "commonProperties": {}
+                        }
+                    }
+                ],
+                "tag": "",
+                "data": {},
+                "interactions": {}
+            }
+        ],
+        "tag": "page1",
+        "data": {},
+        "interactions": {
+            "onLoad": {
+                "type": "function",
+                "function": {
+                    "fnCustomCode": {
+                        "imports": [
+                            {
+                                "namespace": "import {fetchProcesses} from '@/app/[locale]/(myapp)/store/processStore'",
+                                "id": "gd2lx17yyz"
+                            },
+                            {
+                                "namespace": "import {fetchInstances} from '@/app/[locale]/(myapp)/store/processStore'",
+                                "id": "r7r8yyqq5k"
+                            },
+                            {
+                                "namespace": "import {fetchTasks} from '@/app/[locale]/(myapp)/store/taskStore'",
+                                "id": "f7f1joa1vy"
+                            },
+                            {
+                                "id": "import_wreDDt",
+                                "namespace": "import { getDateTemplate, getUserInfo, getText } from '@/app/[locale]/(myapp)/store/columnsTemplates'"
+                            }
+                        ],
+                        "fnCode": "useEffect(() => {\r\n    const loadProcesses = async () => {\r\n      try {\r\n        const [response, responseInstance, responseTask] = await Promise.all([\r\n          fetchProcesses(0, 3),\r\n          fetchInstances(0, 4),\r\n          fetchTasks(0, 4),\r\n        ]);\r\n\r\n        if (response && response.content) {\r\n          const formattedData = response.content.map((proc) => ({\r\n            tableTextCell1: proc.name || 'Untitled Process',\r\n            tableTextCell2: getText(proc.id),\r\n            tableTextCell7: getText(proc.version),\r\n            tableHiddenCell1: proc.id\r\n          }));\r\n\r\n          setContentTabletable2(formattedData);\r\n          setStatstatsCard1Value(response.totalElements || 0);\r\n        }\r\n\r\n        if (responseInstance && responseInstance.content) {\r\n          const formattedData = responseInstance.content.map((instance) => ({\r\n            tableTextCell3: instance.processDefinitionName,\r\n            tableTextCell4: getText(instance.businessKey || \"-\"),\r\n            tableTextCell5: getUserInfo(instance.startedBy || ''),\r\n            tableTextCell6: getDateTemplate(instance.startDate),\r\n            tableBadgeCell1: instance.status,\r\n          }));\r\n\r\n          setContentTabletable1(formattedData);\r\n          setStatstatsCard2Value(responseInstance.totalElements || 0);\r\n        }\r\n        if (responseTask && responseTask.content) {\r\n          setStatstatsCard3Value(responseTask.totalElements || 0);\r\n        }\r\n      } catch (error) {\r\n        console.error('Failed to fetch processes:', error);\r\n        setContentTabletable2([]);\r\n        setStatstatsCard3Value(0);\r\n      }\r\n    };\r\n\r\n    loadProcesses();\r\n  }, []);"
+                    }
+                }
+            }
+        },
+        "childProperties": {}
+    },
+    "imports": []
+}

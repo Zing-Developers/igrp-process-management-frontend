@@ -1,8 +1,1 @@
-{
-    "name": "process-management-frontend",
-    "description": "",
-    "workspaceId": "6688a66d-1f00-4dca-a475-a1d2be191724",
-    "id": "607ffa93-9ff3-4376-8215-be81e901dc82",
-    "version": "0.1.0-beta.1",
-    "type": "nextjs"
-}
+{"name":"process-management-frontend","description":"","workspaceId":"6688a66d-1f00-4dca-a475-a1d2be191724","id":"607ffa93-9ff3-4376-8215-be81e901dc82","version":"0.1.0-beta.1","type":"nextjs"}

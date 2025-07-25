@@ -5,10 +5,11 @@ import { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   // uncomment this line when you build this build,
-  output: 'standalone',
+  // output: 'standalone',
 
   // use this if you are using a custom domain for igrp-applications-center
-  basePath: process.env.IGRP_APP_BASE_PATH || '',
+  basePath: "/apps/appslug",
+  // basePath: process.env.IGRP_APP_BASE_PATH || '',
 
   images: {
     remotePatterns: [

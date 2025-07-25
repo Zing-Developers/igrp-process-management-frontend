@@ -42,25 +42,8 @@
  */
 
 export default {
-  types: ['processconfiguration/types/index'],
+  types: [],
   actions: [],
-  functions: [
-    'processconfiguration/hooks/use-process-configuration',
-    'processmap/hooks/use-process-map',
-    'availabletasks/hooks/use-available-tasks',
-    'components/processtaksfilter/hooks/use-process-tasks-filter',
-    'processinstances/hooks/use-process-instances',
-    'mytasks/hooks/use-my-tasks',
-    'dashboard/hooks/use-dashboard',
-    'dashboard/hooks/use-dashboard-data',
-    'utils/url-config',
-    'utils/status-badge'
-  ],
-  components: [
-    'processconfiguration/components/areas-list',
-    'processconfiguration/components/process-list',
-    'processconfiguration/components/artifact-processes-list',
-    'processmap/components/process-tree-node',
-    'components/recent-items-card',
-  ],
+  functions: [],
+  components: []
 };

@@ -42,8 +42,13 @@
  */
 
 export default {
-  types: [],
+  types: ['processconfiguration/types/index'],
   actions: [],
-  functions: [],
-  components: []
+  functions: [
+    'processconfiguration/hooks/use-process-configuration'
+  ],
+  components: [
+    'processconfiguration/components/areas-list',
+    'processconfiguration/components/project-list',
+  ],
 };

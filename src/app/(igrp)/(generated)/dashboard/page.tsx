@@ -111,7 +111,6 @@ function goTostartProcess (row?: any): void {
 
   return (
 <div className={ cn('page','space-y-6',)}    >
-	<div className={ cn('section',' space-x-3 space-y-3',)}    >
 	<IGRPPageHeader
   name={ `pageHeader1` }
   title={ `Dashboard` }
@@ -124,9 +123,8 @@ function goTostartProcess (row?: any): void {
   <div className="flex items-center gap-2">
 </div>
 </IGRPPageHeader>
-</div>
-<div className={ cn('section',)}    >
-	<div className={ cn('grid','grid-cols-1 ','md:grid-cols-2 ','lg:grid-cols-4 ',' gap-4',)}    >
+
+<div className={ cn('grid','grid-cols-1 ','md:grid-cols-2 ','lg:grid-cols-4 ',' gap-4',)}    >
 	<IGRPStatsCard
   name={ `statsCard1` }
   cardBorderPosition={ `none` }
@@ -210,8 +208,7 @@ itemPlacement={ `end` }
   onClick={ () => goTotaskManagement() }
   value={ statstatsCard4Value }
 >
-</IGRPStatsCard></div></div>
-<div className={ cn('section',' space-x-6 space-y-6',)}    ></div>
+</IGRPStatsCard></div>
 <div className={ cn('section',' space-x-6 space-y-6',)}    >
 	<IGRPHeadline
   name={ `headline1` }

@@ -3,7 +3,7 @@ import { IGRPMenuItemArgs } from '@igrp/framework-next-types';
 export const IGRP_DEFAULT_MENU: IGRPMenuItemArgs[] = [
   {
     id: 1,
-    name: 'Test Dashboard',
+    name: 'Dashboard',
     type: 'FOLDER',
     position: 1,
     icon: 'AppWindow',
@@ -92,6 +92,19 @@ export const IGRP_DEFAULT_MENU: IGRPMenuItemArgs[] = [
     status: 'ACTIVE',
     target: 'INTERNAL',
     url: '/system-settings',
+    parentId: 5,
+    applicationId: 1,
+    resourceId: null,
+  },
+  {
+    id: 7,
+    name: 'Configuração',
+    type: 'MENU_PAGE',
+    position: 1,
+    icon: 'Settings2',
+    status: 'ACTIVE',
+    target: 'INTERNAL',
+    url: '/processconfiguration',
     parentId: 5,
     applicationId: 1,
     resourceId: null,

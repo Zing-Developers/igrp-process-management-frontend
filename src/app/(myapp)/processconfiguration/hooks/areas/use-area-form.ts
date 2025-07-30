@@ -1,64 +1,68 @@
-import { useState } from 'react'
-import { AreaFormData, AreaModalState } from '../../types'
-import { Area } from '@/app/(myapp)/external/types/area'
+import { useState } from 'react';
+import { AreaFormData, AreaModalState } from '../../types';
+import { Area } from '@/app/(myapp)/external/types/area';
 
 export function useAreaForm() {
   const [modalState, setModalState] = useState<AreaModalState>({
     isOpen: false,
     editingArea: null,
-  })
-  
+  });
+
   const [formData, setFormData] = useState<AreaFormData>({
     code: '',
     name: '',
     description: '',
-    area_fk: undefined
-  })
+    applicationBase: '',
+    parentId: undefined, // Changed from area_fk to area_id
+  });
 
   const openModal = (area?: Area, parentAreaId?: string) => {
     if (area) {
       setModalState({
         isOpen: true,
         editingArea: area,
-        parentAreaId
-      })
+        parentAreaId,
+      });
       setFormData({
         code: area.code,
         name: area.name,
         description: area.description || '',
-        area_fk: area.area_fk
-      })
+        applicationBase: '',
+        parentId: area.areaId, // Changed from area_fk to area_id
+      });
     } else {
       setModalState({
         isOpen: true,
         editingArea: null,
-        parentAreaId
-      })
+        parentAreaId,
+      });
       setFormData({
         code: '',
         name: '',
         description: '',
-        area_fk: parentAreaId
-      })
+        applicationBase: '',
+        parentId: parentAreaId, // Changed from area_fk to area_id
+      });
     }
-  }
+  };
 
   const closeModal = () => {
     setModalState({
       isOpen: false,
       editingArea: null,
-    })
-    resetForm()
-  }
+    });
+    resetForm();
+  };
 
   const resetForm = () => {
     setFormData({
       code: '',
       name: '',
       description: '',
-      area_fk: undefined
-    })
-  }
+      applicationBase: '',
+      parentId: undefined, // Changed from area_fk to area_id
+    });
+  };
 
   return {
     modalState,
@@ -67,5 +71,5 @@ export function useAreaForm() {
     openModal,
     closeModal,
     resetForm,
-  }
+  };
 }

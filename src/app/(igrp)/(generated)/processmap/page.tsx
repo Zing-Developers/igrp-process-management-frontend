@@ -8,9 +8,13 @@
 
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
+import {ProcessTreeComponent} from '@/app/(myapp)/processmap/components/process-tree-node'
+import ProcessDetail from '@/app/(igrp)/(generated)/processmap/components/processdetail'
 import { 
-  IGRPPageHeader 
+  IGRPPageHeader,
+	IGRPInputSearch 
 } from "@igrp/igrp-framework-react-design-system";
+import {useProcessMap} from '@/app/(myapp)/processmap/hooks/use-process-map'
 
 
 export default function PageProcessmapComponent() {
@@ -21,21 +25,45 @@ export default function PageProcessmapComponent() {
   
 const { igrpToast } = useIGRPToast()
 
+/*---------------------------------Reserved area begin------------------------------*/
+const pm = useProcessMap(igrpToast);
+/*---------------------------------Reserved area end------------------------------*/
+
 
   return (
 <div className={ cn('page','space-y-6',)}    >
-	<div className={ cn('section',' space-x-6 space-y-6',)}    >
 	<IGRPPageHeader
   name={ `pageHeader1` }
   title={ `Mapa de Processos` }
-  description={ `Visualize processos organizados por área, subárea e projeto` }
+  description={ `Visualize processos organizados por área e subárea` }
   iconBackButton={ `Search` }
   variant={ `h3` }
+  className={ cn() }
   
 >
   <div className="flex items-center gap-2">
 </div>
 </IGRPPageHeader>
-</div></div>
+
+<IGRPInputSearch
+  name={ `inputSearch1` }
+  label={ undefined }
+showStartIcon={ true }
+startIcon={ `Search` }
+submitIcon={ `ArrowRight` }
+required={ false }
+
+
+showSubmitButton={ false }
+placeholder={ `Procurar por processos...` }
+  className={ cn() }
+  setValueChange={ pm.setSearchTerm }
+  value={ pm.searchTerm }
+>
+</IGRPInputSearch>
+<ProcessTreeComponent  nodes={ pm.filteredNodes } expandedNodes={ pm.expandedNodes } searchTerm={ pm.searchTerm }  onToggle={ pm.toggleNode }
+onStartProcess={ pm.startProcessWithToast }
+onViewDetails={ pm.detailModal.open } ></ProcessTreeComponent>
+<ProcessDetail  open={ pm.detailModal.isOpen } process={ pm.detailModal.process }  setOpen={ pm.detailModal.setOpen } ></ProcessDetail></div>
   );
 }

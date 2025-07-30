@@ -1,10 +1,11 @@
 import { useAreaForm } from './areas/use-area-form';
 import { useAreaOperations } from './areas/use-area-operations';
-import { ExtendedArea } from '../types';
+import { ExtendedArea, AreaProcessesMap } from '../types';
 
 export function useAreaHandlers(
   areas: ExtendedArea[],
   setAreas: React.Dispatch<React.SetStateAction<ExtendedArea[]>>,
+  setAreaProcesses: React.Dispatch<React.SetStateAction<AreaProcessesMap>>,
   igrpToast?: any,
 ) {
   const areaForm = useAreaForm();
@@ -15,6 +16,7 @@ export function useAreaHandlers(
       // Use the passed formData if available, otherwise fall back to areaForm.formData
       const dataToUse = formData || areaForm.formData;
       console.log("Creating area with data:", dataToUse);
+      
       await areaOperations.handleCreateArea(dataToUse);
       areaForm.closeModal();
 
@@ -75,10 +77,59 @@ export function useAreaHandlers(
     }
   };
 
+  const handleDeleteArea = async (areaId: string) => {
+    try {
+      await areaOperations.handleDeleteArea(areaId);
+
+      // Show success toast
+      if (igrpToast) {
+        igrpToast({
+          type: 'success',
+          title: 'Sucesso',
+          description: 'Área excluída com sucesso!',
+        });
+      }
+    } catch (error) {
+      console.error('Error deleting area:', error);
+
+      // Show error toast
+      if (igrpToast) {
+        igrpToast({
+          type: 'error',
+          title: 'Erro',
+          description: 'Erro ao excluir área. Tente novamente.',
+        });
+      }
+
+      throw error;
+    }
+  };
+
+  const handleLoadSubareas = async (parentAreaId: string) => {
+    try {
+      console.log("Loading subareas for parent area:", parentAreaId);      
+      // Load subareas using area operations
+      await areaOperations.loadSubareas(parentAreaId);      
+    } catch (error) {
+      console.error('Error loading subareas:', error);
+
+      // Show error toast
+      if (igrpToast) {
+        igrpToast({
+          type: 'error',
+          title: 'Erro',
+          description: 'Erro ao carregar subáreas. Tente novamente.',
+        });
+      }
+    }
+  };
+
   return {
     areaForm,
     areaOperations,
     handleCreateArea,
     handleUpdateArea,
+    handleDeleteArea,
+    handleLoadSubareas,
   };
 }

@@ -45,10 +45,11 @@ export default {
   types: ['processconfiguration/types/index'],
   actions: [],
   functions: [
-    'processconfiguration/hooks/use-process-configuration'
+    'processconfiguration/hooks/use-process-configuration',
+    'processmap/hooks/use-process-map'
   ],
   components: [
     'processconfiguration/components/areas-list',
-    'processconfiguration/components/project-list',
+    'processmap/components/process-tree-node'
   ],
 };

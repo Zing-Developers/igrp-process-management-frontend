@@ -20,8 +20,8 @@ export class AreaService {
     return await deleteArea(areaId);
   }
 
-  static async getAreas(page: number = 0, size: number = 100) {
-    return await getAreas(page, size);
+  static async getAreas(page: number = 0, size: number = 100, parentId?: string) {
+    return await getAreas(page, size, parentId);
   }
 
   static async getSubareas(parentAreaId: string): Promise<Area[]> {

@@ -1,62 +1,57 @@
-import { useState, useEffect } from 'react'
-import { ExtendedArea, AreaProjectsMap } from '../types'
-import { AreaService } from '../services/area.service'
-import { ProjectService } from '../services/project.service'
-import { organizeAreasHierarchy } from '../utils/area-hierarchy'
-import { Project } from '../../external/types/area'
+import { useState, useEffect } from 'react';
+import { Process } from '../../external/types/process';
+import { getAreas } from '../../external/client/services/area.service';
+import { AreaProcessesMap, ExtendedArea } from '../types';
+import { organizeAreasHierarchy } from '../utils/area-hierarchy';
 
 export function useConfiguration() {
-  const [areas, setAreas] = useState<ExtendedArea[]>([])
-  const [projects, setProjects] = useState<Project[]>([])
-  const [areaProjects, setAreaProjects] = useState<AreaProjectsMap>({})
-  const [loading, setLoading] = useState(true)
-
-  const loadInitialData = async () => {
-    setLoading(true)
-    try {
-      // Load all data at once
-      const [areasResponse, projectsResponse, areaProjectsResponse] = await Promise.all([
-        AreaService.getAreas(0, 100),
-        ProjectService.getAllProjects(0, 100),
-        ProjectService.getAllAreaProjects()
-      ])
-      
-      const flatAreas = areasResponse?.content || []
-      const organizedAreas = organizeAreasHierarchy(flatAreas)
-      setAreas(organizedAreas)
-      setProjects(projectsResponse?.content || [])
-      
-      // Organize area projects by area ID for quick lookup
-      const areaProjectsMap: AreaProjectsMap = {}
-      areaProjectsResponse.forEach(areaProject => {
-        if (!areaProjectsMap[areaProject.area_fk]) {
-          areaProjectsMap[areaProject.area_fk] = []
-        }
-        areaProjectsMap[areaProject.area_fk].push(areaProject)
-      })
-      setAreaProjects(areaProjectsMap)
-      
-    } catch (error) {
-      console.error('Error loading initial data:', error)
-      setAreas([])
-      setProjects([])
-    } finally {
-      setLoading(false)
-    }
-  }
+  const [areas, setAreas] = useState<ExtendedArea[]>([]);
+  const [processes, setProcesses] = useState<Process[]>([]);
+  const [areaProcesses, setAreaProcesses] = useState<AreaProcessesMap>({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadInitialData()
-  }, [])
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        
+        // Load only top-level areas (no parentId) - they come with their processes
+        const areasResponse = await getAreas(0, 100);
+        
+        // Organize flat areas into hierarchical structure
+        const hierarchicalAreas = organizeAreasHierarchy(areasResponse.content || []);
+        setAreas(hierarchicalAreas);
+        
+        // Extract all processes from areas and build areaProcesses map
+        const allProcesses: Process[] = [];
+        const areaProcessesMap: AreaProcessesMap = {};
+        
+        (areasResponse.content || []).forEach((area) => {
+          const areaProcessList = area.process || [];
+          areaProcessesMap[area.id] = areaProcessList;
+          allProcesses.push(...areaProcessList);
+        });
+        
+        setProcesses(allProcesses);
+        setAreaProcesses(areaProcessesMap);
+        
+      } catch (error) {
+        console.error('Error loading configuration data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
 
   return {
     areas,
     setAreas,
-    projects,
-    setProjects,
-    areaProjects,
-    setAreaProjects,
+    processes,
+    setProcesses,
+    areaProcesses,
+    setAreaProcesses,
     loading,
-    loadInitialData,
-  }
+  };
 }

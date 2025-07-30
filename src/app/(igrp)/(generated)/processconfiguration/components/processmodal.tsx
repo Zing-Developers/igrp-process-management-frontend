@@ -8,7 +8,7 @@
 
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
-import { ProjectList } from '@/app/(myapp)/processconfiguration/components/project-list';
+import { ProcessList } from '@/app/(myapp)/processconfiguration/components/process-list';
 import {
   IGRPModalDialog,
   IGRPModalDialogContent,
@@ -17,15 +17,15 @@ import {
   IGRPInputSearch,
 } from '@igrp/igrp-framework-react-design-system';
 
-export default function Projectmodal({
-  availableProjects,
+export default function Processmodal({
+  availableProcesses,
   onAssociate,
   onClose,
   open,
   setOpen,
 }: {
-  availableProjects: any[];
-  onAssociate: (projectId: string) => void;
+  availableProcesses: any[];
+  onAssociate: (processKey: string) => void;
   onClose: () => void;
   open: boolean;
   setOpen: (prompt: boolean) => void;
@@ -33,11 +33,13 @@ export default function Projectmodal({
   const { igrpToast } = useIGRPToast();
 
   const [searchTerm, setSearchTerm] = useState('');
-  const filteredProjects = availableProjects.filter(
-    (project) =>
-      project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.description?.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const filteredProjects = availableProcesses
+    ? availableProcesses.filter(
+        (process) =>
+          process.processKey?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          process.statusDesc?.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
+    : [];
 
   return (
     <div className={cn('component')}>
@@ -60,11 +62,11 @@ export default function Projectmodal({
               setValueChange={(e) => setSearchTerm(e)}
               value={searchTerm}
             ></IGRPInputSearch>
-            <ProjectList
-              availableProjects={availableProjects}
-              projects={filteredProjects}
+            <ProcessList
+              availableProcesses={availableProcesses}
+              processes={filteredProjects}
               onAssociate={onAssociate}
-            ></ProjectList>
+            ></ProcessList>
           </>
         </IGRPModalDialogContent>
       </IGRPModalDialog>

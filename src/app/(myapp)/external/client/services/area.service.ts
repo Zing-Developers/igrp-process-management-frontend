@@ -1,32 +1,20 @@
 import { httpClient } from './http-client';
-import {
-  Area,
-  CreateAreaRequest,
-  UpdateAreaRequest,
-  AreaProject,
-  CreateAreaProjectRequest,
-  Project,
-  AreaWithProjects,
-} from '../../types/area';
+import { Area, CreateAreaRequest, UpdateAreaRequest } from '../../types/area';
 import { PaginatedResponse } from '../../types/response';
 import {
   createDummyArea,
   createDummyUpdatedArea,
   getDummyAreaById,
   getDummySubareas,
-  getDummyProjectsByAppCode,
-  createDummyAreaProject,
-  getDummyAreaProjects,
-  getAllDummyAreaProjects, // Add this import
-  getDummyAreaWithProjects,
   getDummyAreasPaginated,
-  getDummyProjectsPaginated,
 } from '../dummy-data/areas';
 import { apiConfig } from '../config/api.config';
 
 // Area Management
 export const createArea = async (areaData: CreateAreaRequest): Promise<Area> => {
   try {
+    areaData.applicationBase = apiConfig.applicationBase;
+    console.log('createArea', areaData);
     return await httpClient.post<Area>(apiConfig.endpoints.areas, areaData);
   } catch (error) {
     console.warn('API call failed, using fallback data for createArea');
@@ -36,6 +24,7 @@ export const createArea = async (areaData: CreateAreaRequest): Promise<Area> => 
 
 export const updateArea = async (id: string, areaData: UpdateAreaRequest): Promise<Area> => {
   try {
+    areaData.applicationBase = apiConfig.applicationBase;
     return await httpClient.put<Area>(`${apiConfig.endpoints.areas}/${id}`, areaData);
   } catch (error) {
     console.warn('API call failed, using fallback data for updateArea');
@@ -52,14 +41,21 @@ export const deleteArea = async (id: string): Promise<void> => {
   }
 };
 
-export const getAreas = async (page = 0, size = 20): Promise<PaginatedResponse<Area>> => {
+export const getAreas = async (
+  page = 0,
+  size = 20,
+  parentId?: string,
+): Promise<PaginatedResponse<Area>> => {
   try {
-    return await httpClient.get<PaginatedResponse<Area>>(
-      `${apiConfig.endpoints.areas}?page=${page}&size=${size}`,
-    );
+    const url = parentId
+      ? `${apiConfig.endpoints.areas}?page=${page}&size=${size}&parentId=${parentId}`
+      : `${apiConfig.endpoints.areas}?page=${page}&size=${size}`;
+    console.log('getAreas url:', url);
+    return await httpClient.get<PaginatedResponse<Area>>(url);
   } catch (error) {
-    console.warn('API call failed, using fallback data for getAreas');
-    return getDummyAreasPaginated(page, size);
+    console.warn('API call failed, using fallback data for getAreas with parentId:', parentId);
+    // Pass parentId to getDummyAreasPaginated so it can filter correctly
+    return getDummyAreasPaginated(page, size, parentId);
   }
 };
 
@@ -74,83 +70,13 @@ export const getAreaById = async (id: string): Promise<Area | null> => {
 
 export const getSubareas = async (parentAreaId: string): Promise<Area[]> => {
   try {
-    return await httpClient.get<Area[]>(`${apiConfig.endpoints.areas}/${parentAreaId}/subareas`);
+    console.log('Fetching subareas for parent area:', parentAreaId);
+    // Use the same getAreas API with parentId parameter
+    const response = await getAreas(0, 100, parentAreaId);
+    console.log('Subareas response:', response);
+    return response.content || [];
   } catch (error) {
     console.warn('API call failed, using fallback data for getSubareas');
     return getDummySubareas(parentAreaId);
-  }
-};
-
-// Project Management
-export const getProjectsByAppCode = async (appCode: string): Promise<Project[]> => {
-  try {
-    return await httpClient.get<Project[]>(`${apiConfig.endpoints.projects}?app_code=${appCode}`);
-  } catch (error) {
-    console.warn('API call failed, using fallback data for getProjectsByAppCode');
-    return getDummyProjectsByAppCode(appCode);
-  }
-};
-
-export const getAllProjects = async (page = 0, size = 20): Promise<PaginatedResponse<Project>> => {
-  try {
-    return await httpClient.get<PaginatedResponse<Project>>(
-      `${apiConfig.endpoints.projects}?page=${page}&size=${size}`,
-    );
-  } catch (error) {
-    console.warn('API call failed, using fallback data for getAllProjects');
-    return getDummyProjectsPaginated(page, size);
-  }
-};
-
-// Area-Project Association
-export const associateProjectToArea = async (
-  associationData: CreateAreaProjectRequest,
-): Promise<AreaProject> => {
-  try {
-    return await httpClient.post<AreaProject>(apiConfig.endpoints.areaProjects, associationData);
-  } catch (error) {
-    console.warn('API call failed, using fallback data for associateProjectToArea');
-    return createDummyAreaProject(associationData);
-  }
-};
-
-export const removeProjectFromArea = async (areaId: string, projectId: string): Promise<void> => {
-  try {
-    await httpClient.delete(
-      `${apiConfig.endpoints.areaProjects}?area_fk=${areaId}&project_id=${projectId}`,
-    );
-  } catch (error) {
-    console.warn('API call failed for removeProjectFromArea');
-    // For demo purposes, just log the action
-  }
-};
-
-export const getAreaProjects = async (areaId: string): Promise<AreaProject[]> => {
-  try {
-    return await httpClient.get<AreaProject[]>(`${apiConfig.endpoints.areas}/${areaId}/projects`);
-  } catch (error) {
-    console.warn('API call failed, using fallback data for getAreaProjects');
-    return getDummyAreaProjects(areaId);
-  }
-};
-
-export const getAreaWithProjects = async (areaId: string): Promise<AreaWithProjects | null> => {
-  try {
-    return await httpClient.get<AreaWithProjects>(
-      `${apiConfig.endpoints.areas}/${areaId}/with-projects`,
-    );
-  } catch (error) {
-    console.warn('API call failed, using fallback data for getAreaWithProjects');
-    return getDummyAreaWithProjects(areaId);
-  }
-};
-
-// Add this new function to get all area projects at once
-export const getAllAreaProjects = async (): Promise<AreaProject[]> => {
-  try {
-    return await httpClient.get<AreaProject[]>(`${apiConfig.endpoints.areaProjects}`);
-  } catch (error) {
-    console.warn('API call failed, using fallback data for getAllAreaProjects');
-    return getAllDummyAreaProjects();
   }
 };

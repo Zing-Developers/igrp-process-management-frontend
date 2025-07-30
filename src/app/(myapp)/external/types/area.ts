@@ -1,55 +1,54 @@
-import { Process } from "./process";
+import { Process } from './process';
 
 export interface Area {
   id: string;
   code: string;
   name: string;
   description?: string;
-  area_fk?: string; // Parent area ID for subareas
+  areaId?: string; // Parent area ID for subareas
+  process?: Process[]; // Array of processes associated with this area
   createdAt?: string;
   updatedAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
 }
 
 export interface CreateAreaRequest {
   code: string;
   name: string;
   description?: string;
-  area_fk?: string; // Parent area ID for creating subareas
+  applicationBase: string;
+  parentId?: string; // Parent area ID for creating subareas
 }
 
 export interface UpdateAreaRequest {
   code?: string;
   name?: string;
   description?: string;
-  area_fk?: string;
+  applicationBase: string;
+  parentId?: string;
 }
 
-export interface AreaProject {
-  id: string;
-  area_fk: string;
-  project_id: string;
-  createdAt?: string;
+export interface AreaWithProcesses extends Area {
+  process?: Process[];
+  subareas?: AreaWithProcesses[];
 }
 
-export interface CreateAreaProjectRequest {
-  area_fk: string;
-  project_id: string;
+// Paginated response interface
+export interface PaginatedResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  pageSize: number;
+  pageNumber: number;
+  first: boolean;
+  last: boolean;
+  empty: boolean;
 }
 
-export interface Project {
-  projectId: string;
-  code: string;
-  name: string;
-  description?: string;
-  active: boolean;
-  app_code: string;
-  processDefinitions: Process [];   
-  status: 'ACTIVE' | 'INACTIVE';
-  createdAt?: string;
-  updatedAt?: string;
-}
-
+// Keep for backward compatibility if needed, but mark as deprecated
+/** @deprecated Use AreaWithProcesses instead */
 export interface AreaWithProjects extends Area {
-  projects?: Project[];
+  projects?: any[];
   subareas?: AreaWithProjects[];
 }

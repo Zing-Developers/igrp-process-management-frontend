@@ -1,17 +1,19 @@
 export type Process = {
-  processDefinitionId: string;
-  projectId: string;
+  id: string;
   processKey: string;
-  code: string;
-  title: string;
-  description: string;
-  version: string;
+  name?: string; // Add this for compatibility
+  description?: string; // Add this for compatibility
+  releaseId: string;
+  areaId: string;
   status: string;
   statusDesc: string;
-  deploymentId: string;
-  deploymentDate: string;
-  category?: string;
-  thumbnail?: string;
+  version: string;
+  createdAt: string;
+  updatedAt?: string;
+  createdBy: string;
+  updatedBy?: string;
+  removedAt?: string | null;
+  removedBy?: string | null;
 };
 
 export type ProcessInstance = {

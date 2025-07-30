@@ -1,28 +1,32 @@
-import { useState } from 'react'
-import { ExpandedAreas, ExtendedArea } from '../../types'
-import { findAreaById } from '../../utils/area-hierarchy'
+import { useState } from 'react';
+import { ExpandedAreas } from '../../types';
 
-export function useExpansion(areas: ExtendedArea[]) {
-  const [expandedAreas, setExpandedAreas] = useState<ExpandedAreas>({})
+export function useExpansion() {
+  const [expandedAreas, setExpandedAreas] = useState<ExpandedAreas>({});
+  const [loadedSubareas, setLoadedSubareas] = useState<Set<string>>(new Set());
 
   const toggleAreaExpansion = async (
-    areaId: string, 
-    loadSubareasCallback: (areaId: string) => Promise<void>
+    areaId: string,
+    loadSubareasCallback: (areaId: string) => Promise<void>,
   ) => {
-    const isExpanded = expandedAreas[areaId]
-    setExpandedAreas(prev => ({ ...prev, [areaId]: !isExpanded }))
-    
-    // Only load subareas if not expanded and they don't exist yet
-    if (!isExpanded) {
-      const area = findAreaById(areas, areaId)
-      if (area && !area.subareas) {
-        await loadSubareasCallback(areaId)
-      }
+    console.log('useExpansion areaid:', areaId);
+    const isExpanded = expandedAreas[areaId];
+    setExpandedAreas((prev) => ({ ...prev, [areaId]: !isExpanded }));
+
+    // Only load subareas if expanding and they haven't been loaded yet
+    console.log("expandedAreas", expandedAreas)
+    console.log("isExpanded", isExpanded)
+    console.log("loadedSubareas", loadedSubareas)
+    if (!isExpanded && !loadedSubareas.has(areaId)) {
+      console.log('Loading subareas for area:', areaId);
+      await loadSubareasCallback(areaId);
+      setLoadedSubareas((prev) => new Set(prev).add(areaId));
     }
-  }
+  };
 
   return {
     expandedAreas,
     toggleAreaExpansion,
-  }
+    loadedSubareas,
+  };
 }

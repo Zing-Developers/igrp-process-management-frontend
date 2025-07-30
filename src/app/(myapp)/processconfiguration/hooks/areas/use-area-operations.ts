@@ -1,89 +1,114 @@
-import { AreaService } from '../../services/area.service'
-import { AreaFormData, ExtendedArea } from '../../types'
-import { organizeAreasHierarchy, getAllAreasFlat } from '../../utils/area-hierarchy'
-import { CreateAreaRequest, UpdateAreaRequest } from '@/app/(myapp)/external/types/area'
+import { AreaService } from '../../services/area.service';
+import { AreaFormData, ExtendedArea } from '../../types';
+import { organizeAreasHierarchy, getAllAreasFlat, findAreaById } from '../../utils/area-hierarchy';
+import { CreateAreaRequest, UpdateAreaRequest } from '@/app/(myapp)/external/types/area';
 
 export function useAreaOperations(
-  areas: ExtendedArea[], 
-  setAreas: React.Dispatch<React.SetStateAction<ExtendedArea[]>>
+  areas: ExtendedArea[],
+  setAreas: React.Dispatch<React.SetStateAction<ExtendedArea[]>>,
 ) {
   const handleCreateArea = async (formData: AreaFormData) => {
     try {
-      const newArea = await AreaService.createArea(formData as CreateAreaRequest)
-      
-      console.log(newArea)
-      console.log("formData:", formData)
-      console.log("areas:", areas)
+      const newArea = await AreaService.createArea(formData as CreateAreaRequest);
+
+      console.log(newArea);
+      console.log('formData:', formData);
+      console.log('areas:', areas);
       // Add the new area to the flat list and reorganize
-      const flatAreas = getAllAreasFlat(areas)
-      flatAreas.push(newArea)
-      const organizedAreas = organizeAreasHierarchy(flatAreas)
-      setAreas(organizedAreas)
-      console.log("organizedAreas:", organizedAreas)
-      return newArea
+      const flatAreas = getAllAreasFlat(areas);
+      flatAreas.push(newArea);
+      const organizedAreas = organizeAreasHierarchy(flatAreas);
+      setAreas(organizedAreas);
+      console.log('organizedAreas:', organizedAreas);
+      return newArea;
     } catch (error) {
-      console.error('Error creating area:', error)
-      throw error
+      console.error('Error creating area:', error);
+      throw error;
     }
-  }
+  };
 
   const handleUpdateArea = async (areaId: string, formData: AreaFormData) => {
     try {
-      const updatedArea = await AreaService.updateArea(areaId, formData as UpdateAreaRequest)
-      
+      console.log('handleUpdateArea areaId', areaId);
+      console.log('handleUpdateArea formData', formData);
+      const updatedArea = await AreaService.updateArea(areaId, formData as UpdateAreaRequest);
+
       // Update the area in the flat list and reorganize
-      const flatAreas = getAllAreasFlat(areas)
-      const index = flatAreas.findIndex(area => area.id === areaId)
+      const flatAreas = getAllAreasFlat(areas);
+      const index = flatAreas.findIndex((area) => area.id === areaId);
       if (index !== -1) {
-        flatAreas[index] = updatedArea
+        flatAreas[index] = updatedArea;
       }
-      const organizedAreas = organizeAreasHierarchy(flatAreas)
-      setAreas(organizedAreas)
-      
-      return updatedArea
+      const organizedAreas = organizeAreasHierarchy(flatAreas);
+      setAreas(organizedAreas);
+
+      return updatedArea;
     } catch (error) {
-      console.error('Error updating area:', error)
-      throw error
+      console.error('Error updating area:', error);
+      throw error;
     }
-  }
+  };
 
   const handleDeleteArea = async (areaId: string) => {
-    if (!confirm('Tem certeza que deseja excluir esta área? Todas as subáreas também serão removidas.')) return
-    
+    if (
+      !confirm(
+        'Tem certeza que deseja excluir esta área? Todas as subáreas também serão removidas.',
+      )
+    )
+      return;
+
     try {
-      await AreaService.deleteArea(areaId)
-      
+      await AreaService.deleteArea(areaId);
+
       // Remove the area and its subareas from the flat list and reorganize
-      const flatAreas = getAllAreasFlat(areas)
-      const filteredAreas = flatAreas.filter(area => area.id !== areaId && area.area_fk !== areaId)
-      const organizedAreas = organizeAreasHierarchy(filteredAreas)
-      setAreas(organizedAreas)
+      const flatAreas = getAllAreasFlat(areas);
+      const filteredAreas = flatAreas.filter(
+        (area) => area.id !== areaId && area.areaId !== areaId,
+      );
+      const organizedAreas = organizeAreasHierarchy(filteredAreas);
+      setAreas(organizedAreas);
     } catch (error) {
-      console.error('Error deleting area:', error)
-      throw error
+      console.error('Error deleting area:', error);
+      throw error;
     }
-  }
+  };
 
   const loadSubareas = async (parentAreaId: string) => {
     try {
-      const subareas = await AreaService.getSubareas(parentAreaId)
-      setAreas(prev => {
-        const updated = [...prev]
-        const parentIndex = updated.findIndex(area => area.id === parentAreaId)
-        if (parentIndex !== -1) {
-          updated[parentIndex] = { ...updated[parentIndex], subareas: subareas || [] }
-        }
-        return updated
-      })
+      const subareas = await AreaService.getSubareas(parentAreaId);
+      console.log('loadSubareas subareas', subareas);
+      // Update the areas state to include the loaded subareas
+      setAreas((prev) => {
+        const flatAreas = getAllAreasFlat(prev);
+        console.log('loadSubareas flatAreas', flatAreas);
+
+        // Add the new subareas to the flat list if they don't already exist
+        subareas.forEach((subarea) => {
+          const exists = flatAreas.find((area) => area.id === subarea.id);
+          if (!exists) {
+            flatAreas.push(subarea);
+          }
+        });
+
+        console.log('loadSubareas flatAreas', flatAreas);
+        // Reorganize the hierarchy
+        return organizeAreasHierarchy(flatAreas);
+      });
     } catch (error) {
-      console.error('Error loading subareas:', error)
+      console.error('Error loading subareas:', error);
     }
-  }
+  };
+
+  const getSubareasForParent = (parentAreaId: string): ExtendedArea[] => {
+    const parentArea = findAreaById(areas, parentAreaId);
+    return parentArea?.subareas || [];
+  };
 
   return {
     handleCreateArea,
     handleUpdateArea,
     handleDeleteArea,
     loadSubareas,
-  }
+    getSubareasForParent,
+  };
 }

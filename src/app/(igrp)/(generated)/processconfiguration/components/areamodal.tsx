@@ -119,7 +119,7 @@ export default function Areamodal({
                 className={cn()}
               ></IGRPTextarea>
               <IGRPSelect
-                name={`area_fk`}
+                name={`parentId`}
                 label={`Área Pai`}
                 placeholder={`Select an option...`}
                 gridSize={`full`}

@@ -109,4 +109,17 @@ export const IGRP_DEFAULT_MENU: IGRPMenuItemArgs[] = [
     applicationId: 1,
     resourceId: null,
   },
+  {
+    id: 7,
+    name: 'Mapa Processos',
+    type: 'MENU_PAGE',
+    position: 1,
+    icon: 'Settings2',
+    status: 'ACTIVE',
+    target: 'INTERNAL',
+    url: '/processmap',
+    parentId: 5,
+    applicationId: 1,
+    resourceId: null,
+  },
 ];

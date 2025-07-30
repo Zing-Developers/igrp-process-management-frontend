@@ -27,14 +27,14 @@ async function request<T>(
   retries = USE_DUMMY_DATA_ONLY ? 0 : 1,  // No retries in dev mode
   delay = USE_DUMMY_DATA_ONLY ? 0 : 100   // No delay in dev mode
 ): Promise<T> {
-  // In development mode with dummy data flag, immediately use dummy data
-  console.log("isDevelopment", isDevelopment);
-  console.log("process.env.NODE_ENV"+process.env.NODE_ENV)
+  // In development mode with dummy data flag, immediately use dummy data 
   if (USE_DUMMY_DATA_ONLY) {
     throw new Error('Development mode: using dummy data only');
   }
 
   const url = `${apiConfig.baseUrl}/${endpoint}`;
+  
+  console.log("request url", url);
   const options: RequestInit = {
     method,
     headers: {

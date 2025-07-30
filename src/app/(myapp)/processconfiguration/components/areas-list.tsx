@@ -1,4 +1,4 @@
-import { Area, AreaProject, Project } from '../../external/types/area';
+import { Area } from '../../external/types/area';
 import { AreaCard } from './area-card';
 
 interface ExtendedArea extends Area {
@@ -8,35 +8,28 @@ interface ExtendedArea extends Area {
 interface ExpandedAreas {
   [key: string]: boolean;
 }
-interface AreaProjects {
-  [areaId: string]: AreaProject[];
-}
 
 export function AreasList({
   areas,
   expandedAreas,
-  areaProjects,
-  projects,
   onToggleExpansion,
   onEdit,
   onDelete,
   onAddSubarea,
-  onAddProject,
-  onRemoveProject,
+  onAddProcess,
+  onRemoveProcess,
 }: {
   areas: ExtendedArea[];
   expandedAreas: ExpandedAreas;
-  areaProjects: AreaProjects;
-  projects: Project[];
-  onToggleExpansion: (areaId: string) => void;
+  onToggleExpansion: (areaId: string) => Promise<void>;
   onEdit: (area: Area) => void;
   onDelete: (areaId: string) => void;
   onAddSubarea: (parentAreaId: string) => void;
-  onAddProject: (areaId: string) => void;
-  onRemoveProject: (areaId: string, projectId: string) => void;
+  onAddProcess: (areaId: string) => void;
+  onRemoveProcess: (areaId: string, processId: string) => void;
 }) {
   // Filter to show only top-level areas (areas without parent)
-  const topLevelAreas = areas.filter((area) => !area.area_fk);
+  const topLevelAreas = areas.filter((area) => !area.areaId);
 
   if (topLevelAreas.length === 0) {
     return (
@@ -54,14 +47,12 @@ export function AreasList({
           area={area}
           isExpanded={expandedAreas[area.id] || false}
           expandedAreas={expandedAreas}
-          allAreaProjects={areaProjects}
-          projects={projects}
           onToggleExpansion={onToggleExpansion}
           onEdit={onEdit}
           onDelete={onDelete}
           onAddSubarea={onAddSubarea}
-          onAddProject={onAddProject}
-          onRemoveProject={onRemoveProject}
+          onAddProcess={onAddProcess}
+          onRemoveProcess={onRemoveProcess}
         />
       ))}
     </div>

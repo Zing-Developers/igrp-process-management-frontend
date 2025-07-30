@@ -10,7 +10,7 @@ import { ProcessTreeNode } from '../types';
 interface NodeIconProps {
   node: ProcessTreeNode;
   isExpanded: boolean;
-}
+} 
 
 export function NodeIcon({ node, isExpanded }: NodeIconProps) {
   switch (node.type) {

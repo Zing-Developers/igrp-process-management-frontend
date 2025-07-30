@@ -36,7 +36,7 @@ export default function Processmodal({
   const filteredProjects = availableProcesses
     ? availableProcesses.filter(
         (process) =>
-          process.processKey?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          process.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           process.statusDesc?.toLowerCase().includes(searchTerm.toLowerCase()),
       )
     : [];

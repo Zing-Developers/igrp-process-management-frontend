@@ -20,12 +20,12 @@ export function ExpandButton({ hasChildren, isExpanded, onToggle }: ExpandButton
           e.stopPropagation();
           onToggle();
         }}
-        className="p-1 hover:bg-gray-200 rounded"
+        className="p-1 hover:bg-muted rounded"
       >
         {isExpanded ? (
-          <ChevronDown className="w-4 h-4 text-gray-600" />
+          <ChevronDown className="w-4 h-4 text-muted-foreground" />
         ) : (
-          <ChevronRight className="w-4 h-4 text-gray-600" />
+          <ChevronRight className="w-4 h-4 text-muted-foreground" />
         )}
       </button>
     </div>

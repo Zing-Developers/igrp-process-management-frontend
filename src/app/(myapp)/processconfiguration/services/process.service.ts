@@ -1,5 +1,11 @@
+import {
+  getProcesses,
+  getProcessById,
+  startProcess,
+} from '../../external/client/services/process.service';
+import { Process, ProcessInstance } from '../../external/types/process';
+import { PaginatedResponse } from '../../external/types/response';
 import { httpClient } from '../../external/client/services/http-client';
-import { Process } from '../../external/types/process';
 import { apiConfig } from '../../external/client/config/api.config';
 
 export interface CreateProcessRequest {
@@ -16,14 +22,16 @@ export interface RemoveProcessResponse {
 export class ProcessService {
   static async getAllProcesses(page: number = 0, size: number = 100): Promise<Process[]> {
     try {
-      const response = await httpClient.get<{ content: Process[] }>(
-        `${apiConfig.endpoints.processes}?page=${page}&size=${size}`
-      );
+      const response = await getProcesses(page, size);
       return response.content || [];
     } catch (error) {
-      console.warn('API call failed for getAllProcesses');
+      console.warn('Error getting all processes');
       return [];
     }
+  }
+
+  static async getProcessById(id: string): Promise<Process | null> {
+    return await getProcessById(id);
   }
 
   static async getAreaProcesses(areaId: string): Promise<Process[]> {
@@ -58,5 +66,13 @@ export class ProcessService {
       console.error('Error removing process from area:', error);
       throw error;
     }
+  }
+
+  static async startProcess(
+    processDefinitionId: string,
+    businessKey?: string,
+    variables?: Record<string, any>
+  ): Promise<ProcessInstance> {
+    return await startProcess(processDefinitionId, businessKey, variables);
   }
 }

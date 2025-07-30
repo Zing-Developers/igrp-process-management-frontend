@@ -24,19 +24,15 @@ export function ProcessTreeComponent({
   searchTerm: string;
 }) {
   return (
-    <div
-      className={`border border-gray-200 rounded-lg bg-white shadow-sm`}
-    >
-      <div className="p-4">
-        <ProcessTree
-          nodes={nodes}
-          expandedNodes={expandedNodes}
-          onToggle={onToggle}
-          onStartProcess={onStartProcess}
-          onViewDetails={onViewDetails}
-          searchTerm={searchTerm}
-        />
-      </div>
+    <div className={`border border-border rounded-lg bg-card shadow-sm p-4`}>
+      <ProcessTree
+        nodes={nodes}
+        expandedNodes={expandedNodes}
+        onToggle={onToggle}
+        onStartProcess={onStartProcess}
+        onViewDetails={onViewDetails}
+        searchTerm={searchTerm}
+      />
     </div>
   );
 }

@@ -12,8 +12,8 @@ export function StatusBadge({ node }: StatusBadgeProps) {
     return (
       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
         process.status === 'ACTIVE' 
-          ? 'bg-green-100 text-green-800' 
-          : 'bg-gray-100 text-gray-800'
+          ? 'bg-primary/10 text-primary' 
+          : 'bg-muted text-muted-foreground'
       }`}>
         v{process.version || '1.0'}
       </span>
@@ -23,7 +23,7 @@ export function StatusBadge({ node }: StatusBadgeProps) {
   if (node.type === 'area' || node.type === 'subarea') {
     const childCount = node.children?.length || 0;
     return (
-      <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+      <span className="px-2 py-1 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
         {childCount} {childCount === 1 ? 'item' : 'itens'}
       </span>
     );

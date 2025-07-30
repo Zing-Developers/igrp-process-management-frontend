@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { ProcessTreeNode } from '../types';
 import { Process, ProcessInstance } from '../../external/types/process';
+import { IGRPButton } from '@igrp/igrp-framework-react-design-system';
 
 interface NodeActionsProps {
   node: ProcessTreeNode;
@@ -34,20 +35,23 @@ export function NodeActions({ node, onStartProcess, onViewDetails }: NodeActions
 
   return (
     <div className="flex items-center space-x-1">
-      <button
+      <IGRPButton
         onClick={handleViewDetails}
-        className="p-1 text-gray-400 hover:text-gray-600 rounded"
         title="Ver detalhes"
+        iconName={"Eye"}
+        size={"icon"}
+        variant={"ghost"}
       >
-        <Eye className="w-4 h-4" />
-      </button>
-      <button
+      </IGRPButton>
+      <IGRPButton
         onClick={handleStartProcess}
-        className="p-1 text-green-600 hover:text-green-800 rounded disabled:opacity-50"
         title="Iniciar processo"
+        iconName={"Play"}
+        size={"icon"}
+        iconClassName='text-green-600 hover:text-green-800'
+        variant={"ghost"}
       >
-        <Play className="w-4 h-4" />
-      </button>
+      </IGRPButton>
     </div>
   );
 }

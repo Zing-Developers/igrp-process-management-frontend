@@ -34,7 +34,7 @@ export function AreasList({
   if (topLevelAreas.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-500">Nenhuma área encontrada</p>
+        <p className="text-muted-foreground">Nenhuma área encontrada</p>
       </div>
     );
   }

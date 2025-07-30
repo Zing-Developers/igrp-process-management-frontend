@@ -1,12 +1,11 @@
-import {
-  Process,ProcessInstance
-} from '../../types/process';
-import {
-  PaginatedResponse
-} from '../../types/response';
-
-import { processes } from '../dummy-data/processes';
 import { httpClient } from './http-client';
+import { Process, ProcessInstance } from '../../types/process';
+import { PaginatedResponse } from '../../types/response';
+import {
+  getDummyProcessById,
+  getDummyProcessesPaginated,
+  createDummyProcessInstance,
+} from '../dummy-data/processes';
 import { apiConfig } from '../config/api.config';
 
 /**
@@ -17,7 +16,7 @@ import { apiConfig } from '../config/api.config';
  */
 export const getProcesses = async (
   page = 0,
-  size = 10
+  size = 20
 ): Promise<PaginatedResponse<Process>> => {
   try {
     const response = await httpClient.get<PaginatedResponse<Process>>(
@@ -25,38 +24,24 @@ export const getProcesses = async (
     );
     return response;
   } catch (error) {
-    console.log("config:"+apiConfig.endpoints.processes);
-    console.error('Failed to fetch processes, returning dummy data.', error);
-    return {
-      content: processes,
-      pageNumber: page,
-      pageSize: size,
-      totalElements: processes.length,
-      totalPages: Math.ceil(processes.length / size),
-      first: page === 0,
-      last: page * size + size >= processes.length,
-      empty: processes.length === 0,
-    };
+    console.warn('API call failed, using fallback data for getProcesses');
+    return getDummyProcessesPaginated(page, size);
   }
 };
 
 /**
  * Fetches a single process by its ID.
  * @param id The ID of the process to fetch.
- * @returns A promise that resolves to the process, or undefined if not found.
+ * @returns A promise that resolves to the process, or null if not found.
  */
 export const getProcessById = async (
   id: string
-): Promise<Process | undefined> => {
+): Promise<Process | null> => {
   try {
-    const response = await httpClient.get<Process>(`${apiConfig.endpoints.processes}/${id}`);
-    return response;
+    return await httpClient.get<Process>(`${apiConfig.endpoints.processes}/${id}`);
   } catch (error) {
-    console.error(
-      `Failed to fetch process with id ${id}, returning dummy data.`,
-      error
-    );
-    return processes.find((p) => p.processDefinitionId === id);
+    console.warn('API call failed, using fallback data for getProcessById');
+    return getDummyProcessById(id) || null;
   }
 };
 
@@ -78,21 +63,8 @@ export const startProcess = async (
   try {
     const response = await httpClient.post<ProcessInstance>(endpoint, body);
     return response;
-  } catch (error: any) {
-    console.error('Error starting process:', error);
-    // Simulating a successful response with dummy data
-    return {
-      id: `pi_${Date.now()}`,
-      processDefinitionId,
-      processDefinitionName:
-        processes.find((p) => p.processDefinitionId === processDefinitionId)?.title ||
-        'Unknown Process',
-      businessKey,
-      startDate: new Date().toISOString(),
-      initiator: 'currentUser', // Replace with actual user
-      status: 'RUNNING',
-      startedBy: 'currentUser',
-      variables,
-    };
+  } catch (error) {
+    console.warn('API call failed, using fallback data for startProcess');
+    return createDummyProcessInstance(processDefinitionId, businessKey, variables);
   }
 };

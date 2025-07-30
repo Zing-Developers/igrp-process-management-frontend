@@ -41,7 +41,7 @@ export function TreeNode({
   return (
     <div key={node.id}>
       <div 
-        className="flex items-center py-2 px-3 hover:bg-gray-50 rounded-lg cursor-pointer"
+        className="flex items-center py-2 px-3 hover:bg-accent rounded-lg cursor-pointer"
         style={{ paddingLeft: `${paddingLeft + 12}px` }}
         onClick={handleToggle}
       > 

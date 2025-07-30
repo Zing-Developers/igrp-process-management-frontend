@@ -2,7 +2,6 @@ import { ProcessService, CreateProcessRequest } from '../../services/process.ser
 import { AreaProcessesMap } from '../../types';
 
 export function useProcessOperations(
-  areaProcesses: AreaProcessesMap,
   setAreaProcesses: React.Dispatch<React.SetStateAction<AreaProcessesMap>>
 ) {
   const handleAssociateProcess = async (areaId: string, processData: CreateProcessRequest) => {

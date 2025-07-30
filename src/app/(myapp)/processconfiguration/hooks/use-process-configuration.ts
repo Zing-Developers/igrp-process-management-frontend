@@ -17,7 +17,7 @@ export function useProcessConfiguration(igrpToast?: any) {
   const areaHandlers = useAreaHandlers(areas, setAreas, setAreaProcesses, igrpToast);
 
   // Process management
-  const processHandlers = useProcessHandlers(areaProcesses, setAreaProcesses, processes, igrpToast);
+  const { loading: processesLoading, ...processHandlers } = useProcessHandlers(areaProcesses, setAreaProcesses, processes, igrpToast);
 
   // UI state - pass the loadSubareas function to expansion
   const expansion = useExpansion();
@@ -37,6 +37,7 @@ export function useProcessConfiguration(igrpToast?: any) {
     processes,
     areaProcesses,
     loading,
+    processesLoading,
 
     // Search
     ...searchHook,

@@ -2,7 +2,8 @@ import { useProcessForm } from './processes/use-process-form';
 import { useProcessOperations } from './processes/use-process-operations';
 import { AreaProcessesMap } from '../types';
 import { Process } from '@/app/(myapp)/external/types/process';
-import { CreateProcessRequest } from '../services/process.service';
+import { CreateProcessRequest, ProcessService } from '../services/process.service';
+import { useState, useEffect } from 'react';
 
 export function useProcessHandlers(
   areaProcesses: AreaProcessesMap,
@@ -10,14 +11,41 @@ export function useProcessHandlers(
   processes: Process[],
   igrpToast?: any
 ) {
+  const [allProcesses, setAllProcesses] = useState<Process[]>(processes);
+  const [loading, setLoading] = useState(false);
+  
   const processForm = useProcessForm();
-  const processOperations = useProcessOperations(areaProcesses, setAreaProcesses);
+  const processOperations = useProcessOperations(setAreaProcesses);
+
+  // Load all processes from API when component mounts or when needed
+  const loadAllProcesses = async () => {
+    if (loading) return;
+    
+    setLoading(true);
+    try {
+      const fetchedProcesses = await ProcessService.getAllProcesses();
+      setAllProcesses(fetchedProcesses);
+    } catch (error) {
+      console.error('Error loading processes:', error);
+      // Keep using the passed processes as fallback
+      setAllProcesses(processes);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load processes on mount if we don't have any
+  useEffect(() => {
+    if (allProcesses.length === 0) {
+      loadAllProcesses();
+    }
+  }, []);
 
   const handleAssociateProcess = async (processKey: string) => {
     if (!processForm.modalState.selectedAreaId) return;
 
-    // Find the process by processKey
-    const process = processes.find(p => p.processKey === processKey);
+    // Find the process by processKey from our loaded processes
+    const process = allProcesses.find(p => p.processKey === processKey);
     if (!process) {
       console.error('Process not found:', processKey);
       if (igrpToast) {
@@ -102,11 +130,11 @@ export function useProcessHandlers(
     const areaProcessList = areaProcesses[areaId];
     if (!Array.isArray(areaProcessList)) {
       console.warn(`No processes found for area ${areaId}, returning all available processes`);
-      return processes; // Return all processes if no area-specific processes are loaded
+      return allProcesses; // Return all loaded processes if no area-specific processes are loaded
     }
     
     const associatedProcessIds = areaProcessList.map((process) => process.id);
-    return processes.filter((process) => !associatedProcessIds.includes(process.id));
+    return allProcesses.filter((process) => !associatedProcessIds.includes(process.id));
   };
 
   return {
@@ -115,5 +143,8 @@ export function useProcessHandlers(
     handleAssociateProcess,
     handleRemoveProcess,
     getAvailableProcesses,
+    loadAllProcesses,
+    allProcesses,
+    loading,
   };
 }

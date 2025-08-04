@@ -6,25 +6,26 @@ import { ProcessTree } from './process-tree';
 export function ProcessTreeComponent({
   nodes,
   expandedNodes,
+  searchTerm,
   onToggle,
   onStartProcess,
   onViewDetails,
-  searchTerm,
 }: {
   nodes: ProcessTreeNode[];
   expandedNodes: Set<string>;
-  onToggle: (nodeId: string) => void | Promise<void>; // Accept both sync and async
+  searchTerm?: string;
+  onToggle: (nodeId: string) => void;
   onStartProcess: (
-    processDefinitionId: string,
-    processKey?: string,
-    businessKey?: string,
-    variables?: Record<string, any>,
+    processDefinitionId: string, 
+    processKey: string, 
+    applicationBase: string, 
+    businessKey?: string, 
+    variables?: Array<{ name: string; value: string }>
   ) => Promise<ProcessInstance | null>;
   onViewDetails: (process: Process) => void;
-  searchTerm: string;
 }) {
   return (
-    <div className={`border border-border rounded-lg bg-card shadow-sm p-4`}>
+    <div className="bg-white rounded-lg border border-gray-200 p-4">
       <ProcessTree
         nodes={nodes}
         expandedNodes={expandedNodes}
@@ -36,12 +37,3 @@ export function ProcessTreeComponent({
     </div>
   );
 }
-
-// Export individual components for direct use
-export { TreeNode } from './tree-node';
-export { ProcessTree } from './process-tree';
-export { NodeIcon } from './node-icon';
-export { StatusBadge } from './status-badge';
-export { NodeActions } from './node-actions';
-export { NodeContent } from './node-content';
-export { ExpandButton } from './expand-button';

@@ -1,40 +1,40 @@
 // http-client.ts
 import { PostResponse } from '../../types/response';
 import { apiConfig } from '../config/api.config';
+import { joinUrl } from '../utils/url-builder';
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
-// Check if we should use dummy data immediately (for development)
+// Check if we should use dummy data based ONLY on the explicit environment variable
 // Safe way to check environment variables in both Node.js and browser environments
-const isDevelopment = (() => {
+const shouldUseDummyData = (() => {
   try {
-    // Try to access process.env (works in Node.js and Next.js with proper config)
-    return typeof process !== 'undefined' && 
-           (process.env.NODE_ENV === 'development' || 
-            process.env.NEXT_PUBLIC_USE_DUMMY_DATA === 'true');
+    // Only use dummy data if explicitly set to 'true'
+    return typeof process !== 'undefined' && process.env.NEXT_PUBLIC_USE_DUMMY_DATA === 'true';
   } catch {
     // Fallback for pure browser environments
     return false;
   }
 })();
 
-const USE_DUMMY_DATA_ONLY = isDevelopment;
+const USE_DUMMY_DATA_ONLY = shouldUseDummyData;
 
 async function request<T>(
   endpoint: string,
   method: HttpMethod,
   body?: any,
-  retries = USE_DUMMY_DATA_ONLY ? 0 : 1,  // No retries in dev mode
-  delay = USE_DUMMY_DATA_ONLY ? 0 : 100   // No delay in dev mode
+  retries = 1, // Always allow retries unless dummy data is forced
+  delay = 100, // Standard delay
 ): Promise<T> {
-  // In development mode with dummy data flag, immediately use dummy data 
+  // Only use dummy data if explicitly configured to do so
   if (USE_DUMMY_DATA_ONLY) {
-    throw new Error('Development mode: using dummy data only');
+    throw new Error('Dummy data mode: using dummy data only');
   }
 
-  const url = `${apiConfig.baseUrl}/${endpoint}`;
-  
-  console.log("request url", url);
+  const url = joinUrl(apiConfig.baseUrl, endpoint);
+
+  console.log('request url', url);
+  console.log('request body', body);
   const options: RequestInit = {
     method,
     headers: {
@@ -49,7 +49,33 @@ async function request<T>(
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    return await response.json();
+    
+    // Check if response has content before trying to parse JSON
+    const contentLength = response.headers.get('content-length');
+    const contentType = response.headers.get('content-type');
+    
+    // If content-length is 0 or response is 204 No Content, return empty object
+    if (contentLength === '0' || response.status === 204) {
+      return {} as T;
+    }
+    
+    // Check if response is actually JSON
+    if (contentType && contentType.includes('application/json')) {
+      const text = await response.text();
+      // If text is empty, return empty object
+      if (!text.trim()) {
+        return {} as T;
+      }
+      return JSON.parse(text);
+    }
+    
+    // For non-JSON responses, try to parse as JSON but handle empty responses
+    const text = await response.text();
+    if (!text.trim()) {
+      return {} as T;
+    }
+    
+    return JSON.parse(text);
   } catch (error) {
     if (retries > 0) {
       await new Promise((res) => setTimeout(res, delay));
@@ -66,18 +92,14 @@ export const httpClient = {
   delete: <T>(endpoint: string) => request<T>(endpoint, 'DELETE'),
 };
 
-export const post = async (
-  endpoint: string,
-  body: any
-): Promise<PostResponse> => {
+export const post = async (endpoint: string, body: any): Promise<PostResponse> => {
   try {
     const response = await httpClient.post<PostResponse>(endpoint, body);
     return response;
   } catch (error: any) {
     console.error(`Error posting to ${endpoint}:`, error);
-    return {
-      code: '500',
-      message: error.message,
-    };
+    // Re-throw the error instead of returning a generic error response
+    // This ensures the calling services can handle the actual error
+    throw error;
   }
 };

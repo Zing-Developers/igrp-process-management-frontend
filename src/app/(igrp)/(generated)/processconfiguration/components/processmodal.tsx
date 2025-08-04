@@ -14,6 +14,7 @@ import {
   IGRPModalDialogContent,
   IGRPModalDialogHeader,
   IGRPModalDialogTitle,
+  IGRPModalDialogDescription,
   IGRPInputSearch,
 } from '@igrp/igrp-framework-react-design-system';
 
@@ -23,20 +24,22 @@ export default function Processmodal({
   onClose,
   open,
   setOpen,
+  modalDescription,
 }: {
   availableProcesses: any[];
   onAssociate: (processKey: string) => void;
   onClose: () => void;
   open: boolean;
   setOpen: (prompt: boolean) => void;
+  modalDescription?: string;
 }) {
   const { igrpToast } = useIGRPToast();
 
   const [searchTerm, setSearchTerm] = useState('');
-  const filteredProjects = availableProcesses
+  const filteredProcesses = availableProcesses
     ? availableProcesses.filter(
         (process) =>
-          process.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          process.processKey?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           process.statusDesc?.toLowerCase().includes(searchTerm.toLowerCase()),
       )
     : [];
@@ -47,8 +50,11 @@ export default function Processmodal({
         <IGRPModalDialogContent size={`md`} className={cn()}>
           <IGRPModalDialogHeader>
             <IGRPModalDialogTitle name={`modalDialogTitle1`} className={cn('', 'overflow-visible')}>
-              Associar Projeto
+              Associar Processo
             </IGRPModalDialogTitle>
+            <IGRPModalDialogDescription
+              name={`modalDialogDescription1`}
+            ></IGRPModalDialogDescription>
           </IGRPModalDialogHeader>
           <>
             <IGRPInputSearch
@@ -58,13 +64,13 @@ export default function Processmodal({
               startIcon={`Search`}
               submitIcon={`ArrowRight`}
               required={false}
-              placeholder={`Encontrar Projetos...`}
+              placeholder={`Encontrar Processos...`}
               setValueChange={(e) => setSearchTerm(e)}
               value={searchTerm}
             ></IGRPInputSearch>
             <ProcessList
               availableProcesses={availableProcesses}
-              processes={filteredProjects}
+              processes={filteredProcesses}
               onAssociate={onAssociate}
             ></ProcessList>
           </>

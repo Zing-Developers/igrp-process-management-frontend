@@ -1,4 +1,5 @@
-import { Area, PaginatedResponse } from '@/app/(myapp)/external/types/area';
+import { Area } from '@/app/(myapp)/external/types/area';
+import { PaginatedResponse } from '../../types/response';
 
 export const dummyAreas: Area[] = [
   {

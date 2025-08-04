@@ -1,4 +1,4 @@
-import { Task } from '@igrp/platform-process-management-types';
+import { Task } from "../../types/task";
 
 export const tasks: Task[] = [
   {
@@ -11,7 +11,7 @@ export const tasks: Task[] = [
     processName: 'Processo de Gestão de Férias',
     createdDate: '2023-06-01T10:00:00Z',
     dueDate: '2023-06-05T17:00:00Z',
-    priority: 1,
+    priority: "LOW",
     assignee: 'user_2',
     formKey: 'form_vacation_approval',
     status: 'ASSIGNED',
@@ -25,7 +25,7 @@ export const tasks: Task[] = [
     taskDefinitionKey: 'submit_expense_report',
     processName: 'Processo de Reembolso de Despesas',
     createdDate: '2023-06-02T11:30:00Z',
-    priority: 2,
+    priority: "LOW",
     assignee: 'user_1',
     formKey: 'form_expense_report',
     status: 'CREATED',

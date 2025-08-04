@@ -18,6 +18,22 @@ export type Process = {
 
 export type ProcessInstance = {
   id: string;
+  procReleaseKey: string;
+  procReleaseId: string;
+  number: string;
+  status: 'CREATED' | 'COMPLETED' | 'SUSPENDED' | 'TERMINATED' | 'RUNNING';
+  statusDesc: string;
+  businessKey?: string;
+  startedAt: string;
+  startedBy: string;
+  applicationBase: string;
+  endTime?: string;
+  variables?: Record<string, any>;
+};
+
+// For backward compatibility, keep the old structure as well
+export type LegacyProcessInstance = {
+  id: string;
   processDefinitionId: string;
   processDefinitionName: string;
   businessKey?: string;

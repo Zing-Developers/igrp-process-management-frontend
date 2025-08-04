@@ -29,7 +29,7 @@ export function ProcessList({
                 <h3 className="font-medium text-foreground">{process.name}</h3>
                 <div className="text-sm text-muted-foreground mt-1">
                   <p>Versão: {process.version}</p>
-                  <p>Status: {process.statusDesc}</p>
+                  <p>key: {process.processKey}</p>
                 </div>
               </div>
               <IGRPButton

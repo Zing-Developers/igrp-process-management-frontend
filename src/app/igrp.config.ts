@@ -46,10 +46,12 @@ export default {
   actions: [],
   functions: [
     'processconfiguration/hooks/use-process-configuration',
-    'processmap/hooks/use-process-map'
+    'processmap/hooks/use-process-map',
   ],
   components: [
     'processconfiguration/components/areas-list',
-    'processmap/components/process-tree-node'
+    'processconfiguration/components/process-list',
+    'processmap/components/process-tree-node',
+    'components/recent-items-card',
   ],
 };

@@ -1,9 +1,9 @@
-import { Trash2, Settings } from 'lucide-react'
-import { Process } from '../../external/types/process'
+import { Trash2, Settings } from 'lucide-react';
+import { Process } from '../../external/types/process';
 
 interface ProcessesListProps {
-  processes: Process[]
-  onRemoveProcess: (processId: string) => void
+  processes: Process[];
+  onRemoveProcess: (processId: string) => void;
 }
 
 export function ProcessesList({ processes, onRemoveProcess }: ProcessesListProps) {
@@ -12,7 +12,7 @@ export function ProcessesList({ processes, onRemoveProcess }: ProcessesListProps
       <div className="text-sm text-muted-foreground italic">
         Nenhum processo associado a esta área
       </div>
-    )
+    );
   }
 
   return (
@@ -27,7 +27,7 @@ export function ProcessesList({ processes, onRemoveProcess }: ProcessesListProps
             <Settings className="w-4 h-4 text-muted-foreground" />
             <div>
               <span className="text-sm font-medium text-foreground">
-                {process.name}
+                {process.name || process.processKey}
               </span>
               <div className="text-xs text-muted-foreground">
                 <span>v{process.version}</span>
@@ -46,5 +46,5 @@ export function ProcessesList({ processes, onRemoveProcess }: ProcessesListProps
         </div>
       ))}
     </div>
-  )
+  );
 }

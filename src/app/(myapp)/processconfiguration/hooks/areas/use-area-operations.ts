@@ -10,16 +10,11 @@ export function useAreaOperations(
   const handleCreateArea = async (formData: AreaFormData) => {
     try {
       const newArea = await AreaService.createArea(formData as CreateAreaRequest);
-
-      console.log(newArea);
-      console.log('formData:', formData);
-      console.log('areas:', areas);
       // Add the new area to the flat list and reorganize
       const flatAreas = getAllAreasFlat(areas);
       flatAreas.push(newArea);
       const organizedAreas = organizeAreasHierarchy(flatAreas);
       setAreas(organizedAreas);
-      console.log('organizedAreas:', organizedAreas);
       return newArea;
     } catch (error) {
       console.error('Error creating area:', error);

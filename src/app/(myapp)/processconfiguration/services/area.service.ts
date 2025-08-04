@@ -6,6 +6,7 @@ import {
   updateArea,
 } from '../../external/client/services/area.service';
 import { Area, CreateAreaRequest, UpdateAreaRequest } from '../../external/types/area';
+import { PaginatedResponse } from '../../external/types/response';
 
 export class AreaService {
   static async createArea(areaData: CreateAreaRequest): Promise<Area> {
@@ -20,8 +21,8 @@ export class AreaService {
     return await deleteArea(areaId);
   }
 
-  static async getAreas(page: number = 0, size: number = 100, parentId?: string) {
-    return await getAreas(page, size, parentId);
+  static async getAreas(name: string, applicationBase: string, page: number = 0, size: number = 100, parentId?: string): Promise<PaginatedResponse<Area>> {
+    return await getAreas(name, applicationBase, page, size, parentId);
   }
 
   static async getSubareas(parentAreaId: string): Promise<Area[]> {

@@ -1,6 +1,7 @@
 import { useAreaForm } from './areas/use-area-form';
 import { useAreaOperations } from './areas/use-area-operations';
 import { ExtendedArea, AreaProcessesMap } from '../types';
+import { AreaProcessService } from '../services/area-process.service';
 
 export function useAreaHandlers(
   areas: ExtendedArea[],
@@ -124,6 +125,36 @@ export function useAreaHandlers(
     }
   };
 
+  // Add function to load area processes on-demand
+  const handleLoadAreaProcesses = async (areaId: string) => {
+    try {
+      console.log("Loading processes for area:", areaId);
+      const paginatedResponse = await AreaProcessService.getAreaProcesses(areaId);
+      
+      // Extract the content array from the paginated response
+      const processes = paginatedResponse.content || [];
+      
+      // Update the areaProcesses state with the loaded processes
+      setAreaProcesses((prev) => ({
+        ...prev,
+        [areaId]: processes, // Now processes is Process[]
+      }));
+      
+      console.log("Loaded processes for area:", areaId, processes);
+    } catch (error) {
+      console.error('Error loading area processes:', error);
+
+      // Show error toast
+      if (igrpToast) {
+        igrpToast({
+          type: 'error',
+          title: 'Erro',
+          description: 'Erro ao carregar processos da área. Tente novamente.',
+        });
+      }
+    }
+  };
+
   return {
     areaForm,
     areaOperations,
@@ -131,5 +162,6 @@ export function useAreaHandlers(
     handleUpdateArea,
     handleDeleteArea,
     handleLoadSubareas,
+    handleLoadAreaProcesses, // Export the new function
   };
 }

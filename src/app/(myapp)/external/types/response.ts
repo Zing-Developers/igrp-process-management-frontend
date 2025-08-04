@@ -11,5 +11,5 @@ export interface PaginatedResponse<T> {
   totalPages: number;
   first: boolean;
   last: boolean;
-  empty: boolean;
+  empty?: boolean; // Make this optional since the API doesn't always include it
 }

@@ -8,6 +8,27 @@ import {
 import { tasks } from '../dummy-data/tasks';
 import { httpClient, post } from './http-client';
 import { apiConfig } from '../config/api.config';
+import { buildUrlWithParams } from '../utils/url-builder';
+import { 
+  shouldUseDummyData, 
+  createPaginatedResponse, 
+  createFilteredPaginatedResponse,
+  logDummyDataError 
+} from '../dummy-data/utils';
+
+/**
+ * Interface for task filter parameters used in multiple functions
+ */
+interface TaskFilterParams {
+  processNumber: string;
+  processKey: string;
+  user: string;
+  status: string;
+  dateFrom: string;
+  dateTo: string;
+  page?: number;
+  size?: number;
+}
 
 /**
  * Fetches a paginated list of tasks.
@@ -20,22 +41,16 @@ export const getTasks = async (
   size = 10
 ): Promise<PaginatedResponse<Task>> => {
   try {
-    const response = await httpClient.get<PaginatedResponse<Task>>(
-      `${apiConfig.endpoints.tasks}?page=${page}&size=${size}`
-    );
+    const url = buildUrlWithParams(apiConfig.endpoints.tasks, { page, size });
+    const response = await httpClient.get<PaginatedResponse<Task>>(url);
     return response;
   } catch (error) {
-    console.error('Failed to fetch tasks, returning dummy data.', error);
-    return {
-      content: tasks,
-      pageNumber: page,
-      pageSize: size,
-      totalElements: tasks.length,
-      totalPages: Math.ceil(tasks.length / size),
-      first: page === 0,
-      last: page * size + size >= tasks.length,
-      empty: tasks.length === 0,
-    };
+    if (shouldUseDummyData()) {
+      logDummyDataError('fetch tasks', error);
+      return createPaginatedResponse(tasks, page, size);
+    }
+    // Re-throw the error if dummy data is not allowed
+    throw error;
   }
 };
 
@@ -49,47 +64,45 @@ export const getTaskById = async (id: string): Promise<Task | undefined> => {
     const response = await httpClient.get<Task>(`${apiConfig.endpoints.tasks}/${id}`);
     return response;
   } catch (error) {
-    console.error(
-      `Failed to fetch task with id ${id}, returning dummy data.`,
-      error
-    );
-    return tasks.find((t) => t.id === id);
+    if (shouldUseDummyData()) {
+      logDummyDataError(`fetch task with id ${id}`, error);
+      return tasks.find((t) => t.id === id);
+    }
+    // Re-throw the error if dummy data is not allowed
+    throw error;
   }
 };
 
 /**
  * Fetches all tasks assigned to the current user with pagination.
- * @param page The page number to fetch.
- * @param size The number of items per page.
+ * @param params The filter parameters for fetching tasks.
  * @returns A promise that resolves to a paginated response of tasks.
  */
 export const getMyTasks = async (
-  page = 0,
-  size = 10
+  params: TaskFilterParams
 ): Promise<PaginatedResponse<Task>> => {
+  const { page = 0, size = 10, ...filterParams } = params;
+  
   try {
-    const response = await httpClient.get<PaginatedResponse<Task>>(
-      `${apiConfig.endpoints.tasks}/my?page=${page}&size=${size}`
-    );
+    const url = buildUrlWithParams(`${apiConfig.endpoints.tasks}/my`, {
+      ...filterParams,
+      page,
+      size
+    });
+    const response = await httpClient.get<PaginatedResponse<Task>>(url);
     return response;
   } catch (error) {
-    console.error('Failed to fetch my tasks, returning dummy data.', error);
-    // For dummy data, simulate pagination
-    const myTasks = tasks.filter((t) => t.assignee === 'current-user');
-    const startIndex = page * size;
-    const endIndex = startIndex + size;
-    const paginatedTasks = myTasks.slice(startIndex, endIndex);
-    
-    return {
-      content: paginatedTasks,
-      pageNumber: page,
-      pageSize: size,
-      totalElements: myTasks.length,
-      totalPages: Math.ceil(myTasks.length / size),
-      first: page === 0,
-      last: endIndex >= myTasks.length,
-      empty: myTasks.length === 0,
-    };
+    if (shouldUseDummyData()) {
+      logDummyDataError('fetch my tasks', error);
+      return createFilteredPaginatedResponse(
+        tasks,
+        (t) => t.assignee === 'current-user',
+        page,
+        size
+      );
+    }
+    // Re-throw the error if dummy data is not allowed
+    throw error;
   }
 };
 
@@ -103,47 +116,45 @@ export const getTasksByUser = async (userId: string): Promise<Task[]> => {
     const response = await httpClient.get<Task[]>(`${apiConfig.endpoints.tasks}/user/${userId}`);
     return response;
   } catch (error) {
-    console.error(
-      `Failed to fetch tasks for user ${userId}, returning dummy data.`,
-      error
-    );
-    return tasks.filter((t) => t.assignee === userId);
+    if (shouldUseDummyData()) {
+      logDummyDataError(`fetch tasks for user ${userId}`, error);
+      return tasks.filter((t) => t.assignee === userId);
+    }
+    // Re-throw the error if dummy data is not allowed
+    throw error;
   }
 };
 
 /**
  * Fetches all available tasks for a user with pagination.
- * @param page The page number to fetch.
- * @param size The number of items per page.
+ * @param params The filter parameters for fetching tasks.
  * @returns A promise that resolves to a paginated response of tasks.
  */
 export const getAvailableTasks = async (
-  page = 0,
-  size = 10
+  params: TaskFilterParams
 ): Promise<PaginatedResponse<Task>> => {
+  const { page = 0, size = 10, ...filterParams } = params;
+  
   try {
-    const response = await httpClient.get<PaginatedResponse<Task>>(
-      `${apiConfig.endpoints.tasks}/available?page=${page}&size=${size}`
-    );
+    const url = buildUrlWithParams(`${apiConfig.endpoints.tasks}/available`, {
+      ...filterParams,
+      page,
+      size
+    });
+    const response = await httpClient.get<PaginatedResponse<Task>>(url);
     return response;
   } catch (error) {
-    console.error('Failed to fetch available tasks, returning dummy data.', error);
-    // For dummy data, simulate pagination
-    const availableTasks = tasks.filter((t) => !t.assignee && t.status === 'CREATED');
-    const startIndex = page * size;
-    const endIndex = startIndex + size;
-    const paginatedTasks = availableTasks.slice(startIndex, endIndex);
-    
-    return {
-      content: paginatedTasks,
-      pageNumber: page,
-      pageSize: size,
-      totalElements: availableTasks.length,
-      totalPages: Math.ceil(availableTasks.length / size),
-      first: page === 0,
-      last: endIndex >= availableTasks.length,
-      empty: availableTasks.length === 0,
-    };
+    if (shouldUseDummyData()) {
+      logDummyDataError('fetch available tasks', error);
+      return createFilteredPaginatedResponse(
+        tasks,
+        (t) => !t.assignee && t.status === 'CREATED',
+        page,
+        size
+      );
+    }
+    // Re-throw the error if dummy data is not allowed
+    throw error;
   }
 };
 
@@ -161,11 +172,12 @@ export const getTasksByProcessInstance = async (
     );
     return response;
   } catch (error) {
-    console.error(
-      `Failed to fetch tasks for process instance ${processInstanceId}, returning dummy data.`,
-      error
-    );
-    return tasks.filter((t) => t.processInstanceId === processInstanceId);
+    if (shouldUseDummyData()) {
+      logDummyDataError(`fetch tasks for process instance ${processInstanceId}`, error);
+      return tasks.filter((t) => t.processInstanceId === processInstanceId);
+    }
+    // Re-throw the error if dummy data is not allowed
+    throw error;
   }
 };
 

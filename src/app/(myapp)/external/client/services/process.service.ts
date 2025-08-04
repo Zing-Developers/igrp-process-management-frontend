@@ -7,6 +7,8 @@ import {
   createDummyProcessInstance,
 } from '../dummy-data/processes';
 import { apiConfig } from '../config/api.config';
+import { buildUrlWithParams } from '../utils/url-builder';
+import { shouldUseDummyData, logDummyDataFallback } from '../dummy-data/utils';
 
 /**
  * Fetches a paginated list of processes.
@@ -19,13 +21,16 @@ export const getProcesses = async (
   size = 20
 ): Promise<PaginatedResponse<Process>> => {
   try {
-    const response = await httpClient.get<PaginatedResponse<Process>>(
-      `${apiConfig.endpoints.processes}?page=${page}&size=${size}`
-    );
+    const url = buildUrlWithParams(apiConfig.endpoints.processes, { page, size });
+    const response = await httpClient.get<PaginatedResponse<Process>>(url);
     return response;
   } catch (error) {
-    console.warn('API call failed, using fallback data for getProcesses');
-    return getDummyProcessesPaginated(page, size);
+    if (shouldUseDummyData()) {
+      logDummyDataFallback('getProcesses', error);
+      return getDummyProcessesPaginated(page, size);
+    }
+    // Re-throw the error if dummy data is not allowed
+    throw error;
   }
 };
 
@@ -40,31 +45,50 @@ export const getProcessById = async (
   try {
     return await httpClient.get<Process>(`${apiConfig.endpoints.processes}/${id}`);
   } catch (error) {
-    console.warn('API call failed, using fallback data for getProcessById');
-    return getDummyProcessById(id) || null;
+    if (shouldUseDummyData()) {
+      logDummyDataFallback('getProcessById', error);
+      return getDummyProcessById(id) || null;
+    }
+    // Re-throw the error if dummy data is not allowed
+    throw error;
   }
 };
 
 /**
  * Starts a new process instance.
  * @param processDefinitionId The ID of the process definition to start.
+ * @param processKey The process key.
  * @param businessKey Optional business key for the process instance.
+ * @param applicationBase The application base.
  * @param variables Optional variables to pass to the process instance.
  * @returns A promise that resolves to the newly created process instance.
  */
 export const startProcess = async (
   processDefinitionId: string,
+  processKey: string,
+  applicationBase: string,
   businessKey?: string,
-  variables?: Record<string, any>
+  variables?: Array<{ name: string; value: string }>
 ): Promise<ProcessInstance> => {
   const endpoint = apiConfig.endpoints.processStart;
-  const body = { processDefinitionId, businessKey, variables };
+  const body = {
+    processDefinitionId,
+    processKey,
+    businessKey,
+    applicationBase: applicationBase || apiConfig.applicationBase,
+    variables: variables || []
+  };
 
   try {
     const response = await httpClient.post<ProcessInstance>(endpoint, body);
     return response;
   } catch (error) {
-    console.warn('API call failed, using fallback data for startProcess');
-    return createDummyProcessInstance(processDefinitionId, businessKey, variables);
+    if (shouldUseDummyData()) {
+      logDummyDataFallback('startProcess', error);
+      return createDummyProcessInstance(processDefinitionId, businessKey, variables);
+    }
+    // Re-throw the error if dummy data is not allowed
+    throw error;
   }
 };
+

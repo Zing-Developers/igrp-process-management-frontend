@@ -1,54 +1,58 @@
-import { Area } from '../../external/types/area';
 import { Process, ProcessInstance } from '../../external/types/process';
 import { ExtendedArea } from '../../processconfiguration/types';
 
-
 // Use the same structure as process configuration - no need for ProcessMapArea
+
 export interface ProcessTreeNode {
   id: string;
   name: string;
   type: 'area' | 'subarea' | 'process';
+  data: ExtendedArea | Process;
   children?: ProcessTreeNode[];
-  data?: Area | Process;
-  isExpanded?: boolean;
   level: number;
   parentId?: string;
-  hasChildren?: boolean; // Indicates if node has children that can be loaded
-  isLoaded?: boolean; // Indicates if children have been loaded
+  isExpanded?: boolean;
+  hasChildren?: boolean;
+  isLoaded?: boolean;
 }
 
 export interface ProcessMapState {
   areas: ExtendedArea[]; // Use ExtendedArea instead of ProcessMapArea
   expandedNodes: Set<string>;
-  loadedNodes: Set<string>; // Track which nodes have loaded their children
+  loadedNodes: Set<string>;
   selectedProcess?: Process;
   loading: boolean;
   error?: string;
 }
 
 export interface ProcessMapActions {
-  toggleNode: (nodeId: string) => Promise<void>; // Async for the main hook
-  loadSubareas: (parentAreaId: string) => Promise<void>; // On-demand loading
+  toggleNode: (nodeId: string) => void;
+  loadSubareas: (areaId: string) => Promise<void>;
   selectProcess: (process: Process) => void;
-  startProcess: (processDefinitionId: string, businessKey?: string, variables?: Record<string, any>) => Promise<ProcessInstance>;
-  startProcessWithToast: (processDefinitionId: string, processKey?: string, businessKey?: string, variables?: Record<string, any>) => Promise<ProcessInstance | null>;
+  startProcess: (processDefinitionId: string, processKey: string, applicationBase: string, businessKey?: string, variables?: Array<{ name: string; value: string }>) => Promise<ProcessInstance>;
+  startProcessWithToast: (processDefinitionId: string, processKey: string, applicationBase: string, businessKey?: string, variables?: Array<{ name: string; value: string }>) => Promise<ProcessInstance | null>;
   refreshData: () => Promise<void>;
 }
 
 export interface ProcessMapHookReturn extends ProcessMapState, ProcessMapActions {
+  // Computed values
   treeNodes: ProcessTreeNode[];
   flatNodes: ProcessTreeNode[];
   filteredNodes: ProcessTreeNode[];
+  totalProcesses: number;
+  totalAreas: number;
+
+  // Search
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   clearSearch: () => void;
-  totalProcesses: number;
-  totalAreas: number;
+
+  // Modals
   detailModal: {
     isOpen: boolean;
     process?: Process;
     open: (process: Process) => void;
     close: () => void;
-    setOpen: (open: boolean) => void; // Add this for the generated component
+    setOpen: (open: boolean) => void;
   };
 }

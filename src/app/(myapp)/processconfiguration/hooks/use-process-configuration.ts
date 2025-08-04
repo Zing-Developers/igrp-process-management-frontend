@@ -19,16 +19,20 @@ export function useProcessConfiguration(igrpToast?: any) {
   // Process management
   const { loading: processesLoading, ...processHandlers } = useProcessHandlers(areaProcesses, setAreaProcesses, processes, igrpToast);
 
-  // UI state - pass the loadSubareas function to expansion
+  // UI state - pass both loadSubareas and loadAreaProcesses functions to expansion
   const expansion = useExpansion();
 
   // Computed values
   const computedValues = useComputedValues(areas);
 
-  // Enhanced toggle function that integrates with loadSubareas
+  // Enhanced toggle function that integrates with loadSubareas and loadAreaProcesses
   const handleToggleExpansion = async (areaId: string) => {
-    console.log("Toggling expansion for area 2:", areaId);
-    await expansion.toggleAreaExpansion(areaId, areaHandlers.handleLoadSubareas);
+    console.log("Toggling expansion for area:", areaId);
+    await expansion.toggleAreaExpansion(
+      areaId, 
+      areaHandlers.handleLoadSubareas,
+      areaHandlers.handleLoadAreaProcesses // Pass the process loading function
+    );
   };
 
   return {

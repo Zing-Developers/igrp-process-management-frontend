@@ -22,7 +22,7 @@ export default function PageProcessconfigurationComponent() {
   const { igrpToast } = useIGRPToast();
 
   /*---------------------------------Reserved area begin------------------------------*/
-  const pc = useProcessConfiguration();
+  const pc = useProcessConfiguration(igrpToast);
   /*---------------------------------Reserved area end------------------------------*/
 
   return (
@@ -72,10 +72,9 @@ export default function PageProcessconfigurationComponent() {
           onDelete={pc.areaOperations.handleDeleteArea}
           onAddProcess={pc.processForm.openModal}
           onRemoveProcess={pc.processOperations.handleRemoveProcess}
-          onToggleExpansion={(areaId) =>
-            pc.expansion.toggleAreaExpansion(areaId, pc.areaOperations.loadSubareas)
-          }
+          onToggleExpansion={pc.expansion.handleToggleExpansion} // Use the enhanced toggle function
           onAddSubarea={(parentAreaId) => pc.areaForm.openModal(undefined, parentAreaId)}
+          areaProcesses={pc.areaProcesses} // Pass the areaProcesses state
         ></AreasList>
       </div>
       <AreaModal

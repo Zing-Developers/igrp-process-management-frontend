@@ -11,11 +11,13 @@ export function useProcessOperations(igrpToast?: any) {
 
   const startProcessAction = useCallback(async (
     processDefinitionId: string, 
+    processKey: string,
+    applicationBase: string,
     businessKey?: string, 
-    variables?: Record<string, any>
+    variables?: Array<{ name: string; value: string }>
   ): Promise<ProcessInstance> => {
     try {
-      const instance = await startProcess(processDefinitionId, businessKey, variables);
+      const instance = await startProcess(processDefinitionId, processKey, applicationBase, businessKey, variables);
       return instance;
     } catch (err) {
       console.error('Error starting process:', err);
@@ -24,13 +26,14 @@ export function useProcessOperations(igrpToast?: any) {
   }, []);
 
   const startProcessWithToast = useCallback(async (
-    processDefinitionId: string,
-    processKey?: string,
+    processDefinitionId: string, 
+    processKey: string,
+    applicationBase: string,
     businessKey?: string, 
-    variables?: Record<string, any>
+    variables?: Array<{ name: string; value: string }>
   ): Promise<ProcessInstance | null> => {
     try {
-      const instance = await startProcess(processDefinitionId, businessKey, variables);
+      const instance = await startProcess(processDefinitionId, processKey, applicationBase, businessKey, variables);
       
       // Show success toast
       if (igrpToast) {

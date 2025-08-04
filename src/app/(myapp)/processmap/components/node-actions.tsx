@@ -1,15 +1,17 @@
 import React from 'react';
-import {
-  Eye,
-  Play,
-} from 'lucide-react';
 import { ProcessTreeNode } from '../types';
 import { Process, ProcessInstance } from '../../external/types/process';
 import { IGRPButton } from '@igrp/igrp-framework-react-design-system';
 
 interface NodeActionsProps {
   node: ProcessTreeNode;
-  onStartProcess: (processDefinitionId: string, processKey?: string, businessKey?: string, variables?: Record<string, any>) => Promise<ProcessInstance | null>;
+  onStartProcess: (
+    processDefinitionId: string,
+    processKey: string,
+    applicationBase: string,
+    businessKey?: string,
+    variables?: Array<{ name: string; value: string }>,
+  ) => Promise<ProcessInstance | null>;
   onViewDetails: (process: Process) => void;
 }
 
@@ -22,7 +24,9 @@ export function NodeActions({ node, onStartProcess, onViewDetails }: NodeActions
     e.stopPropagation();
     if (node.data) {
       const process = node.data as Process;
-      await onStartProcess(process.id, process.processKey);
+      // For now, we'll use default values for the new required parameters
+      // These should ideally come from the process data or be configurable
+      await onStartProcess(process.id, process.processKey, '', 'test', []);
     }
   };
 
@@ -38,20 +42,18 @@ export function NodeActions({ node, onStartProcess, onViewDetails }: NodeActions
       <IGRPButton
         onClick={handleViewDetails}
         title="Ver detalhes"
-        iconName={"Eye"}
-        size={"icon"}
-        variant={"ghost"}
-      >
-      </IGRPButton>
+        iconName={'Eye'}
+        size={'icon'}
+        variant={'ghost'}
+      ></IGRPButton>
       <IGRPButton
         onClick={handleStartProcess}
         title="Iniciar processo"
-        iconName={"Play"}
-        size={"icon"}
-        iconClassName='text-green-600 hover:text-green-800'
-        variant={"ghost"}
-      >
-      </IGRPButton>
+        iconName={'Play'}
+        size={'icon'}
+        iconClassName="text-green-600 hover:text-green-800"
+        variant={'ghost'}
+      ></IGRPButton>
     </div>
   );
 }

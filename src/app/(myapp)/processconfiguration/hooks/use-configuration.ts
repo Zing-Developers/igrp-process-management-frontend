@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Process } from '../../external/types/process';
-import { getAreas } from '../../external/client/services/area.service';
 import { AreaProcessesMap, ExtendedArea } from '../types';
 import { organizeAreasHierarchy } from '../utils/area-hierarchy';
+import { AreaService } from '../services/area.service';
 
 export function useConfiguration() {
   const [areas, setAreas] = useState<ExtendedArea[]>([]);
@@ -15,25 +15,25 @@ export function useConfiguration() {
       try {
         setLoading(true);
         
-        // Load only top-level areas (no parentId) - they come with their processes
-        const areasResponse = await getAreas(0, 100);
+        // Load only top-level areas (no parentId)
+        const areasResponse = await AreaService.getAreas('', '');
         
         // Organize flat areas into hierarchical structure
         const hierarchicalAreas = organizeAreasHierarchy(areasResponse.content || []);
         setAreas(hierarchicalAreas);
         
-        // Extract all processes from areas and build areaProcesses map
+        // Extract all processes from areas for the global processes list (for process selection)
         const allProcesses: Process[] = [];
-        const areaProcessesMap: AreaProcessesMap = {};
         
         (areasResponse.content || []).forEach((area) => {
           const areaProcessList = area.process || [];
-          areaProcessesMap[area.id] = areaProcessList;
           allProcesses.push(...areaProcessList);
         });
         
         setProcesses(allProcesses);
-        setAreaProcesses(areaProcessesMap);
+        
+        // Initialize areaProcesses as empty - processes will be loaded on-demand when areas are expanded
+        setAreaProcesses({});
         
       } catch (error) {
         console.error('Error loading configuration data:', error);

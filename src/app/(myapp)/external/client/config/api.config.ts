@@ -6,6 +6,7 @@ export interface ApiConfig {
     // Process endpoints
     processes: string;
     processStart: string;
+    processInstances: string;
 
     // Task endpoints
     tasks: string;
@@ -51,7 +52,8 @@ const createDefaultConfig = (): ApiConfig => {
     endpoints: {
       // Process endpoints
       processes: getEnvVar('NEXT_PUBLIC_PROCESSES_ENDPOINT', 'process-definitions'),
-      processStart: getEnvVar('NEXT_PUBLIC_PROCESS_START_ENDPOINT', 'processes/start'),
+      processStart: getEnvVar('NEXT_PUBLIC_PROCESS_START_ENDPOINT', 'process-instances'),
+      processInstances: getEnvVar('NEXT_PUBLIC_PROCESS_INSTANCES_ENDPOINT', 'process-instances'),
 
       // Task endpoints
       tasks: getEnvVar('NEXT_PUBLIC_TASKS_ENDPOINT', 'tasks'),

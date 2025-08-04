@@ -27,7 +27,7 @@ export function buildProcessTree(areas: ExtendedArea[]): ProcessTreeNode[] {
     if (areaProcesses && areaProcesses.length > 0) {
       const processNodes: ProcessTreeNode[] = areaProcesses.map((process: Process) => ({
         id: `process-${process.id}`,
-        name: process.name || process.statusDesc || 'Unnamed Process',
+        name: process.name || process.processKey || 'Unnamed Process',
         type: 'process',
         level: level + 1,
         parentId: area.id,

@@ -47,6 +47,7 @@ export default {
   functions: [
     'processconfiguration/hooks/use-process-configuration',
     'processmap/hooks/use-process-map',
+    'availabletasks/hooks/use-available-tasks',
   ],
   components: [
     'processconfiguration/components/areas-list',

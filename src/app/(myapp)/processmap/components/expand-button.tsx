@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronRight, ChevronDown } from 'lucide-react';
+import { IGRPButton } from '@igrp/igrp-framework-react-design-system';
 
 interface ExpandButtonProps {
   hasChildren: boolean;
@@ -15,19 +15,17 @@ export function ExpandButton({ hasChildren, isExpanded, onToggle }: ExpandButton
 
   return (
     <div className="w-6 h-6 flex items-center justify-center mr-2">
-      <button
+      <IGRPButton
         onClick={(e) => {
           e.stopPropagation();
           onToggle();
         }}
-        className="p-1 hover:bg-muted rounded"
-      >
-        {isExpanded ? (
-          <ChevronDown className="w-4 h-4 text-muted-foreground" />
-        ) : (
-          <ChevronRight className="w-4 h-4 text-muted-foreground" />
-        )}
-      </button>
+        variant="ghost"
+        size="icon"
+        iconName={isExpanded ? 'ChevronDown' : 'ChevronRight'}
+        className="p-1 hover:bg-muted rounded w-6 h-6"
+        iconClassName="w-4 h-4 text-muted-foreground"
+      />
     </div>
   );
 }

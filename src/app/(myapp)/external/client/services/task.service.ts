@@ -136,7 +136,7 @@ export const getAvailableTasks = async (
   const { page = 0, size = 10, ...filterParams } = params;
   
   try {
-    const url = buildUrlWithParams(`${apiConfig.endpoints.tasks}/available`, {
+    const url = buildUrlWithParams(`${apiConfig.endpoints.tasks}`, {
       ...filterParams,
       page,
       size

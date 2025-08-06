@@ -2,11 +2,16 @@ import { httpClient } from './http-client';
 import { Process } from '../../types/process';
 import { PaginatedResponse } from '../../types/response';
 import { apiConfig } from '../config/api.config';
-import { shouldUseDummyData, logDummyDataFallback, createPaginatedResponse } from '../dummy-data/utils';
+import {
+  shouldUseDummyData,
+  logDummyDataFallback,
+  createPaginatedResponse,
+} from '../dummy-data/utils';
 import { processes } from '../dummy-data/processes';
 
 export interface CreateProcessRequest {
   processKey: string;
+  name: string;
   releaseId: string;
   version: string;
 }
@@ -19,7 +24,7 @@ export interface CreateProcessRequest {
 export const getAreaProcesses = async (areaId: string): Promise<PaginatedResponse<Process>> => {
   try {
     return await httpClient.get<PaginatedResponse<Process>>(
-      `${apiConfig.endpoints.areas}/${areaId}/process-definitions`
+      `${apiConfig.endpoints.areas}/${areaId}/process-definitions`,
     );
   } catch (error) {
     if (shouldUseDummyData()) {
@@ -39,14 +44,14 @@ export const getAreaProcesses = async (areaId: string): Promise<PaginatedRespons
  * @returns A promise that resolves to the associated process.
  */
 export const associateProcessToArea = async (
-  areaId: string, 
-  processData: CreateProcessRequest
+  areaId: string,
+  processData: CreateProcessRequest,
 ): Promise<Process> => {
   try {
-    console.log("associateProcessToArea", areaId, processData);
+    console.log('associateProcessToArea', areaId, processData);
     return await httpClient.post<Process>(
       `${apiConfig.endpoints.areas}/${areaId}/process-definitions`,
-      processData
+      processData,
     );
   } catch (error) {
     if (shouldUseDummyData()) {
@@ -78,14 +83,11 @@ export const associateProcessToArea = async (
  * @param processDefinitionId The ID of the process definition to remove.
  * @returns A promise that resolves to a removal response.
  */
-export const removeProcessFromArea = async (
-  areaId: string, 
-  processDefinitionId: string
-) => {
+export const removeProcessFromArea = async (areaId: string, processDefinitionId: string) => {
   try {
-    console.log("removeProcessFromArea", areaId, processDefinitionId);
+    console.log('removeProcessFromArea', areaId, processDefinitionId);
     await httpClient.delete(
-      `${apiConfig.endpoints.areas}/${areaId}/process-definitions/${processDefinitionId}`
+      `${apiConfig.endpoints.areas}/${areaId}/process-definitions/${processDefinitionId}`,
     );
   } catch (error) {
     throw error;

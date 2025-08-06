@@ -2,9 +2,9 @@ import { useProcessForm } from './processes/use-process-form';
 import { useProcessOperations } from './processes/use-process-operations';
 import { AreaProcessesMap } from '../types';
 import { Process } from '@/app/(myapp)/external/types/process';
-import { CreateProcessRequest } from '../services/area-process.service';
 import { ProcessService } from '../services/process.service';
 import { useState, useEffect } from 'react';
+import { CreateProcessRequest } from '../../external/client/services/area-process.service';
 
 export function useProcessHandlers(
   areaProcesses: AreaProcessesMap,
@@ -61,7 +61,8 @@ export function useProcessHandlers(
     console.log('process', process);
     // Create the request object
     const processData: CreateProcessRequest = {
-      processKey: process.processKey,
+      processKey: process.processKey || '',
+      name: process.name || '',
       releaseId: process.id || '',
       version: process.version.toString(),
     };

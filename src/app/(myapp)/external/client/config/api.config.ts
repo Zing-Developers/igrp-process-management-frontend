@@ -56,7 +56,7 @@ const createDefaultConfig = (): ApiConfig => {
       processInstances: getEnvVar('NEXT_PUBLIC_PROCESS_INSTANCES_ENDPOINT', 'process-instances'),
 
       // Task endpoints
-      tasks: getEnvVar('NEXT_PUBLIC_TASKS_ENDPOINT', 'tasks'),
+      tasks: getEnvVar('NEXT_PUBLIC_TASKS_ENDPOINT', 'tasks-instances'),
       tasksClaim: getEnvVar('NEXT_PUBLIC_TASKS_CLAIM_ENDPOINT', 'tasks/claim'),
       tasksRelease: getEnvVar('NEXT_PUBLIC_TASKS_RELEASE_ENDPOINT', 'tasks/release'),
       tasksComplete: getEnvVar('NEXT_PUBLIC_TASKS_COMPLETE_ENDPOINT', 'tasks/complete'),

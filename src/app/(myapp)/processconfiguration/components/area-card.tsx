@@ -1,16 +1,11 @@
 import { 
-  ChevronRight,
-  ChevronDown,
   Building,
-  FolderPlus,
-  Plus,
-  Edit2,
-  Trash2,
 } from 'lucide-react'
 
 import { Area } from '../../external/types/area'
 import { Process } from '../../external/types/process'
 import { ProcessesList } from './areas-processes-list'
+import { IGRPButton } from '@igrp/igrp-framework-react-design-system'
 
 interface ExtendedArea extends Area {
   subareas?: ExtendedArea[]
@@ -64,16 +59,14 @@ export function AreaCard({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 flex-1">
             {(hasContent || canHaveSubareas) && (
-              <button
+              <IGRPButton
                 onClick={handleToggleExpansion}
-                className="p-1 hover:bg-muted rounded"
-              >
-                {isExpanded ? (
-                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
-                ) : (
-                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
-                )}
-              </button>
+                variant="ghost"
+                size="icon"
+                iconName={isExpanded ? 'ChevronDown' : 'ChevronRight'}
+                className="p-1 hover:bg-muted rounded w-6 h-6"
+                iconClassName="w-4 h-4 text-muted-foreground"
+              />
             )}
             <Building className={`w-5 h-5 ${level === 0 ? 'text-primary' : 'text-secondary-foreground'}`} />
             <div className="flex-1">
@@ -88,35 +81,43 @@ export function AreaCard({
           <div className="flex items-center gap-2">
             {/* Only show "Add Subarea" button for top-level areas (level === 0) */}
             {level === 0 && (
-              <button
+              <IGRPButton
                 onClick={() => onAddSubarea(area.id)}
+                variant="ghost"
+                size="icon"
+                iconName="FolderPlus"
                 className="p-2 text-muted-foreground hover:text-primary hover:bg-accent rounded"
+                iconClassName="w-4 h-4"
                 title="Adicionar Subárea"
-              >
-                <FolderPlus className="w-4 h-4" />
-              </button>
+              />
             )}
-            <button
+            <IGRPButton
               onClick={() => onAddProcess(area.id)}
+              variant="ghost"
+              size="icon"
+              iconName="Plus"
               className="p-2 text-muted-foreground hover:text-primary hover:bg-accent rounded"
+              iconClassName="w-4 h-4"
               title="Adicionar Processo"
-            >
-              <Plus className="w-4 h-4" />
-            </button>
-            <button
+            />
+            <IGRPButton
               onClick={() => onEdit(area)}
+              variant="ghost"
+              size="icon"
+              iconName="Pen"
               className="p-2 text-muted-foreground hover:text-primary hover:bg-accent rounded"
+              iconClassName="w-4 h-4"
               title="Editar"
-            >
-              <Edit2 className="w-4 h-4" />
-            </button>
-            <button
+            />
+            <IGRPButton
               onClick={() => onDelete(area.id)}
+              variant="ghost"
+              size="icon"
+              iconName="Trash2"
               className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded"
+              iconClassName="w-4 h-4"
               title="Excluir"
-            >
-              <Trash2 className="w-4 h-4" />
-            </button>
+            />
           </div>
         </div>
 

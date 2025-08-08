@@ -15,7 +15,7 @@ export function useProcessMap(igrpToast?: any): ProcessMapHookReturn {
   const { expandedNodes, toggleNode: originalToggleNode } = useTreeExpansion();
 
   // Process operations
-  const { selectedProcess, selectProcess, startProcess, startProcessWithToast } = useProcessOperations(igrpToast);
+  const { selectedProcess, selectProcess, startProcess } = useProcessOperations(igrpToast);
 
   // Modal management
   const { detailModal } = useProcessModal();
@@ -76,7 +76,6 @@ export function useProcessMap(igrpToast?: any): ProcessMapHookReturn {
     loadSubareas,
     selectProcess,
     startProcess,
-    startProcessWithToast,
     refreshData,
 
     // Modals

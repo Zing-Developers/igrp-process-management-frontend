@@ -99,14 +99,13 @@ const handleResetFilters = () => {
 </div>
 </IGRPPageHeader>
 
-<div className={ cn(' border rounded-sm',)}    >
+<div className={ cn(' border rounded-lg',)}    >
 	<TaskProcessFilter   onSearch={ handleSearchSubmit }
 onApplyFilters={ handleApplyFilters }
-onResetFilters={ handleResetFilters } ></TaskProcessFilter>
+onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
 <IGRPDataTable<Table1, Table1>
   showFilter={ true }
   showPagination={ true }
-  tableClassName={ `rounded-none` }
   paginationClassName={ `px-3 pb-3` }
   className={ cn() }
   columns={
@@ -168,6 +167,6 @@ badgeClassName={ `` }
   }
   
   data={ contentTabletable1 }
-/></div></div>
+/></div>
   );
 }

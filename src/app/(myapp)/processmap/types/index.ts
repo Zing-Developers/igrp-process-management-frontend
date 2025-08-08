@@ -35,12 +35,6 @@ export interface ProcessMapActions {
     businessKey?: string,
     variables?: Array<{ name: string; value: string }>,
   ) => Promise<ProcessInstance>;
-  startProcessWithToast: (
-    processDefinitionId: string,
-    processKey: string,
-    businessKey?: string,
-    variables?: Array<{ name: string; value: string }>,
-  ) => Promise<ProcessInstance | null>;
   refreshData: () => Promise<void>;
 }
 

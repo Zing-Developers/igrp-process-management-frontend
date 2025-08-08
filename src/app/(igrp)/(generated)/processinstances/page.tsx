@@ -28,7 +28,6 @@ export default function PageProcessinstancesComponent() {
   type Table1 = {
     process: string;
     createBy: string;
-    currentStep: string;
     waintingDays: string;
     status: string;
 }
@@ -59,7 +58,6 @@ const { igrpToast } = useIGRPToast()
     const transformedData = tableData.map((row, index) => ({
       process: row.processInfo,
       createBy: row.createBy,
-      currentStep: row.currentStep,
       waintingDays: row.daysWaiting,
       status: row.status,
     }));
@@ -120,11 +118,10 @@ const { igrpToast } = useIGRPToast()
 <div className={ cn(' border rounded-sm',)}    >
 	<TaskProcessFilter   onSearch={ handleSearchSubmit }
 onApplyFilters={ handleApplyFilters }
-onResetFilters={ handleResetFilters } ></TaskProcessFilter>
+onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
 <IGRPDataTable<Table1, Table1>
   showFilter={ true }
   showPagination={ true }
-  tableClassName={ `rounded-none` }
   paginationClassName={ `px-3 pb-3` }
   className={ cn('','border-0 border-solid border-[#000000]',) }
   columns={
@@ -142,14 +139,6 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter>
 ,accessorKey: 'createBy',
           cell: ({ row }) => {
           return row.getValue("createBy")
-          },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: 'Etapa Atual'
-,accessorKey: 'currentStep',
-          cell: ({ row }) => {
-          return row.getValue("currentStep")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },
@@ -208,6 +197,6 @@ return (
   }
   
   data={ contentTableprocesses }
-/></div></div>
+/></div>
   );
 }

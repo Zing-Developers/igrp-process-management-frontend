@@ -1,7 +1,4 @@
-import { Building } from 'lucide-react';
-
-import { Area } from '../../external/types/area';
-import { Process } from '../../external/types/process';
+import { Area, Process } from '@igrp/platform-process-management-types';
 import { ProcessesList } from './areas-processes-list';
 import { IGRPButton, IGRPIcon } from '@igrp/igrp-framework-react-design-system';
 import { cn } from '@/lib/utils';
@@ -42,11 +39,6 @@ export function AreaCard({
   const hasSubareas = area.subareas && area.subareas.length > 0;
   const hasProcesses = processes.length > 0;
 
-  // For top-level areas, we assume they might have subareas even if not loaded yet
-  // For subareas, we only show expansion if they actually have subareas loaded
-  const canHaveSubareas = level === 0 || hasSubareas;
-  const hasContent = hasSubareas || hasProcesses || (level === 0 && !isExpanded);
-
   const handleToggleExpansion = async () => {
     console.log('Toggling expansion for area:', area.id);
     await onToggleExpansion(area.id);
@@ -59,16 +51,14 @@ export function AreaCard({
       <div className="p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 flex-1">
-            {(hasContent || canHaveSubareas) && (
-              <IGRPButton
-                onClick={handleToggleExpansion}
-                variant="ghost"
-                size="icon"
-                iconName={isExpanded ? 'ChevronDown' : 'ChevronRight'}
-                className="p-1 hover:bg-muted rounded w-6 h-6"
-                iconClassName="w-4 h-4 text-muted-foreground"
-              />
-            )}
+            <IGRPButton
+              onClick={handleToggleExpansion}
+              variant="ghost"
+              size="icon"
+              iconName={isExpanded ? 'ChevronDown' : 'ChevronRight'}
+              className="p-1 hover:bg-muted rounded w-6 h-6"
+              iconClassName="w-4 h-4 text-muted-foreground"
+            />
 
             <IGRPIcon
               name={`icon1`}
@@ -164,9 +154,11 @@ export function AreaCard({
             )}
 
             {/* Show message when expanded but no content loaded yet (only for top-level areas) */}
-            {level === 0 && !hasSubareas && !hasProcesses && (
+            {!hasProcesses && (
               <div className="pl-8 text-sm text-muted-foreground">
-                Nenhuma subárea ou processo encontrado
+                {level === 0 && !hasSubareas
+                  ? 'Nenhuma subárea ou processo encontrado'
+                  : 'Nenhum processo encontrado'}
               </div>
             )}
           </div>

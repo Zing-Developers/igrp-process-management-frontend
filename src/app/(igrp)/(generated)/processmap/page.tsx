@@ -51,7 +51,7 @@ export default function PageProcessmapComponent() {
         expandedNodes={pm.expandedNodes}
         searchTerm={pm.searchTerm}
         onToggle={pm.toggleNode}
-        onStartProcess={pm.startProcessWithToast}
+        onStartProcess={pm.startProcess}
         onViewDetails={pm.detailModal.open}
       ></ProcessTreeComponent>
       <ProcessDetail

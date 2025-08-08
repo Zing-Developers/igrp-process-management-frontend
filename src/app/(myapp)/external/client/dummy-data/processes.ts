@@ -1,5 +1,5 @@
-import { Process, ProcessInstance } from "../../types/process";
-import { PaginatedResponse } from "../../types/response";
+import { PaginatedResponse, Process, ProcessInstance } from "@igrp/platform-process-management-types";
+
 
 export const processes: Process[] = [
   // Human Resources processes
@@ -188,8 +188,7 @@ export const getDummyProcessesPaginated = (
 
 export const createDummyProcessInstance = (
   processId: string,
-  businessKey?: string,
-  variables?: Record<string, any>
+  businessKey?: string
 ): ProcessInstance => {
   const process = getDummyProcessById(processId);
   
@@ -201,9 +200,14 @@ export const createDummyProcessInstance = (
     status: 'RUNNING',
     statusDesc: 'Processo em execução',
     businessKey,
+    version: process?.version || '1.0',    
     startedAt: new Date().toISOString(),
     startedBy: 'currentUser',
-    applicationBase: 'IGRP',
-    variables,
+    endedAt: "",
+    endedBy: "",
+    canceledAt: "",
+    canceledBy: "",
+    obsCancel: "",
+    applicationBase: 'IGRP'
   };
 };

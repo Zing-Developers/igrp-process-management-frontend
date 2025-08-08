@@ -67,6 +67,10 @@ export function buildUrlWithPathAndQuery(
   pathParams: Record<string, string | number> = {},
   queryParams: QueryParams = {}
 ): string {
+  if (!baseUrl) {
+    throw new Error('baseUrl is required and cannot be undefined or empty');
+  }
+  
   let url = baseUrl;
   
   // Replace path parameters

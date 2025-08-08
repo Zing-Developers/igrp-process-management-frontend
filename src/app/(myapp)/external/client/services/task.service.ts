@@ -1,31 +1,34 @@
-import {
-  Task,
-} from '../../types/task';
-import {
-  PaginatedResponse,
-  PostResponse
-} from '../../types/response';
+import { PaginatedResponse, Task } from '@igrp/platform-process-management-types';
 import { tasks } from '../dummy-data/tasks';
-import { httpClient, post } from './http-client';
-import { apiConfig } from '../config/api.config';
-import { buildUrlWithParams } from '../utils/url-builder';
-import { 
-  shouldUseDummyData, 
-  createPaginatedResponse, 
+import {
+  shouldUseDummyData,
+  createPaginatedResponse,
   createFilteredPaginatedResponse,
-  logDummyDataError 
+  logDummyDataError,
 } from '../dummy-data/utils';
+import { ProcessManagementClient } from '@igrp/platform-process-management-client-ts';
+import { PostResponse } from '@igrp/platform-process-management-types/dist/response';
+
+const httpClient = ProcessManagementClient.create({
+  baseUrl: 'http://localhost:8080',
+  timeout: 30000, // optional, defaults to 30000 (30 seconds)
+  headers: {
+    // optional
+    //Authorization: 'Bearer your-token-here',
+  },
+});
 
 /**
  * Interface for task filter parameters used in multiple functions
  */
 interface TaskFilterParams {
-  processNumber: string;
-  processKey: string;
-  user: string;
-  status: string;
-  dateFrom: string;
-  dateTo: string;
+  processNumber?: string;
+  processKey?: string;
+  user?: string;
+  status?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  applicationBase?: string;
   page?: number;
   size?: number;
 }
@@ -36,14 +39,10 @@ interface TaskFilterParams {
  * @param size The number of items per page.
  * @returns A promise that resolves to a paginated response of tasks.
  */
-export const getTasks = async (
-  page = 0,
-  size = 10
-): Promise<PaginatedResponse<Task>> => {
+export const getTasks = async (page = 0, size = 10): Promise<PaginatedResponse<Task>> => {
   try {
-    const url = buildUrlWithParams(apiConfig.endpoints.tasks, { page, size });
-    const response = await httpClient.get<PaginatedResponse<Task>>(url);
-    return response;
+    const response = await httpClient.tasks.getTasks({ page, size });
+    return response.data as PaginatedResponse<Task>;
   } catch (error) {
     if (shouldUseDummyData()) {
       logDummyDataError('fetch tasks', error);
@@ -61,8 +60,8 @@ export const getTasks = async (
  */
 export const getTaskById = async (id: string): Promise<Task | undefined> => {
   try {
-    const response = await httpClient.get<Task>(`${apiConfig.endpoints.tasks}/${id}`);
-    return response;
+    const response = await httpClient.tasks.getTaskById(id);
+    return response.data as Task;
   } catch (error) {
     if (shouldUseDummyData()) {
       logDummyDataError(`fetch task with id ${id}`, error);
@@ -78,19 +77,16 @@ export const getTaskById = async (id: string): Promise<Task | undefined> => {
  * @param params The filter parameters for fetching tasks.
  * @returns A promise that resolves to a paginated response of tasks.
  */
-export const getMyTasks = async (
-  params: TaskFilterParams
-): Promise<PaginatedResponse<Task>> => {
+export const getMyTasks = async (params: TaskFilterParams): Promise<PaginatedResponse<Task>> => {
   const { page = 0, size = 10, ...filterParams } = params;
-  
+
   try {
-    const url = buildUrlWithParams(`${apiConfig.endpoints.tasks}/me`, {
+    const response = await httpClient.tasks.getMyTasks({
       ...filterParams,
       page,
-      size
+      size,
     });
-    const response = await httpClient.get<PaginatedResponse<Task>>(url);
-    return response;
+    return response.data as PaginatedResponse<Task>;
   } catch (error) {
     if (shouldUseDummyData()) {
       logDummyDataError('fetch my tasks', error);
@@ -98,7 +94,7 @@ export const getMyTasks = async (
         tasks,
         (t) => t.assignee === 'current-user',
         page,
-        size
+        size,
       );
     }
     // Re-throw the error if dummy data is not allowed
@@ -111,14 +107,14 @@ export const getMyTasks = async (
  * @param userId The ID of the user.
  * @returns A promise that resolves to a list of tasks.
  */
-export const getTasksByUser = async (userId: string): Promise<Task[]> => {
+export const getTasksByUser = async (userId: string): Promise<PaginatedResponse<Task>> => {
   try {
-    const response = await httpClient.get<Task[]>(`${apiConfig.endpoints.tasks}/user/${userId}`);
-    return response;
+    const response = await httpClient.tasks.getTasksByUser(userId);
+    return response.data as PaginatedResponse<Task>;
   } catch (error) {
     if (shouldUseDummyData()) {
       logDummyDataError(`fetch tasks for user ${userId}`, error);
-      return tasks.filter((t) => t.assignee === userId);
+      return createFilteredPaginatedResponse(tasks, (t) => t.assignee === userId, 0, 10);
     }
     // Re-throw the error if dummy data is not allowed
     throw error;
@@ -131,18 +127,17 @@ export const getTasksByUser = async (userId: string): Promise<Task[]> => {
  * @returns A promise that resolves to a paginated response of tasks.
  */
 export const getAvailableTasks = async (
-  params: TaskFilterParams
+  params: TaskFilterParams,
 ): Promise<PaginatedResponse<Task>> => {
   const { page = 0, size = 10, ...filterParams } = params;
-  
+
   try {
-    const url = buildUrlWithParams(`${apiConfig.endpoints.tasks}`, {
+    const response = await httpClient.tasks.getAvailableTasks({
       ...filterParams,
       page,
-      size
+      size,
     });
-    const response = await httpClient.get<PaginatedResponse<Task>>(url);
-    return response;
+    return response.data;
   } catch (error) {
     if (shouldUseDummyData()) {
       logDummyDataError('fetch available tasks', error);
@@ -150,7 +145,7 @@ export const getAvailableTasks = async (
         tasks,
         (t) => !t.assignee && t.status === 'CREATED',
         page,
-        size
+        size,
       );
     }
     // Re-throw the error if dummy data is not allowed
@@ -164,17 +159,20 @@ export const getAvailableTasks = async (
  * @returns A promise that resolves to a list of tasks.
  */
 export const getTasksByProcessInstance = async (
-  processInstanceId: string
-): Promise<Task[]> => {
+  processInstanceId: string,
+): Promise<PaginatedResponse<Task>> => {
   try {
-    const response = await httpClient.get<Task[]>(
-      `${apiConfig.endpoints.tasks}/process/${processInstanceId}`
-    );
-    return response;
+    const response = await httpClient.tasks.getTasksByProcessInstance(processInstanceId);
+    return response.data;
   } catch (error) {
     if (shouldUseDummyData()) {
       logDummyDataError(`fetch tasks for process instance ${processInstanceId}`, error);
-      return tasks.filter((t) => t.processInstanceId === processInstanceId);
+      return createFilteredPaginatedResponse(
+        tasks,
+        (t) => t.processInstanceId === processInstanceId,
+        0,
+        10,
+      );
     }
     // Re-throw the error if dummy data is not allowed
     throw error;
@@ -187,16 +185,34 @@ export const getTasksByProcessInstance = async (
  * @param userId The ID of the user claiming the task.
  * @returns A promise that resolves to a PostResponse.
  */
-export const claimTask = (taskId: string, userId: string): Promise<PostResponse> =>
-  post(apiConfig.endpoints.tasksClaim, { taskId, userId });
+export const claimTask = async (
+  taskId: string,
+  user: string,
+  note?: string,
+): Promise<PostResponse> => (await httpClient.tasks.claimTask(taskId, { user, note })).data;
+
+/**
+ * Unassigns a task from a user.
+ * @param taskId The ID of the task to unassign.
+ * @param userId The ID of the user to unassign the task from.
+ * @returns A promise that resolves to a PostResponse.
+ */
+export const unassignTask = async (
+  taskId: string,
+  user: string,
+  note?: string,
+): Promise<PostResponse> => (await httpClient.tasks.unassignTask(taskId, { user, note })).data;
 
 /**
  * Releases a claimed task.
  * @param taskId The ID of the task to release.
  * @returns A promise that resolves to a PostResponse.
  */
-export const releaseTask = (taskId: string): Promise<PostResponse> =>
-  post(apiConfig.endpoints.tasksRelease, { taskId });
+export const releaseTask = async (
+  taskId: string,
+  user: string,
+  note?: string,
+): Promise<PostResponse> => (await httpClient.tasks.unclaimTask(taskId, { user, note })).data;
 
 /**
  * Completes a task.
@@ -204,7 +220,10 @@ export const releaseTask = (taskId: string): Promise<PostResponse> =>
  * @param variables Optional variables to pass to the task.
  * @returns A promise that resolves to a PostResponse.
  */
-export const completeTask = (
+export const completeTask = async (
   taskId: string,
-  variables?: Record<string, any>
-): Promise<PostResponse> => post(apiConfig.endpoints.tasksComplete, { taskId, variables });
+  variables?: Array<{
+    name: string;
+    value: string;
+  }>,
+): Promise<PostResponse> => (await httpClient.tasks.completeTask(taskId, variables)).data;

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AreaFormData, AreaModalState } from '../../types';
-import { Area } from '@/app/(myapp)/external/types/area';
+import { Area } from '@igrp/platform-process-management-types';
 
 export function useAreaForm() {
   const [modalState, setModalState] = useState<AreaModalState>({

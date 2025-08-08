@@ -127,6 +127,9 @@ export function useAreaHandlers(
 
   // Add function to load area processes on-demand
   const handleLoadAreaProcesses = async (areaId: string) => {
+    console.log("handleLoadAreaProcesses called with areaId:", areaId);
+    console.log("handleLoadAreaProcesses function exists:", typeof handleLoadAreaProcesses);
+    
     try {
       console.log("Loading processes for area:", areaId);
       const paginatedResponse = await AreaProcessService.getAreaProcesses(areaId);

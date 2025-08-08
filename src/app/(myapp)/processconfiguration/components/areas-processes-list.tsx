@@ -1,5 +1,6 @@
-import { Trash2, Settings } from 'lucide-react';
 import { Process } from '../../external/types/process';
+import { IGRPButton, IGRPIcon } from '@igrp/igrp-framework-react-design-system';
+import { cn } from '@/lib/utils';
 
 interface ProcessesListProps {
   processes: Process[];
@@ -21,10 +22,15 @@ export function ProcessesList({ processes, onRemoveProcess }: ProcessesListProps
       {processes.map((process) => (
         <div
           key={process.id}
-          className="flex items-center justify-between p-2 bg-muted rounded border border-border"
+          className="flex items-center justify-between p-2 rounded border border-border"
         >
           <div className="flex items-center gap-2">
-            <Settings className="w-4 h-4 text-muted-foreground" />
+            <IGRPIcon
+              name={`icon1`}
+              iconName={'Settings'}
+              size={18}
+              className={cn('text-muted-foreground')}
+            ></IGRPIcon>
             <div>
               <span className="text-sm font-medium text-foreground">
                 {process.name || process.processKey}
@@ -36,13 +42,16 @@ export function ProcessesList({ processes, onRemoveProcess }: ProcessesListProps
               </div>
             </div>
           </div>
-          <button
-            onClick={() => onRemoveProcess(process.id)}
-            className="p-1 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded"
-            title="Remover processo"
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
+          
+            <IGRPButton
+              onClick={() => onRemoveProcess(process.id)}
+              variant="ghost"
+              size="icon"
+              iconName="Trash2"
+              className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded"
+              iconClassName="w-4 h-4"
+              title="Remover processo"
+            />
         </div>
       ))}
     </div>

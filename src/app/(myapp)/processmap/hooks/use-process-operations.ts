@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
-import { Process, ProcessInstance } from '../../external/types/process';
 import { startProcess } from '../../external/client/services/process.service';
+import { Process, ProcessInstance } from '@igrp/platform-process-management-types';
 
 export function useProcessOperations(igrpToast?: any) {
   const [selectedProcess, setSelectedProcess] = useState<Process | undefined>();
@@ -12,12 +12,11 @@ export function useProcessOperations(igrpToast?: any) {
   const startProcessAction = useCallback(async (
     processDefinitionId: string, 
     processKey: string,
-    applicationBase: string,
     businessKey?: string, 
     variables?: Array<{ name: string; value: string }>
   ): Promise<ProcessInstance> => {
     try {
-      const instance = await startProcess(processDefinitionId, processKey, applicationBase, businessKey, variables);
+      const instance = await startProcess(processDefinitionId, processKey, businessKey, variables);
       return instance;
     } catch (err) {
       console.error('Error starting process:', err);
@@ -28,12 +27,11 @@ export function useProcessOperations(igrpToast?: any) {
   const startProcessWithToast = useCallback(async (
     processDefinitionId: string, 
     processKey: string,
-    applicationBase: string,
     businessKey?: string, 
     variables?: Array<{ name: string; value: string }>
   ): Promise<ProcessInstance | null> => {
     try {
-      const instance = await startProcess(processDefinitionId, processKey, applicationBase, businessKey, variables);
+      const instance = await startProcess(processDefinitionId, processKey, businessKey, variables);
       
       // Show success toast
       if (igrpToast) {

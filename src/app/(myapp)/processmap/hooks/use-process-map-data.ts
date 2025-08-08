@@ -15,7 +15,7 @@ export function useProcessMapData() {
       setError(undefined);
       
       // Load only top-level areas initially (areas without areaId)
-      const areasResponse = await AreaService.getAreas('', '', 0, 100);
+      const areasResponse = await AreaService.getAreas('');
       console.log("areasResponse", areasResponse);
       
       // Filter to get only top-level areas

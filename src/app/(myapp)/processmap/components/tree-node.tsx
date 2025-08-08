@@ -1,15 +1,20 @@
 import React from 'react';
 import { ProcessTreeNode } from '../types';
-import { Process, ProcessInstance } from '../../external/types/process';
 import { NodeIcon } from './node-icon';
 import { NodeContent } from './node-content';
 import { ExpandButton } from './expand-button';
+import { Process, ProcessInstance } from '@igrp/platform-process-management-types';
 
 interface TreeNodeProps {
   node: ProcessTreeNode;
   expandedNodes: Set<string>;
   onToggle: (nodeId: string) => void;
-  onStartProcess: (processDefinitionId: string, processKey: string, applicationBase: string, businessKey?: string, variables?: Array<{ name: string; value: string }>) => Promise<ProcessInstance | null>;
+  onStartProcess: (
+    processDefinitionId: string,
+    processKey: string,
+    businessKey?: string,
+    variables?: Array<{ name: string; value: string }>,
+  ) => Promise<ProcessInstance | null>;
   onViewDetails: (process: Process) => void;
   searchTerm?: string;
 }
@@ -34,7 +39,7 @@ export function TreeNode({
   return (
     <div className="w-full">
       <div
-        className="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded-lg cursor-pointer group"
+        className="flex items-center space-x-2 p-2 hover:bg-muted rounded-lg cursor-pointer group"
         style={{ paddingLeft: `${node.level * 20 + 8}px` }}
         onClick={handleToggle}
       >
@@ -43,14 +48,10 @@ export function TreeNode({
           hasChildren={hasChildren || node.type === 'area'}
           onToggle={handleToggle}
         />
-        
+
         <NodeIcon node={node} isExpanded={isExpanded} />
-        
-        <NodeContent
-          node={node}
-          onStartProcess={onStartProcess}
-          onViewDetails={onViewDetails}
-        />
+
+        <NodeContent node={node} onStartProcess={onStartProcess} onViewDetails={onViewDetails} />
       </div>
 
       {isExpanded && hasChildren && (

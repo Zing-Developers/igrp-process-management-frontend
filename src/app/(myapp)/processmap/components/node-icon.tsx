@@ -1,29 +1,50 @@
 import React from 'react';
-import {
-  Building,
-  FolderOpen,
-  Folder,
-  FileText,
-} from 'lucide-react';
+import { Building, FolderOpen, Folder, FileText } from 'lucide-react';
 import { ProcessTreeNode } from '../types';
+import { cn, IGRPIcon } from '@igrp/igrp-framework-react-design-system';
 
 interface NodeIconProps {
   node: ProcessTreeNode;
   isExpanded: boolean;
-} 
+}
 
 export function NodeIcon({ node, isExpanded }: NodeIconProps) {
   switch (node.type) {
     case 'area':
-      return <Building className="w-4 h-4 text-blue-600" />;
+      return (
+        <IGRPIcon
+          name={`icon1`}
+          iconName={'Building'}
+          size={18}
+          className={cn(`text-primary`)}
+        ></IGRPIcon>
+      );
     case 'subarea':
       return isExpanded ? (
-        <FolderOpen className="w-4 h-4 text-blue-500" />
+        <IGRPIcon
+              name={`icon1`}
+              iconName={'FolderOpen'}
+              size={18}
+              className={cn(`text-primary`)}
+            ></IGRPIcon>
       ) : (
-        <Folder className="w-4 h-4 text-blue-500" />
+        <IGRPIcon
+              name={`icon1`}
+              iconName={'Folder'}
+              size={18}
+              className={cn(`text-primary`)}
+            ></IGRPIcon>
       );
     case 'process':
-      return <FileText className="w-4 h-4 text-purple-600" />;
+      return (
+        <IGRPIcon
+          name={`icon1`}
+          iconName={'FileText'}
+          size={18}
+          className={cn(`text-muted-foreground`)}
+
+        ></IGRPIcon>
+      );
     default:
       return null;
   }

@@ -1,4 +1,5 @@
-import { AreaProcessService, CreateProcessRequest } from '../../services/area-process.service';
+import { CreateProcessRequest } from '@/app/(myapp)/external/client/services/area-process.service';
+import { AreaProcessService } from '../../services/area-process.service';
 import { AreaProcessesMap } from '../../types';
 
 export function useProcessOperations(

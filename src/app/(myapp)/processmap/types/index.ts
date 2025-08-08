@@ -29,8 +29,18 @@ export interface ProcessMapActions {
   toggleNode: (nodeId: string) => void;
   loadSubareas: (areaId: string) => Promise<void>;
   selectProcess: (process: Process) => void;
-  startProcess: (processDefinitionId: string, processKey: string, applicationBase: string, businessKey?: string, variables?: Array<{ name: string; value: string }>) => Promise<ProcessInstance>;
-  startProcessWithToast: (processDefinitionId: string, processKey: string, applicationBase: string, businessKey?: string, variables?: Array<{ name: string; value: string }>) => Promise<ProcessInstance | null>;
+  startProcess: (
+    processDefinitionId: string,
+    processKey: string,
+    businessKey?: string,
+    variables?: Array<{ name: string; value: string }>,
+  ) => Promise<ProcessInstance>;
+  startProcessWithToast: (
+    processDefinitionId: string,
+    processKey: string,
+    businessKey?: string,
+    variables?: Array<{ name: string; value: string }>,
+  ) => Promise<ProcessInstance | null>;
   refreshData: () => Promise<void>;
 }
 

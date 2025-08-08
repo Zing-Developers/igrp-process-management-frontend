@@ -18,10 +18,9 @@ export class ProcessService {
   static async startProcess(
     processDefinitionId: string,
     processKey: string,
-    applicationBase: string,
     businessKey?: string,
     variables?: Array<{ name: string; value: string }>
   ): Promise<ProcessInstance> {
-    return await startProcess(processDefinitionId, processKey, applicationBase, businessKey, variables);
+    return await startProcess(processDefinitionId, processKey, businessKey, variables);
   }
 }

@@ -21,8 +21,8 @@ export class AreaService {
     return await deleteArea(areaId);
   }
 
-  static async getAreas(name: string, applicationBase: string, page: number = 0, size: number = 100, parentId?: string): Promise<PaginatedResponse<Area>> {
-    return await getAreas(name, applicationBase, page, size, parentId);
+  static async getAreas(name: string, page: number = 0, size: number = 100, parentId?: string): Promise<PaginatedResponse<Area>> {
+    return await getAreas(name, page, size, parentId);
   }
 
   static async getSubareas(parentAreaId: string): Promise<Area[]> {

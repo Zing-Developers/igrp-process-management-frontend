@@ -1,8 +1,10 @@
 import React from 'react';
 import { ProcessTreeNode } from '../types';
 import { TreeNode } from './tree-node';
-import { Process, ProcessInstance } from '../../external/types/process';
 import { InfoCard } from '../../components/info-card';
+import { IGRPCard, IGRPCardContent } from '@igrp/igrp-framework-react-design-system';
+import { cn } from '@/lib/utils';
+import { Process, ProcessInstance } from '@igrp/platform-process-management-types';
 
 interface ProcessTreeProps {
   nodes: ProcessTreeNode[];
@@ -11,7 +13,6 @@ interface ProcessTreeProps {
   onStartProcess: (
     processDefinitionId: string,
     processKey: string,
-    applicationBase: string,
     businessKey?: string,
     variables?: Array<{ name: string; value: string }>,
   ) => Promise<ProcessInstance | null>;
@@ -38,8 +39,8 @@ export function ProcessTree({
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4">
-      <div className="space-y-1">
+     <IGRPCard name={`card1`} className={cn('w-full')}>
+      <IGRPCardContent>
         {nodes.map((node) => (
           <TreeNode
             key={node.id}
@@ -51,7 +52,7 @@ export function ProcessTree({
             searchTerm={searchTerm}
           />
         ))}
-      </div>
-    </div>
+      </IGRPCardContent>
+    </IGRPCard>
   );
 }

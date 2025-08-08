@@ -1,3 +1,4 @@
+'use server';
 import { PaginatedResponse, Task } from '@igrp/platform-process-management-types';
 import { tasks } from '../dummy-data/tasks';
 import {

@@ -1,3 +1,4 @@
+'use server';
 import { shouldUseDummyData, logDummyDataFallback } from '../dummy-data/utils';
 import { ProcessManagementClient } from '@igrp/platform-process-management-client-ts';
 import { PaginatedResponse, ProcessInstance } from '@igrp/platform-process-management-types';

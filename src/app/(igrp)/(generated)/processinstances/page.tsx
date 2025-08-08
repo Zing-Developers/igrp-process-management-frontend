@@ -16,9 +16,11 @@ import {
 	IGRPDataTable,
 	IGRPDataTableCellBadge,
 	IGRPDataTableRowAction,
-	IGRPDataTableButtonLink 
+	IGRPDataTableDropdownMenu,
+	IGRPDataTableDropdownMenuCustom 
 } from "@igrp/igrp-framework-react-design-system";
 import {useProcessInstances} from '@/app/(myapp)/processinstances/hooks/use-process-instances'
+import { useRouter } from "next/navigation"
 
 
 export default function PageProcessinstancesComponent() {
@@ -26,10 +28,12 @@ export default function PageProcessinstancesComponent() {
 
   
   type Table1 = {
-    process: string;
+    processInfo: string;
     createBy: string;
-    waintingDays: string;
+    daysWaiting: string;
     status: string;
+    procReleaseKey: string;
+    processInstanceId: string;
 }
 
   const [contentTableprocesses, setContentTableprocesses] = useState<Table1[]>([]);
@@ -37,8 +41,15 @@ export default function PageProcessinstancesComponent() {
   
 const { igrpToast } = useIGRPToast()
 
-//-------------------reserved area start----------------------------
+function goToProcessRuntime (row: any): void  | undefined {
 
+  console.log(row)
+router.push(`${process.env.NEXT_PUBLIC_PROJECT_RUNTIME_TEST_URL}/process/${row.procReleaseKey}/${row.processInstanceId}`)
+
+}
+
+//-------------------reserved area start----------------------------
+const router = useRouter()
   const {
     tableData,
     loading,
@@ -55,14 +66,14 @@ const { igrpToast } = useIGRPToast()
 
   // Update table data when process instances change
   useEffect(() => {
-    const transformedData = tableData.map((row, index) => ({
+    /* const transformedData = tableData.map((row, index) => ({
       process: row.processInfo,
       createBy: row.createBy,
       waintingDays: row.daysWaiting,
       status: row.status,
-    }));
+    })); */
 
-    setContentTableprocesses(transformedData);
+    setContentTableprocesses(tableData);
   }, [tableData]);
 
   // Handle filter application with process instance filters
@@ -102,8 +113,8 @@ const { igrpToast } = useIGRPToast()
 <div className={ cn('page','space-y-6',)}    >
 	<IGRPPageHeader
   name={ `pageHeader1` }
-  title={ `Processos` }
-  description={ `Visualize processos em curso por área e subárea` }
+  title={ `Gestāo de Tarefas` }
+  description={ `Visualize tarefas em curso por área e subárea` }
   iconBackButton={ `ArrowLeft` }
   showBackButton={ true }
   urlBackButton={ `/dashboard` }
@@ -128,9 +139,9 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
     [
         {
           header: 'Processo'
-,accessorKey: 'process',
+,accessorKey: 'processInfo',
           cell: ({ row }) => {
-          return row.getValue("process")
+          return row.getValue("processInfo")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },
@@ -144,9 +155,9 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
         },
         {
           header: 'Dias em espera'
-,accessorKey: 'waintingDays',
+,accessorKey: 'daysWaiting',
           cell: ({ row }) => {
-          return row.getValue("waintingDays")
+          return row.getValue("daysWaiting")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },
@@ -168,22 +179,25 @@ badgeClassName={ `` }
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Actions Column'
-,accessorKey: 'tableActionListCell1',
+          id: 'tableActionListCell1',
           enableHiding: false,cell: ({ row }) => {
           const rowData = row.original;
 
 return (
 <IGRPDataTableRowAction>
-  <IGRPDataTableButtonLink
-  labelTrigger={ `Processo` }
-  href={ `https://www.igrp.cv/` }
-  variant={ `default` }
-  icon={ `Play` }
-  className={ cn() }
-  action={ (e) => {} }
+  <IGRPDataTableDropdownMenu
+  items={
+    [
+      {
+        component: IGRPDataTableDropdownMenuCustom,
+        props: {
+          labelTrigger: `Executar Task`,icon: `ArrowRight`,          showIcon: true,          action: () => {goToProcessRuntime(rowData)},
+}
+      },
+]
+  }
 >
-</IGRPDataTableButtonLink>
+</IGRPDataTableDropdownMenu>
 </IGRPDataTableRowAction>
 );
           },

@@ -187,21 +187,23 @@ export const getDummyProcessesPaginated = (
 };
 
 export const createDummyProcessInstance = (
-  processDefinitionId: string,
+  processId: string,
   businessKey?: string,
   variables?: Record<string, any>
 ): ProcessInstance => {
-  const process = getDummyProcessById(processDefinitionId);
+  const process = getDummyProcessById(processId);
   
   return {
     id: `pi_${Date.now()}`,
-    processDefinitionId,
-    processDefinitionName: process?.name || 'Unknown Process',
-    businessKey,
-    startDate: new Date().toISOString(),
-    initiator: 'currentUser',
+    procReleaseKey: process?.processKey || 'unknown_process',
+    procReleaseId: process?.releaseId || 'rel-unknown',
+    number: `PN-${Date.now()}`,
     status: 'RUNNING',
+    statusDesc: 'Processo em execução',
+    businessKey,
+    startedAt: new Date().toISOString(),
     startedBy: 'currentUser',
+    applicationBase: 'IGRP',
     variables,
   };
 };

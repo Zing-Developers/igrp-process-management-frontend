@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ExtendedArea } from '../../processconfiguration/types';
-import { getAreas } from '../../external/client/services/area.service';
 import { AreaService } from '../../processconfiguration/services/area.service';
 import { organizeAreasHierarchy, getAllAreasFlat } from '../../processconfiguration/utils/area-hierarchy';
 

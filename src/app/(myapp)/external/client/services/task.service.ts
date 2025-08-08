@@ -84,7 +84,7 @@ export const getMyTasks = async (
   const { page = 0, size = 10, ...filterParams } = params;
   
   try {
-    const url = buildUrlWithParams(`${apiConfig.endpoints.tasks}/my`, {
+    const url = buildUrlWithParams(`${apiConfig.endpoints.tasks}/me`, {
       ...filterParams,
       page,
       size

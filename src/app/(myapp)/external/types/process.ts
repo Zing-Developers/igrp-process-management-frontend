@@ -21,26 +21,12 @@ export type ProcessInstance = {
   procReleaseKey: string;
   procReleaseId: string;
   number: string;
-  status: 'CREATED' | 'COMPLETED' | 'SUSPENDED' | 'TERMINATED' | 'RUNNING';
+  status: 'CREATED' | 'RUNNING' | 'SUSPENDED' | 'CANCELLED' | 'COMPLETED' | 'TERMINATED';
   statusDesc: string;
   businessKey?: string;
   startedAt: string;
   startedBy: string;
   applicationBase: string;
   endTime?: string;
-  variables?: Record<string, any>;
-};
-
-// For backward compatibility, keep the old structure as well
-export type LegacyProcessInstance = {
-  id: string;
-  processDefinitionId: string;
-  processDefinitionName: string;
-  businessKey?: string;
-  startDate: string;
-  endTime?: string;
-  initiator: string;
-  status: 'CREATED' | 'COMPLETED' | 'SUSPENDED' | 'TERMINATED' | 'RUNNING';
-  startedBy: string;
   variables?: Record<string, any>;
 };

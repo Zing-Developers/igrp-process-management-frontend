@@ -16,24 +16,22 @@ export function ProcessTreeComponent({
   searchTerm?: string;
   onToggle: (nodeId: string) => void;
   onStartProcess: (
-    processDefinitionId: string, 
-    processKey: string, 
-    applicationBase: string, 
-    businessKey?: string, 
-    variables?: Array<{ name: string; value: string }>
+    processDefinitionId: string,
+    processKey: string,
+    applicationBase: string,
+    businessKey?: string,
+    variables?: Array<{ name: string; value: string }>,
   ) => Promise<ProcessInstance | null>;
   onViewDetails: (process: Process) => void;
 }) {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4">
-      <ProcessTree
-        nodes={nodes}
-        expandedNodes={expandedNodes}
-        onToggle={onToggle}
-        onStartProcess={onStartProcess}
-        onViewDetails={onViewDetails}
-        searchTerm={searchTerm}
-      />
-    </div>
+    <ProcessTree
+      nodes={nodes}
+      expandedNodes={expandedNodes}
+      onToggle={onToggle}
+      onStartProcess={onStartProcess}
+      onViewDetails={onViewDetails}
+      searchTerm={searchTerm}
+    />
   );
 }

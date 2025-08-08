@@ -13,7 +13,7 @@ export type Task = {
   priority?: TaskPriority;
   assignee?: string;
   formKey?: string;
-  status: 'CREATED' | 'ASSIGNED' | 'COMPLETED';
+  status: 'CREATED' | 'ASSIGNED' | 'COMPLETED' | 'CANCELLED' | 'DELETED';
   variables?: Record<string, any>;
 };
 

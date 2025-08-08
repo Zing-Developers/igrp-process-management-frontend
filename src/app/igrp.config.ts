@@ -48,6 +48,10 @@ export default {
     'processconfiguration/hooks/use-process-configuration',
     'processmap/hooks/use-process-map',
     'availabletasks/hooks/use-available-tasks',
+    'components/processtaksfilter/hooks/use-process-tasks-filter',
+    'processinstances/hooks/use-process-instances',
+    'mytasks/hooks/use-my-tasks',
+
   ],
   components: [
     'processconfiguration/components/areas-list',

@@ -8,10 +8,15 @@ import { shouldUseDummyData, logDummyDataFallback } from '../dummy-data/utils';
 export interface ProcessInstanceFilters {
   procReleaseKey?: string;
   procReleaseId?: string;
-  status?: 'CREATED' | 'COMPLETED' | 'SUSPENDED' | 'TERMINATED' | 'RUNNING';
+  status?: 'CREATED' | 'RUNNING' | 'SUSPENDED' | 'CANCELLED' | 'COMPLETED' | 'TERMINATED';
   applicationBase?: string;
   businessKey?: string;
   startedBy?: string;
+}
+
+export interface StatusOption {
+  label: string;
+  value: string;
 }
 
 /**
@@ -164,4 +169,31 @@ export const getRunningProcessInstances = async (
   size = 5
 ): Promise<PaginatedResponse<ProcessInstance>> => {
   return getProcessInstances(page, size, { applicationBase, status: 'RUNNING' });
+};
+
+/**
+ * Fetches available status options for process instances.
+ * @returns A promise that resolves to an array of status options.
+ */
+export const getProcessInstancesStatus = async (): Promise<StatusOption[]> => {
+  try {
+    const response = await httpClient.get<StatusOption[]>(apiConfig.endpoints.processInstancesStatus);
+    return response;
+  } catch (error) {
+    if (shouldUseDummyData()) {
+      logDummyDataFallback('getProcessInstancesStatus', error);
+      // Return dummy status options
+      return [
+        { label: 'Ativo', value: 'ACTIVE' },
+        { label: 'Pendente', value: 'PENDING' },
+        { label: 'Concluído', value: 'COMPLETED' },
+        { label: 'Cancelado', value: 'CANCELLED' },
+        { label: 'Suspenso', value: 'SUSPENDED' },
+        { label: 'Terminado', value: 'TERMINATED' },
+        { label: 'Em execução', value: 'RUNNING' },
+      ];
+    }
+    // Re-throw the error if dummy data is not allowed
+    throw error;
+  }
 };

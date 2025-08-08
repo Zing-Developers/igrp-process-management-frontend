@@ -14,12 +14,14 @@ import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDat
 import { 
   IGRPPageHeader,
 	IGRPDataTable,
-	IGRPDataTableCellBadge 
+	IGRPDataTableCellBadge,
+	IGRPDataTableRowAction,
+	IGRPDataTableButtonLink 
 } from "@igrp/igrp-framework-react-design-system";
-import {useMyTasks} from '@/app/(myapp)/mytasks/hooks/use-my-tasks'
+import {useProcessInstances} from '@/app/(myapp)/processinstances/hooks/use-process-instances'
 
 
-export default function PageMytasksComponent() {
+export default function PageProcessinstancesComponent() {
 
 
   
@@ -27,67 +29,83 @@ export default function PageMytasksComponent() {
     process: string;
     createBy: string;
     currentStep: string;
-    waitingDays: string;
+    waintingDays: string;
     status: string;
 }
 
-  const [contentTabletable1, setContentTabletable1] = useState<Table1[]>([]);
+  const [contentTableprocesses, setContentTableprocesses] = useState<Table1[]>([]);
   
   
 const { igrpToast } = useIGRPToast()
 
 //-------------------reserved area start----------------------------
-const {
-  tableData,
-  myTasksState,
-  fetchMyTasks,
-  applyFilters,
-  resetFilters,
-  handleSearch,
-  handlePageChange,
-  loading,
-  error,
-} = useMyTasks();
 
-// Transform data for the table
-useEffect(() => {
-  if (tableData) {
-    const transformedData = tableData.map((row) => ({
-      process: row.process,
+  const {
+    tableData,
+    loading,
+    error,
+    totalElements,
+    totalPages,
+    currentPage,
+    handleSearch,
+    handlePageChange,
+    applyFilters,
+    resetFilters,
+    getStatusVariant,
+  } = useProcessInstances();
+
+  // Update table data when process instances change
+  useEffect(() => {
+    const transformedData = tableData.map((row, index) => ({
+      process: row.processInfo,
       createBy: row.createBy,
       currentStep: row.currentStep,
-      waitingDays: row.waitingDays,
+      waintingDays: row.daysWaiting,
       status: row.status,
     }));
-    setContentTabletable1(transformedData as Table1[]);
-  }
-}, [tableData]);
 
-// Load initial data
-useEffect(() => {
-  fetchMyTasks();
-}, []);
+    setContentTableprocesses(transformedData);
+  }, [tableData]);
 
-const handleSearchSubmit = (searchTerm: string) => {
-  handleSearch(searchTerm);
-};
+  // Handle filter application with process instance filters
+  const handleApplyFilters = (filters?: any) => {
+    if (filters) {
+      console.log('Applying process instance filters:', filters);
+      applyFilters(filters);
+    } else {
+      applyFilters();
+    }
+  };
 
-const handleApplyFilters = () => {
-  applyFilters();
-};
+  // Handle filter reset
+  const handleResetFilters = () => {
+    resetFilters();
+  };
 
-const handleResetFilters = () => {
-  resetFilters();
-};
-//-------------------reserved area end------------------------------
+  // Handle search
+  const handleSearchSubmit = (searchTerm: string) => {
+    handleSearch(searchTerm);
+  };
+
+  // Show error toast if there's an error
+  useEffect(() => {
+    if (error) {
+      igrpToast({
+        title: 'Erro',
+        description: error,
+      });
+    }
+  }, [error, igrpToast]);
+
+  //-------------------reserved area end------------------------------
 
 
   return (
 <div className={ cn('page','space-y-6',)}    >
 	<IGRPPageHeader
   name={ `pageHeader1` }
-  title={ `Minhas Tarefas` }
-  description={ `Tarefas atribuídas a você` }
+  title={ `Processos` }
+  description={ `Visualize processos em curso por área e subárea` }
   iconBackButton={ `ArrowLeft` }
   showBackButton={ true }
   urlBackButton={ `/dashboard` }
@@ -108,7 +126,7 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter>
   showPagination={ true }
   tableClassName={ `rounded-none` }
   paginationClassName={ `px-3 pb-3` }
-  className={ cn() }
+  className={ cn('','border-0 border-solid border-[#000000]',) }
   columns={
     [
         {
@@ -128,7 +146,7 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Etapa Atual	'
+          header: 'Etapa Atual'
 ,accessorKey: 'currentStep',
           cell: ({ row }) => {
           return row.getValue("currentStep")
@@ -137,9 +155,9 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter>
         },
         {
           header: 'Dias em espera'
-,accessorKey: 'waitingDays',
+,accessorKey: 'waintingDays',
           cell: ({ row }) => {
-          return row.getValue("waitingDays")
+          return row.getValue("waintingDays")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },
@@ -160,6 +178,28 @@ badgeClassName={ `` }
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },
+        {
+          header: 'Actions Column'
+,accessorKey: 'tableActionListCell1',
+          enableHiding: false,cell: ({ row }) => {
+          const rowData = row.original;
+
+return (
+<IGRPDataTableRowAction>
+  <IGRPDataTableButtonLink
+  labelTrigger={ `Processo` }
+  href={ `https://www.igrp.cv/` }
+  variant={ `default` }
+  icon={ `Play` }
+  className={ cn() }
+  action={ (e) => {} }
+>
+</IGRPDataTableButtonLink>
+</IGRPDataTableRowAction>
+);
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
 ]
   }
   clientFilters={
@@ -167,7 +207,7 @@ badgeClassName={ `` }
     ]
   }
   
-  data={ contentTabletable1 }
+  data={ contentTableprocesses }
 /></div></div>
   );
 }

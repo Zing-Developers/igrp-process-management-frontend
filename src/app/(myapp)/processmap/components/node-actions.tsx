@@ -26,7 +26,7 @@ export function NodeActions({ node, onStartProcess, onViewDetails }: NodeActions
       const process = node.data as Process;
       // For now, we'll use default values for the new required parameters
       // These should ideally come from the process data or be configurable
-      await onStartProcess(process.id, process.processKey, '', 'test', []);
+      await onStartProcess(process.releaseId, process.processKey, '', 'test', []);
     }
   };
 

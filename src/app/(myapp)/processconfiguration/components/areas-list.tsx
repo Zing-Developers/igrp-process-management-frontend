@@ -1,3 +1,4 @@
+import { InfoCard } from '../../components/info-card';
 import { Area } from '../../external/types/area';
 import { Process } from '../../external/types/process';
 import { AreaCard } from './area-card';
@@ -36,9 +37,11 @@ export function AreasList({
 
   if (topLevelAreas.length === 0) {
     return (
-      <div className="text-center py-8">
-        <p className="text-muted-foreground">Nenhuma área encontrada</p>
-      </div>
+      <InfoCard
+        iconName="SquareCheckBig"
+        title="Nenhuma área encontrada"
+        description="Nenhuma área foi encontrada. Clique no botão acima para adicionar uma nova área."
+      />
     );
   }
 

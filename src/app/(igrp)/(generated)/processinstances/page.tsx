@@ -31,6 +31,7 @@ export default function PageProcessinstancesComponent() {
     processInfo: string;
     createBy: string;
     daysWaiting: string;
+    version: string;
     status: string;
     procReleaseKey: string;
     processInstanceId: string;
@@ -158,6 +159,23 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
 ,accessorKey: 'daysWaiting',
           cell: ({ row }) => {
           return row.getValue("daysWaiting")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Versāo'
+,accessorKey: 'version',
+          cell: ({ row }) => {
+          const rowData = row.original;
+
+
+return <IGRPDataTableCellBadge
+  label={ row.original.version }
+  variant={ `soft` }
+badgeClassName={ `` }
+>
+
+</IGRPDataTableCellBadge>
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },

@@ -1,23 +1,9 @@
 'use server';
 import { PaginatedResponse, Task } from '@igrp/platform-process-management-types';
-import { tasks } from '../dummy-data/tasks';
-import {
-  shouldUseDummyData,
-  createPaginatedResponse,
-  createFilteredPaginatedResponse,
-  logDummyDataError,
-} from '../dummy-data/utils';
-import { ProcessManagementClient } from '@igrp/platform-process-management-client-ts';
+import { getHttpClient } from '../config/client.config';
 import { PostResponse } from '@igrp/platform-process-management-types/dist/response';
 
-const httpClient = ProcessManagementClient.create({
-  baseUrl: 'http://localhost:8080',
-  timeout: 30000, // optional, defaults to 30000 (30 seconds)
-  headers: {
-    // optional
-    //Authorization: 'Bearer your-token-here',
-  },
-});
+const httpClient = getHttpClient();
 
 /**
  * Interface for task filter parameters used in multiple functions
@@ -41,17 +27,8 @@ interface TaskFilterParams {
  * @returns A promise that resolves to a paginated response of tasks.
  */
 export const getTasks = async (page = 0, size = 10): Promise<PaginatedResponse<Task>> => {
-  try {
-    const response = await httpClient.tasks.getTasks({ page, size });
-    return response.data as PaginatedResponse<Task>;
-  } catch (error) {
-    if (shouldUseDummyData()) {
-      logDummyDataError('fetch tasks', error);
-      return createPaginatedResponse(tasks, page, size);
-    }
-    // Re-throw the error if dummy data is not allowed
-    throw error;
-  }
+  const response = await httpClient.tasks.getTasks({ page, size });
+  return response.data as PaginatedResponse<Task>;
 };
 
 /**
@@ -60,17 +37,8 @@ export const getTasks = async (page = 0, size = 10): Promise<PaginatedResponse<T
  * @returns A promise that resolves to the task, or undefined if not found.
  */
 export const getTaskById = async (id: string): Promise<Task | undefined> => {
-  try {
-    const response = await httpClient.tasks.getTaskById(id);
-    return response.data as Task;
-  } catch (error) {
-    if (shouldUseDummyData()) {
-      logDummyDataError(`fetch task with id ${id}`, error);
-      return tasks.find((t) => t.id === id);
-    }
-    // Re-throw the error if dummy data is not allowed
-    throw error;
-  }
+  const response = await httpClient.tasks.getTaskById(id);
+  return response.data as Task;
 };
 
 /**
@@ -81,26 +49,12 @@ export const getTaskById = async (id: string): Promise<Task | undefined> => {
 export const getMyTasks = async (params: TaskFilterParams): Promise<PaginatedResponse<Task>> => {
   const { page = 0, size = 10, ...filterParams } = params;
 
-  try {
-    const response = await httpClient.tasks.getMyTasks({
-      ...filterParams,
-      page,
-      size,
-    });
-    return response.data as PaginatedResponse<Task>;
-  } catch (error) {
-    if (shouldUseDummyData()) {
-      logDummyDataError('fetch my tasks', error);
-      return createFilteredPaginatedResponse(
-        tasks,
-        (t) => t.assignee === 'current-user',
-        page,
-        size,
-      );
-    }
-    // Re-throw the error if dummy data is not allowed
-    throw error;
-  }
+  const response = await httpClient.tasks.getMyTasks({
+    ...filterParams,
+    page,
+    size,
+  });
+  return response.data as PaginatedResponse<Task>;
 };
 
 /**
@@ -109,17 +63,8 @@ export const getMyTasks = async (params: TaskFilterParams): Promise<PaginatedRes
  * @returns A promise that resolves to a list of tasks.
  */
 export const getTasksByUser = async (userId: string): Promise<PaginatedResponse<Task>> => {
-  try {
-    const response = await httpClient.tasks.getTasksByUser(userId);
-    return response.data as PaginatedResponse<Task>;
-  } catch (error) {
-    if (shouldUseDummyData()) {
-      logDummyDataError(`fetch tasks for user ${userId}`, error);
-      return createFilteredPaginatedResponse(tasks, (t) => t.assignee === userId, 0, 10);
-    }
-    // Re-throw the error if dummy data is not allowed
-    throw error;
-  }
+  const response = await httpClient.tasks.getTasksByUser(userId);
+  return response.data as PaginatedResponse<Task>;
 };
 
 /**
@@ -132,26 +77,12 @@ export const getAvailableTasks = async (
 ): Promise<PaginatedResponse<Task>> => {
   const { page = 0, size = 10, ...filterParams } = params;
 
-  try {
-    const response = await httpClient.tasks.getAvailableTasks({
-      ...filterParams,
-      page,
-      size,
-    });
-    return response.data;
-  } catch (error) {
-    if (shouldUseDummyData()) {
-      logDummyDataError('fetch available tasks', error);
-      return createFilteredPaginatedResponse(
-        tasks,
-        (t) => !t.assignee && t.status === 'CREATED',
-        page,
-        size,
-      );
-    }
-    // Re-throw the error if dummy data is not allowed
-    throw error;
-  }
+  const response = await httpClient.tasks.getAvailableTasks({
+    ...filterParams,
+    page,
+    size,
+  });
+  return response.data;
 };
 
 /**
@@ -162,28 +93,15 @@ export const getAvailableTasks = async (
 export const getTasksByProcessInstance = async (
   processInstanceId: string,
 ): Promise<PaginatedResponse<Task>> => {
-  try {
-    const response = await httpClient.tasks.getTasksByProcessInstance(processInstanceId);
-    return response.data;
-  } catch (error) {
-    if (shouldUseDummyData()) {
-      logDummyDataError(`fetch tasks for process instance ${processInstanceId}`, error);
-      return createFilteredPaginatedResponse(
-        tasks,
-        (t) => t.processInstanceId === processInstanceId,
-        0,
-        10,
-      );
-    }
-    // Re-throw the error if dummy data is not allowed
-    throw error;
-  }
+  const response = await httpClient.tasks.getTasksByProcessInstance(processInstanceId);
+  return response.data;
 };
 
 /**
  * Claims a task for a user.
  * @param taskId The ID of the task to claim.
- * @param userId The ID of the user claiming the task.
+ * @param user The user claiming the task.
+ * @param note Optional note for the claim action.
  * @returns A promise that resolves to a PostResponse.
  */
 export const claimTask = async (
@@ -195,7 +113,8 @@ export const claimTask = async (
 /**
  * Unassigns a task from a user.
  * @param taskId The ID of the task to unassign.
- * @param userId The ID of the user to unassign the task from.
+ * @param user The user to unassign the task from.
+ * @param note Optional note for the unassign action.
  * @returns A promise that resolves to a PostResponse.
  */
 export const unassignTask = async (
@@ -207,6 +126,8 @@ export const unassignTask = async (
 /**
  * Releases a claimed task.
  * @param taskId The ID of the task to release.
+ * @param user The user releasing the task.
+ * @param note Optional note for the release action.
  * @returns A promise that resolves to a PostResponse.
  */
 export const releaseTask = async (

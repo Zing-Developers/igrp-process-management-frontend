@@ -51,6 +51,7 @@ export function useProcessInstances() {
         procReleaseKey: processInstance.procReleaseKey,
         startedAt: processInstance.startedAt,
         startedBy: processInstance.startedBy,
+        version:  processInstance.version
       };
     });
   }, [processInstancesState.processInstances]);

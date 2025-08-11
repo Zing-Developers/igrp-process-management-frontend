@@ -12,12 +12,14 @@ import { ProcessTreeComponent } from '@/app/(myapp)/processmap/components/proces
 import ProcessDetail from '@/app/(igrp)/(generated)/processmap/components/processdetail';
 import { IGRPPageHeader, IGRPInputSearch } from '@igrp/igrp-framework-react-design-system';
 import { useProcessMap } from '@/app/(myapp)/processmap/hooks/use-process-map';
+import { useRouter } from 'next/navigation';
 
 export default function PageProcessmapComponent() {
   const { igrpToast } = useIGRPToast();
 
   /*---------------------------------Reserved area begin------------------------------*/
-  const pm = useProcessMap(igrpToast);
+  const router = useRouter();
+  const pm = useProcessMap(igrpToast, router);
   /*---------------------------------Reserved area end------------------------------*/
 
   return (
@@ -50,9 +52,9 @@ export default function PageProcessmapComponent() {
         nodes={pm.filteredNodes}
         expandedNodes={pm.expandedNodes}
         searchTerm={pm.searchTerm}
-        onToggle={pm.toggleNode}
         onStartProcess={pm.startProcess}
         onViewDetails={pm.detailModal.open}
+        onToggle={pm.toggleNode}
       ></ProcessTreeComponent>
       <ProcessDetail
         open={pm.detailModal.isOpen}

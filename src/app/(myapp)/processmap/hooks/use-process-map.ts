@@ -6,16 +6,17 @@ import { useProcessOperations } from './use-process-operations';
 import { useProcessModal } from './use-process-modal';
 import { useTreeSearch } from './use-tree-search';
 import { useTreeComputed } from './use-tree-computed';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
-export function useProcessMap(igrpToast?: any): ProcessMapHookReturn {
+export function useProcessMap(igrpToast?: any, router?: AppRouterInstance): ProcessMapHookReturn {
   // Data management
   const { areas, loadedNodes, loading, error, loadSubareas, refreshData } = useProcessMapData();
 
   // Tree expansion state
   const { expandedNodes, toggleNode: originalToggleNode } = useTreeExpansion();
 
-  // Process operations
-  const { selectedProcess, selectProcess, startProcess } = useProcessOperations(igrpToast);
+  // Process operations (now with router support)
+  const { selectedProcess, selectProcess, startProcess } = useProcessOperations(igrpToast, router);
 
   // Modal management
   const { detailModal } = useProcessModal();

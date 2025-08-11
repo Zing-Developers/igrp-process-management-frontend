@@ -1,3 +1,5 @@
+'use server';
+
 import { getHttpClient } from '../config/client.config';
 import { PaginatedResponse, ProcessInstance } from '@igrp/platform-process-management-types';
 

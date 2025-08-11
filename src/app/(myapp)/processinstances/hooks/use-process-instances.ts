@@ -78,7 +78,7 @@ export function useProcessInstances() {
   };
 
   const handleSearch = (searchTerm: string) => {
-    updateFilters({ procReleaseKey: searchTerm });
+    updateFilters({ processType: searchTerm });
     applyFilters();
   };
 

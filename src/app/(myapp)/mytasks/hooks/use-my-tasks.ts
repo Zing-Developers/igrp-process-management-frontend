@@ -16,7 +16,7 @@ export function useMyTasks() {
   const tableData = useMemo((): TaskTableRow[] => {
     return myTasksState.tasks.map((task) => {
       // Calculate waiting days
-      const createdDate = new Date(task.createdDate);
+      const createdDate = new Date(task.startedAt);
       const currentDate = new Date();
       const diffTime = Math.abs(currentDate.getTime() - createdDate.getTime());
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));

@@ -19,8 +19,10 @@ import {
 	IGRPDataTableDropdownMenu,
 	IGRPDataTableDropdownMenuCustom 
 } from "@igrp/igrp-framework-react-design-system";
+import {useProcessConfiguration} from '@/app/(myapp)/processconfiguration/hooks/use-process-configuration'
 import {useProcessInstances} from '@/app/(myapp)/processinstances/hooks/use-process-instances'
 import { useRouter } from "next/navigation"
+import { urlConfig } from '@/app/(myapp)/utils/url-config'
 
 
 export default function PageProcessinstancesComponent() {
@@ -45,7 +47,13 @@ const { igrpToast } = useIGRPToast()
 function goToProcessRuntime (row: any): void  | undefined {
 
   console.log(row)
-router.push(`${process.env.NEXT_PUBLIC_PROJECT_RUNTIME_TEST_URL}/process/${row.procReleaseKey}/${row.processInstanceId}`)
+const taskUrl = urlConfig.buildTaskExecutionUrl(
+      row.procReleaseKey,
+      row.processInstanceId,
+      row.taskKey,
+      row.taskId
+    );
+    router.push(taskUrl);
 
 }
 
@@ -67,13 +75,6 @@ const router = useRouter()
 
   // Update table data when process instances change
   useEffect(() => {
-    /* const transformedData = tableData.map((row, index) => ({
-      process: row.processInfo,
-      createBy: row.createBy,
-      waintingDays: row.daysWaiting,
-      status: row.status,
-    })); */
-
     setContentTableprocesses(tableData);
   }, [tableData]);
 
@@ -114,8 +115,8 @@ const router = useRouter()
 <div className={ cn('page','space-y-6',)}    >
 	<IGRPPageHeader
   name={ `pageHeader1` }
-  title={ `Gestāo de Tarefas` }
-  description={ `Visualize tarefas em curso por área e subárea` }
+  title={ `Processos` }
+  description={ `Visualize processos em curso por área e subárea` }
   iconBackButton={ `ArrowLeft` }
   showBackButton={ true }
   urlBackButton={ `/dashboard` }

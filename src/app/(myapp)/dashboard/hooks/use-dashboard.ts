@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useDashboardData } from './use-dashboard-data';
 import { RecentItemsCardItem } from '../types';
-import { ProcessInstance } from '../../external/types/process';
+import { ProcessInstance } from '@igrp/platform-process-management-types';
 
 export function useDashboard() {
   const { data, loading, error, refreshData } = useDashboardData();

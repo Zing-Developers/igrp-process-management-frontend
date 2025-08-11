@@ -92,4 +92,17 @@ export const IGRP_DEFAULT_MENU: IGRPMenuItemArgs[] = [
     applicationId: 1,
     resourceId: null,
   },
+  {
+    id: 13,
+    name: 'Gestão de Tarefas',
+    type: 'MENU_PAGE',
+    position: 1,
+    icon: 'Settings2',
+    status: 'ACTIVE',
+    target: 'INTERNAL',
+    url: '/taskmanagement',
+    parentId: null,
+    applicationId: 1,
+    resourceId: null,
+  },
 ];

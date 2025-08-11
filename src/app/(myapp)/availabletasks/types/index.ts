@@ -1,6 +1,5 @@
-import { Task } from '../../external/types/task';
-import { Area } from '../../external/types/area';
-import { Process } from '../../external/types/process';
+import { Task } from "@igrp/platform-process-management-types";
+
 
 export interface AvailableTasksFilters {
   processNumber: string;

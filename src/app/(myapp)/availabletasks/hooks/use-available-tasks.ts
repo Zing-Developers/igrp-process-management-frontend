@@ -3,37 +3,8 @@ import { useAvailableTasksData } from './use-available-tasks-data';
 import { TaskTableRow } from '../types';
 
 export function useAvailableTasks() {
-  const {
-    tasksState,
-    filters,
-    updateFilters,
-    applyFilters,
-    resetFilters,
-    fetchTasks,
-  } = useAvailableTasksData();
-
-  // Transform tasks to table format
-  const tableData = useMemo((): TaskTableRow[] => {
-    return tasksState.tasks.map(task => {
-      // Calculate days waiting
-      const createdDate = new Date(task.createdDate);
-      const now = new Date();
-      const diffTime = Math.abs(now.getTime() - createdDate.getTime());
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-      return {
-        processInfo: task.processName || 'N/A',
-        createBy: task.assignee || 'Sistema',
-        taskName: task.name,
-        status: getStatusLabel(task.status),
-        daysWaiting: diffDays.toString(),
-        taskId: task.id,
-        processInstanceId: task.processInstanceId,
-        createdDate: task.createdDate,
-        assignee: task.assignee,
-      };
-    });
-  }, [tasksState.tasks]);
+  const { tasksState, filters, updateFilters, applyFilters, resetFilters, fetchTasks } =
+    useAvailableTasksData();
 
   // Helper function to get status label
   const getStatusLabel = (status: string): string => {
@@ -48,6 +19,29 @@ export function useAvailableTasks() {
         return status;
     }
   };
+
+  // Transform tasks to table format
+  const tableData = useMemo((): TaskTableRow[] => {
+    return tasksState.tasks.map((task) => {
+      // Calculate days waiting
+      const createdDate = new Date(task.startedAt);
+      const now = new Date();
+      const diffTime = Math.abs(now.getTime() - createdDate.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      return {
+        processInfo: task.processName || 'N/A',
+        createBy: task.assignee || 'Sistema',
+        taskName: task.name,
+        status: getStatusLabel(task.status),
+        daysWaiting: diffDays.toString(),
+        taskId: task.id,
+        processInstanceId: task.processInstanceId,
+        createdDate: task.startedAt,
+        assignee: task.assignee,
+      };
+    });
+  }, [tasksState.tasks]);
 
   // Helper function to get status variant for badge
   const getStatusVariant = (status: string): string => {
@@ -66,7 +60,7 @@ export function useAvailableTasks() {
   const handleSearch = (searchTerm: string) => {
     // You can implement search logic here
     // For now, we'll use it as a general filter
-    updateFilters({ processKey: searchTerm });
+    updateFilters({ processType: searchTerm });
     applyFilters();
   };
 
@@ -82,10 +76,10 @@ export function useAvailableTasks() {
     totalElements: tasksState.totalElements,
     totalPages: tasksState.totalPages,
     currentPage: tasksState.currentPage,
-    
+
     // Filter values
     filters,
-    
+
     // Actions
     handleSearch,
     handlePageChange,

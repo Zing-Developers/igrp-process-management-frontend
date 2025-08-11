@@ -44,7 +44,7 @@ export function useDropdownData(filters: FilterState) {
     const loadDropdownOptions = async () => {
       try {
         // Load areas
-        const areasResponse = await getAreas('', '', 0, 100);
+        const areasResponse = await getAreas('', 0, 100);
         const areaOptions = areasResponse.content.map((area) => ({
           label: area.name,
           value: area.id,
@@ -75,7 +75,7 @@ export function useDropdownData(filters: FilterState) {
       }
 
       try {
-        const subareasResponse = await getAreas('', '', 0, 100, filters.areaId);
+        const subareasResponse = await getAreas('', 0, 100, filters.areaId);
         const subareaOptions = subareasResponse.content.map((subarea) => ({
           label: subarea.name,
           value: subarea.id,

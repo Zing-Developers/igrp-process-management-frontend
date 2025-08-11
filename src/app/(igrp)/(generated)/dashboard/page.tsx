@@ -10,8 +10,8 @@ import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import { RecentItemsCard } from '@/app/(myapp)/components/recent-items-card';
 import { IGRPPageHeader, IGRPStatsCard } from '@igrp/igrp-framework-react-design-system';
-import { useRouter } from 'next/navigation';
 import { useDashboard } from '@/app/(myapp)/dashboard/hooks/use-dashboard';
+import { useRouter } from 'next/navigation';
 
 export default function PageDashboardComponent() {
   const [statstatsCard1Value, setStatstatsCard1Value] = useState<string | number>(0);
@@ -22,16 +22,9 @@ export default function PageDashboardComponent() {
   const { igrpToast } = useIGRPToast();
 
   const router = useRouter();
-  
+
   // Use the dashboard hook to get real data
-  const {
-    stats,
-    processInstancesItems,
-    taskItems,
-    loading,
-    error,
-    refreshData,
-  } = useDashboard();
+  const { stats, processInstancesItems, taskItems, loading, error, refreshData } = useDashboard();
 
   // Update stats values when data changes
   useEffect(() => {
@@ -60,20 +53,20 @@ export default function PageDashboardComponent() {
     }
   }, [error, igrpToast]);
 
-  function goToprocessMap(row?: any): void {
-    router.push(`/processmap`);
+  function goToprocessInstances(row?: any): void {
+    router.push(`/processinstances`);
   }
 
-  function goToinstances(row?: any): void {
-    router.push(`/instances`);
+  function goTotaskManagement(row?: any): void {
+    router.push(`/taskmanagement`);
   }
 
   function goTomyTasks(row?: any): void {
     router.push(`/mytasks`);
   }
 
-  function goTotaskManagement(row?: any): void {
-    router.push(`/taskmanagement`);
+  function goToavailableTasks(row?: any): void {
+    router.push(`/availabletasks`);
   }
 
   return (
@@ -108,7 +101,7 @@ export default function PageDashboardComponent() {
           showIconBackground={true}
           showIconBorder={false}
           className={cn('', 'col-span-1')}
-          onClick={() => goToprocessMap()}
+          onClick={() => goToprocessInstances()}
           value={statstatsCard1Value}
         ></IGRPStatsCard>
         <IGRPStatsCard
@@ -128,7 +121,7 @@ export default function PageDashboardComponent() {
           itemPlacement={`start`}
           showIconBackground={true}
           className={cn('col-span-1')}
-          onClick={() => goToinstances()}
+          onClick={() => goTotaskManagement()}
           value={statstatsCard2Value}
         ></IGRPStatsCard>
         <IGRPStatsCard
@@ -168,7 +161,7 @@ export default function PageDashboardComponent() {
           itemPlacement={`start`}
           showIconBackground={true}
           className={cn('', 'col-span-1')}
-          onClick={() => goTotaskManagement()}
+          onClick={() => goToavailableTasks()}
           value={statstatsCard4Value}
         ></IGRPStatsCard>
       </div>

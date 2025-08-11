@@ -51,7 +51,8 @@ export default {
     'components/processtaksfilter/hooks/use-process-tasks-filter',
     'processinstances/hooks/use-process-instances',
     'mytasks/hooks/use-my-tasks',
-
+    'dashboard/hooks/use-dashboard',
+    'utils/url-config'
   ],
   components: [
     'processconfiguration/components/areas-list',

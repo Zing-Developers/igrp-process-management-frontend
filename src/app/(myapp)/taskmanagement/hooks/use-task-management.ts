@@ -11,7 +11,7 @@ export interface TaskManagementTableRow {
   taskId: string;
   taskKey: string;
   processInstanceId?: string;
-  procReleaseKey?: string;
+  processKey?: string;
   assignee?: string;
   createdDate?: string;
 }
@@ -102,7 +102,7 @@ export function useTaskManagement() {
         taskId: task.id,
         taskKey: task.taskKey,
         processInstanceId: task.processInstanceId,
-        procReleaseKey: (task as any).procReleaseKey || task.processKey || 'unknown',
+        processKey: task.processKey || 'unknown',
         assignee: task.assignedBy,
         createdDate: task.startedAt,
       };

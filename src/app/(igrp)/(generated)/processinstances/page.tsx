@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY iGRP STUDIO. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -8,27 +8,30 @@
 
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
-import TaskProcessFilter from '@/components/taskprocessfilter'
-import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
-import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
-import { 
+import TaskProcessFilter from '@/components/taskprocessfilter';
+import {
+  IGRPDataTableFacetedFilterFn,
+  IGRPDataTableDateRangeFilterFn,
+} from '@igrp/igrp-framework-react-design-system';
+import {
+  IGRPDataTableHeaderSortToggle,
+  IGRPDataTableHeaderSortDropdown,
+  IGRPDataTableHeaderRowsSelect,
+} from '@igrp/igrp-framework-react-design-system';
+import {
   IGRPPageHeader,
-	IGRPDataTable,
-	IGRPDataTableCellBadge,
-	IGRPDataTableRowAction,
-	IGRPDataTableDropdownMenu,
-	IGRPDataTableDropdownMenuCustom 
-} from "@igrp/igrp-framework-react-design-system";
-import {useProcessConfiguration} from '@/app/(myapp)/processconfiguration/hooks/use-process-configuration'
-import {useProcessInstances} from '@/app/(myapp)/processinstances/hooks/use-process-instances'
-import { useRouter } from "next/navigation"
-import { urlConfig } from '@/app/(myapp)/utils/url-config'
-
+  IGRPDataTable,
+  IGRPDataTableCellBadge,
+  IGRPDataTableRowAction,
+  IGRPDataTableDropdownMenu,
+  IGRPDataTableDropdownMenuCustom,
+} from '@igrp/igrp-framework-react-design-system';
+import { useProcessConfiguration } from '@/app/(myapp)/processconfiguration/hooks/use-process-configuration';
+import { useProcessInstances } from '@/app/(myapp)/processinstances/hooks/use-process-instances';
+import { useRouter } from 'next/navigation';
+import { urlConfig } from '@/app/(myapp)/utils/url-config';
 
 export default function PageProcessinstancesComponent() {
-
-
-  
   type Table1 = {
     processInfo: string;
     createBy: string;
@@ -37,28 +40,25 @@ export default function PageProcessinstancesComponent() {
     status: string;
     procReleaseKey: string;
     processInstanceId: string;
-}
+  };
 
   const [contentTableprocesses, setContentTableprocesses] = useState<Table1[]>([]);
-  
-  
-const { igrpToast } = useIGRPToast()
 
-function goToProcessRuntime (row: any): void  | undefined {
+  const { igrpToast } = useIGRPToast();
 
-  console.log(row)
-const taskUrl = urlConfig.buildTaskExecutionUrl(
+  function goToProcessRuntime(row: any): void | undefined {
+    console.log(row);
+    const taskUrl = urlConfig.buildTaskExecutionUrl(
       row.procReleaseKey,
       row.processInstanceId,
       row.taskKey,
-      row.taskId
+      row.taskId,
     );
     router.push(taskUrl);
+  }
 
-}
-
-//-------------------reserved area start----------------------------
-const router = useRouter()
+  //-------------------reserved area start----------------------------
+  const router = useRouter();
   const {
     tableData,
     loading,
@@ -110,126 +110,122 @@ const router = useRouter()
 
   //-------------------reserved area end------------------------------
 
-
   return (
-<div className={ cn('page','space-y-6',)}    >
-	<IGRPPageHeader
-  name={ `pageHeader1` }
-  title={ `Processos` }
-  description={ `Visualize processos em curso por área e subárea` }
-  iconBackButton={ `ArrowLeft` }
-  showBackButton={ true }
-  urlBackButton={ `/dashboard` }
-  variant={ `h3` }
-  className={ cn() }
-  
->
-  <div className="flex items-center gap-2">
-</div>
-</IGRPPageHeader>
+    <div className={cn('page', 'space-y-6')}>
+      <IGRPPageHeader
+        name={`pageHeader1`}
+        title={`Processos`}
+        description={`Visualize processos em curso por área e subárea`}
+        iconBackButton={`ArrowLeft`}
+        showBackButton={true}
+        urlBackButton={`/dashboard`}
+        variant={`h3`}
+        className={cn()}
+      >
+        <div className="flex items-center gap-2"></div>
+      </IGRPPageHeader>
 
-<div className={ cn(' border rounded-sm',)}    >
-	<TaskProcessFilter   onSearch={ handleSearchSubmit }
-onApplyFilters={ handleApplyFilters }
-onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
-<IGRPDataTable<Table1, Table1>
-  showFilter={ true }
-  showPagination={ true }
-  paginationClassName={ `px-3 pb-3` }
-  className={ cn('','border-0 border-solid border-[#000000]',) }
-  columns={
-    [
-        {
-          header: 'Processo'
-,accessorKey: 'processInfo',
-          cell: ({ row }) => {
-          return row.getValue("processInfo")
+      <div className={cn(' border rounded-sm')}>
+        <TaskProcessFilter
+          onSearch={handleSearchSubmit}
+          onApplyFilters={handleApplyFilters}
+          onResetFilters={handleResetFilters}
+        ></TaskProcessFilter>
+      </div>
+      <IGRPDataTable<Table1, Table1>
+        showFilter={true}
+        showPagination={true}
+        paginationClassName={`px-3 pb-3`}
+        className={cn('', 'border-0 border-solid border-[#000000]')}
+        columns={[
+          {
+            header: 'Processo',
+            accessorKey: 'processInfo',
+            cell: ({ row }) => {
+              return row.getValue('processInfo');
+            },
+            filterFn: IGRPDataTableFacetedFilterFn,
           },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: 'Criado por'
-,accessorKey: 'createBy',
-          cell: ({ row }) => {
-          return row.getValue("createBy")
+          {
+            header: 'Criado por',
+            accessorKey: 'createBy',
+            cell: ({ row }) => {
+              return row.getValue('createBy');
+            },
+            filterFn: IGRPDataTableFacetedFilterFn,
           },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: 'Dias em espera'
-,accessorKey: 'daysWaiting',
-          cell: ({ row }) => {
-          return row.getValue("daysWaiting")
+          {
+            header: 'Dias em espera',
+            accessorKey: 'daysWaiting',
+            cell: ({ row }) => {
+              return row.getValue('daysWaiting');
+            },
+            filterFn: IGRPDataTableFacetedFilterFn,
           },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: 'Versāo'
-,accessorKey: 'version',
-          cell: ({ row }) => {
-          const rowData = row.original;
+          {
+            header: 'Versāo',
+            accessorKey: 'version',
+            cell: ({ row }) => {
+              const rowData = row.original;
 
-
-return <IGRPDataTableCellBadge
-  label={ row.original.version }
-  variant={ `soft` }
-badgeClassName={ `` }
->
-
-</IGRPDataTableCellBadge>
+              return (
+                <IGRPDataTableCellBadge
+                  label={row.original.version}
+                  variant={`soft`}
+                  badgeClassName={``}
+                ></IGRPDataTableCellBadge>
+              );
+            },
+            filterFn: IGRPDataTableFacetedFilterFn,
           },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: 'Estado'
-,accessorKey: 'status',
-          cell: ({ row }) => {
-          const rowData = row.original;
+          {
+            header: 'Estado',
+            accessorKey: 'status',
+            cell: ({ row }) => {
+              const rowData = row.original;
 
-
-return <IGRPDataTableCellBadge
-  label={ row.original.status }
-  variant={ `soft` }
-badgeClassName={ `` }
->
-
-</IGRPDataTableCellBadge>
+              return (
+                <IGRPDataTableCellBadge
+                  label={row.original.status}
+                  variant={`soft`}
+                  badgeClassName={``}
+                ></IGRPDataTableCellBadge>
+              );
+            },
+            filterFn: IGRPDataTableFacetedFilterFn,
           },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          id: 'tableActionListCell1',
-          enableHiding: false,cell: ({ row }) => {
-          const rowData = row.original;
+          {
+            id: 'tableActionListCell1',
+            enableHiding: false,
+            cell: ({ row }) => {
+              const rowData = row.original;
 
-return (
-<IGRPDataTableRowAction>
-  <IGRPDataTableDropdownMenu
-  items={
-    [
-      {
-        component: IGRPDataTableDropdownMenuCustom,
-        props: {
-          labelTrigger: `Executar Task`,icon: `ArrowRight`,          showIcon: true,          action: () => {goToProcessRuntime(rowData)},
-}
-      },
-]
-  }
->
-</IGRPDataTableDropdownMenu>
-</IGRPDataTableRowAction>
-);
+              return (
+                <IGRPDataTableRowAction>
+                  <IGRPDataTableDropdownMenu
+                    items={[
+                      {
+                        component: IGRPDataTableDropdownMenuCustom,
+                        props: {
+                          labelTrigger: `Executar Task`,
+                          icon: `ArrowRight`,
+                          showIcon: true,
+                          action: () => {
+                            goToProcessRuntime(rowData);
+                          },
+                        },
+                      },
+                    ]}
+                  ></IGRPDataTableDropdownMenu>
+                </IGRPDataTableRowAction>
+              );
+            },
+            filterFn: IGRPDataTableFacetedFilterFn,
           },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-]
-  }
-  clientFilters={
-    [
-    ]
-  }
-  
-  data={ contentTableprocesses }
-/></div>
+        ]}
+        clientFilters={[]}
+        data={contentTableprocesses}
+      />
+    </div>
   );
 }

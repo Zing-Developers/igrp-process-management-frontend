@@ -24,10 +24,14 @@ export function useMyTasks() {
       return {
         id: task.id,
         process: task.processName || task.name,
-        createBy: task.assignee || 'Sistema',
+        createBy: task.assignedBy || 'Sistema',
         currentStep: task.name,
         waitingDays: diffDays.toString(),
-        status: task.status,
+        status: task.statusDesc || 'N/A',
+        processKey: task.processKey,
+        processInstanceId: task.processInstanceId,
+        taskKey: task.taskKey,
+        taskId: task.id,
         taskInfo: task,
       };
     });

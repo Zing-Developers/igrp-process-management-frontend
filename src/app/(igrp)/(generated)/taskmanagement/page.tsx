@@ -50,7 +50,7 @@ function executeTask (row: any): void  | undefined {
   console.log('Executing task:', row);
 // Navigate to task execution page using centralized URL config
 const taskUrl = urlConfig.buildTaskExecutionUrl(
-  row.procReleaseKey,
+  row.processKey,
   row.processInstanceId,
   row.taskKey,
   row.taskId
@@ -78,16 +78,7 @@ const {
 // Transform data for the table
 useEffect(() => {
   if (tableData) {
-    const transformedData = tableData.map((row) => ({
-      process: row.process,
-      createBy: row.createBy,
-      currentStep: row.currentStep,
-      waitingDays: row.waitingDays,
-      status: row.status,
-      taskId: row.taskId,
-      taskKey: row.taskKey,
-    }));
-    setContentTabletable1(transformedData as Table1[]);
+    setContentTabletable1(tableData);
   }
 }, [tableData]);
 

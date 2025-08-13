@@ -10,8 +10,8 @@ export interface TaskManagementTableRow {
   status: string;
   taskId: string;
   taskKey: string;
-  processInstanceId?: string;
-  processKey?: string;
+  processInstanceId: string;
+  processKey: string;
   assignee?: string;
   createdDate?: string;
 }

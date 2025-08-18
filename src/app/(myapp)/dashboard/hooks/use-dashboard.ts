@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useDashboardData } from './use-dashboard-data';
 import { RecentItemsCardItem } from '../types';
 import { ProcessInstance } from '@igrp/platform-process-management-types';
+import { getProcessInstanceStatusLabel, getProcessInstanceStatusVariant, ProcessInstanceStatus } from '../../utils/status-helpers';
 
 export function useDashboard() {
   const { data, loading, error, refreshData } = useDashboardData();
@@ -13,8 +14,8 @@ export function useDashboard() {
       title: instance.procReleaseKey || 'Processo',
       subtitle: `Iniciado por: ${instance.startedBy}`,
       badge: {
-        text: instance.status,
-        variant: getStatusVariant(instance.status),
+        text: getProcessInstanceStatusLabel(instance.status as ProcessInstanceStatus),
+        variant: getProcessInstanceStatusVariant(instance.status as ProcessInstanceStatus),
       },
     }));
   }, [data.recentProcessInstances]);
@@ -44,19 +45,4 @@ export function useDashboard() {
     // Actions
     refreshData,
   };
-}
-
-function getStatusVariant(status: string): 'success' | 'warning' | 'error' | 'info' {
-  switch (status) {
-    case 'COMPLETED':
-      return 'success';
-    case 'RUNNING':
-      return 'info';
-    case 'SUSPENDED':
-      return 'warning';
-    case 'TERMINATED':
-      return 'error';
-    default:
-      return 'info';
-  }
 }

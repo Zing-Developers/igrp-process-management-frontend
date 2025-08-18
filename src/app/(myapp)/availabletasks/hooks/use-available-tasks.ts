@@ -1,24 +1,12 @@
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import { useAvailableTasksData } from './use-available-tasks-data';
+import { claimTask } from '../../external/client/services/task.service';
+import { getTaskStatusLabel, getTaskStatusVariant } from '../../utils/status-helpers';
 import { TaskTableRow } from '../types';
 
 export function useAvailableTasks() {
   const { tasksState, filters, updateFilters, applyFilters, resetFilters, fetchTasks } =
     useAvailableTasksData();
-
-  // Helper function to get status label
-  const getStatusLabel = (status: string): string => {
-    switch (status) {
-      case 'CREATED':
-        return 'Criado';
-      case 'ASSIGNED':
-        return 'Atribuído';
-      case 'COMPLETED':
-        return 'Concluído';
-      default:
-        return status;
-    }
-  };
 
   // Transform tasks to table format
   const tableData = useMemo((): TaskTableRow[] => {
@@ -31,35 +19,32 @@ export function useAvailableTasks() {
 
       return {
         processInfo: task.processName || 'N/A',
-        createBy: task.assignee || 'Sistema',
+        createBy: task.assignedBy || 'Sistema',
         taskName: task.name,
-        status: getStatusLabel(task.status),
+        status: getTaskStatusLabel(task.status),
         daysWaiting: diffDays.toString(),
         taskId: task.id,
         processInstanceId: task.processInstanceId,
         createdDate: task.startedAt,
-        assignee: task.assignee,
+        assignedBy: task.assignedBy,
       };
     });
   }, [tasksState.tasks]);
 
-  // Helper function to get status variant for badge
-  const getStatusVariant = (status: string): string => {
-    switch (status) {
-      case 'CREATED':
-        return 'info';
-      case 'ASSIGNED':
-        return 'warning';
-      case 'COMPLETED':
-        return 'success';
-      default:
-        return 'default';
+  // Claim task function
+  const handleClaimTask = useCallback(async (taskId: string, user: string, note?: string) => {
+    try {
+      await claimTask(taskId, user, note);
+      // Refresh tasks after claiming
+      fetchTasks(tasksState.currentPage, tasksState.pageSize);
+      return { success: true };
+    } catch (error) {
+      console.error('Error claiming task:', error);
+      return { success: false, error: error instanceof Error ? error.message : 'Erro ao assumir tarefa' };
     }
-  };
+  }, [fetchTasks, tasksState.currentPage, tasksState.pageSize]);
 
   const handleSearch = (searchTerm: string) => {
-    // You can implement search logic here
-    // For now, we'll use it as a general filter
     updateFilters({ processType: searchTerm });
     applyFilters();
   };
@@ -85,7 +70,8 @@ export function useAvailableTasks() {
     handlePageChange,
     applyFilters,
     resetFilters,
-    getStatusVariant,
+    getStatusVariant: getTaskStatusVariant,
     fetchTasks,
+    handleClaimTask,
   };
 }

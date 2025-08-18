@@ -1,5 +1,6 @@
 import React from 'react';
 import { cn, IGRPIcon } from '@igrp/igrp-framework-react-design-system';
+import { BadgeVariant } from '../utils/status-helpers';
 
 interface RecentItem {
   id: string;
@@ -7,7 +8,7 @@ interface RecentItem {
   subtitle: string;
   badge?: {
     text: string;
-    variant?: 'success' | 'warning' | 'error' | 'info' | 'default';
+    variant?: BadgeVariant;
   };
 }
 

@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY iGRP STUDIO. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -8,42 +8,44 @@
 
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
-import TaskProcessFilter from '@/components/taskprocessfilter'
-import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
-import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
-import { 
+import TaskProcessFilter from '@/components/taskprocessfilter';
+import {
+  IGRPDataTableFacetedFilterFn,
+  IGRPDataTableDateRangeFilterFn,
+} from '@igrp/igrp-framework-react-design-system';
+import {
+  IGRPDataTableHeaderSortToggle,
+  IGRPDataTableHeaderSortDropdown,
+  IGRPDataTableHeaderRowsSelect,
+} from '@igrp/igrp-framework-react-design-system';
+import {
   IGRPPageHeader,
-	IGRPDataTable,
-	IGRPDataTableCellBadge,
-	IGRPDataTableRowAction,
-	IGRPDataTableDropdownMenu,
-	IGRPDataTableDropdownMenuLink 
-} from "@igrp/igrp-framework-react-design-system";
-import {useAvailableTasks} from '@/app/(myapp)/availabletasks/hooks/use-available-tasks'
-
+  IGRPDataTable,
+  IGRPDataTableCellBadge,
+  IGRPDataTableRowAction,
+  IGRPDataTableDropdownMenu,
+  IGRPDataTableDropdownMenuLink,
+} from '@igrp/igrp-framework-react-design-system';
+import { useAvailableTasks } from '@/app/(myapp)/availabletasks/hooks/use-available-tasks';
 
 export default function PageAvailabletasksComponent() {
-
-
-  
   type Table1 = {
     processInfo: string;
     createBy: string;
     taskName: string;
     status: string;
     daysWaiting: string;
-}
+    taskId: string;
+  };
 
   const [contentTabletasks, setContentTabletasks] = useState<Table1[]>([]);
-  
-  
-const [showFilter, setShowFilter] = useState<boolean>(false);
 
-const { igrpToast } = useIGRPToast()
+  const [showFilter, setShowFilter] = useState<boolean>(false);
 
-//------------------------------------Reserved Area-------------------------
+  const { igrpToast } = useIGRPToast();
+
+  //------------------------------------Reserved Area-------------------------
   // Integration with useAvailableTasks hook
-  const [searchTerm, setSearchTerm] = useState<string>('');
   const {
     tableData,
     loading,
@@ -57,6 +59,7 @@ const { igrpToast } = useIGRPToast()
     applyFilters,
     resetFilters,
     getStatusVariant,
+    handleClaimTask,
   } = useAvailableTasks();
 
   // Update table data when tableData changes
@@ -67,6 +70,7 @@ const { igrpToast } = useIGRPToast()
       taskName: task.taskName,
       status: task.status,
       daysWaiting: task.daysWaiting,
+      taskId: task.taskId, // Include taskId
     }));
     setContentTabletasks(transformedData);
   }, [tableData]);
@@ -81,127 +85,138 @@ const { igrpToast } = useIGRPToast()
     }
   }, [error, igrpToast]);
 
+  // Handle claim task action
+  const onClaimTask = async (taskId: string) => {
+    const result = await handleClaimTask(taskId, 'current-user'); // You might want to get the actual user from context/session
+
+    if (result.success) {
+      igrpToast({
+        type: 'success',
+        title: 'Sucesso',
+        description: 'Tarefa assumida com sucesso!',
+      });
+    } else {
+      igrpToast({
+        type: 'error',
+        title: 'Erro',
+        description: result.error || 'Erro ao assumir tarefa',
+      });
+    }
+  };
+
   //------------------------------------Reserved Area-------------------------
 
-
   return (
-<div className={ cn('page','space-y-6',)}    >
-	<IGRPPageHeader
-  name={ `pageHeader1` }
-  title={ `Tarefas Disponíveis` }
-  description={ `Visualize e atribua tarefas disponíveis para você` }
-  iconBackButton={ `ArrowLeft` }
-  showBackButton={ true }
-  urlBackButton={ `/dashboard` }
-  variant={ `h3` }
-  className={ cn() }
-  
->
-  <div className="flex items-center gap-2">
-</div>
-</IGRPPageHeader>
+    <div className={cn('page', 'space-y-6')}>
+      <IGRPPageHeader
+        name={`pageHeader1`}
+        title={`Tarefas Disponíveis`}
+        description={`Visualize e atribua tarefas disponíveis para você`}
+        iconBackButton={`ArrowLeft`}
+        showBackButton={true}
+        urlBackButton={`/dashboard`}
+        variant={`h3`}
+        className={cn()}
+      >
+        <div className="flex items-center gap-2"></div>
+      </IGRPPageHeader>
 
-<div className={ cn(' border rounded-sm',)}    >
-	<TaskProcessFilter   onSearch={ handleSearch }
-onApplyFilters={ applyFilters }
-onResetFilters={ resetFilters } ></TaskProcessFilter></div>
-<IGRPDataTable<Table1, Table1>
-  showFilter={ true }
-  showPagination={ true }
-  tableClassName={ `rounded-none` }
-  paginationClassName={ `px-3 pb-3` }
-  className={ cn('','border-0 border-solid border-[#000000]',) }
-  columns={
-    [
-        {
-          header: 'Processo'
-,accessorKey: 'processInfo',
-          cell: ({ row }) => {
-          return row.getValue("processInfo")
+      <div className={cn(' border rounded-sm')}>
+        <TaskProcessFilter
+          onSearch={handleSearch}
+          onApplyFilters={applyFilters}
+          onResetFilters={resetFilters}
+        ></TaskProcessFilter>
+      </div>
+      <IGRPDataTable<Table1, Table1>
+        showFilter={true}
+        showPagination={true}
+        tableClassName={`rounded-none`}
+        paginationClassName={`px-3 pb-3`}
+        className={cn('', 'border-0 border-solid border-[#000000]')}
+        columns={[
+          {
+            header: 'Processo',
+            accessorKey: 'processInfo',
+            cell: ({ row }) => {
+              return row.getValue('processInfo');
+            },
+            filterFn: IGRPDataTableFacetedFilterFn,
           },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: 'Criado por'
-,accessorKey: 'createBy',
-          cell: ({ row }) => {
-          return row.getValue("createBy")
+          {
+            header: 'Criado por',
+            accessorKey: 'createBy',
+            cell: ({ row }) => {
+              return row.getValue('createBy');
+            },
+            filterFn: IGRPDataTableFacetedFilterFn,
           },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: 'Etapa atual'
-,accessorKey: 'taskName',
-          cell: ({ row }) => {
-          return row.getValue("taskName")
+          {
+            header: 'Etapa atual',
+            accessorKey: 'taskName',
+            cell: ({ row }) => {
+              return row.getValue('taskName');
+            },
+            filterFn: IGRPDataTableFacetedFilterFn,
           },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: 'Estado'
-,accessorKey: 'status',
-          cell: ({ row }) => {
-          const rowData = row.original;
+          {
+            header: 'Estado',
+            accessorKey: 'status',
+            cell: ({ row }) => {
+              const rowData = row.original;
 
-
-return <IGRPDataTableCellBadge
-  label={ row.original.status }
-  variant={ `soft` }
-badgeClassName={ `` }
->
-
-</IGRPDataTableCellBadge>
+              return (
+                <IGRPDataTableCellBadge
+                  label={row.original.status}
+                  variant={`soft`}
+                  badgeClassName={``}
+                ></IGRPDataTableCellBadge>
+              );
+            },
+            filterFn: IGRPDataTableFacetedFilterFn,
           },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: 'Dias em espera'
-,accessorKey: 'daysWaiting',
-          cell: ({ row }) => {
-          return row.getValue("daysWaiting")
+          {
+            header: 'Dias em espera',
+            accessorKey: 'daysWaiting',
+            cell: ({ row }) => {
+              return row.getValue('daysWaiting');
+            },
+            filterFn: IGRPDataTableFacetedFilterFn,
           },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: 'Actions Column'
-,accessorKey: 'tableActionListCell1',
-          enableHiding: false,cell: ({ row }) => {
-          const rowData = row.original;
+          {
+            header: 'Actions Column',
+            accessorKey: 'tableActionListCell1',
+            enableHiding: false,
+            cell: ({ row }) => {
+              const rowData = row.original;
 
-return (
-<IGRPDataTableRowAction>
-  <IGRPDataTableDropdownMenu
-  items={
-    [
-      {
-        component: IGRPDataTableDropdownMenuLink,
-        props: {
-          labelTrigger: `Assumir Tarefa`,icon: `CheckCheck`,href: `https://www.igrp.cv/`,          showIcon: true,          action: (e) => {},
-}
-      },
-      {
-        component: IGRPDataTableDropdownMenuLink,
-        props: {
-          labelTrigger: `Detalhes`,icon: `Eye`,href: `https://www.igrp.cv/`,          showIcon: true,          action: (e) => {},
-}
-      },
-]
-  }
->
-</IGRPDataTableDropdownMenu>
-</IGRPDataTableRowAction>
-);
+              return (
+                <IGRPDataTableRowAction>
+                  <IGRPDataTableDropdownMenu
+                    items={[
+                      {
+                        component: IGRPDataTableDropdownMenuLink,
+                        props: {
+                          labelTrigger: `Assumir Tarefa`,
+                          icon: `CheckCheck`,
+                          href: `https://www.igrp.cv/`,
+                          showIcon: true,
+                          action: () => {
+                            onClaimTask(rowData.taskId);
+                          },
+                        },
+                      },
+                    ]}
+                  ></IGRPDataTableDropdownMenu>
+                </IGRPDataTableRowAction>
+              );
+            },
+            filterFn: IGRPDataTableFacetedFilterFn,
           },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-]
-  }
-  clientFilters={
-    [
-    ]
-  }
-  
-  data={ contentTabletasks }
-/></div>
+        ]}
+        clientFilters={[]}
+        data={contentTabletasks}
+      />
+    </div>
   );
 }

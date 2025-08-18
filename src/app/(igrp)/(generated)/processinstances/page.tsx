@@ -30,6 +30,7 @@ import { useProcessConfiguration } from '@/app/(myapp)/processconfiguration/hook
 import { useProcessInstances } from '@/app/(myapp)/processinstances/hooks/use-process-instances';
 import { useRouter } from 'next/navigation';
 import { urlConfig } from '@/app/(myapp)/utils/url-config';
+import { getProcessInstanceStatusColor } from '@/app/(myapp)/utils/status-badge';
 
 export default function PageProcessinstancesComponent() {
   type Table1 = {
@@ -80,6 +81,7 @@ export default function PageProcessinstancesComponent() {
 
   // Handle filter application with process instance filters
   const handleApplyFilters = (filters?: any) => {
+    console.log('handleApplyFilters', filters);
     if (filters) {
       console.log('Applying process instance filters:', filters);
       applyFilters(filters);
@@ -184,11 +186,14 @@ export default function PageProcessinstancesComponent() {
             cell: ({ row }) => {
               const rowData = row.original;
 
+              const { iconName, bgClass, textClass, label, className } =
+                getProcessInstanceStatusColor(rowData);
+
               return (
                 <IGRPDataTableCellBadge
-                  label={row.original.status}
+                  label={label ?? row.original.status}
                   variant={`soft`}
-                  badgeClassName={``}
+                  badgeClassName={`${bgClass} ${textClass} ${className}`}
                 ></IGRPDataTableCellBadge>
               );
             },

@@ -17,6 +17,8 @@ export function useFilterData() {
   const { dropdownOptions } = useDropdownData(filters);
 
   const updateFilters = (newFilters: Partial<FilterState>) => {
+    console.log("newFilters", newFilters);
+
     setFilters((prev) => ({ ...prev, ...newFilters }));
   };
 

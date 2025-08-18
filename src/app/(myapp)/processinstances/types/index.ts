@@ -46,6 +46,6 @@ export interface ProcessInstanceTableRow {
   status: string;
   processInstanceId: string;
   procReleaseKey: string;
-  startedAt: string;
   startedBy: string;
+  version: string;
 }

@@ -29,9 +29,13 @@ export function useProcessInstancesData() {
   };
 
   // Fetch process instances function
-  const fetchProcessInstances = async (page = 0, size = 10, customFilters?: Partial<ProcessInstancesFilters>) => {
+  const fetchProcessInstances = async (
+    page = 0,
+    size = 10,
+    customFilters?: Partial<ProcessInstancesFilters>,
+  ) => {
     setProcessInstancesState((prev) => ({ ...prev, loading: true, error: null }));
-    
+
     // Use custom filters if provided, otherwise use current filters state
     const filtersToUse = customFilters ? { ...filters, ...customFilters } : filters;
     console.log('Fetching process instances with filters:', filtersToUse);
@@ -40,14 +44,21 @@ export function useProcessInstancesData() {
       // Map the filter fields to match the ProcessInstanceFilters interface
       const mappedFilters = {
         procReleaseKey: filtersToUse.processType || undefined,
-        businessKey: filtersToUse.processNumber || undefined,
-        status: filtersToUse.status as 'CREATED' | 'COMPLETED' | 'SUSPENDED' | 'TERMINATED' | 'RUNNING' | undefined,
+        number: filtersToUse.processNumber || '',
+        status: filtersToUse.status as
+          | 'CREATED'
+          | 'COMPLETED'
+          | 'SUSPENDED'
+          | 'TERMINATED'
+          | 'RUNNING'
+          | undefined,
         // Note: dateFrom and dateTo are not supported by the current ProcessInstanceFilters interface
         // You may need to extend the interface or handle these differently
       };
 
       // Call the service with separate parameters: page, size, filters
       const response = await getProcessInstances(page, size, mappedFilters);
+      console.log('response:', response);
 
       setProcessInstancesState({
         processInstances: response.content,
@@ -73,12 +84,12 @@ export function useProcessInstancesData() {
     // Use a callback to get the most current filter values
     const filtersToApply = customFilters || filters;
     console.log('Applying filters:', filtersToApply);
-    
+
     // Update filters if custom filters provided
     if (customFilters) {
       updateFilters(customFilters);
     }
-    
+
     // Fetch process instances with the filter values
     fetchProcessInstances(0, processInstancesState.pageSize, filtersToApply);
   };

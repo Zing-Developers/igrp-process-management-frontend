@@ -3,6 +3,7 @@ import { DashboardData, DashboardStats, RecentItemsCardItem } from '../types';
 import { getProcessInstances } from '../../external/client/services/process-instances.service';
 import { getMyTasks, getTasks } from '../../external/client/services/task.service';
 import { Task } from '@igrp/platform-process-management-types';
+import { getTaskStatusLabel, getTaskStatusVariant, TaskStatus } from '../../utils/status-helpers';
 
 export function useDashboardData() {
   const [data, setData] = useState<DashboardData>({
@@ -22,32 +23,10 @@ export function useDashboardData() {
    * Maps a Task to RecentItemsCardItem format
    */
   const mapTaskToRecentItem = (task: Task): RecentItemsCardItem => {
-    // Determine badge variant based on task priority or status
-    let badgeVariant: 'success' | 'warning' | 'error' | 'info' = 'info';
-    let badgeText =  'Pendente';
-
-    switch (task.status?.toLowerCase()) {
-      case 'completed':
-        badgeVariant = 'success';
-        badgeText = 'Concluída';
-        break;
-      case 'in_progress':
-        badgeVariant = 'warning';
-        badgeText = 'Em Andamento';
-        break;
-      case 'created':
-        badgeVariant = 'info';
-        badgeText = 'Nova';
-        break;
-      case 'suspended':
-        badgeVariant = 'error';
-        badgeText = 'Suspensa';
-        break;
-      default:
-        badgeVariant = 'error';
-        badgeText = 'Pendente';
-        break;
-    }
+    // Use centralized status helpers
+    const taskStatus = task.status?.toUpperCase() as TaskStatus;
+    const badgeText = getTaskStatusLabel(taskStatus);
+    const badgeVariant = getTaskStatusVariant(taskStatus);
 
     return {
       id: task.id,

@@ -23,7 +23,7 @@ export const getProcessInstances = async (
   size = 20,
   filters?: {
     processKey?: string;
-    processNumber?: number;
+    number?: string;
     status?: string;
     businessKey?: string;
     startDateFrom?: string;

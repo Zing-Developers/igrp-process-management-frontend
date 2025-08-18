@@ -52,7 +52,8 @@ export default {
     'processinstances/hooks/use-process-instances',
     'mytasks/hooks/use-my-tasks',
     'dashboard/hooks/use-dashboard',
-    'utils/url-config'
+    'utils/url-config',
+    'utils/status-badge'
   ],
   components: [
     'processconfiguration/components/areas-list',

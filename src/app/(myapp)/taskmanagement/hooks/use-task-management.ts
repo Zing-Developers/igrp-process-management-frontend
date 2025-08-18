@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Task, PaginatedResponse } from '@igrp/platform-process-management-types';
 import { getTasks } from '../../external/client/services/task.service';
+import { getTaskStatusLabel, getTaskStatusVariant } from '../../utils/status-helpers';
 
 export interface TaskManagementTableRow {
   process: string;
@@ -12,7 +13,7 @@ export interface TaskManagementTableRow {
   taskKey: string;
   processInstanceId: string;
   processKey: string;
-  assignee?: string;
+  assignedBy?: string;
   createdDate?: string;
 }
 
@@ -49,41 +50,6 @@ export function useTaskManagement() {
 
   const [filters, setFilters] = useState<TaskFilters>({});
 
-  // Helper function to get status label
-  const getStatusLabel = (status: string): string => {
-    switch (status) {
-      case 'CREATED':
-        return 'Criado';
-      case 'ASSIGNED':
-        return 'Atribuído';
-      case 'COMPLETED':
-        return 'Concluído';
-      case 'CANCELLED':
-        return 'Cancelado';
-      case 'DELETED':
-        return 'Excluído';
-      default:
-        return status;
-    }
-  };
-
-  // Helper function to get status variant for badge
-  const getStatusVariant = (status: string): string => {
-    switch (status) {
-      case 'CREATED':
-        return 'info';
-      case 'ASSIGNED':
-        return 'warning';
-      case 'COMPLETED':
-        return 'success';
-      case 'CANCELLED':
-        return 'destructive';
-      case 'DELETED':
-        return 'secondary';
-      default:
-        return 'default';
-    }
-  };
 
   // Transform tasks data for table display
   const tableData = useMemo((): TaskManagementTableRow[] => {
@@ -98,12 +64,12 @@ export function useTaskManagement() {
         createBy: task.assignedBy || 'Sistema',
         currentStep: task.name,
         waitingDays: diffDays.toString(),
-        status: getStatusLabel(task.status),
+        status: getTaskStatusLabel(task.status),
         taskId: task.id,
-        taskKey: task.taskKey,
+        taskKey: task.taskKey || task.name,
         processInstanceId: task.processInstanceId,
         processKey: task.processKey || 'unknown',
-        assignee: task.assignedBy,
+        assignedBy: task.assignedBy,
         createdDate: task.startedAt,
       };
     });
@@ -170,8 +136,7 @@ export function useTaskManagement() {
 
   return {
     // Data
-    tableData,
-    
+    tableData,    
     // State
     loading: state.loading,
     error: state.error,
@@ -179,16 +144,14 @@ export function useTaskManagement() {
     totalPages: state.totalPages,
     currentPage: state.currentPage,
     pageSize: state.pageSize,
-
     // Filters
     filters,
-
     // Actions
     handleSearch,
     handlePageChange,
     applyFilters,
     resetFilters,
-    getStatusVariant,
+    getStatusVariant: getTaskStatusVariant,
     fetchTasks,
   };
 }

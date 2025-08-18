@@ -1,4 +1,5 @@
 import { ProcessInstance } from '../../external/types/process';
+import { BadgeVariant } from '../../utils/status-helpers';
 
 export interface DashboardStats {
   totalProcesses: number;
@@ -25,6 +26,6 @@ export interface RecentItemsCardItem {
   subtitle: string;
   badge: {
     text: string;
-    variant: 'success' | 'warning' | 'error' | 'info';
+    variant: BadgeVariant;
   };
 }

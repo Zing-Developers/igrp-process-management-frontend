@@ -9,6 +9,7 @@ const httpClient = getHttpClient();
  * Interface for task filter parameters used in multiple functions
  */
 interface TaskFilterParams {
+  processInstanceId?: string;
   processNumber?: string;
   processKey?: string;
   user?: string;
@@ -21,13 +22,23 @@ interface TaskFilterParams {
 }
 
 /**
- * Fetches a paginated list of tasks.
+ * Fetches a paginated list of tasks with optional filters.
  * @param page The page number to fetch.
  * @param size The number of items per page.
+ * @param filters Optional filter parameters.
  * @returns A promise that resolves to a paginated response of tasks.
  */
-export const getTasks = async (page = 0, size = 10): Promise<PaginatedResponse<Task>> => {
-  const response = await httpClient.tasks.getTasks({ page, size });
+export const getTasks = async (
+  page = 0, 
+  size = 10, 
+  filters?: Omit<TaskFilterParams, 'page' | 'size'>
+): Promise<PaginatedResponse<Task>> => {
+  const params = {
+    page,
+    size,
+    ...filters
+  };
+  const response = await httpClient.tasks.getTasks(params);
   return response.data as PaginatedResponse<Task>;
 };
 

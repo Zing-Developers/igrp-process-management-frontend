@@ -27,7 +27,7 @@ export function useAreaForm() {
         code: area.code,
         name: area.name,
         description: area.description || '',
-        applicationBase: '',
+        applicationBase: area.applicationBase || '',
         parentId: area.areaId, // Changed from area_fk to area_id
       });
     } else {

@@ -1,5 +1,5 @@
 import { IGRPButton } from '@igrp/igrp-framework-react-design-system';
-import { Process } from '../../external/types/process';
+import { Process } from '@igrp/platform-process-management-types';
 
 export function ProcessList({
   processes,

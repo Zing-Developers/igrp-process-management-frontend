@@ -16,7 +16,7 @@
     "@igrp/framework-next-ui": "latest",
     "@igrp/igrp-framework-react-design-system": "latest",
     "@igrp/platform-process-management-client-ts": "latest",
-    "@igrp/platform-process-management-types": "0.0.1-beta.5",
+    "@igrp/platform-process-management-types": "latest",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.518.0",

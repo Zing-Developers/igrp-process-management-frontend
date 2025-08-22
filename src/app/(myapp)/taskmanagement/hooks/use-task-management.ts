@@ -50,7 +50,6 @@ export function useTaskManagement() {
 
   const [filters, setFilters] = useState<TaskFilters>({});
 
-
   // Transform tasks data for table display
   const tableData = useMemo((): TaskManagementTableRow[] => {
     return state.tasks.map((task) => {
@@ -75,12 +74,27 @@ export function useTaskManagement() {
     });
   }, [state.tasks]);
 
-  // Fetch tasks function
-  const fetchTasks = useCallback(async (page = 0, size = 10) => {
+  // Fetch tasks function with filters
+  const fetchTasks = useCallback(async (page = 0, size = 10, appliedFilters?: TaskFilters) => {
     setState(prev => ({ ...prev, loading: true, error: null }));
     
     try {
-      const response: PaginatedResponse<Task> = await getTasks(page, size);
+      // Convert filters to API format
+      const apiFilters = {
+        processNumber: appliedFilters?.processNumber,
+        processKey: appliedFilters?.processKey,
+        user: appliedFilters?.user,
+        status: appliedFilters?.status,
+        dateFrom: appliedFilters?.dateFrom,
+        dateTo: appliedFilters?.dateTo,
+      };
+
+      // Remove undefined values
+      const cleanFilters = Object.fromEntries(
+        Object.entries(apiFilters).filter(([_, value]) => value !== undefined)
+      );
+
+      const response: PaginatedResponse<Task> = await getTasks(page, size, cleanFilters);
       
       setState(prev => ({
         ...prev,
@@ -103,30 +117,27 @@ export function useTaskManagement() {
 
   // Handle search functionality
   const handleSearch = useCallback((searchTerm: string) => {
-    setFilters(prev => ({ ...prev, searchTerm }));
-    // For now, we'll just refetch with the current page
-    // In a real implementation, you might want to pass search parameters to the API
-    fetchTasks(0, state.pageSize);
-  }, [fetchTasks, state.pageSize]);
+    const newFilters = { ...filters, searchTerm };
+    setFilters(newFilters);
+    fetchTasks(0, state.pageSize, newFilters);
+  }, [filters, fetchTasks, state.pageSize]);
 
   // Handle page change
   const handlePageChange = useCallback((page: number) => {
-    fetchTasks(page, state.pageSize);
-  }, [fetchTasks, state.pageSize]);
+    fetchTasks(page, state.pageSize, filters);
+  }, [fetchTasks, state.pageSize, filters]);
 
   // Handle filter application
   const applyFilters = useCallback((newFilters?: TaskFilters) => {
-    if (newFilters) {
-      setFilters(prev => ({ ...prev, ...newFilters }));
-    }
-    // Refetch tasks with current filters
-    fetchTasks(0, state.pageSize);
-  }, [fetchTasks, state.pageSize]);
+    const updatedFilters = newFilters ? { ...filters, ...newFilters } : filters;
+    setFilters(updatedFilters);
+    fetchTasks(0, state.pageSize, updatedFilters);
+  }, [filters, fetchTasks, state.pageSize]);
 
   // Handle filter reset
   const resetFilters = useCallback(() => {
     setFilters({});
-    fetchTasks(0, state.pageSize);
+    fetchTasks(0, state.pageSize, {});
   }, [fetchTasks, state.pageSize]);
 
   // Load initial data

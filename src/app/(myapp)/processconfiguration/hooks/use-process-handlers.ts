@@ -1,10 +1,11 @@
 import { useProcessForm } from './processes/use-process-form';
 import { useProcessOperations } from './processes/use-process-operations';
+import { useArtifactForm } from './artifacts/use-artifact-form';
+import { useArtifactOperations } from './artifacts/use-artifact-operations';
 import { AreaProcessesMap } from '../types';
-import { Process } from '@/app/(myapp)/external/types/process';
 import { ProcessService } from '../services/process.service';
 import { useState, useEffect } from 'react';
-import { CreateProcessRequest } from '../../external/client/services/area-process.service';
+import { Process, ProcessData } from '@igrp/platform-process-management-types';
 
 export function useProcessHandlers(
   areaProcesses: AreaProcessesMap,
@@ -17,6 +18,8 @@ export function useProcessHandlers(
 
   const processForm = useProcessForm();
   const processOperations = useProcessOperations(setAreaProcesses);
+  const artifactForm = useArtifactForm();
+  const artifactOperations = useArtifactOperations();
 
   // Load all processes from API when component mounts or when needed
   const loadAllProcesses = async () => {
@@ -60,7 +63,7 @@ export function useProcessHandlers(
     }
     console.log('process', process);
     // Create the request object
-    const processData: CreateProcessRequest = {
+    const processData: ProcessData = {
       processKey: process.processKey || '',
       name: process.name || '',
       releaseId: process.id || '',
@@ -140,11 +143,27 @@ export function useProcessHandlers(
     return filteredProcesses;
   };
 
+  const handleOpenArtifactModal = async (processId: string) => {
+    artifactForm.openModal(processId);
+    
+    // Load artifacts when modal opens
+    if (processId) {
+      await artifactOperations.loadProcessArtifacts(
+        processId,
+        artifactForm.setProcessArtifacts,
+        artifactForm.setLoading
+      );
+    }
+  };
+
   return {
     processForm,
     processOperations,
+    artifactForm,
+    artifactOperations,
     handleAssociateProcess,
     handleRemoveProcess,
+    handleOpenArtifactModal,
     getAvailableProcesses,
     loadAllProcesses,
     allProcesses,

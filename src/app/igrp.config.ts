@@ -58,6 +58,7 @@ export default {
   components: [
     'processconfiguration/components/areas-list',
     'processconfiguration/components/process-list',
+    'processconfiguration/components/artifact-processes-list',
     'processmap/components/process-tree-node',
     'components/recent-items-card',
   ],

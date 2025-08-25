@@ -22,7 +22,12 @@ export const getAreaProcesses = async (areaId: string): Promise<PaginatedRespons
  */
 export const associateProcessToArea = async (
   areaId: string,
-  processData: { processKey: string; processNumber: number },
+  processData: {
+      processKey: string;
+      releaseId: string;
+      version: string;
+      name: string;
+    },
 ): Promise<Process> => {
   return (await httpClient.areas.associateProcessToArea(areaId, processData)).data;
 };

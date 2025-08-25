@@ -1,9 +1,8 @@
-import { PaginatedResponse, Process } from '@igrp/platform-process-management-types';
+import { PaginatedResponse, Process, ProcessData } from '@igrp/platform-process-management-types';
 import {
   getAreaProcesses,
   associateProcessToArea,
-  removeProcessFromArea,
-  CreateProcessRequest,
+  removeProcessFromArea
 } from '../../external/client/services/area-process.service';
 
 export class AreaProcessService {
@@ -12,7 +11,7 @@ export class AreaProcessService {
     return paginatedResponse;
   }
 
-  static async associateProcessToArea(areaId: string, processData: CreateProcessRequest): Promise<Process> {
+  static async associateProcessToArea(areaId: string, processData: ProcessData): Promise<Process> {
     return await associateProcessToArea(areaId, processData);
   }
 

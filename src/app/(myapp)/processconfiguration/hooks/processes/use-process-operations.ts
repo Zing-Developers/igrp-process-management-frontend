@@ -1,4 +1,4 @@
-import { CreateProcessRequest } from '@/app/(myapp)/external/client/services/area-process.service';
+import { ProcessData } from '@igrp/platform-process-management-types';
 import { AreaProcessService } from '../../services/area-process.service';
 import { AreaProcessesMap } from '../../types';
 
@@ -15,7 +15,7 @@ export function useProcessOperations(
     setAreaProcesses(prev => ({ ...prev, [areaId]: updatedProcesses || [] }));
   };
 
-  const handleAssociateProcess = async (areaId: string, processData: CreateProcessRequest) => {
+  const handleAssociateProcess = async (areaId: string, processData: ProcessData) => {
     try {
       await AreaProcessService.associateProcessToArea(areaId, processData);
       

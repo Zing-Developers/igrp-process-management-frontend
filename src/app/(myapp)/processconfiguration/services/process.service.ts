@@ -1,10 +1,11 @@
+import { PaginatedResponse, Process, ProcessInstance, ProcessArtifact } from '@igrp/platform-process-management-types';
 import {
   getProcesses,
   getProcessById,
   startProcess,
+  getProcessArtifacts,
+  getProcessDeployedArtifacts,
 } from '../../external/client/services/process.service';
-import { Process, ProcessInstance } from '../../external/types/process';
-import { PaginatedResponse } from '../../external/types/response';
 
 export class ProcessService {
   static async getProcesses(page: number = 0, size: number = 20): Promise<PaginatedResponse<Process>> {
@@ -22,5 +23,13 @@ export class ProcessService {
     variables?: Array<{ name: string; value: string }>
   ): Promise<ProcessInstance> {
     return await startProcess(processDefinitionId, processKey, businessKey, variables);
+  }
+
+  static async getProcessArtifacts(processDefinitionId: string): Promise<ProcessArtifact[]> {
+    return await getProcessArtifacts(processDefinitionId);
+  }
+
+  static async getProcessDeployedArtifacts(processDefinitionId: string): Promise<ProcessArtifact[]> {
+    return await getProcessDeployedArtifacts(processDefinitionId);
   }
 }

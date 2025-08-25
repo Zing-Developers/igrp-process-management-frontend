@@ -3,6 +3,7 @@ import { getHttpClient, getApplicationBase } from '../config/client.config';
 import {
   PaginatedResponse,
   Process,
+  ProcessArtifact,
   ProcessInstance,
 } from '@igrp/platform-process-management-types';
 
@@ -18,6 +19,30 @@ const applicationBase = getApplicationBase();
 export const getProcesses = async (page = 0, size = 20): Promise<PaginatedResponse<Process>> => {
   const response = await httpClient.processes.getProcesses({ page, size });
   return response.data as PaginatedResponse<Process>;
+};
+
+
+
+/**
+ * Fetches a paginated list of processes.
+ * @param processDefinitionId The ID of the process definition to fetch.
+ * @returns A promise that resolves to a paginated response of processes.
+ */
+export const getProcessArtifacts = async (processDefinitionId: string): Promise<ProcessArtifact[]> => {
+  const response = await httpClient.processes.getProcessArtifacts(processDefinitionId);
+  return response.data as ProcessArtifact[];
+};
+
+
+
+/**
+ * Fetches a paginated list of processes.
+ * @param processDefinitionId The ID of the process definition to fetch.
+ * @returns A promise that resolves to a paginated response of processes.
+ */
+export const getProcessDeployedArtifacts = async (processDefinitionId: string): Promise<ProcessArtifact[]> => {
+  const response = await httpClient.processes.getProcessDeployedArtifacts(processDefinitionId);
+  return response.data as ProcessArtifact[];
 };
 
 /**

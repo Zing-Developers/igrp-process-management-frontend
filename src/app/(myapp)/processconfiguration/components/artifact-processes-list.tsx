@@ -1,29 +1,24 @@
-
 import { IGRPButton, IGRPIcon } from '@igrp/igrp-framework-react-design-system';
 import { cn } from '@/lib/utils';
 import { Process } from '@igrp/platform-process-management-types';
 
-interface ProcessesListProps {
+export function ArtifactProcessesList({
+  processes,
+  onArtifactEdit,
+}: {
   processes: Process[];
-  onRemoveProcess: (processId: string) => void;
-}
-
-export function ProcessesList({ processes, onRemoveProcess }: ProcessesListProps) {
+  onArtifactEdit: (processId: string) => void;
+}) {
   if (processes.length === 0) {
-    return (
-      <div className="text-sm text-muted-foreground italic">
-        Nenhum processo associado a esta área
-      </div>
-    );
+    return <div className="text-sm text-muted-foreground italic">Nenhum processo encontrado</div>;
   }
 
   return (
     <div className="space-y-2">
-      <h4 className="text-sm font-medium text-foreground mb-2">Processos:</h4>
       {processes.map((process) => (
         <div
           key={process.id}
-          className="flex items-center justify-between p-2 rounded border border-border"
+          className="flex items-center justify-between p-2 rounded-lg bg-card border border-border"
         >
           <div className="flex items-center gap-2">
             <IGRPIcon
@@ -43,16 +38,15 @@ export function ProcessesList({ processes, onRemoveProcess }: ProcessesListProps
               </div>
             </div>
           </div>
-          
-            <IGRPButton
-              onClick={() => onRemoveProcess(process.id)}
-              variant="ghost"
-              size="icon"
-              iconName="Trash2"
-              className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded"
-              iconClassName="w-4 h-4"
-              title="Remover processo"
-            />
+          <IGRPButton
+            onClick={() => onArtifactEdit(process.id)}
+            variant="ghost"
+            size="icon"
+            iconName="ArrowRightLeft"
+            className="p-2 text-muted-foreground hover:text-primary hover:bg-accent rounded"
+            iconClassName="w-4 h-4"
+            title="Configurar Artifatos"
+          />
         </div>
       ))}
     </div>

@@ -59,6 +59,11 @@ export function useProcessConfiguration(igrpToast?: any) {
     // Process management
     ...processHandlers,
 
+    // Artifact management - ADD THESE LINES
+    artifactForm: processHandlers.artifactForm,
+    processArtifacts: processHandlers.artifactForm.processArtifacts,
+    handleOpenArtifactModal: processHandlers.handleOpenArtifactModal,
+
     // UI state
     expansion: {
       ...expansion,

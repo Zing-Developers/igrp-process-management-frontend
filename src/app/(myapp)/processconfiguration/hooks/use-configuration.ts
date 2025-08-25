@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Process } from '../../external/types/process';
 import { AreaProcessesMap, ExtendedArea } from '../types';
 import { organizeAreasHierarchy } from '../utils/area-hierarchy';
 import { AreaService } from '../services/area.service';
+import { Process } from '@igrp/platform-process-management-types';
 
 export function useConfiguration() {
   const [areas, setAreas] = useState<ExtendedArea[]>([]);

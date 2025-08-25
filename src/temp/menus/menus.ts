@@ -22,7 +22,7 @@ export const IGRP_DEFAULT_MENU: IGRPMenuItemArgs[] = [
     icon: 'Settings2',
     status: 'ACTIVE',
     target: 'INTERNAL',
-    url: '/dashboard',
+    url: '/',
     parentId: null,
     applicationId: 1,
     resourceId: null,

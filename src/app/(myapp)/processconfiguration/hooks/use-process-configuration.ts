@@ -16,11 +16,6 @@ export function useProcessConfiguration(igrpToast?: any) {
   // Area management - pass setAreaProcesses
   const areaHandlers = useAreaHandlers(areas, setAreas, setAreaProcesses, igrpToast);
 
-  // Debug: Log what areaHandlers contains
-  console.log("areaHandlers keys:", Object.keys(areaHandlers));
-  console.log("areaHandlers.handleLoadAreaProcesses:", areaHandlers.handleLoadAreaProcesses);
-  console.log("typeof areaHandlers.handleLoadAreaProcesses:", typeof areaHandlers.handleLoadAreaProcesses);
-
   // Process management
   const { loading: processesLoading, ...processHandlers } = useProcessHandlers(areaProcesses, setAreaProcesses, processes, igrpToast);
 
@@ -59,10 +54,11 @@ export function useProcessConfiguration(igrpToast?: any) {
     // Process management
     ...processHandlers,
 
-    // Artifact management - ADD THESE LINES
+    // Artifact management
     artifactForm: processHandlers.artifactForm,
     processArtifacts: processHandlers.artifactForm.processArtifacts,
     handleOpenArtifactModal: processHandlers.handleOpenArtifactModal,
+    handleSaveArtifacts: () => processHandlers.artifactForm.saveArtifacts(igrpToast),
 
     // UI state
     expansion: {

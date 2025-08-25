@@ -62,6 +62,7 @@ export const getMyTasks = async (params: TaskFilterParams): Promise<PaginatedRes
 
   const response = await httpClient.tasks.getMyTasks({
     ...filterParams,
+    status: 'ASSIGNED',
     page,
     size,
   });
@@ -90,6 +91,7 @@ export const getAvailableTasks = async (
 
   const response = await httpClient.tasks.getAvailableTasks({
     ...filterParams,
+    status: 'CREATED',
     page,
     size,
   });

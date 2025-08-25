@@ -1,6 +1,7 @@
 'use server';
 import { getHttpClient, getApplicationBase } from '../config/client.config';
 import {
+  CreateProcessArtifactRequest,
   PaginatedResponse,
   Process,
   ProcessArtifact,
@@ -34,6 +35,16 @@ export const getProcessArtifacts = async (processDefinitionId: string): Promise<
 };
 
 
+/**
+ * Creates a new process artifact.
+ * @param processDefinitionId The ID of the process definition to create the artifact for.
+ * @param artifact The artifact to create.
+ * @returns A promise that resolves to the created process artifact.
+ */
+export const createProcessArtifact = async (processDefinitionId: string, artifact: CreateProcessArtifactRequest): Promise<ProcessArtifact> => {
+  const response = await httpClient.processes.createProcessArtifact(processDefinitionId, artifact);
+  return response.data as ProcessArtifact;
+};
 
 /**
  * Fetches a paginated list of processes.

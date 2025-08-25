@@ -151,7 +151,8 @@ export function useProcessHandlers(
       await artifactOperations.loadProcessArtifacts(
         processId,
         artifactForm.setProcessArtifacts,
-        artifactForm.setLoading
+        artifactForm.setLoading,
+        artifactForm.populateFormDataFromArtifacts // Pass the populate function
       );
     }
   };

@@ -141,11 +141,14 @@ export default function PageProcessconfigurationComponent() {
       <ArtifactModal
         open={pc.artifactForm.modalState.isOpen}
         processArtifacts={pc.processArtifacts}
+        formData={pc.artifactForm.formData}
         setOpen={(open) =>
           open
             ? pc.handleOpenArtifactModal(pc.artifactForm.modalState.selectedProcessId || '')
             : pc.artifactForm.closeModal()
         }
+        onFormChange={pc.artifactForm.updateFormData}
+        onSave={pc.handleSaveArtifacts}
       ></ArtifactModal>
     </div>
   );

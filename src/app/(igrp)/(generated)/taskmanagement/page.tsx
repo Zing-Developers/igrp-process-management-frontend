@@ -65,6 +65,7 @@ export default function PageTaskmanagementComponent() {
   const router = useRouter();
   const { stats, loading: statsLoading } = useDashboard();
   const {
+    assignModalState,
     tableData,
     loading,
     error,
@@ -77,22 +78,13 @@ export default function PageTaskmanagementComponent() {
     resetFilters,
     getStatusVariant,
     handleAssignTask,
+    handleOpenAssignModal,
+    handleCloseAssignModal,
   } = useTaskManagement();
 
   // Transform data for the table
   useEffect(() => {
-    if (tableData) {
-      const transformedData = tableData.map((row) => ({
-        process: row.process,
-        createBy: row.createBy,
-        currentStep: row.currentStep,
-        waitingDays: row.waitingDays,
-        status: row.status,
-        taskId: row.taskId,
-        taskKey: row.taskKey,
-      }));
-      setContentTabletable1(transformedData as Table1[]);
-    }
+    if (tableData) setContentTabletable1(tableData);
   }, [tableData]);
 
   const handleSearchSubmit = (searchTerm: string) => {
@@ -121,14 +113,12 @@ export default function PageTaskmanagementComponent() {
       });
     }
   }, [error, igrpToast]);
-  //-------------------reserved area end------------------------------
-
-  const taskManagement = useTaskManagement();
 
   // Handle assign task save
   const handleAssignTaskSave = async (formData: { user: string; note?: string }) => {
-    const result = await taskManagement.handleAssignTask(formData.user, formData.note);
-    
+    console.log('Assign task form data:', formData);
+    const result = await handleAssignTask(formData.user, formData.note);
+
     if (igrpToast) {
       igrpToast({
         type: result?.success ? 'success' : 'error',
@@ -137,6 +127,11 @@ export default function PageTaskmanagementComponent() {
       });
     }
   };
+
+  // Define modal subtitle with dynamic content
+  const modalSubtitle = `Indicar um utilizador para assumir a tarefa "${assignModalState.selectedTask?.currentStep}" do processo "${assignModalState.selectedTask?.process}"`;
+
+  //-------------------reserved area end------------------------------
 
   return (
     <div className={cn('page', 'space-y-6')}>
@@ -236,7 +231,9 @@ export default function PageTaskmanagementComponent() {
                     variant={`ghost`}
                     icon={`UserCheck`}
                     className={cn()}
-                    action={(e) => {}}
+                    action={() => {
+                      handleOpenAssignModal(rowData);
+                    }}
                   ></IGRPDataTableButtonLink>
                 </IGRPDataTableRowAction>
               );
@@ -248,11 +245,11 @@ export default function PageTaskmanagementComponent() {
         data={contentTabletable1}
       />
       <CommonUserTaskModalForm
-        open={taskManagement.assignModalState.isOpen}
-        setOpen={(open) => open ? {} : taskManagement.handleCloseAssignModal()}
-        onSave={handleAssignTaskSave}
         modalTitle={`Atribuir Tarefa`}
-        modalSubTitle={`Indicar um utilizador para assumir um tarefa`}
+        open={assignModalState.isOpen}
+        modalSubTitle={modalSubtitle}
+        setOpen={(open) => (open ? {} : handleCloseAssignModal())}
+        onSave={handleAssignTaskSave}
       ></CommonUserTaskModalForm>
     </div>
   );

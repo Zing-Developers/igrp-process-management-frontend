@@ -179,6 +179,7 @@ export function useTaskManagement() {
     setState(prev => ({ ...prev, loading: true }));
     
     try {
+      console.log('Assign task params:', assignModalState.selectedTask.taskId, user, note);
       await assignTask(assignModalState.selectedTask.taskId, user, note);
       
       // Refresh tasks after successful assignment

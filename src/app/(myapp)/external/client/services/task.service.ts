@@ -137,6 +137,19 @@ export const unassignTask = async (
 ): Promise<PostResponse> => (await httpClient.tasks.unassignTask(taskId, { user, note })).data;
 
 /**
+ * Assigns a task to a user.
+ * @param taskId The ID of the task to assign.
+ * @param user The user to assign the task to.
+ * @param note Optional note for the assign action.
+ * @returns A promise that resolves to a PostResponse.
+ */
+export const assignTask = async (
+  taskId: string,
+  user: string,
+  note?: string,
+): Promise<PostResponse> => (await httpClient.tasks.assignTask(taskId, { user, note })).data;
+
+/**
  * Releases a claimed task.
  * @param taskId The ID of the task to release.
  * @param user The user releasing the task.

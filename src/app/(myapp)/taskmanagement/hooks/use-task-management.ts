@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Task, PaginatedResponse } from '@igrp/platform-process-management-types';
-import { getTasks } from '../../external/client/services/task.service';
+import { getTasks, assignTask } from '../../external/client/services/task.service';
 import { getTaskStatusLabel, getTaskStatusVariant } from '../../utils/status-helpers';
 
 export interface TaskManagementTableRow {
@@ -37,6 +37,11 @@ interface TaskFilters {
   searchTerm?: string;
 }
 
+interface AssignTaskModalState {
+  isOpen: boolean;
+  selectedTask: TaskManagementTableRow | null;
+}
+
 export function useTaskManagement() {
   const [state, setState] = useState<TaskManagementState>({
     tasks: [],
@@ -49,6 +54,12 @@ export function useTaskManagement() {
   });
 
   const [filters, setFilters] = useState<TaskFilters>({});
+  
+  // Add modal state for assign task
+  const [assignModalState, setAssignModalState] = useState<AssignTaskModalState>({
+    isOpen: false,
+    selectedTask: null,
+  });
 
   // Transform tasks data for table display
   const tableData = useMemo((): TaskManagementTableRow[] => {
@@ -145,6 +156,45 @@ export function useTaskManagement() {
     fetchTasks();
   }, [fetchTasks]);
 
+  // Handle opening assign task modal
+  const handleOpenAssignModal = useCallback((task: TaskManagementTableRow) => {
+    setAssignModalState({
+      isOpen: true,
+      selectedTask: task,
+    });
+  }, []);
+
+  // Handle closing assign task modal
+  const handleCloseAssignModal = useCallback(() => {
+    setAssignModalState({
+      isOpen: false,
+      selectedTask: null,
+    });
+  }, []);
+
+  // Handle task assignment
+  const handleAssignTask = useCallback(async (user: string, note?: string) => {
+    if (!assignModalState.selectedTask) return;
+
+    setState(prev => ({ ...prev, loading: true }));
+    
+    try {
+      await assignTask(assignModalState.selectedTask.taskId, user, note);
+      
+      // Refresh tasks after successful assignment
+      await fetchTasks(state.currentPage, state.pageSize, filters);
+      
+      // Close modal
+      handleCloseAssignModal();
+      
+      return { success: true, message: 'Tarefa atribuída com sucesso!' };
+    } catch (error) {
+      console.error('Error assigning task:', error);
+      setState(prev => ({ ...prev, loading: false }));
+      return { success: false, message: 'Erro ao atribuir tarefa. Tente novamente.' };
+    }
+  }, [assignModalState.selectedTask, fetchTasks, state.currentPage, state.pageSize, filters, handleCloseAssignModal]);
+
   return {
     // Data
     tableData,    
@@ -157,11 +207,16 @@ export function useTaskManagement() {
     pageSize: state.pageSize,
     // Filters
     filters,
+    // Assign Task Modal
+    assignModalState,
     // Actions
     handleSearch,
     handlePageChange,
     applyFilters,
     resetFilters,
+    handleOpenAssignModal,
+    handleCloseAssignModal,
+    handleAssignTask,
     getStatusVariant: getTaskStatusVariant,
     fetchTasks,
   };

@@ -1,10 +1,10 @@
-import { 
-  getTaskStatusLabel, 
-  getTaskStatusVariant, 
-  getProcessInstanceStatusLabel, 
+import {
+  getTaskStatusLabel,
+  getTaskStatusVariant,
+  getProcessInstanceStatusLabel,
   getProcessInstanceStatusVariant,
-  TaskStatus, 
-  ProcessInstanceStatus 
+  TaskStatus,
+  ProcessInstanceStatus,
 } from './status-helpers';
 
 // Shared utility function to map badge variants to CSS classes
@@ -25,8 +25,8 @@ const getBgClass = (variant: string, useBlueForInfo: boolean = false): string =>
   }
 };
 
-export const getTaskStatusColor = (task: any) => {
-  const status = task.tableBadgeCell1?.toUpperCase() as TaskStatus;
+export const getTaskStatusColor = (task: { status: string }) => {
+  const status = task.status?.toUpperCase() as TaskStatus;
   const label = getTaskStatusLabel(status);
   const variant = getTaskStatusVariant(status);
 
@@ -39,7 +39,7 @@ export const getTaskStatusColor = (task: any) => {
   };
 };
 
-export const getProcessInstanceStatusColor = (processInstance: any) => {
+export const getProcessInstanceStatusColor = (processInstance: { status: string }) => {
   const status = processInstance.status?.toUpperCase() as ProcessInstanceStatus;
   const label = getProcessInstanceStatusLabel(status);
   const variant = getProcessInstanceStatusVariant(status);

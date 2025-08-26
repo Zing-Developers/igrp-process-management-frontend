@@ -1,5 +1,4 @@
-import { Task } from "@igrp/platform-process-management-types";
-
+import { Task } from '@igrp/platform-process-management-types';
 
 export interface AvailableTasksFilters {
   processNumber: string;
@@ -41,7 +40,8 @@ export interface AvailableTasksData {
 
 // Table row type that matches the generated page structure
 export interface TaskTableRow {
-  processInfo: string;
+  processInfo: any;
+  processNumber: string;
   createBy: string;
   taskName: string;
   status: string;

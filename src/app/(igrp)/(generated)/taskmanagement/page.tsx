@@ -31,6 +31,7 @@ import { useTaskManagement } from '@/app/(myapp)/taskmanagement/hooks/use-task-m
 import { useRouter } from 'next/navigation';
 import { urlConfig } from '@/app/(myapp)/utils/url-config';
 import { useDashboard } from '@/app/(myapp)/dashboard/hooks/use-dashboard';
+import { getTaskStatusColor } from '@/app/(myapp)/utils/status-badge';
 
 export default function PageTaskmanagementComponent() {
   type Table1 = {
@@ -73,10 +74,8 @@ export default function PageTaskmanagementComponent() {
     totalPages,
     currentPage,
     handleSearch,
-    handlePageChange,
     applyFilters,
     resetFilters,
-    getStatusVariant,
     handleAssignTask,
     handleOpenAssignModal,
     handleCloseAssignModal,
@@ -198,11 +197,14 @@ export default function PageTaskmanagementComponent() {
             cell: ({ row }) => {
               const rowData = row.original;
 
+              const { iconName, bgClass, textClass, label, className } =
+                getTaskStatusColor(rowData);
+
               return (
                 <IGRPDataTableCellBadge
-                  label={row.original.status}
+                  label={label ?? row.original.status}
                   variant={`soft`}
-                  badgeClassName={``}
+                  badgeClassName={`${bgClass} ${textClass} ${className}`}
                 ></IGRPDataTableCellBadge>
               );
             },

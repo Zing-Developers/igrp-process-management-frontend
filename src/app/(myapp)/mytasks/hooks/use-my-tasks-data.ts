@@ -5,7 +5,7 @@ import { useFilterData } from '../../components/processtaksfilter/hooks/use-filt
 
 export interface MyTasksTableRow {
   process: string;
-  createBy: string;
+  assignedBy: string;
   currentStep: string;
   waitingDays: string;
   status: string;
@@ -13,7 +13,6 @@ export interface MyTasksTableRow {
   taskKey: string;
   processInstanceId: string;
   processKey: string;
-  assignedBy?: string;
   createdDate?: string;
 }
 

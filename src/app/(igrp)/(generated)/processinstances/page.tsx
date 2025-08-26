@@ -26,6 +26,7 @@ import { useRouter } from "next/navigation"
 import { urlConfig } from '@/app/(myapp)/utils/url-config'
 import {useDashboard} from '@/app/(myapp)/dashboard/hooks/use-dashboard'
 import {getTaskStatusColor} from '@/app/(myapp)/utils/status-badge'
+import {getProcessInstanceStatusColor} from '@/app/(myapp)/utils/status-badge'
 
 
 export default function PageProcessinstancesComponent() {
@@ -190,7 +191,7 @@ badgeClassName={ `` }
           cell: ({ row }) => {
           const rowData = row.original;
 
-const { iconName, bgClass, textClass, label, className } = getTaskStatusColor(rowData);
+const { iconName, bgClass, textClass, label, className } = getProcessInstanceStatusColor(rowData);
 
 return <IGRPDataTableCellBadge
   label={ label ?? row.original.status }

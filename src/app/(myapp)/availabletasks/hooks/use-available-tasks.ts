@@ -1,8 +1,8 @@
 import { useMemo, useCallback } from 'react';
 import { useAvailableTasksData } from './use-available-tasks-data';
 import { claimTask } from '../../external/client/services/task.service';
-import { getTaskStatusLabel, getTaskStatusVariant } from '../../utils/status-helpers';
 import { TaskTableRow } from '../types';
+import { getProcessInfo } from '../../utils/columns-template';
 
 export function useAvailableTasks() {
   const { tasksState, filters, updateFilters, applyFilters, resetFilters, fetchTasks } =
@@ -18,10 +18,11 @@ export function useAvailableTasks() {
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
       return {
-        processInfo: task.processName || 'N/A',
-        createBy: task.assignedBy || 'Sistema',
+        processInfo: getProcessInfo(task.processName, task.startedAt),
+        processNumber: task.processNumber,
+        createBy: task.assignedBy || 'N/A',
         taskName: task.name,
-        status: getTaskStatusLabel(task.status),
+        status: task.status,
         daysWaiting: diffDays.toString(),
         taskId: task.id,
         processInstanceId: task.processInstanceId,
@@ -32,17 +33,23 @@ export function useAvailableTasks() {
   }, [tasksState.tasks]);
 
   // Claim task function
-  const handleClaimTask = useCallback(async (taskId: string, user: string, note?: string) => {
-    try {
-      await claimTask(taskId, user, note);
-      // Refresh tasks after claiming
-      fetchTasks(tasksState.currentPage, tasksState.pageSize);
-      return { success: true };
-    } catch (error) {
-      console.error('Error claiming task:', error);
-      return { success: false, error: error instanceof Error ? error.message : 'Erro ao assumir tarefa' };
-    }
-  }, [fetchTasks, tasksState.currentPage, tasksState.pageSize]);
+  const handleClaimTask = useCallback(
+    async (taskId: string, user: string, note?: string) => {
+      try {
+        await claimTask(taskId, user, note);
+        // Refresh tasks after claiming
+        fetchTasks(tasksState.currentPage, tasksState.pageSize);
+        return { success: true };
+      } catch (error) {
+        console.error('Error claiming task:', error);
+        return {
+          success: false,
+          error: error instanceof Error ? error.message : 'Erro ao assumir tarefa',
+        };
+      }
+    },
+    [fetchTasks, tasksState.currentPage, tasksState.pageSize],
+  );
 
   const handleSearch = (searchTerm: string) => {
     updateFilters({ processType: searchTerm });
@@ -70,7 +77,6 @@ export function useAvailableTasks() {
     handlePageChange,
     applyFilters,
     resetFilters,
-    getStatusVariant: getTaskStatusVariant,
     fetchTasks,
     handleClaimTask,
   };

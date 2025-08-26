@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY iGRP STUDIO. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -8,34 +8,33 @@
 
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
-import ProcessStatsCards from '@/components/processstatscards';
-import TaskProcessFilter from '@/components/taskprocessfilter';
-import {
-  IGRPDataTableFacetedFilterFn,
-  IGRPDataTableDateRangeFilterFn,
-} from '@igrp/igrp-framework-react-design-system';
-import {
-  IGRPDataTableHeaderSortToggle,
-  IGRPDataTableHeaderSortDropdown,
-  IGRPDataTableHeaderRowsSelect,
-} from '@igrp/igrp-framework-react-design-system';
-import CommonUserTaskModalForm from '@/components/commonusertaskmodalform';
-import {
+import ProcessStatsCards from '@/components/processstatscards'
+import TaskProcessFilter from '@/components/taskprocessfilter'
+import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
+import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
+import CommonUserTaskModalForm from '@/components/commonusertaskmodalform'
+import { 
   IGRPPageHeader,
-  IGRPDataTable,
-  IGRPDataTableCellBadge,
-  IGRPDataTableRowAction,
-  IGRPDataTableButtonLink,
-} from '@igrp/igrp-framework-react-design-system';
-import { useMyTasks } from '@/app/(myapp)/mytasks/hooks/use-my-tasks';
-import { useRouter } from 'next/navigation';
-import { urlConfig } from '@/app/(myapp)/utils/url-config';
-import { useDashboard } from '@/app/(myapp)/dashboard/hooks/use-dashboard';
+	IGRPDataTable,
+	IGRPDataTableCellBadge,
+	IGRPDataTableRowAction,
+	IGRPDataTableButtonLink 
+} from "@igrp/igrp-framework-react-design-system";
+import {useMyTasks} from '@/app/(myapp)/mytasks/hooks/use-my-tasks'
+import { useRouter } from 'next/navigation'
+import { urlConfig } from '@/app/(myapp)/utils/url-config'
+import {useDashboard} from '@/app/(myapp)/dashboard/hooks/use-dashboard'
+import {getTaskStatusColor} from '@/app/(myapp)/utils/status-badge'
+
 
 export default function PageMytasksComponent() {
+
+
+  
   type Table1 = {
     process: string;
-    createBy: string;
+    processNumber: string;
+    assignedBy: string;
     currentStep: string;
     waitingDays: string;
     status: string;
@@ -43,14 +42,16 @@ export default function PageMytasksComponent() {
     processInstanceId: string;
     taskKey: string;
     taskId: string;
-  };
+}
 
   const [contentTabletable1, setContentTabletable1] = useState<Table1[]>([]);
+  
+  
+const { igrpToast } = useIGRPToast()
 
-  const { igrpToast } = useIGRPToast();
+function executeTask (row: any): void  | undefined {
 
-  function executeTask(row: any): void | undefined {
-    console.log('Executing task:', row);
+  console.log('Executing task:', row);
     // Navigate to task execution page using centralized URL config
     const taskUrl = urlConfig.buildTaskExecutionUrl(
       row.processKey,
@@ -59,9 +60,10 @@ export default function PageMytasksComponent() {
       row.taskId,
     );
     router.push(taskUrl);
-  }
 
-  //-------------------reserved area start----------------------------
+}
+
+//-------------------reserved area start----------------------------
   const router = useRouter();
 
   const { stats, loading: statsLoading } = useDashboard();
@@ -83,7 +85,8 @@ export default function PageMytasksComponent() {
 
   // Transform data for the table
   useEffect(() => {
-    if (tableData) setContentTabletable1(tableData);
+    if (tableData) 
+      setContentTabletable1(tableData);
   }, [tableData]);
 
   // Load initial data
@@ -120,124 +123,131 @@ export default function PageMytasksComponent() {
 
   //-------------------reserved area end------------------------------
 
+
   return (
-    <div className={cn('page', 'space-y-6')}>
-      <IGRPPageHeader
-        name={`pageHeader1`}
-        title={`Minhas Tarefas`}
-        description={`Tarefas atribuídas a você`}
-        iconBackButton={`ArrowLeft`}
-        urlBackButton={`/dashboard`}
-        variant={`h3`}
-        className={cn()}
-      >
-        <div className="flex items-center gap-2"></div>
-      </IGRPPageHeader>
+<div className={ cn('page','space-y-6',)}    >
+	<IGRPPageHeader
+  name={ `pageHeader1` }
+  title={ `Minhas Tarefas` }
+  description={ `Tarefas atribuídas a você` }
+  iconBackButton={ `ArrowLeft` }
+  urlBackButton={ `/dashboard` }
+  variant={ `h3` }
+  className={ cn() }
+  
+>
+  <div className="flex items-center gap-2">
+</div>
+</IGRPPageHeader>
 
-      <ProcessStatsCards stats={stats} loading={statsLoading}></ProcessStatsCards>
-      <div className={cn(' border rounded-lg')}>
-        <TaskProcessFilter
-          onSearch={handleSearchSubmit}
-          onApplyFilters={handleApplyFilters}
-          onResetFilters={handleResetFilters}
-        ></TaskProcessFilter>
-      </div>
-      <IGRPDataTable<Table1, Table1>
-        showFilter={true}
-        showPagination={true}
-        paginationClassName={`px-3 pb-3`}
-        className={cn()}
-        columns={[
-          {
-            header: 'Processo',
-            accessorKey: 'process',
-            cell: ({ row }) => {
-              return row.getValue('process');
-            },
-            filterFn: IGRPDataTableFacetedFilterFn,
+<ProcessStatsCards  stats={ stats } loading={ statsLoading }   ></ProcessStatsCards>
+<div className={ cn(' border rounded-lg',)}    >
+	<TaskProcessFilter   onSearch={ handleSearchSubmit }
+onApplyFilters={ handleApplyFilters }
+onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
+<IGRPDataTable<Table1, Table1>
+  showFilter={ true }
+  showPagination={ true }
+  paginationClassName={ `px-3 pb-3` }
+  className={ cn() }
+  columns={
+    [
+        {
+          header: 'Processo'
+,accessorKey: 'process',
+          cell: ({ row }) => {
+          return row.getValue("process")
           },
-          {
-            header: 'Criado por',
-            accessorKey: 'createBy',
-            cell: ({ row }) => {
-              return row.getValue('createBy');
-            },
-            filterFn: IGRPDataTableFacetedFilterFn,
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Número'
+,accessorKey: 'processNumber',
+          cell: ({ row }) => {
+          return row.getValue("processNumber")
           },
-          {
-            header: 'Etapa Atual	',
-            accessorKey: 'currentStep',
-            cell: ({ row }) => {
-              return row.getValue('currentStep');
-            },
-            filterFn: IGRPDataTableFacetedFilterFn,
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Utilizador'
+,accessorKey: 'assignedBy',
+          cell: ({ row }) => {
+          return row.getValue("assignedBy")
           },
-          {
-            header: 'Dias em espera',
-            accessorKey: 'waitingDays',
-            cell: ({ row }) => {
-              return row.getValue('waitingDays');
-            },
-            filterFn: IGRPDataTableFacetedFilterFn,
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Etapa Atual	'
+,accessorKey: 'currentStep',
+          cell: ({ row }) => {
+          return row.getValue("currentStep")
           },
-          {
-            header: 'Estado',
-            accessorKey: 'status',
-            cell: ({ row }) => {
-              const rowData = row.original;
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Dias em espera'
+,accessorKey: 'waitingDays',
+          cell: ({ row }) => {
+          return row.getValue("waitingDays")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Estado'
+,accessorKey: 'status',
+          cell: ({ row }) => {
+          const rowData = row.original;
 
-              return (
-                <IGRPDataTableCellBadge
-                  label={row.original.status}
-                  variant={`soft`}
-                  badgeClassName={``}
-                ></IGRPDataTableCellBadge>
-              );
-            },
-            filterFn: IGRPDataTableFacetedFilterFn,
-          },
-          {
-            id: 'tableActionListCell1',
-            enableHiding: false,
-            cell: ({ row }) => {
-              const rowData = row.original;
+const { iconName, bgClass, textClass, label, className } = getTaskStatusColor(rowData);
 
-              return (
-                <IGRPDataTableRowAction>
-                  <IGRPDataTableButtonLink
-                    labelTrigger={`Executar Tarefa`}
-                    variant={`ghost`}
-                    icon={`Play`}
-                    className={cn()}
-                    action={() => {
-                      executeTask(rowData);
-                    }}
-                  ></IGRPDataTableButtonLink>
-                  <IGRPDataTableButtonLink
-                    labelTrigger={`Libertar Tarefa`}
-                    variant={`ghost`}
-                    icon={`UserX`}
-                    className={cn()}
-                    action={() => {
-                      handleOpenUnclaimModal(rowData);
-                    }}
-                  ></IGRPDataTableButtonLink>
-                </IGRPDataTableRowAction>
-              );
-            },
-            filterFn: IGRPDataTableFacetedFilterFn,
+return <IGRPDataTableCellBadge
+  label={ label ?? row.original.status }
+  variant={ `soft` }
+badgeClassName={ `${bgClass} ${textClass} ${className}` }
+>
+
+</IGRPDataTableCellBadge>
           },
-        ]}
-        clientFilters={[]}
-        data={contentTabletable1}
-      />
-      <CommonUserTaskModalForm
-        modalTitle={`Libertar Tarefa`}
-        modalSubTitle={modalSubtitle}
-        open={unclaimModalState.isOpen}
-        setOpen={(open) => (open ? {} : handleCloseUnclaimModal())}
-        onSave={handleUnclaimTaskSave}
-      ></CommonUserTaskModalForm>
-    </div>
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          id: 'tableActionListCell1',
+          enableHiding: false,cell: ({ row }) => {
+          const rowData = row.original;
+
+return (
+<IGRPDataTableRowAction>
+  <IGRPDataTableButtonLink
+  labelTrigger={ `Executar Tarefa` }
+  variant={ `ghost` }
+  icon={ `Play` }
+  className={ cn() }
+  action={ () => {executeTask(rowData)} }
+>
+</IGRPDataTableButtonLink>
+  <IGRPDataTableButtonLink
+  labelTrigger={ `Libertar Tarefa` }
+  variant={ `ghost` }
+  icon={ `UserX` }
+  className={ cn() }
+  action={ () => { handleOpenUnclaimModal(rowData); } }
+>
+</IGRPDataTableButtonLink>
+</IGRPDataTableRowAction>
+);
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+]
+  }
+  clientFilters={
+    [
+    ]
+  }
+  
+  data={ contentTabletable1 }
+/>
+<CommonUserTaskModalForm  modalTitle={ `Libertar Tarefa` } modalSubTitle={ modalSubtitle } open={ unclaimModalState.isOpen }  setOpen={ (open) => (open ? {} : handleCloseUnclaimModal()) }
+onSave={ handleUnclaimTaskSave } ></CommonUserTaskModalForm></div>
   );
 }

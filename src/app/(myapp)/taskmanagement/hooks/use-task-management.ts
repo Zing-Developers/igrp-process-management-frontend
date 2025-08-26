@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Task, PaginatedResponse } from '@igrp/platform-process-management-types';
 import { getTasks, assignTask } from '../../external/client/services/task.service';
-import { getTaskStatusLabel, getTaskStatusVariant } from '../../utils/status-helpers';
 
 export interface TaskManagementTableRow {
   process: string;
@@ -54,7 +53,7 @@ export function useTaskManagement() {
   });
 
   const [filters, setFilters] = useState<TaskFilters>({});
-  
+
   // Add modal state for assign task
   const [assignModalState, setAssignModalState] = useState<AssignTaskModalState>({
     isOpen: false,
@@ -74,7 +73,7 @@ export function useTaskManagement() {
         createBy: task.assignedBy || 'Sistema',
         currentStep: task.name,
         waitingDays: diffDays.toString(),
-        status: getTaskStatusLabel(task.status),
+        status: task.status,
         taskId: task.id,
         taskKey: task.taskKey || task.name,
         processInstanceId: task.processInstanceId,
@@ -87,8 +86,8 @@ export function useTaskManagement() {
 
   // Fetch tasks function with filters
   const fetchTasks = useCallback(async (page = 0, size = 10, appliedFilters?: TaskFilters) => {
-    setState(prev => ({ ...prev, loading: true, error: null }));
-    
+    setState((prev) => ({ ...prev, loading: true, error: null }));
+
     try {
       // Convert filters to API format
       const apiFilters = {
@@ -102,12 +101,12 @@ export function useTaskManagement() {
 
       // Remove undefined values
       const cleanFilters = Object.fromEntries(
-        Object.entries(apiFilters).filter(([_, value]) => value !== undefined)
+        Object.entries(apiFilters).filter(([_, value]) => value !== undefined),
       );
 
       const response: PaginatedResponse<Task> = await getTasks(page, size, cleanFilters);
-      
-      setState(prev => ({
+
+      setState((prev) => ({
         ...prev,
         tasks: response.content || [],
         totalElements: response.totalElements || 0,
@@ -118,7 +117,7 @@ export function useTaskManagement() {
       }));
     } catch (error) {
       console.error('Error fetching tasks:', error);
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         loading: false,
         error: 'Erro ao carregar tarefas. Tente novamente.',
@@ -127,23 +126,32 @@ export function useTaskManagement() {
   }, []);
 
   // Handle search functionality
-  const handleSearch = useCallback((searchTerm: string) => {
-    const newFilters = { ...filters, searchTerm };
-    setFilters(newFilters);
-    fetchTasks(0, state.pageSize, newFilters);
-  }, [filters, fetchTasks, state.pageSize]);
+  const handleSearch = useCallback(
+    (searchTerm: string) => {
+      const newFilters = { ...filters, searchTerm };
+      setFilters(newFilters);
+      fetchTasks(0, state.pageSize, newFilters);
+    },
+    [filters, fetchTasks, state.pageSize],
+  );
 
   // Handle page change
-  const handlePageChange = useCallback((page: number) => {
-    fetchTasks(page, state.pageSize, filters);
-  }, [fetchTasks, state.pageSize, filters]);
+  const handlePageChange = useCallback(
+    (page: number) => {
+      fetchTasks(page, state.pageSize, filters);
+    },
+    [fetchTasks, state.pageSize, filters],
+  );
 
   // Handle filter application
-  const applyFilters = useCallback((newFilters?: TaskFilters) => {
-    const updatedFilters = newFilters ? { ...filters, ...newFilters } : filters;
-    setFilters(updatedFilters);
-    fetchTasks(0, state.pageSize, updatedFilters);
-  }, [filters, fetchTasks, state.pageSize]);
+  const applyFilters = useCallback(
+    (newFilters?: TaskFilters) => {
+      const updatedFilters = newFilters ? { ...filters, ...newFilters } : filters;
+      setFilters(updatedFilters);
+      fetchTasks(0, state.pageSize, updatedFilters);
+    },
+    [filters, fetchTasks, state.pageSize],
+  );
 
   // Handle filter reset
   const resetFilters = useCallback(() => {
@@ -173,32 +181,42 @@ export function useTaskManagement() {
   }, []);
 
   // Handle task assignment
-  const handleAssignTask = useCallback(async (user: string, note?: string) => {
-    if (!assignModalState.selectedTask) return;
+  const handleAssignTask = useCallback(
+    async (user: string, note?: string) => {
+      if (!assignModalState.selectedTask) return;
 
-    setState(prev => ({ ...prev, loading: true }));
-    
-    try {
-      console.log('Assign task params:', assignModalState.selectedTask.taskId, user, note);
-      await assignTask(assignModalState.selectedTask.taskId, user, note);
-      
-      // Refresh tasks after successful assignment
-      await fetchTasks(state.currentPage, state.pageSize, filters);
-      
-      // Close modal
-      handleCloseAssignModal();
-      
-      return { success: true, message: 'Tarefa atribuída com sucesso!' };
-    } catch (error) {
-      console.error('Error assigning task:', error);
-      setState(prev => ({ ...prev, loading: false }));
-      return { success: false, message: 'Erro ao atribuir tarefa. Tente novamente.' };
-    }
-  }, [assignModalState.selectedTask, fetchTasks, state.currentPage, state.pageSize, filters, handleCloseAssignModal]);
+      setState((prev) => ({ ...prev, loading: true }));
+
+      try {
+        console.log('Assign task params:', assignModalState.selectedTask.taskId, user, note);
+        await assignTask(assignModalState.selectedTask.taskId, user, note);
+
+        // Refresh tasks after successful assignment
+        await fetchTasks(state.currentPage, state.pageSize, filters);
+
+        // Close modal
+        handleCloseAssignModal();
+
+        return { success: true, message: 'Tarefa atribuída com sucesso!' };
+      } catch (error) {
+        console.error('Error assigning task:', error);
+        setState((prev) => ({ ...prev, loading: false }));
+        return { success: false, message: 'Erro ao atribuir tarefa. Tente novamente.' };
+      }
+    },
+    [
+      assignModalState.selectedTask,
+      fetchTasks,
+      state.currentPage,
+      state.pageSize,
+      filters,
+      handleCloseAssignModal,
+    ],
+  );
 
   return {
     // Data
-    tableData,    
+    tableData,
     // State
     loading: state.loading,
     error: state.error,
@@ -218,7 +236,6 @@ export function useTaskManagement() {
     handleOpenAssignModal,
     handleCloseAssignModal,
     handleAssignTask,
-    getStatusVariant: getTaskStatusVariant,
     fetchTasks,
   };
 }

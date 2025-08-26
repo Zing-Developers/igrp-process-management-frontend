@@ -25,8 +25,9 @@ export interface MyTasksState {
 
 export interface TaskTableRow {
   id: string;
-  process: string;
-  createBy: string;
+  process: any;
+  processNumber: string;
+  assignedBy: any;
   currentStep: string;
   waitingDays: string;
   status: string;

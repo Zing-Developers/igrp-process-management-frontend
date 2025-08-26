@@ -1,7 +1,27 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { getMyTasks } from '../../external/client/services/task.service';
 import { MyTasksState, MyTasksFilters } from '../types';
 import { useFilterData } from '../../components/processtaksfilter/hooks/use-filter-data';
+
+export interface MyTasksTableRow {
+  process: string;
+  createBy: string;
+  currentStep: string;
+  waitingDays: string;
+  status: string;
+  taskId: string;
+  taskKey: string;
+  processInstanceId: string;
+  processKey: string;
+  assignedBy?: string;
+  createdDate?: string;
+}
+
+// Export unclaim modal state interface
+export interface UnclaimModalState {
+  isOpen: boolean;
+  selectedTask: MyTasksTableRow | null;
+}
 
 export function useMyTasksData() {
   const [myTasksState, setMyTasksState] = useState<MyTasksState>({
@@ -12,6 +32,12 @@ export function useMyTasksData() {
     totalPages: 0,
     currentPage: 0,
     pageSize: 10,
+  });
+
+  // Add unclaim modal state
+  const [unclaimModalState, setUnclaimModalState] = useState<UnclaimModalState>({
+    isOpen: false,
+    selectedTask: null,
   });
 
   const { filters, updateFilters, resetFilters } = useFilterData();
@@ -76,12 +102,32 @@ export function useMyTasksData() {
     });
   };
 
+  // Add unclaim modal handlers
+  
+  const handleOpenUnclaimModal = useCallback((task: MyTasksTableRow) => {
+    console.log('Opening unclaim modal for task:', task);
+    setUnclaimModalState({
+      isOpen: true,
+      selectedTask: task,
+    });
+  }, []);
+
+  const handleCloseUnclaimModal = () => {
+    setUnclaimModalState({
+      isOpen: false,
+      selectedTask: null,
+    });
+  };
+
   return {
     myTasksState,
+    unclaimModalState,
     filters,
     updateFilters,
     fetchMyTasks,
     applyFilters,
     resetFilters: handleResetFilters,
+    handleOpenUnclaimModal,
+    handleCloseUnclaimModal,
   };
 }

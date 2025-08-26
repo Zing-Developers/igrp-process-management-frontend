@@ -1,4 +1,5 @@
 'use server';
+
 import { PaginatedResponse, Task } from '@igrp/platform-process-management-types';
 import { getHttpClient } from '../config/client.config';
 import { PostResponse } from '@igrp/platform-process-management-types/dist/response';
@@ -147,7 +148,12 @@ export const assignTask = async (
   taskId: string,
   user: string,
   note?: string,
-): Promise<PostResponse> => (await httpClient.tasks.assignTask(taskId, { user, note })).data;
+): Promise<PostResponse> => {
+  console.debug('Assigning task:', { taskId, user, note });
+  const response = await httpClient.tasks.assignTask(taskId, { user, note });
+  console.debug('Task assigned response:', response);
+  return response.data;
+};
 
 /**
  * Releases a claimed task.
@@ -156,11 +162,10 @@ export const assignTask = async (
  * @param note Optional note for the release action.
  * @returns A promise that resolves to a PostResponse.
  */
-export const releaseTask = async (
+export const unclaimTask = async (
   taskId: string,
-  user: string,
   note?: string,
-): Promise<PostResponse> => (await httpClient.tasks.unclaimTask(taskId, { user, note })).data;
+): Promise<PostResponse> => (await httpClient.tasks.unclaimTask(taskId, { note })).data;
 
 /**
  * Completes a task.

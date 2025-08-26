@@ -1,15 +1,19 @@
 import { useMemo } from 'react';
 import { useMyTasksData } from './use-my-tasks-data';
 import { TaskTableRow } from '../types';
+import { unclaimTask } from '../../external/client/services/task.service';
 
 export function useMyTasks() {
   const {
     myTasksState,
+    unclaimModalState,
     filters,
     updateFilters,
     fetchMyTasks,
     applyFilters,
     resetFilters,
+    handleOpenUnclaimModal,
+    handleCloseUnclaimModal,
   } = useMyTasksData();
 
   // Transform tasks data for the table
@@ -47,12 +51,37 @@ export function useMyTasks() {
     fetchMyTasks(page, myTasksState.pageSize);
   };
 
+  // Add unclaim task handler
+  const handleUnclaimTask = async (note?: string) => {
+    if (!unclaimModalState.selectedTask || !unclaimModalState.selectedTask.taskId) {
+      return { success: false, message: 'Nenhuma tarefa selecionada' };
+    } 
+    
+    try {
+      console.log("unclaimModalState.selectedTask.taskId", unclaimModalState.selectedTask.taskId)
+      await unclaimTask(unclaimModalState.selectedTask.taskId, note);
+
+      // Close modal and refresh data
+      handleCloseUnclaimModal();
+      await fetchMyTasks(myTasksState.currentPage, myTasksState.pageSize);
+
+      return { success: true, message: 'Tarefa libertada com sucesso!' };
+    } catch (error) {
+      console.error('Error unclaiming task:', error);
+      return {
+        success: false,
+        message: error instanceof Error ? error.message : 'Erro ao libertar tarefa',
+      };
+    }
+  };
+
   return {
     // Data
     tableData,
     myTasksState,
+    unclaimModalState,
     filters,
-    
+
     // Actions
     fetchMyTasks,
     applyFilters,
@@ -60,7 +89,10 @@ export function useMyTasks() {
     handleSearch,
     handlePageChange,
     updateFilters,
-    
+    handleUnclaimTask,
+    handleOpenUnclaimModal,
+    handleCloseUnclaimModal,
+
     // State
     loading: myTasksState.loading,
     error: myTasksState.error,

@@ -30,12 +30,14 @@ export default function Commonusertaskmodalform({
   onSave,
   modalTitle,
   modalSubTitle,
+  userRequired,
 }: {
   open: boolean;
   setOpen: (prompt: boolean) => void;
   onSave: (data: any) => void;
   modalTitle: string;
   modalSubTitle: string;
+  userRequired?: boolean;
 }) {
   const form1 = z.object({
     user: z.string().optional(),
@@ -95,19 +97,22 @@ export default function Commonusertaskmodalform({
                   ' gap-4',
                 )}
               >
-                <IGRPCombobox
-                  name={`user`}
-                  label={`Utilizador`}
-                  variant={`single`}
-                  placeholder={`Select an option...`}
-                  selectLabel={`No option found`}
-                  showSearch={true}
-                  showIcon={false}
-                  iconName={`CornerDownRight`}
-                  className={cn('col-span-1')}
-                  onChange={() => {}}
-                  options={selectuserOptions}
-                ></IGRPCombobox>
+                {userRequired && (
+                  <IGRPCombobox
+                    name={`user`}
+                    label={`Utilizador`}
+                    variant={`single`}
+                    placeholder={`Select an option...`}
+                    required={undefined}
+                    selectLabel={`No option found`}
+                    showSearch={true}
+                    showIcon={false}
+                    iconName={`CornerDownRight`}
+                    className={cn('col-span-1')}
+                    onChange={() => {}}
+                    options={selectuserOptions}
+                  ></IGRPCombobox>
+                )}
                 <IGRPTextarea
                   name={`note`}
                   label={`Nota`}

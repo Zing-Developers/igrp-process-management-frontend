@@ -116,7 +116,6 @@ export default function PageTaskmanagementComponent() {
 
   // Handle assign task save
   const handleAssignTaskSave = async (formData: { user: string; note?: string }) => {
-    console.log('Assign task form data:', formData);
     const result = await handleAssignTask(formData.user, formData.note);
 
     if (igrpToast) {
@@ -246,6 +245,7 @@ export default function PageTaskmanagementComponent() {
       />
       <CommonUserTaskModalForm
         modalTitle={`Atribuir Tarefa`}
+        userRequired={true}
         open={assignModalState.isOpen}
         modalSubTitle={modalSubtitle}
         setOpen={(open) => (open ? {} : handleCloseAssignModal())}

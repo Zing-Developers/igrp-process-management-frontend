@@ -19,13 +19,13 @@ import {
   IGRPDataTableHeaderSortDropdown,
   IGRPDataTableHeaderRowsSelect,
 } from '@igrp/igrp-framework-react-design-system';
+import CommonUserTaskModalForm from '@/components/commonusertaskmodalform';
 import {
   IGRPPageHeader,
   IGRPDataTable,
   IGRPDataTableCellBadge,
   IGRPDataTableRowAction,
-  IGRPDataTableDropdownMenu,
-  IGRPDataTableDropdownMenuCustom,
+  IGRPDataTableButtonLink,
 } from '@igrp/igrp-framework-react-design-system';
 import { useMyTasks } from '@/app/(myapp)/mytasks/hooks/use-my-tasks';
 import { useRouter } from 'next/navigation';
@@ -68,11 +68,15 @@ export default function PageMytasksComponent() {
   const {
     tableData,
     myTasksState,
+    unclaimModalState,
     fetchMyTasks,
     applyFilters,
     resetFilters,
     handleSearch,
     handlePageChange,
+    handleUnclaimTask,
+    handleOpenUnclaimModal,
+    handleCloseUnclaimModal,
     loading,
     error,
   } = useMyTasks();
@@ -98,6 +102,22 @@ export default function PageMytasksComponent() {
   const handleResetFilters = () => {
     resetFilters();
   };
+  // Handle unclaim task save
+  const handleUnclaimTaskSave = async (formData: { note?: string }) => {
+    const result = await handleUnclaimTask(formData.note);
+
+    if (igrpToast) {
+      igrpToast({
+        type: result?.success ? 'success' : 'error',
+        title: result?.success ? 'Sucesso' : 'Erro',
+        description: result?.message,
+      });
+    }
+  };
+
+  // Define modal subtitle with dynamic content
+  const modalSubtitle = `Libertar a tarefa "${unclaimModalState.selectedTask?.currentStep}" do processo "${unclaimModalState.selectedTask?.process}"`;
+
   //-------------------reserved area end------------------------------
 
   return (
@@ -184,21 +204,24 @@ export default function PageMytasksComponent() {
 
               return (
                 <IGRPDataTableRowAction>
-                  <IGRPDataTableDropdownMenu
-                    items={[
-                      {
-                        component: IGRPDataTableDropdownMenuCustom,
-                        props: {
-                          labelTrigger: `Executar Tarefa`,
-                          icon: `Play`,
-                          showIcon: true,
-                          action: () => {
-                            executeTask(rowData);
-                          },
-                        },
-                      },
-                    ]}
-                  ></IGRPDataTableDropdownMenu>
+                  <IGRPDataTableButtonLink
+                    labelTrigger={`Executar Tarefa`}
+                    variant={`ghost`}
+                    icon={`Play`}
+                    className={cn()}
+                    action={() => {
+                      executeTask(rowData);
+                    }}
+                  ></IGRPDataTableButtonLink>
+                  <IGRPDataTableButtonLink
+                    labelTrigger={`Libertar Tarefa`}
+                    variant={`ghost`}
+                    icon={`UserX`}
+                    className={cn()}
+                    action={() => {
+                      handleOpenUnclaimModal(rowData);
+                    }}
+                  ></IGRPDataTableButtonLink>
                 </IGRPDataTableRowAction>
               );
             },
@@ -208,6 +231,13 @@ export default function PageMytasksComponent() {
         clientFilters={[]}
         data={contentTabletable1}
       />
+      <CommonUserTaskModalForm
+        modalTitle={`Libertar Tarefa`}
+        modalSubTitle={modalSubtitle}
+        open={unclaimModalState.isOpen}
+        setOpen={(open) => (open ? {} : handleCloseUnclaimModal())}
+        onSave={handleUnclaimTaskSave}
+      ></CommonUserTaskModalForm>
     </div>
   );
 }

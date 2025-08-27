@@ -8,12 +8,12 @@
 
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
-import ProcessStatsCards from '@/components/processstatscards'
 import TaskProcessFilter from '@/components/taskprocessfilter'
 import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
 import { 
   IGRPPageHeader,
+	IGRPStatsCard,
 	IGRPDataTable,
 	IGRPDataTableCellBadge,
 	IGRPDataTableRowAction,
@@ -43,6 +43,10 @@ export default function PageProcessinstancesComponent() {
     processInstanceId: string;
 }
 
+  const [statstatsCard1Value, setStatstatsCard1Value] = useState<string | number>(0);
+  const [statstatsCard2Value, setStatstatsCard2Value] = useState<string | number>(0);
+  const [statstatsCard4Value, setStatstatsCard4Value] = useState<string | number>(0);
+  const [statstatsCard3Value, setStatstatsCard3Value] = useState<string | number>(0);
   const [contentTableprocesses, setContentTableprocesses] = useState<Table1[]>([]);
   
   
@@ -72,16 +76,18 @@ const router = useRouter()
     totalPages,
     currentPage,
     handleSearch,
-    handlePageChange,
     applyFilters,
     resetFilters,
-    getStatusVariant,
   } = useProcessInstances();
 
   // Update table data when process instances change
   useEffect(() => {
     setContentTableprocesses(tableData);
-  }, [tableData]);
+    setStatstatsCard1Value(stats.processInstances.totalInstances);
+    setStatstatsCard2Value(stats.processInstances.totalRunning);
+    setStatstatsCard3Value(stats.processInstances.totalCompleted);
+    setStatstatsCard4Value(stats.processInstances.totalCancelled);
+  }, [tableData, stats]);
 
   // Handle filter application with process instance filters
   const handleApplyFilters = (filters?: any) => {
@@ -132,7 +138,94 @@ const router = useRouter()
 </div>
 </IGRPPageHeader>
 
-<ProcessStatsCards  stats={ stats } loading={ statsLoading }   ></ProcessStatsCards>
+<div className={ cn('grid','grid-cols-1 ','md:grid-cols-2 ','lg:grid-cols-4 ',' gap-4',)}    >
+	<IGRPStatsCard
+  name={ `statsCard1` }
+  cardBorderPosition={ `top` }
+cardBorder={ `rounded-lg` }
+cardVariant={ `info` }
+iconBackground={ `square` }
+title={ `Total de Processos` }
+titleSize={ `sm` }
+valueSize={ `2xl` }
+showIcon={ true }
+iconName={ `Settings` }
+iconSize={ `md` }
+iconVariant={ `info` }
+iconPlacement={ `end` }
+itemPlacement={ `start` }
+
+showIconBorder={ false }
+showIconBackground={ true }
+  onClick={ () => {} }
+  value={ statstatsCard1Value }
+>
+</IGRPStatsCard>
+<IGRPStatsCard
+  name={ `statsCard2` }
+  cardBorderPosition={ `top` }
+cardBorder={ `rounded-lg` }
+cardVariant={ `warning` }
+iconBackground={ `square` }
+title={ `Total em Execução` }
+titleSize={ `sm` }
+valueSize={ `2xl` }
+showIcon={ true }
+iconName={ `Play` }
+iconSize={ `md` }
+iconVariant={ `warning` }
+iconPlacement={ `end` }
+itemPlacement={ `start` }
+
+showIconBackground={ true }
+showIconBorder={ false }
+  onClick={ () => {} }
+  value={ statstatsCard2Value }
+>
+</IGRPStatsCard>
+<IGRPStatsCard
+  name={ `statsCard4` }
+  cardBorderPosition={ `top` }
+cardBorder={ `rounded-lg` }
+cardVariant={ `destructive` }
+iconBackground={ `square` }
+title={ `Total Cancelados` }
+titleSize={ `sm` }
+valueSize={ `2xl` }
+showIcon={ true }
+iconName={ `CalendarX2` }
+iconSize={ `md` }
+iconVariant={ `destructive` }
+iconPlacement={ `end` }
+itemPlacement={ `start` }
+
+showIconBackground={ true }
+  onClick={ () => {} }
+  value={ statstatsCard4Value }
+>
+</IGRPStatsCard>
+<IGRPStatsCard
+  name={ `statsCard3` }
+  cardBorderPosition={ `top` }
+cardBorder={ `rounded-lg` }
+cardVariant={ `success` }
+iconBackground={ `square` }
+title={ `Total Finalizados` }
+titleSize={ `sm` }
+valueSize={ `2xl` }
+showIcon={ true }
+iconName={ `CheckCheck` }
+iconSize={ `md` }
+iconVariant={ `success` }
+iconPlacement={ `end` }
+itemPlacement={ `start` }
+
+showIconBackground={ true }
+showIconBorder={ false }
+  onClick={ () => {} }
+  value={ statstatsCard3Value }
+>
+</IGRPStatsCard></div>
 <div className={ cn(' border rounded-sm',)}    >
 	<TaskProcessFilter   onSearch={ handleSearchSubmit }
 onApplyFilters={ handleApplyFilters }

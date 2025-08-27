@@ -30,14 +30,14 @@ interface TaskFilterParams {
  * @returns A promise that resolves to a paginated response of tasks.
  */
 export const getTasks = async (
-  page = 0, 
-  size = 10, 
-  filters?: Omit<TaskFilterParams, 'page' | 'size'>
+  page = 0,
+  size = 50,
+  filters?: Omit<TaskFilterParams, 'page' | 'size'>,
 ): Promise<PaginatedResponse<Task>> => {
   const params = {
     page,
     size,
-    ...filters
+    ...filters,
   };
   const response = await httpClient.tasks.getTasks(params);
   return response.data as PaginatedResponse<Task>;
@@ -59,7 +59,7 @@ export const getTaskById = async (id: string): Promise<Task | undefined> => {
  * @returns A promise that resolves to a paginated response of tasks.
  */
 export const getMyTasks = async (params: TaskFilterParams): Promise<PaginatedResponse<Task>> => {
-  const { page = 0, size = 10, ...filterParams } = params;
+  const { page = 0, size = 50, ...filterParams } = params;
 
   const response = await httpClient.tasks.getMyTasks({
     ...filterParams,
@@ -162,10 +162,8 @@ export const assignTask = async (
  * @param note Optional note for the release action.
  * @returns A promise that resolves to a PostResponse.
  */
-export const unclaimTask = async (
-  taskId: string,
-  note?: string,
-): Promise<PostResponse> => (await httpClient.tasks.unclaimTask(taskId, { note })).data;
+export const unclaimTask = async (taskId: string, note?: string): Promise<PostResponse> =>
+  (await httpClient.tasks.unclaimTask(taskId, { note })).data;
 
 /**
  * Completes a task.

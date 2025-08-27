@@ -2,7 +2,7 @@ import { useMemo, useCallback } from 'react';
 import { useAvailableTasksData } from './use-available-tasks-data';
 import { claimTask } from '../../external/client/services/task.service';
 import { TaskTableRow } from '../types';
-import { getProcessInfo } from '../../utils/columns-template';
+import { getProcessInfo, getUserInfo } from '../../utils/columns-template';
 
 export function useAvailableTasks() {
   const { tasksState, filters, updateFilters, applyFilters, resetFilters, fetchTasks } =
@@ -20,7 +20,7 @@ export function useAvailableTasks() {
       return {
         processInfo: getProcessInfo(task.processName, task.startedAt),
         processNumber: task.processNumber,
-        createBy: task.assignedBy || 'N/A',
+        createBy: getUserInfo(task.assignedBy),
         taskName: task.name,
         status: task.status,
         daysWaiting: diffDays.toString(),

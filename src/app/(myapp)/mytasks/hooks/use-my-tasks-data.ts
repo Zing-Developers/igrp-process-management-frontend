@@ -42,9 +42,13 @@ export function useMyTasksData() {
   const { filters, updateFilters, resetFilters } = useFilterData();
 
   // Fetch my tasks function
-  const fetchMyTasks = async (page = 0, size = 10, customFilters?: Partial<MyTasksFilters>) => {
+  const fetchMyTasks = async (
+    page: number,
+    size: number,
+    customFilters?: Partial<MyTasksFilters>,
+  ) => {
     setMyTasksState((prev) => ({ ...prev, loading: true, error: null }));
-    
+
     // Use custom filters if provided, otherwise use current filters state
     const filtersToUse = customFilters ? { ...filters, ...customFilters } : filters;
     console.log('Fetching my tasks with filters:', filtersToUse);
@@ -63,7 +67,7 @@ export function useMyTasksData() {
       };
 
       const response = await getMyTasks(mappedFilters);
-      
+
       setMyTasksState((prev) => ({
         ...prev,
         tasks: response.content,
@@ -102,7 +106,7 @@ export function useMyTasksData() {
   };
 
   // Add unclaim modal handlers
-  
+
   const handleOpenUnclaimModal = useCallback((task: MyTasksTableRow) => {
     console.log('Opening unclaim modal for task:', task);
     setUnclaimModalState({

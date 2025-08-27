@@ -39,8 +39,8 @@ export interface DropdownOptions {
 }
 
 export interface ProcessInstanceTableRow {
-  processInfo: string;
-  createBy: string;
+  processInfo: any;
+  createBy: any;
   currentStep: string;
   daysWaiting: string;
   status: string;

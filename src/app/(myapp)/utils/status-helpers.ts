@@ -22,8 +22,6 @@ export const getProcessInstanceStatusLabel = (status: ProcessInstanceStatus): st
       return 'Cancelado';
     case 'COMPLETED':
       return 'Concluído';
-    case 'TERMINATED':
-      return 'Terminado';
     default:
       return status;
   }

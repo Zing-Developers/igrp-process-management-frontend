@@ -8,13 +8,13 @@
 
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
-import ProcessStatsCards from '@/components/processstatscards'
 import TaskProcessFilter from '@/components/taskprocessfilter'
 import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
 import CommonUserTaskModalForm from '@/components/commonusertaskmodalform'
 import { 
   IGRPPageHeader,
+	IGRPStatsCard,
 	IGRPDataTable,
 	IGRPDataTableCellBadge,
 	IGRPDataTableRowAction,
@@ -44,6 +44,11 @@ export default function PageMytasksComponent() {
     taskId: string;
 }
 
+  const [statstatsCard1Value, setStatstatsCard1Value] = useState<string | number>(0);
+  const [statstatsCard2Value, setStatstatsCard2Value] = useState<string | number>(0);
+  const [statstatsCard5Value, setStatstatsCard5Value] = useState<string | number>(0);
+  const [statstatsCard4Value, setStatstatsCard4Value] = useState<string | number>(0);
+  const [statstatsCard3Value, setStatstatsCard3Value] = useState<string | number>(0);
   const [contentTabletable1, setContentTabletable1] = useState<Table1[]>([]);
   
   
@@ -69,29 +74,30 @@ function executeTask (row: any): void  | undefined {
   const { stats, loading: statsLoading } = useDashboard();
   const {
     tableData,
-    myTasksState,
     unclaimModalState,
     fetchMyTasks,
     applyFilters,
     resetFilters,
     handleSearch,
-    handlePageChange,
     handleUnclaimTask,
     handleOpenUnclaimModal,
-    handleCloseUnclaimModal,
-    loading,
-    error,
+    handleCloseUnclaimModal
   } = useMyTasks();
 
   // Transform data for the table
   useEffect(() => {
     if (tableData) 
       setContentTabletable1(tableData);
-  }, [tableData]);
+    setStatstatsCard1Value(stats.tasks.totalMyTasks);    
+    setStatstatsCard2Value(stats.tasks.totalTasksAvailable);
+    setStatstatsCard5Value(stats.tasks.totalMyTasksSuspended);
+    setStatstatsCard4Value(stats.tasks.totalMyTasksCancelled);
+    setStatstatsCard3Value(stats.tasks.totalMyTasksCompleted);
+  }, [tableData, stats]);
 
   // Load initial data
   useEffect(() => {
-    fetchMyTasks();
+    fetchMyTasks(0, 50);
   }, []);
 
   const handleSearchSubmit = (searchTerm: string) => {
@@ -140,7 +146,120 @@ function executeTask (row: any): void  | undefined {
 </div>
 </IGRPPageHeader>
 
-<ProcessStatsCards  stats={ stats } loading={ statsLoading }   ></ProcessStatsCards>
+<div className={ cn('grid','grid-cols-1 ','md:grid-cols-2 ','lg:grid-cols-3 ','xl:grid-cols-5 ',' gap-4',)}    >
+	<IGRPStatsCard
+  name={ `statsCard1` }
+  cardBorderPosition={ `top` }
+cardBorder={ `rounded-lg` }
+cardVariant={ `info` }
+iconBackground={ `square` }
+title={ `Total de Tarefas` }
+titleSize={ `sm` }
+valueSize={ `2xl` }
+showIcon={ true }
+iconName={ `ListChecks` }
+iconSize={ `md` }
+iconVariant={ `info` }
+iconPlacement={ `end` }
+itemPlacement={ `start` }
+
+showIconBorder={ false }
+showIconBackground={ true }
+  className={ cn('col-span-1',) }
+  onClick={ () => {} }
+  value={ statstatsCard1Value }
+>
+</IGRPStatsCard>
+<IGRPStatsCard
+  name={ `statsCard2` }
+  cardBorderPosition={ `top` }
+cardBorder={ `rounded-lg` }
+cardVariant={ `warning` }
+iconBackground={ `square` }
+title={ `Total Disponiveis` }
+titleSize={ `sm` }
+valueSize={ `2xl` }
+showIcon={ true }
+iconName={ `CircleAlert` }
+iconSize={ `md` }
+iconVariant={ `warning` }
+iconPlacement={ `end` }
+itemPlacement={ `start` }
+
+showIconBackground={ true }
+showIconBorder={ false }
+  className={ cn('col-span-1',) }
+  onClick={ () => {} }
+  value={ statstatsCard2Value }
+>
+</IGRPStatsCard>
+<IGRPStatsCard
+  name={ `statsCard5` }
+  cardBorderPosition={ `top` }
+cardBorder={ `rounded-lg` }
+cardVariant={ `primary` }
+iconBackground={ `square` }
+title={ `Total Suspensos` }
+titleSize={ `sm` }
+valueSize={ `2xl` }
+showIcon={ true }
+iconName={ `Pause` }
+iconSize={ `md` }
+iconVariant={ `primary` }
+iconPlacement={ `end` }
+itemPlacement={ `start` }
+
+showIconBackground={ true }
+  className={ cn('col-span-1',) }
+  onClick={ () => {} }
+  value={ statstatsCard5Value }
+>
+</IGRPStatsCard>
+<IGRPStatsCard
+  name={ `statsCard4` }
+  cardBorderPosition={ `top` }
+cardBorder={ `rounded-lg` }
+cardVariant={ `destructive` }
+iconBackground={ `square` }
+title={ `Total Cancelados` }
+titleSize={ `sm` }
+valueSize={ `2xl` }
+showIcon={ true }
+iconName={ `CalendarX2` }
+iconSize={ `md` }
+iconVariant={ `destructive` }
+iconPlacement={ `end` }
+itemPlacement={ `start` }
+
+showIconBackground={ true }
+  className={ cn('col-span-1',) }
+  onClick={ () => {} }
+  value={ statstatsCard4Value }
+>
+</IGRPStatsCard>
+<IGRPStatsCard
+  name={ `statsCard3` }
+  cardBorderPosition={ `top` }
+cardBorder={ `rounded-lg` }
+cardVariant={ `success` }
+iconBackground={ `square` }
+title={ `Total Finalizados` }
+titleSize={ `sm` }
+valueSize={ `2xl` }
+showIcon={ true }
+iconName={ `CheckCheck` }
+iconSize={ `md` }
+iconVariant={ `success` }
+iconPlacement={ `end` }
+itemPlacement={ `start` }
+
+showIconBackground={ true }
+showIconBorder={ false }
+  className={ cn('col-span-1',) }
+  onClick={ () => {} }
+  value={ statstatsCard3Value }
+>
+</IGRPStatsCard></div>
 <div className={ cn(' border rounded-lg',)}    >
 	<TaskProcessFilter   onSearch={ handleSearchSubmit }
 onApplyFilters={ handleApplyFilters }
@@ -152,6 +271,14 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
   className={ cn() }
   columns={
     [
+        {
+          header: 'Tarefa'
+,accessorKey: 'currentStep',
+          cell: ({ row }) => {
+          return row.getValue("currentStep")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
         {
           header: 'Processo'
 ,accessorKey: 'process',
@@ -165,22 +292,6 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
 ,accessorKey: 'processNumber',
           cell: ({ row }) => {
           return row.getValue("processNumber")
-          },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: 'Utilizador'
-,accessorKey: 'assignedBy',
-          cell: ({ row }) => {
-          return row.getValue("assignedBy")
-          },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: 'Etapa Atual	'
-,accessorKey: 'currentStep',
-          cell: ({ row }) => {
-          return row.getValue("currentStep")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },

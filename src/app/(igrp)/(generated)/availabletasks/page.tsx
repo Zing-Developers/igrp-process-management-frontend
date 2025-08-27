@@ -8,12 +8,12 @@
 
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
-import ProcessStatsCards from '@/components/processstatscards'
 import TaskProcessFilter from '@/components/taskprocessfilter'
 import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
 import { 
   IGRPPageHeader,
+	IGRPStatsCard,
 	IGRPDataTable,
 	IGRPDataTableCellBadge,
 	IGRPDataTableRowAction,
@@ -37,6 +37,7 @@ export default function PageAvailabletasksComponent() {
     taskId: string;
 }
 
+  const [statstatsCard1Value, setStatstatsCard1Value] = useState<string | number>(0);
   const [contentTabletasks, setContentTabletasks] = useState<Table1[]>([]);
   
   
@@ -45,18 +46,16 @@ const [showFilter, setShowFilter] = useState<boolean>(false);
 const { igrpToast } = useIGRPToast()
 
 //------------------------------------Reserved Area-------------------------
-  const { stats, loading: statsLoading } = useDashboard(); 
-  
+  const { stats, loading: statsLoading } = useDashboard();
+
   const {
     tableData,
-    loading,
     error,
     totalElements,
     totalPages,
     currentPage,
     filters,
     handleSearch,
-    handlePageChange,
     applyFilters,
     resetFilters,
     handleClaimTask,
@@ -65,7 +64,8 @@ const { igrpToast } = useIGRPToast()
   // Update table data when tableData changes
   useEffect(() => {
     if (tableData) setContentTabletasks(tableData);
-  }, [tableData]);
+    setStatstatsCard1Value(stats.tasks.totalTasksAvailable);
+  }, [tableData, stats]);
 
   // Show error toast if there's an error
   useEffect(() => {
@@ -115,7 +115,30 @@ const { igrpToast } = useIGRPToast()
 </div>
 </IGRPPageHeader>
 
-<ProcessStatsCards  stats={ stats } loading={ statsLoading }   ></ProcessStatsCards>
+<div className={ cn('grid','grid-cols-1 ','md:grid-cols-2 ','lg:grid-cols-2 ',' gap-4',)}    >
+	<IGRPStatsCard
+  name={ `statsCard1` }
+  cardBorderPosition={ `top` }
+cardBorder={ `rounded-lg` }
+cardVariant={ `info` }
+iconBackground={ `square` }
+title={ undefined }
+titleSize={ `sm` }
+valueSize={ `2xl` }
+showIcon={ true }
+iconName={ `ListChecks` }
+iconSize={ `md` }
+iconVariant={ `info` }
+iconPlacement={ `end` }
+itemPlacement={ `start` }
+
+showIconBorder={ false }
+showIconBackground={ true }
+  className={ cn('col-span-1',) }
+  onClick={ () => {} }
+  value={ statstatsCard1Value }
+>
+</IGRPStatsCard></div>
 <div className={ cn(' border rounded-sm',)}    >
 	<TaskProcessFilter   onSearch={ handleSearch }
 onApplyFilters={ applyFilters }
@@ -123,7 +146,6 @@ onResetFilters={ resetFilters } ></TaskProcessFilter></div>
 <IGRPDataTable<Table1, Table1>
   showFilter={ true }
   showPagination={ true }
-  tableClassName={ `rounded-none` }
   paginationClassName={ `px-3 pb-3` }
   className={ cn('','border-0 border-solid border-[#000000]',) }
   columns={

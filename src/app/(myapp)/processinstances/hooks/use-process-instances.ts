@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useProcessInstancesData } from './use-process-instances-data';
 import { getProcessInstanceStatusVariant } from '../../utils/status-helpers';
 import { ProcessInstanceTableRow } from '../types';
+import { getProcessInfo, getUserInfo } from '../../utils/columns-template';
 
 export function useProcessInstances() {
   const {
@@ -23,8 +24,8 @@ export function useProcessInstances() {
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
       return {
-        processInfo: instance.processName || instance.procReleaseKey,
-        createBy: instance.startedBy || 'Sistema',
+        processInfo: getProcessInfo(instance.processName, instance.startedAt),
+        createBy: getUserInfo(instance.startedBy),
         currentStep: instance.currentActivityName || 'N/A',
         daysWaiting: diffDays.toString(),
         status: instance.status,

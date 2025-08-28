@@ -40,6 +40,7 @@ export default function PageProcessinstancesComponent() {
     version: string;
     startedAt: string;
     endedAt: string;
+    progress: string;
     status: string;
     processInstanceId: string;
     procReleaseKey: string;
@@ -281,6 +282,14 @@ export default function PageProcessinstancesComponent() {
             accessorKey: 'endedAt',
             cell: ({ row }) => {
               return row.getValue('endedAt');
+            },
+            filterFn: IGRPDataTableFacetedFilterFn,
+          },
+          {
+            header: 'Progresso',
+            accessorKey: 'progress',
+            cell: ({ row }) => {
+              return row.getValue('progress');
             },
             filterFn: IGRPDataTableFacetedFilterFn,
           },

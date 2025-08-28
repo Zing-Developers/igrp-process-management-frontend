@@ -43,6 +43,7 @@ export interface ProcessInstanceTableRow {
   createBy: any;
   daysWaiting: string;
   version: string;
+  progress: any;
   startedAt: any;
   endedAt: any;
   status: string;

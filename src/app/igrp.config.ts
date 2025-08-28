@@ -52,6 +52,7 @@ export default {
     'processinstances/hooks/use-process-instances',
     'mytasks/hooks/use-my-tasks',
     'dashboard/hooks/use-dashboard',
+    'dashboard/hooks/use-dashboard-data',
     'utils/url-config',
     'utils/status-badge'
   ],

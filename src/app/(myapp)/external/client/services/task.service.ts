@@ -1,6 +1,6 @@
 'use server';
 
-import { PaginatedResponse, Task } from '@igrp/platform-process-management-types';
+import { PaginatedResponse, Task, TaskStats } from '@igrp/platform-process-management-types';
 import { getHttpClient } from '../config/client.config';
 import { PostResponse } from '@igrp/platform-process-management-types/dist/response';
 
@@ -178,3 +178,21 @@ export const completeTask = async (
     value: string;
   }>,
 ): Promise<PostResponse> => (await httpClient.tasks.completeTask(taskId, variables)).data;
+
+/*
+ * Fetches statistics for all tasks.
+ * @returns A promise that resolves to task statistics.
+ */
+export const getTaskStats = async (): Promise<TaskStats> => {
+  const response = await httpClient.tasks.getTaskStats();
+  return response.data;
+}
+
+/**
+ * Fetches statistics for tasks assigned to the current user.
+ * @returns A promise that resolves to task statistics.
+ */
+export const getMyTaskStats = async (): Promise<TaskStats> => {
+  const response = await httpClient.tasks.getMyTaskStats();
+  return response.data;
+}

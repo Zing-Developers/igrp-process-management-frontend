@@ -7,7 +7,7 @@ import {
   TaskStats,
 } from '../types';
 import { getProcessInstances } from '../../external/client/services/process-instances.service';
-import { getMyTasks, getTasks } from '../../external/client/services/task.service';
+import { getMyTasks, getTasks, getTaskStats, getMyTaskStats } from '../../external/client/services/task.service';
 import { Task } from '@igrp/platform-process-management-types';
 import { getTaskStatusLabel, getTaskStatusVariant, TaskStatus } from '../../utils/status-helpers';
 
@@ -94,7 +94,7 @@ export function useDashboardData() {
   };
 
   /**
-   * Load task statistics
+   * Load task statistics using dedicated service endpoints
    */
   const loadTaskStats = async (): Promise<TaskStats> => {
     const stats: TaskStats = {
@@ -111,53 +111,29 @@ export function useDashboardData() {
     };
 
     try {
-      // Get total tasks
-      const totalTasksResponse = await getTasks(0, 1);
-      stats.totalTasks = totalTasksResponse.totalElements || 0;
+      // Use dedicated service to get general task statistics
+      const generalTaskStats = await getTaskStats();
+      
+      // Map from platform TaskStats to our TaskStats interface
+      stats.totalTasks = generalTaskStats.totalTaskInstances;
+      stats.totalTasksAvailable = generalTaskStats.totalAvailableTasks;
+      stats.totalTasksAssigned = generalTaskStats.totalAssignedTasks;
+      stats.totalTasksSuspended = generalTaskStats.totalSuspendedTasks;
+      stats.totalTasksCompleted = generalTaskStats.totalCompletedTasks;
+      stats.totalTasksCancelled = generalTaskStats.totalCanceledTasks;
 
-      // Get total completed tasks
-      const completedTasksResponse = await getTasks(0, 1, { status: 'COMPLETED' });
-      stats.totalTasksCompleted = completedTasksResponse.totalElements || 0;
-
-      // Get total running tasks
-      const runningTasksResponse = await getTasks(0, 1, { status: 'ASSIGNED' });
-      stats.totalTasksAssigned = runningTasksResponse.totalElements || 0;
-
-      // Get total suspended tasks
-      const suspendedTasksResponse = await getTasks(0, 1, { status: 'SUSPENDED' });
-      stats.totalTasksSuspended = suspendedTasksResponse.totalElements || 0;
-
-      // Get total cancelled tasks
-      const cancelledTasksResponse = await getTasks(0, 1, { status: 'CANCELLED' });
-      stats.totalTasksCancelled = cancelledTasksResponse.totalElements || 0;
-
-      // Get my tasks statistics
+      // Use dedicated service to get user-specific task statistics
       try {
-        const myTasksResponse = await getMyTasks({ page: 0, size: 1 });
-        stats.totalMyTasks = myTasksResponse.totalElements || 0;
-
-        // Get my completed tasks
-        const myCompletedTasksResponse = await getMyTasks({
-          page: 0,
-          size: 1,
-          status: 'COMPLETED',
-        });
-        stats.totalMyTasksCompleted = myCompletedTasksResponse.totalElements || 0;
-
-        // Get my cancelled tasks
-        const myCancelledTasksResponse = await getMyTasks({
-          page: 0,
-          size: 1,
-          status: 'CANCELLED',
-        });
-        stats.totalMyTasksCancelled = myCancelledTasksResponse.totalElements || 0;
-        console.log(myCancelledTasksResponse)
-        // Calculate available tasks (total - my tasks)
-        stats.totalTasksAvailable = Math.max(0, stats.totalTasks - stats.totalMyTasks);
+        const myTaskStats = await getMyTaskStats();
+        
+        // Map from platform TaskStats to our TaskStats interface for user tasks
+        stats.totalMyTasks = myTaskStats.totalAssignedTasks; // My assigned tasks
+        stats.totalMyTasksCompleted = myTaskStats.totalCompletedTasks;
+        stats.totalMyTasksSuspended = myTaskStats.totalSuspendedTasks;
+        stats.totalMyTasksCancelled = myTaskStats.totalCanceledTasks;
       } catch (myTasksError) {
         console.warn('Could not load user-specific task statistics:', myTasksError);
-        // Available tasks = total tasks when user tasks can't be loaded
-        stats.totalTasksAvailable = stats.totalTasks;
+        // Keep user task stats as 0 when user tasks can't be loaded
       }
     } catch (error) {
       console.warn('Could not load task statistics:', error);

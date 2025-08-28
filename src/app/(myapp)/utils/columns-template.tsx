@@ -1,3 +1,4 @@
+import { IGRPProgressBarProvider } from '@igrp/framework-next-ui';
 import { IGRPIcon, cn } from '@igrp/igrp-framework-react-design-system';
 import { format } from 'date-fns';
 
@@ -55,4 +56,29 @@ export const getProcessInfo = (processName: string, processNumber: string) => {
 
 export const getText = (text: string) => {
   return <span className={cn('text-sm text-muted-foreground')}>{text}</span>;
+};
+
+export const getProgressTemplate = (progress: string) => {
+  // Parse the progress string "0/3" format
+  const [completedStr, totalStr] = progress.split('/');
+  const completedTasks = parseInt(completedStr) || 0;
+  const totalTasks = parseInt(totalStr) || 0;
+  
+  const progressPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+  
+  return (
+    <div className={cn('flex items-center space-x-2')}>
+      <IGRPIcon 
+        name="progressIcon" 
+        iconName="CircleCheck" 
+        size={16} 
+        className={cn('text-foreground')} 
+      />
+      <div className={cn('flex flex-col')}>
+        <span className={cn('text-sm font-medium text-foreground')}>
+          {progress}
+        </span>
+      </div>
+    </div>
+  );
 };

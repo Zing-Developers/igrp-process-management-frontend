@@ -1,3 +1,4 @@
+import { Area, CreateAreaRequest, PaginatedResponse, UpdateAreaRequest } from '@igrp/platform-process-management-types';
 import {
   createArea,
   deleteArea,
@@ -5,8 +6,6 @@ import {
   getSubareas,
   updateArea,
 } from '../../external/client/services/area.service';
-import { Area, CreateAreaRequest, UpdateAreaRequest } from '../../external/types/area';
-import { PaginatedResponse } from '../../external/types/response';
 
 export class AreaService {
   static async createArea(areaData: CreateAreaRequest): Promise<Area> {

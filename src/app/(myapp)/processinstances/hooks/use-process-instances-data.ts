@@ -11,7 +11,7 @@ export function useProcessInstancesData() {
     totalElements: 0,
     totalPages: 0,
     currentPage: 0,
-    pageSize: 10,
+    pageSize: 1000,
   });
 
   // Use the shared filter data hook
@@ -31,7 +31,7 @@ export function useProcessInstancesData() {
   // Fetch process instances function
   const fetchProcessInstances = async (
     page = 0,
-    size = 10,
+    size = 1000,
     customFilters?: Partial<ProcessInstancesFilters>,
   ) => {
     setProcessInstancesState((prev) => ({ ...prev, loading: true, error: null }));

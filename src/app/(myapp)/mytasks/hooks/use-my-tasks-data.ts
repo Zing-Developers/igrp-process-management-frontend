@@ -30,7 +30,7 @@ export function useMyTasksData() {
     totalElements: 0,
     totalPages: 0,
     currentPage: 0,
-    pageSize: 10,
+    pageSize: 10000,
   });
 
   // Add unclaim modal state

@@ -49,7 +49,7 @@ export function useTaskManagement() {
     totalElements: 0,
     totalPages: 0,
     currentPage: 0,
-    pageSize: 10,
+    pageSize: 1000,
   });
 
   const [filters, setFilters] = useState<TaskFilters>({});

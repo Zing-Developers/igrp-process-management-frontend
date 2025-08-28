@@ -61,7 +61,7 @@ const pc = useProcessConfiguration(igrpToast);
         {
           value: `tab_area`,
           label: `Área e Subáreas`,
-          icon: `ArrowRight`,
+          icon: `AlarmClockOff`,
 content: (<>
             <div className={ cn('flex flex-row flex-wrap items-center justify-between gap-2',)}    >
 	<div className={ cn(' flex-1 min-w-[240px]',)}    >

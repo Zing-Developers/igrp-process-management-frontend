@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useMyTasksData } from './use-my-tasks-data';
 import { TaskTableRow } from '../types';
 import { unclaimTask } from '../../external/client/services/task.service';
-import { getProcessInfo, getUserInfo } from '../../utils/columns-template';
+import { getDateTemplate, getProcessInfo, getUserInfo } from '../../utils/columns-template';
 
 export function useMyTasks() {
   const {
@@ -29,6 +29,7 @@ export function useMyTasks() {
       return {
         id: task.id,
         process: getProcessInfo(task.processName, task.processNumber),
+        startedAt: getDateTemplate(task.startedAt),
         processNumber: task.processNumber,
         assignedBy: getUserInfo(task.assignedBy),
         currentStep: task.name,

@@ -29,9 +29,9 @@ export default function PageAvailabletasksComponent() {
 
   
   type Table1 = {
-    processInfo: string;
-    processNumber: string;
     taskName: string;
+    startedAt: string;
+    processInfo: string;
     daysWaiting: string;
     status: string;
     taskId: string;
@@ -151,26 +151,26 @@ onResetFilters={ resetFilters } ></TaskProcessFilter></div>
   columns={
     [
         {
+          header: 'Tarefa'
+,accessorKey: 'taskName',
+          cell: ({ row }) => {
+          return row.getValue("taskName")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Data'
+,accessorKey: 'startedAt',
+          cell: ({ row }) => {
+          return row.getValue("startedAt")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
           header: 'Processo'
 ,accessorKey: 'processInfo',
           cell: ({ row }) => {
           return row.getValue("processInfo")
-          },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: 'Número'
-,accessorKey: 'processNumber',
-          cell: ({ row }) => {
-          return row.getValue("processNumber")
-          },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: 'Etapa atual'
-,accessorKey: 'taskName',
-          cell: ({ row }) => {
-          return row.getValue("taskName")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },

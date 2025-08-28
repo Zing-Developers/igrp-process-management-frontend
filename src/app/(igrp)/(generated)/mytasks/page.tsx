@@ -32,10 +32,9 @@ export default function PageMytasksComponent() {
 
   
   type Table1 = {
-    process: string;
-    processNumber: string;
-    assignedBy: string;
     currentStep: string;
+    process: string;
+    startedAt: string;
     waitingDays: string;
     status: string;
     processKey: string;
@@ -288,10 +287,10 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Número'
-,accessorKey: 'processNumber',
+          header: 'Data'
+,accessorKey: 'startedAt',
           cell: ({ row }) => {
-          return row.getValue("processNumber")
+          return row.getValue("startedAt")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },

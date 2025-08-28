@@ -42,7 +42,7 @@ export interface AvailableTasksData {
 export interface TaskTableRow {
   processInfo: any;
   processNumber: string;
-  createBy: string;
+  createBy:  any;
   taskName: string;
   status: string;
   daysWaiting: string;

@@ -1,4 +1,4 @@
-import { ProcessInstance } from '../../external/types/process';
+import { ProcessInstance } from '@igrp/platform-process-management-types';
 
 export interface ProcessInstancesFilters {
   processNumber: string;
@@ -41,11 +41,12 @@ export interface DropdownOptions {
 export interface ProcessInstanceTableRow {
   processInfo: any;
   createBy: any;
-  currentStep: string;
   daysWaiting: string;
+  version: string;
+  startedAt: any;
+  endedAt: any;
   status: string;
   processInstanceId: string;
   procReleaseKey: string;
   startedBy: string;
-  version: string;
 }

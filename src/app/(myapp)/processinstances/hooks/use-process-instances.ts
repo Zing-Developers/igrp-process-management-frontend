@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useProcessInstancesData } from './use-process-instances-data';
 import { getProcessInstanceStatusVariant } from '../../utils/status-helpers';
 import { ProcessInstanceTableRow } from '../types';
-import { getProcessInfo, getUserInfo } from '../../utils/columns-template';
+import { getDateTemplate, getProcessInfo, getUserInfo } from '../../utils/columns-template';
 
 export function useProcessInstances() {
   const {
@@ -24,15 +24,16 @@ export function useProcessInstances() {
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
       return {
-        processInfo: getProcessInfo(instance.processName, instance.startedAt),
+        processInfo: getProcessInfo(instance.name, instance.number),
         createBy: getUserInfo(instance.startedBy),
-        currentStep: instance.currentActivityName || 'N/A',
         daysWaiting: diffDays.toString(),
+        version: instance.version,
+        startedAt: getDateTemplate(instance.startedAt),
+        endedAt: getDateTemplate(instance.endedAt),
         status: instance.status,
         processInstanceId: instance.id,
         procReleaseKey: instance.procReleaseKey,
         startedBy: instance.startedBy,
-        version: instance.version,
       };
     });
   }, [processInstancesState.processInstances]);

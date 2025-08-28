@@ -22,7 +22,7 @@ export function NodeContent({ node, onStartProcess, onViewDetails }: NodeContent
     <div className="flex items-center justify-between w-full">
       <div className="flex items-center space-x-2 flex-1 min-w-0">
         <div className="flex-1 min-w-0">
-          <div className="font-medium text-sm truncate">{node.name}</div>
+          <div className="font-medium text-sm truncate">{node?.name || 'N/A'}</div>
           {isProcess && (
             <>
               <div className="text-xs text-gray-500 truncate">

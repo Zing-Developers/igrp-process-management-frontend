@@ -11,7 +11,7 @@ export function useDashboard() {
   const processInstancesItems = useMemo((): RecentItemsCardItem[] => {
     return data.recentProcessInstances.map((instance: ProcessInstance) => ({
       id: instance.id,
-      title: instance.procReleaseKey || 'Processo',
+      title: instance.name || 'Processo',
       subtitle: `Iniciado por: ${instance.startedBy}`,
       badge: {
         text: getProcessInstanceStatusLabel(instance.status as ProcessInstanceStatus),

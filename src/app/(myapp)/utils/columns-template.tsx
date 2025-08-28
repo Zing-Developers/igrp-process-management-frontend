@@ -1,13 +1,16 @@
 import { IGRPIcon, cn } from '@igrp/igrp-framework-react-design-system';
 import { format } from 'date-fns';
 
-export const getDateTemplate = (date_: string) => {
-  return (
-    <div className={cn('flex items-center text-sm text-muted-foreground')}>
+export const getDateTemplate = (date_: string | Date) => {
+  return date_ ? (
+    <>
+      <div className={cn('flex items-center')}>
       <IGRPIcon name="dateIcon" iconName="Clock" size={16} className={cn('mr-1')} />
-      <span>{format(new Date(date_), 'MMM dd, yyyy')}</span>
-    </div>
-  );
+      
+        <span>{format(new Date(date_), 'MMM dd, yyyy HH:mm')}</span>
+      </div>
+    </>
+  ) : ("");
 };
 
 export const getUserInfo = (assignee: string) => {
@@ -34,7 +37,7 @@ export const getUserInfo = (assignee: string) => {
   );
 };
 
-export const getProcessInfo = (processName: string, createdAt: string) => {
+export const getProcessInfo = (processName: string, processNumber: string) => {
   return (
     <div className={cn('flex flex-col space-y-1')}>
       <div className={cn('flex items-center')}>
@@ -43,8 +46,8 @@ export const getProcessInfo = (processName: string, createdAt: string) => {
         </div>
       </div>
       <div className={cn('flex items-center text-xs text-muted-foreground')}>
-        <IGRPIcon name="createdIcon" iconName="Clock" size={12} className={cn('mr-1')} />
-        <span>Created: {format(new Date(createdAt), 'MMM dd, yyyy HH:mm')}</span>
+        <IGRPIcon name="createdIcon" iconName="Hash" size={12} className={cn('mr-1')} />
+        <span>{processNumber}</span>
       </div>
     </div>
   );

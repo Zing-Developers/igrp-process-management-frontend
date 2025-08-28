@@ -1,4 +1,4 @@
-import { Process, ProcessInstance } from '../../external/types/process';
+import { Process, ProcessInstance } from '@igrp/platform-process-management-types';
 import { ExtendedArea } from '../../processconfiguration/types';
 
 // Use the same structure as process configuration - no need for ProcessMapArea

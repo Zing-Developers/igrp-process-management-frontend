@@ -34,7 +34,7 @@ export interface ProcessMapActions {
     processKey: string,
     businessKey?: string,
     variables?: Array<{ name: string; value: string }>,
-  ) => Promise<ProcessInstance>;
+  ) => Promise<ProcessInstance | null>; // Changed from Promise<ProcessI    nstance> to Promise<ProcessInstance | null>
   refreshData: () => Promise<void>;
 }
 

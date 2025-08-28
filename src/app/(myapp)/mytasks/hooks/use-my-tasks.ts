@@ -28,7 +28,7 @@ export function useMyTasks() {
 
       return {
         id: task.id,
-        process: getProcessInfo(task.processName, task.startedAt),
+        process: getProcessInfo(task.processName, task.processNumber),
         processNumber: task.processNumber,
         assignedBy: getUserInfo(task.assignedBy),
         currentStep: task.name,

@@ -18,7 +18,7 @@ export function useAvailableTasks() {
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
       return {
-        processInfo: getProcessInfo(task.processName, task.startedAt),
+        processInfo: getProcessInfo(task.processName, task.processNumber),
         processNumber: task.processNumber,
         createBy: getUserInfo(task.assignedBy),
         taskName: task.name,

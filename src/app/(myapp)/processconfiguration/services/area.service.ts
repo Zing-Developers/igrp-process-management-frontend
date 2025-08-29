@@ -20,7 +20,7 @@ export class AreaService {
     return await deleteArea(areaId);
   }
 
-  static async getAreas(name: string, page: number = 0, size: number = 100, parentId?: string): Promise<PaginatedResponse<Area>> {
+  static async getAreas(name: string, page: number = 0, size: number = 1000, parentId?: string): Promise<PaginatedResponse<Area>> {
     return await getAreas(name, page, size, parentId);
   }
 

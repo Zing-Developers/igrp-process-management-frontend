@@ -13,6 +13,7 @@ import { ArtifactProcessesList } from '@/app/(myapp)/processconfiguration/compon
 import AreaModal from '@/app/(igrp)/(generated)/processconfiguration/components/areamodal';
 import ProcessModal from '@/app/(igrp)/(generated)/processconfiguration/components/processmodal';
 import ArtifactModal from '@/app/(igrp)/(generated)/processconfiguration/components/artifactmodal';
+import ProcessNumberModal from '@/app/(igrp)/(generated)/processconfiguration/components/processnumbermodal';
 import {
   IGRPPageHeader,
   IGRPTabs,
@@ -108,6 +109,7 @@ export default function PageProcessconfigurationComponent() {
                 <ArtifactProcessesList
                   processes={pc.allProcesses}
                   onArtifactEdit={(processId) => pc.handleOpenArtifactModal(processId)}
+                  onProcessNumberEdit={(processId) => pc.handleOpenProcessNumberModal(processId)}
                 ></ArtifactProcessesList>
               </>
             ),
@@ -149,6 +151,19 @@ export default function PageProcessconfigurationComponent() {
         onFormChange={pc.artifactForm.updateFormData}
         onSave={pc.handleSaveArtifacts}
       ></ArtifactModal>
+      <ProcessNumberModal
+        open={pc.processNumberForm.modalState.isOpen}
+        formData={pc.processNumberForm.formData}
+        setOpen={(open) =>
+          open
+            ? pc.handleOpenProcessNumberModal(
+                pc.processNumberForm.modalState.selectedProcessId || '',
+              )
+            : pc.processNumberForm.closeModal()
+        }
+        onFormChange={pc.processNumberForm.updateFormData}
+        onSave={pc.handleSaveProcessNumber}
+      ></ProcessNumberModal>
     </div>
   );
 }

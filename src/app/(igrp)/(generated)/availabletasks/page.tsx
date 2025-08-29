@@ -30,8 +30,9 @@ export default function PageAvailabletasksComponent() {
   
   type Table1 = {
     taskName: string;
-    startedAt: string;
     processInfo: string;
+    startedAt: string;
+    endAt: string;
     daysWaiting: string;
     status: string;
     taskId: string;
@@ -159,7 +160,15 @@ onResetFilters={ resetFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Data'
+          header: 'Processo'
+,accessorKey: 'processInfo',
+          cell: ({ row }) => {
+          return row.getValue("processInfo")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Data Inicio'
 ,accessorKey: 'startedAt',
           cell: ({ row }) => {
           return row.getValue("startedAt")
@@ -167,10 +176,10 @@ onResetFilters={ resetFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Processo'
-,accessorKey: 'processInfo',
+          header: 'Data Fim'
+,accessorKey: 'endAt',
           cell: ({ row }) => {
-          return row.getValue("processInfo")
+          return row.getValue("endAt")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },

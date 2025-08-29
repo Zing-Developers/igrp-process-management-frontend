@@ -1,11 +1,13 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Task, PaginatedResponse } from '@igrp/platform-process-management-types';
 import { getTasks, assignTask } from '../../external/client/services/task.service';
+import { getDateTemplate, getProcessInfo } from '../../utils/columns-template';
 
 export interface TaskManagementTableRow {
-  process: string;
-  createBy: string;
+  process: any;
   currentStep: string;
+  startedAt: any;
+  endAt: any;
   waitingDays: string;
   status: string;
   taskId: string;
@@ -69,8 +71,9 @@ export function useTaskManagement() {
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
       return {
-        process: task.processName || task.name,
-        createBy: task.assignedBy || 'Sistema',
+        process: getProcessInfo(task.processName, task.processNumber),
+        startedAt: getDateTemplate(task.startedAt),
+        endAt: getDateTemplate(task.endAt),
         currentStep: task.name,
         waitingDays: diffDays.toString(),
         status: task.status,

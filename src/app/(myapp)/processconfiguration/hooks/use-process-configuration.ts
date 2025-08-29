@@ -60,6 +60,12 @@ export function useProcessConfiguration(igrpToast?: any) {
     handleOpenArtifactModal: processHandlers.handleOpenArtifactModal,
     handleSaveArtifacts: () => processHandlers.artifactForm.saveArtifacts(igrpToast),
 
+    // Process Number management
+    processNumberForm: processHandlers.processNumberForm,
+    processNumberConfigs: processHandlers.processNumberForm.processNumberConfigs,
+    handleOpenProcessNumberModal: processHandlers.handleOpenProcessNumberModal,
+    handleSaveProcessNumber: processHandlers.handleSaveProcessNumber,
+
     // UI state
     expansion: {
       ...expansion,

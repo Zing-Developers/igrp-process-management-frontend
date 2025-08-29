@@ -37,3 +37,8 @@ export interface ArtifactModalState {
   isOpen: boolean;
   selectedProcessId: string | null;
 }
+
+export interface ProcessNumberModalState {
+  isOpen: boolean;
+  selectedProcessId: string | null;
+}

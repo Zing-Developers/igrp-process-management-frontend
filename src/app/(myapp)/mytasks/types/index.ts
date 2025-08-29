@@ -27,6 +27,7 @@ export interface TaskTableRow {
   id: string;
   process: any;
   startedAt: any;
+  endAt: any;
   processNumber: string;
   assignedBy: any;
   currentStep: string;

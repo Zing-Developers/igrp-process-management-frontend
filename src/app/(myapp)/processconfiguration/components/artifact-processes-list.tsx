@@ -5,9 +5,11 @@ import { Process } from '@igrp/platform-process-management-types';
 export function ArtifactProcessesList({
   processes,
   onArtifactEdit,
+  onProcessNumberEdit,
 }: {
   processes: Process[];
   onArtifactEdit: (processId: string) => void;
+  onProcessNumberEdit: (processId: string) => void;
 }) {
   if (processes.length === 0) {
     return <div className="text-sm text-muted-foreground italic">Nenhum processo encontrado</div>;
@@ -38,15 +40,26 @@ export function ArtifactProcessesList({
               </div>
             </div>
           </div>
-          <IGRPButton
-            onClick={() => onArtifactEdit(process.id)}
-            variant="ghost"
-            size="icon"
-            iconName="ArrowRightLeft"
-            className="p-2 text-muted-foreground hover:text-primary hover:bg-accent rounded"
-            iconClassName="w-4 h-4"
-            title="Configurar Artifatos"
-          />
+          <div className="flex items-center gap-2">
+            <IGRPButton
+              onClick={() => onProcessNumberEdit(process.id)}
+              variant="ghost"
+              size="icon"
+              iconName="Hash"
+              className="p-2 text-muted-foreground hover:text-primary hover:bg-accent rounded"
+              iconClassName="w-4 h-4"
+              title="Configurar Número do Processo"
+            />
+            <IGRPButton
+              onClick={() => onArtifactEdit(process.id)}
+              variant="ghost"
+              size="icon"
+              iconName="ArrowRightLeft"
+              className="p-2 text-muted-foreground hover:text-primary hover:bg-accent rounded"
+              iconClassName="w-4 h-4"
+              title="Configurar Artifatos"
+            />
+          </div>
         </div>
       ))}
     </div>

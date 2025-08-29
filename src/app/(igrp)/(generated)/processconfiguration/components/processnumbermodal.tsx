@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY iGRP STUDIO. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -6,7 +6,176 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { use, useState, useEffect, useRef } from 'react';
+import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
+import { IGRPFormHandle } from '@igrp/igrp-framework-react-design-system';
+import { z } from 'zod';
+import { IGRPOptionsProps } from '@igrp/igrp-framework-react-design-system';
+import {
+  IGRPModalDialog,
+  IGRPModalDialogContent,
+  IGRPModalDialogHeader,
+  IGRPModalDialogTitle,
+  IGRPModalDialogDescription,
+  IGRPForm,
+  IGRPInputText,
+  IGRPCombobox,
+  IGRPModalDialogFooter,
+  IGRPButton,
+} from '@igrp/igrp-framework-react-design-system';
 
+export default function Processnumbermodal({
+  open,
+  setOpen,
+  formData,
+  onFormChange,
+  onSave,
+}: {
+  open: boolean;
+  setOpen: (prompt: boolean) => void;
+  formData: any;
+  onFormChange: (field: any, value: any) => void;
+  onSave: (data: any) => void;
+}) {
+  const form1 = z.object({
+    prefix: z.string().optional(),
+    dateFormat: z.string().optional(),
+    checkdigit: z.string().optional(),
+  });
 
-export default function Processnumbermodal({ open, setOpen, formData } : { open: boolean, setOpen: (prompt: boolean) => void, formData: any }) {
+  type Form1ZodType = typeof form1;
+
+  const initForm1: z.infer<Form1ZodType> = {
+    prefix: undefined,
+    dateFormat: undefined,
+    checkdigit: undefined,
+  };
+
+  const formform1Ref = useRef<IGRPFormHandle<Form1ZodType> | null>(null);
+  const [form1Data, setForm1Data] = useState<any>(initForm1);
+  const [selectdateFormatOptions, setSelectdateFormatOptions] = useState<IGRPOptionsProps[]>([]);
+  const [selectcheckdigitOptions, setSelectcheckdigitOptions] = useState<IGRPOptionsProps[]>([]);
+
+  const { igrpToast } = useIGRPToast();
+
+  // Load combobox options on component mount
+  useEffect(() => {
+    setSelectdateFormatOptions([
+      { label: 'YYYY', value: 'YYYY' },
+      { label: 'YYYYMM', value: 'YYYYMM' },
+      { label: 'YYYYMMDD', value: 'YYYYMMDD' },
+      { label: 'DDMMYYYY', value: 'DDMMYYYY' },
+      { label: 'MMDDYYYY', value: 'MMDDYYYY' },
+    ]);
+
+    setSelectcheckdigitOptions([
+      { label: '2', value: '2' },
+      { label: '3', value: '3' },
+      { label: '4', value: '4' },
+    ]);
+  }, []);
+
+  // Update form data when formData prop changes
+  useEffect(() => {
+    if (formData) {
+      const updatedData = {
+        prefix: formData.prefix || '',
+        dateFormat: formData.dateFormat || '',
+        checkdigit: formData.checkDigit || '',
+      };
+      setForm1Data(updatedData);
+      formform1Ref.current?.reset(updatedData);
+    }
+  }, [formData]);
+
+  const handleSubmit = async (data: any) => {
+    // Map form data to ProcessNumberConfig format
+    const processNumberData = {
+      prefix: data.prefix,
+      dateFormat: data.dateFormat,
+      checkDigit: data.checkdigit,
+    };
+
+    // Call onSave with the mapped data
+    if (onSave) await onSave(processNumberData);
+  };
+
+  return (
+    <div className={cn('component')}>
+      <IGRPModalDialog onOpenChange={setOpen} open={open}>
+        <IGRPModalDialogContent size={`md`} className={cn()}>
+          <IGRPModalDialogHeader>
+            <IGRPModalDialogTitle name={`modalDialogTitle1`}>Número Processo</IGRPModalDialogTitle>
+            <IGRPModalDialogDescription name={`modalDialogDescription1`}>
+              Lorem ipsum dolor sit amet
+            </IGRPModalDialogDescription>
+          </IGRPModalDialogHeader>
+          <IGRPForm
+            schema={form1}
+            validationMode={`onBlur`}
+            formRef={formform1Ref}
+            onSubmit={async (data) => await handleSubmit(data)}
+            defaultValues={form1Data}
+          >
+            <>
+              <div
+                className={cn(
+                  'grid',
+                  'grid-cols-1 ',
+                  'md:grid-cols-1 ',
+                  'lg:grid-cols-1 ',
+                  ' gap-4',
+                )}
+              >
+                <IGRPInputText
+                  name={`prefix`}
+                  label={`Prefixo`}
+                  showIcon={false}
+                  required={false}
+                  className={cn('col-span-1')}
+                ></IGRPInputText>
+                <IGRPCombobox
+                  name={`dateFormat`}
+                  label={`Data Formato`}
+                  variant={`single`}
+                  placeholder={`Select an option...`}
+                  selectLabel={`No option found`}
+                  showSearch={true}
+                  showIcon={false}
+                  iconName={`CornerDownRight`}
+                  className={cn('col-span-1')}
+                  onChange={() => {}}
+                  options={selectdateFormatOptions}
+                ></IGRPCombobox>
+                <IGRPCombobox
+                  name={`checkdigit`}
+                  label={`Check Digit`}
+                  variant={`single`}
+                  placeholder={`Select an option...`}
+                  selectLabel={`No option found`}
+                  showSearch={true}
+                  showIcon={false}
+                  iconName={`CornerDownRight`}
+                  className={cn('col-span-1')}
+                  onChange={() => {}}
+                  options={selectcheckdigitOptions}
+                ></IGRPCombobox>
+              </div>
+            </>
+          </IGRPForm>
+          <IGRPModalDialogFooter>
+            <IGRPButton
+              name={`button1`}
+              variant={`default`}
+              size={`default`}
+              showIcon={false}
+              onClick={() => formform1Ref.current?.submit()}
+            >
+              Gravar
+            </IGRPButton>
+          </IGRPModalDialogFooter>
+        </IGRPModalDialogContent>
+      </IGRPModalDialog>
+    </div>
+  );
 }

@@ -2,6 +2,8 @@ import { useProcessForm } from './processes/use-process-form';
 import { useProcessOperations } from './processes/use-process-operations';
 import { useArtifactForm } from './artifacts/use-artifact-form';
 import { useArtifactOperations } from './artifacts/use-artifact-operations';
+import { useProcessNumberForm } from './sequence/use-process-number-form';
+import { useProcessNumberOperations } from './sequence/use-process-number-operations';
 import { AreaProcessesMap } from '../types';
 import { ProcessService } from '../services/process.service';
 import { useState, useEffect } from 'react';
@@ -20,6 +22,8 @@ export function useProcessHandlers(
   const processOperations = useProcessOperations(setAreaProcesses);
   const artifactForm = useArtifactForm();
   const artifactOperations = useArtifactOperations();
+  const processNumberForm = useProcessNumberForm();
+  const processNumberOperations = useProcessNumberOperations();
 
   // Load all processes from API when component mounts or when needed
   const loadAllProcesses = async () => {
@@ -157,14 +161,55 @@ export function useProcessHandlers(
     }
   };
 
+  const handleOpenProcessNumberModal = async (processId: string) => {
+    processNumberForm.openModal(processId);
+    
+    // Load process number configurations when modal opens
+    if (processId) {
+      await processNumberOperations.loadProcessNumberConfigs(
+        processId,
+        processNumberForm.setProcessNumberConfigs,
+        processNumberForm.setLoading,
+        processNumberForm.populateFormDataFromConfig
+      );
+    }
+  };
+
+  const handleSaveProcessNumber = async (data?: any) => {
+    if (!processNumberForm.modalState.selectedProcessId) return;
+  
+    processNumberForm.setLoading(true);
+    try {
+      // Use data parameter if provided, otherwise use form data from state
+      const configData = data || processNumberForm.formData;
+      
+      const savedConfig = await processNumberOperations.saveProcessNumberConfiguration(
+        configData,
+        igrpToast
+      );
+      
+      if (savedConfig) {
+        processNumberForm.closeModal();
+      }
+    } catch (error) {
+      console.error('Error saving process number configuration:', error);
+    } finally {
+      processNumberForm.setLoading(false);
+    }
+  };
+
   return {
     processForm,
     processOperations,
     artifactForm,
     artifactOperations,
+    processNumberForm,
+    processNumberOperations,
     handleAssociateProcess,
     handleRemoveProcess,
     handleOpenArtifactModal,
+    handleOpenProcessNumberModal,
+    handleSaveProcessNumber,
     getAvailableProcesses,
     loadAllProcesses,
     allProcesses,

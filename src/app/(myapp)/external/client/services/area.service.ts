@@ -54,6 +54,6 @@ export const getAreaById = async (id: string): Promise<Area | null> => {
 
 export const getSubareas = async (parentAreaId: string): Promise<Area[]> => {
   // Use the same getAreas API with parentId parameter
-  const response = await getAreas('', 0, 100, parentAreaId);
+  const response = await getAreas('', 0, 1000, parentAreaId);
   return response.content || [];
 };

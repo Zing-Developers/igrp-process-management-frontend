@@ -21,6 +21,7 @@ export function useAvailableTasks() {
         processInfo: getProcessInfo(task.processName, task.processNumber),
         processNumber: task.processNumber,
         startedAt: getDateTemplate(task.startedAt),
+        endAt: getDateTemplate(task.endAt),
         createBy: getUserInfo(task.assignedBy),
         taskName: task.name,
         status: task.status,

@@ -32,9 +32,11 @@ export default function PageTaskmanagementComponent() {
 
   
   type Table1 = {
-    process: string;
-    createBy: string;
     currentStep: string;
+    process: string;
+    assignedBy: string;
+    startedAt: string;
+    endAt: string;
     waitingDays: string;
     status: string;
     taskId: string;
@@ -303,10 +305,26 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Criado por'
-,accessorKey: 'createBy',
+          header: 'Utilizador'
+,accessorKey: 'assignedBy',
           cell: ({ row }) => {
-          return row.getValue("createBy")
+          return row.getValue("assignedBy")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Data Início'
+,accessorKey: 'startedAt',
+          cell: ({ row }) => {
+          return row.getValue("startedAt")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Data Fim'
+,accessorKey: 'endAt',
+          cell: ({ row }) => {
+          return row.getValue("endAt")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },

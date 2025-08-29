@@ -246,22 +246,6 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Criado por'
-,accessorKey: 'createBy',
-          cell: ({ row }) => {
-          return row.getValue("createBy")
-          },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: 'Dias em espera'
-,accessorKey: 'daysWaiting',
-          cell: ({ row }) => {
-          return row.getValue("daysWaiting")
-          },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
           header: 'Versāo'
 ,accessorKey: 'version',
           cell: ({ row }) => {
@@ -275,6 +259,22 @@ badgeClassName={ `` }
 >
 
 </IGRPDataTableCellBadge>
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Criado por'
+,accessorKey: 'createBy',
+          cell: ({ row }) => {
+          return row.getValue("createBy")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Dias em espera'
+,accessorKey: 'daysWaiting',
+          cell: ({ row }) => {
+          return row.getValue("daysWaiting")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },

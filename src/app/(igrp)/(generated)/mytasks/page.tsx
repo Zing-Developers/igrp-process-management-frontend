@@ -16,7 +16,6 @@ import {
   IGRPPageHeader,
 	IGRPStatsCard,
 	IGRPDataTable,
-	IGRPDataTableCellBadge,
 	IGRPDataTableRowAction,
 	IGRPDataTableButtonLink 
 } from "@igrp/igrp-framework-react-design-system";
@@ -24,7 +23,6 @@ import {useMyTasks} from '@/app/(myapp)/mytasks/hooks/use-my-tasks'
 import { useRouter } from 'next/navigation'
 import { urlConfig } from '@/app/(myapp)/utils/url-config'
 import {useDashboard} from '@/app/(myapp)/dashboard/hooks/use-dashboard'
-import {getTaskStatusColor} from '@/app/(myapp)/utils/status-badge'
 
 
 export default function PageMytasksComponent() {
@@ -35,6 +33,7 @@ export default function PageMytasksComponent() {
     currentStep: string;
     process: string;
     startedAt: string;
+    endAt: string;
     waitingDays: string;
     status: string;
     processKey: string;
@@ -287,10 +286,18 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Data'
+          header: 'Data Início'
 ,accessorKey: 'startedAt',
           cell: ({ row }) => {
           return row.getValue("startedAt")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Data Fim'
+,accessorKey: 'endAt',
+          cell: ({ row }) => {
+          return row.getValue("endAt")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },
@@ -299,24 +306,6 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
 ,accessorKey: 'waitingDays',
           cell: ({ row }) => {
           return row.getValue("waitingDays")
-          },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: 'Estado'
-,accessorKey: 'status',
-          cell: ({ row }) => {
-          const rowData = row.original;
-
-const { iconName, bgClass, textClass, label, className } = getTaskStatusColor(rowData);
-
-return <IGRPDataTableCellBadge
-  label={ label ?? row.original.status }
-  variant={ `soft` }
-badgeClassName={ `${bgClass} ${textClass} ${className}` }
->
-
-</IGRPDataTableCellBadge>
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },

@@ -58,12 +58,7 @@ export default function PageProcessinstancesComponent() {
 
   function goToProcessRuntime(row: any): void | undefined {
     console.log(row);
-    const taskUrl = urlConfig.buildTaskExecutionUrl(
-      row.procReleaseKey,
-      row.processInstanceId,
-      row.taskKey,
-      row.taskId,
-    );
+    const taskUrl = urlConfig.buildProcessInstanceUrl(row.procReleaseKey, row.processInstanceId);
     router.push(taskUrl);
   }
 
@@ -325,7 +320,7 @@ export default function PageProcessinstancesComponent() {
                   <IGRPDataTableButtonLink
                     labelTrigger={`Consultar Processo`}
                     variant={`ghost`}
-                    icon={`Eye`}
+                    icon={`FileSearch`}
                     className={cn()}
                     action={() => {
                       goToProcessRuntime(rowData);

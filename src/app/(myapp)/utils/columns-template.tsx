@@ -63,16 +63,15 @@ export const getProgressTemplate = (progress: string) => {
   const [completedStr, totalStr] = progress.split('/');
   const completedTasks = parseInt(completedStr) || 0;
   const totalTasks = parseInt(totalStr) || 0;
-  
-  const progressPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+  const isComplete = completedTasks === totalTasks && totalTasks > 0;
   
   return (
     <div className={cn('flex items-center space-x-2')}>
       <IGRPIcon 
         name="progressIcon" 
-        iconName="CircleCheck" 
+        iconName={isComplete ? "CircleCheck" : "Clock"} 
         size={16} 
-        className={cn('text-foreground')} 
+        className={cn(isComplete ? 'text-green-600' : 'text-orange-500')} 
       />
       <div className={cn('flex flex-col')}>
         <span className={cn('text-sm font-medium text-foreground')}>

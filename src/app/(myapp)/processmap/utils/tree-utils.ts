@@ -1,4 +1,4 @@
-import { Process } from '../../external/types/process';
+import { Process } from '@igrp/platform-process-management-types';
 import { ExtendedArea } from '../../processconfiguration/types';
 import { ProcessTreeNode } from '../types';
 
@@ -25,7 +25,10 @@ export function buildProcessTree(areas: ExtendedArea[]): ProcessTreeNode[] {
     // Add processes as children (processes are always loaded with the area)
     const areaProcesses = area.process || [];
     if (areaProcesses && areaProcesses.length > 0) {
-      const processNodes: ProcessTreeNode[] = areaProcesses.map((process: Process) => ({
+      // Filter only active processes
+      const activeProcesses = areaProcesses.filter((process: Process) => process.status === 'ACTIVE');
+      
+      const processNodes: ProcessTreeNode[] = activeProcesses.map((process: Process) => ({
         id: `process-${process.id}`,
         name: process.name || process.processKey || 'Unnamed Process',
         type: 'process',

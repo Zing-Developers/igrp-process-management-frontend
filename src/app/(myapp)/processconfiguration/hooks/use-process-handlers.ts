@@ -7,7 +7,7 @@ import { useProcessNumberOperations } from './sequence/use-process-number-operat
 import { AreaProcessesMap } from '../types';
 import { ProcessService } from '../services/process.service';
 import { useState, useEffect } from 'react';
-import { Process, ProcessData } from '@igrp/platform-process-management-types';
+import { CreateProcessSequenceRequest, Process, ProcessData } from '@igrp/platform-process-management-types';
 
 export function useProcessHandlers(
   areaProcesses: AreaProcessesMap,
@@ -181,10 +181,19 @@ export function useProcessHandlers(
     processNumberForm.setLoading(true);
     try {
       // Use data parameter if provided, otherwise use form data from state
-      const configData = data || processNumberForm.formData;
+      const formData = data || processNumberForm.formData;
       
+      const request: CreateProcessSequenceRequest = {
+        name: formData.prefix+processNumberForm.modalState.selectedProcessId,
+        prefix:  formData.prefix,
+        dateFormat:  formData.dateFormat,
+        checkDigitSize:  formData.checkDigit,
+        padding: 0,
+        numberIncrement:  1,
+      };
       const savedConfig = await processNumberOperations.saveProcessNumberConfiguration(
-        configData,
+        processNumberForm.modalState.selectedProcessId,
+        request,
         igrpToast
       );
       

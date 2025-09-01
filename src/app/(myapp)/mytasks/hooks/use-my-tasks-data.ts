@@ -4,16 +4,16 @@ import { MyTasksState, MyTasksFilters } from '../types';
 import { useFilterData } from '../../components/processtaksfilter/hooks/use-filter-data';
 
 export interface MyTasksTableRow {
-  process: string;
-  assignedBy: string;
   currentStep: string;
+  process: string;
+  startedAt: string;
+  endAt: string;
   waitingDays: string;
-  status: string;
-  taskId: string;
-  taskKey: string;
-  processInstanceId: string;
   processKey: string;
-  createdDate?: string;
+  processInstanceId: string;
+  taskKey: string;
+  taskId: string;
+  processName: string;
 }
 
 // Export unclaim modal state interface

@@ -81,8 +81,9 @@ export default function Processnumbermodal({
       const updatedData = {
         prefix: formData.prefix || '',
         dateFormat: formData.dateFormat || '',
-        checkdigit: formData.checkDigit || '',
+        checkdigit: formData.checkDigit+"" || '',
       };
+      console.log("updatedData",updatedData)
       setForm1Data(updatedData);
       formform1Ref.current?.reset(updatedData);
     }

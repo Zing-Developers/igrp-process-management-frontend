@@ -35,11 +35,11 @@ export default function PageMytasksComponent() {
     startedAt: string;
     endAt: string;
     waitingDays: string;
-    status: string;
     processKey: string;
     processInstanceId: string;
     taskKey: string;
     taskId: string;
+    processName: string;
 }
 
   const [statstatsCard1Value, setStatstatsCard1Value] = useState<string | number>(0);
@@ -123,7 +123,7 @@ function executeTask (row: any): void  | undefined {
   };
 
   // Define modal subtitle with dynamic content
-  const modalSubtitle = `Libertar a tarefa "${unclaimModalState.selectedTask?.currentStep}" do processo "${unclaimModalState.selectedTask?.process}"`;
+  const modalSubtitle = `Libertar a tarefa "${unclaimModalState.selectedTask?.currentStep}" do processo "${unclaimModalState.selectedTask?.processName}"`;
 
   //-------------------reserved area end------------------------------
 

@@ -24,18 +24,14 @@ export interface MyTasksState {
 }
 
 export interface TaskTableRow {
-  id: string;
+  currentStep: string;
   process: any;
   startedAt: any;
   endAt: any;
-  processNumber: string;
-  assignedBy: any;
-  currentStep: string;
   waitingDays: string;
-  status: string;
-  taskInfo: Task;
   processKey: string;
   processInstanceId: string;
   taskKey: string;
   taskId: string;
+  processName: string;
 }

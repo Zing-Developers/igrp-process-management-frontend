@@ -2,10 +2,12 @@
 import { getHttpClient, getApplicationBase } from '../config/client.config';
 import {
   CreateProcessArtifactRequest,
+  CreateProcessSequenceRequest,
   PaginatedResponse,
   Process,
   ProcessArtifact,
   ProcessInstance,
+  ProcessSequence,
   ProcessStats,
 } from '@igrp/platform-process-management-types';
 
@@ -109,46 +111,26 @@ export interface ProcessNumberConfig {
   name: string;
   prefix: string;
   dateFormat: string;
-  checkDigit: boolean;
+  checkDigit: number;
 }
 
 /**
- * Fetches process number configurations (temporary implementation)
+ * Fetches process number configurations
+ * @param processDefinitionId The process definition ID
  * @returns A promise that resolves to process number configurations
  */
-export const getProcessNumberConfigs = async (): Promise<ProcessNumberConfig[]> => {
-  // Temporary implementation - replace with actual API call
-  return [
-    {
-      id: '1',
-      name: 'Default Process Number',
-      prefix: 'PROC',
-      dateFormat: 'YYYY-MM-DD',
-      checkDigit: true
-    }
-  ];
+export const getProcessNumberConfigs = async (processDefinitionId: string): Promise<ProcessSequence> => {
+  const response = await httpClient.processes.getProcessSequence(processDefinitionId);
+  return response.data as ProcessSequence;
 };
 
 /**
- * Saves process number configuration (temporary implementation)
+ * Saves process number configuration
+ * @param processDefinitionId The process definition ID
  * @param config The process number configuration to save
  * @returns A promise that resolves to the saved configuration
  */
-export const saveProcessNumberConfig = async (config: ProcessNumberConfig): Promise<ProcessNumberConfig> => {
-  // Temporary implementation - replace with actual API call
-  console.log('Saving process number config:', config);
-  return {
-    ...config,
-    id: config.id || Date.now().toString()
-  };
-};
-
-/**
- * Deletes process number configuration (temporary implementation)
- * @param configId The ID of the configuration to delete
- * @returns A promise that resolves when deletion is complete
- */
-export const deleteProcessNumberConfig = async (configId: string): Promise<void> => {
-  // Temporary implementation - replace with actual API call
-  console.log('Deleting process number config:', configId);
+export const saveProcessNumberConfig = async (processDefinitionId: string, config: CreateProcessSequenceRequest): Promise<ProcessSequence> => {
+  const response = await httpClient.processes.createProcessSequence(processDefinitionId, config);
+  return response.data as ProcessSequence;
 };

@@ -27,20 +27,16 @@ export function useMyTasks() {
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
       return {
-        id: task.id,
+        currentStep: task.name,
         process: getProcessInfo(task.processName, task.processNumber),
         startedAt: getDateTemplate(task.startedAt),
         endAt: getDateTemplate(task.endAt),
-        processNumber: task.processNumber,
-        assignedBy: getUserInfo(task.assignedBy),
-        currentStep: task.name,
         waitingDays: diffDays.toString(),
-        status: task.status|| 'N/A',
-        taskInfo: task,
         processKey: task.processKey,
         processInstanceId: task.processInstanceId,
         taskKey: task.taskKey,
         taskId: task.id,
+        processName: task.processName
       };
     });
   }, [myTasksState.tasks]);

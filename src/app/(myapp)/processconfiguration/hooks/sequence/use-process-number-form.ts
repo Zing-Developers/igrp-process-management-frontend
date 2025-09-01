@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ProcessNumberModalState } from '../../types';
 import { ProcessNumberConfig } from '@/app/(myapp)/external/client/services/process.service';
+import { ProcessSequence } from '@igrp/platform-process-management-types';
 
 export function useProcessNumberForm() {
   const [modalState, setModalState] = useState<ProcessNumberModalState>({
@@ -8,13 +9,13 @@ export function useProcessNumberForm() {
     selectedProcessId: null,
   });
 
-  const [processNumberConfigs, setProcessNumberConfigs] = useState<ProcessNumberConfig[]>([]);
+  const [processNumberConfigs, setProcessNumberConfigs] = useState<ProcessSequence>();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<ProcessNumberConfig>({
     name: '',
     prefix: '',
     dateFormat: '',
-    checkDigit: false,
+    checkDigit: 0,
   });
 
   const openModal = (processId: string) => {
@@ -27,7 +28,7 @@ export function useProcessNumberForm() {
       name: '',
       prefix: '',
       dateFormat: '',
-      checkDigit: false,
+      checkDigit: 0,
     });
   };
 
@@ -36,12 +37,12 @@ export function useProcessNumberForm() {
       isOpen: false,
       selectedProcessId: null,
     });
-    setProcessNumberConfigs([]);
+    setProcessNumberConfigs(undefined);
     setFormData({
       name: '',
       prefix: '',
       dateFormat: '',
-      checkDigit: false,
+      checkDigit: 0,
     });
   };
 
@@ -52,13 +53,13 @@ export function useProcessNumberForm() {
     }));
   };
 
-  const populateFormDataFromConfig = (config: ProcessNumberConfig) => {
+  const populateFormDataFromConfig = (config: ProcessSequence) => {
     setFormData({
       id: config.id,
       name: config.name,
       prefix: config.prefix,
       dateFormat: config.dateFormat,
-      checkDigit: config.checkDigit,
+      checkDigit: config.checkDigitSize,
     });
   };
 

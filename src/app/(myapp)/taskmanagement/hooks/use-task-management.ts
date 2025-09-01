@@ -4,18 +4,18 @@ import { getTasks, assignTask } from '../../external/client/services/task.servic
 import { getDateTemplate, getProcessInfo } from '../../utils/columns-template';
 
 export interface TaskManagementTableRow {
-  process: any;
   currentStep: string;
+  process: any;
+  assignedBy: string;
   startedAt: any;
   endAt: any;
   waitingDays: string;
   status: string;
   taskId: string;
   taskKey: string;
-  processInstanceId: string;
   processKey: string;
-  assignedBy?: string;
-  createdDate?: string;
+  processInstanceId: string;
+  processName: string;
 }
 
 interface TaskManagementState {
@@ -71,18 +71,18 @@ export function useTaskManagement() {
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
       return {
+        currentStep: task.name,
         process: getProcessInfo(task.processName, task.processNumber),
+        assignedBy: task.assignedBy || '',
         startedAt: getDateTemplate(task.startedAt),
         endAt: getDateTemplate(task.endAt),
-        currentStep: task.name,
         waitingDays: diffDays.toString(),
         status: task.status,
         taskId: task.id,
-        taskKey: task.taskKey || task.name,
+        taskKey: task.taskKey,
+        processKey: task.processKey,
         processInstanceId: task.processInstanceId,
-        processKey: task.processKey || 'unknown',
-        assignedBy: task.assignedBy,
-        createdDate: task.startedAt,
+        processName: task.processName,
       };
     });
   }, [state.tasks]);

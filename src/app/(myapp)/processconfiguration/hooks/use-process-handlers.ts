@@ -7,7 +7,12 @@ import { useProcessNumberOperations } from './sequence/use-process-number-operat
 import { AreaProcessesMap } from '../types';
 import { ProcessService } from '../services/process.service';
 import { useState, useEffect } from 'react';
-import { CreateProcessSequenceRequest, Process, ProcessData } from '@igrp/platform-process-management-types';
+import {
+  CreateProcessSequenceRequest,
+  Process,
+  ProcessData,
+} from '@igrp/platform-process-management-types';
+import { AreaProcessService } from '../services/area-process.service';
 
 export function useProcessHandlers(
   areaProcesses: AreaProcessesMap,
@@ -149,57 +154,55 @@ export function useProcessHandlers(
 
   const handleOpenArtifactModal = async (processId: string) => {
     artifactForm.openModal(processId);
-    
+
     // Load artifacts when modal opens
     if (processId) {
       await artifactOperations.loadProcessArtifacts(
         processId,
         artifactForm.setProcessArtifacts,
         artifactForm.setLoading,
-        artifactForm.populateFormDataFromArtifacts // Pass the populate function
+        artifactForm.populateFormDataFromArtifacts, // Pass the populate function
       );
     }
   };
 
-  const handleOpenProcessNumberModal = async (processId: string) => {
-    processNumberForm.openModal(processId);
-    
+  const handleOpenProcessNumberModal = async (processId: string, processKey: string) => {
+    processNumberForm.openModal(processId, processKey);
+
     // Load process number configurations when modal opens
     if (processId) {
       await processNumberOperations.loadProcessNumberConfigs(
         processId,
         processNumberForm.setProcessNumberConfigs,
         processNumberForm.setLoading,
-        processNumberForm.populateFormDataFromConfig
+        processNumberForm.populateFormDataFromConfig,
       );
     }
   };
 
   const handleSaveProcessNumber = async (data?: any) => {
     if (!processNumberForm.modalState.selectedProcessId) return;
-  
+
     processNumberForm.setLoading(true);
     try {
       // Use data parameter if provided, otherwise use form data from state
       const formData = data || processNumberForm.formData;
-      console.log('data', data);
-      console.log('formData', formData);
-      
+
       const request: CreateProcessSequenceRequest = {
-        name: formData.prefix+processNumberForm.modalState.selectedProcessId,
-        prefix:  formData.prefix,
-        dateFormat:  formData.dateFormat,
-        checkDigitSize:  formData.checkDigit,
+        name: processNumberForm.modalState.selectedProcessKey + '_sequence',
+        prefix: formData.prefix,
+        dateFormat: formData.dateFormat,
+        checkDigitSize: formData.checkDigit,
         padding: 0,
-        numberIncrement:  1,
+        numberIncrement: 1,
       };
-      console.log('request', request);
+      
       const savedConfig = await processNumberOperations.saveProcessNumberConfiguration(
         processNumberForm.modalState.selectedProcessId,
         request,
-        igrpToast
+        igrpToast,
       );
-      
+
       if (savedConfig) {
         processNumberForm.closeModal();
       }
@@ -210,6 +213,22 @@ export function useProcessHandlers(
     }
   };
 
+  // Add a new function to handle process modal opening with preloading
+  const handleOpenProcessModal = async (areaId: string) => {
+    // Preload area processes if not already loaded
+    if (!Array.isArray(areaProcesses[areaId])) {
+      try {
+        const updatedProcessesResponse = await AreaProcessService.getAreaProcesses(areaId);
+        const updatedProcesses = updatedProcessesResponse.content || [];
+        setAreaProcesses(prev => ({ ...prev, [areaId]: updatedProcesses }));
+      } catch (error) {
+        console.error('Error loading area processes:', error);
+      }
+    }
+    
+    // Then open the modal
+    processForm.openModal(areaId);
+  };
   return {
     processForm,
     processOperations,
@@ -220,6 +239,7 @@ export function useProcessHandlers(
     handleAssociateProcess,
     handleRemoveProcess,
     handleOpenArtifactModal,
+    handleOpenProcessModal,
     handleOpenProcessNumberModal,
     handleSaveProcessNumber,
     getAvailableProcesses,

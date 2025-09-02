@@ -71,7 +71,7 @@ export const getProgressTemplate = (progress: string) => {
         name="progressIcon" 
         iconName={isComplete ? "CircleCheck" : "Clock"} 
         size={16} 
-        className={cn(isComplete ? 'text-green-600' : 'text-orange-500')} 
+        className={cn(isComplete ? 'text-green-600' : 'text-orange-300')} 
       />
       <div className={cn('flex flex-col')}>
         <span className={cn('text-sm font-medium text-foreground')}>

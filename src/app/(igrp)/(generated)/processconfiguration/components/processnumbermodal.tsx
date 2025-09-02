@@ -53,11 +53,11 @@ const { igrpToast } = useIGRPToast()
   // Load combobox options on component mount
   useEffect(() => {
     setSelectdateFormatOptions([
-      { label: 'YYYY', value: 'YYYY' },
-      { label: 'YYYYMM', value: 'YYYYMM' },
-      { label: 'YYYYMMDD', value: 'YYYYMMDD' },
-      { label: 'DDMMYYYY', value: 'DDMMYYYY' },
-      { label: 'MMDDYYYY', value: 'MMDDYYYY' },
+      { label: 'YYYY', value: 'yyyy' },
+      { label: 'YYYYMM', value: 'yyyyMM' },
+      { label: 'YYYYMMDD', value: 'yyyyMMdd' },
+      { label: 'DDMMYYYY', value: 'ddMMyyyy' },
+      { label: 'MMDDYYYY', value: 'MMddyyyy' },
     ]);
 
     setSelectcheckdigitOptions([

@@ -7,6 +7,7 @@ export function useProcessNumberForm() {
   const [modalState, setModalState] = useState<ProcessNumberModalState>({
     isOpen: false,
     selectedProcessId: null,
+    selectedProcessKey: null,
   });
 
   const [processNumberConfigs, setProcessNumberConfigs] = useState<ProcessSequence>();
@@ -18,10 +19,11 @@ export function useProcessNumberForm() {
     checkDigit: 0,
   });
 
-  const openModal = (processId: string) => {
+  const openModal = (processId: string, processKey: string) => {
     setModalState({
       isOpen: true,
       selectedProcessId: processId,
+      selectedProcessKey: processKey,
     });
     // Reset form data when opening modal
     setFormData({
@@ -36,6 +38,7 @@ export function useProcessNumberForm() {
     setModalState({
       isOpen: false,
       selectedProcessId: null,
+      selectedProcessKey: null,
     });
     setProcessNumberConfigs(undefined);
     setFormData({

@@ -93,7 +93,7 @@ export default function PageProcessconfigurationComponent() {
                   areaProcesses={pc.areaProcesses}
                   onEdit={pc.areaForm.openModal}
                   onDelete={pc.areaOperations.handleDeleteArea}
-                  onAddProcess={pc.processForm.openModal}
+                  onAddProcess={pc.handleOpenProcessModal}
                   onRemoveProcess={pc.processOperations.handleRemoveProcess}
                   onToggleExpansion={pc.expansion.handleToggleExpansion}
                   onAddSubarea={(parentAreaId) => pc.areaForm.openModal(undefined, parentAreaId)}
@@ -110,7 +110,9 @@ export default function PageProcessconfigurationComponent() {
                 <ArtifactProcessesList
                   processes={pc.allProcesses}
                   onArtifactEdit={(processId) => pc.handleOpenArtifactModal(processId)}
-                  onProcessNumberEdit={(processId) => pc.handleOpenProcessNumberModal(processId)}
+                  onProcessNumberEdit={(processId, processKey) =>
+                    pc.handleOpenProcessNumberModal(processId, processKey)
+                  }
                 ></ArtifactProcessesList>
               </>
             ),
@@ -159,6 +161,7 @@ export default function PageProcessconfigurationComponent() {
           open
             ? pc.handleOpenProcessNumberModal(
                 pc.processNumberForm.modalState.selectedProcessId || '',
+                pc.processNumberForm.modalState.selectedProcessKey || '',
               )
             : pc.processNumberForm.closeModal()
         }

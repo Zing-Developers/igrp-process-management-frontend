@@ -58,6 +58,7 @@ export default function Processnumbermodal({
 
   const { igrpToast } = useIGRPToast();
 
+  /* BEGIN-NOSIRESERVED-AREA */
   // Load combobox options on component mount
   useEffect(() => {
     setSelectdateFormatOptions([
@@ -81,9 +82,9 @@ export default function Processnumbermodal({
       const updatedData = {
         prefix: formData.prefix || '',
         dateFormat: formData.dateFormat || '',
-        checkdigit: formData.checkDigit+"" || '',
+        checkdigit: formData.checkDigit + '' || '',
       };
-      console.log("updatedData",updatedData)
+      console.log('updatedData', updatedData);
       setForm1Data(updatedData);
       formform1Ref.current?.reset(updatedData);
     }
@@ -100,21 +101,24 @@ export default function Processnumbermodal({
     // Call onSave with the mapped data
     if (onSave) await onSave(processNumberData);
   };
+  /* END-NOSIRESERVED-AREA */
 
   return (
     <div className={cn('component')}>
       <IGRPModalDialog onOpenChange={setOpen} open={open}>
-        <IGRPModalDialogContent size={`md`} className={cn()}>
-          <IGRPModalDialogHeader>
+        <IGRPModalDialogContent size={`lg`} className={cn()}>
+          <IGRPModalDialogHeader className={cn('')}>
             <IGRPModalDialogTitle name={`modalDialogTitle1`}>Número Processo</IGRPModalDialogTitle>
             <IGRPModalDialogDescription name={`modalDialogDescription1`}>
-              Lorem ipsum dolor sit amet
+              Configure o formato do número do processo especificando um prefixo, formato de data e
+              comprimento do dígito verificador
             </IGRPModalDialogDescription>
           </IGRPModalDialogHeader>
           <IGRPForm
             schema={form1}
             validationMode={`onBlur`}
             formRef={formform1Ref}
+            className={cn('')}
             onSubmit={async (data) => await handleSubmit(data)}
             defaultValues={form1Data}
           >
@@ -164,7 +168,7 @@ export default function Processnumbermodal({
               </div>
             </>
           </IGRPForm>
-          <IGRPModalDialogFooter>
+          <IGRPModalDialogFooter className={cn('')}>
             <IGRPButton
               name={`button1`}
               variant={`default`}

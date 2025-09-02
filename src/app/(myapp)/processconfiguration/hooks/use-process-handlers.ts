@@ -182,6 +182,8 @@ export function useProcessHandlers(
     try {
       // Use data parameter if provided, otherwise use form data from state
       const formData = data || processNumberForm.formData;
+      console.log('data', data);
+      console.log('formData', formData);
       
       const request: CreateProcessSequenceRequest = {
         name: formData.prefix+processNumberForm.modalState.selectedProcessId,
@@ -191,6 +193,7 @@ export function useProcessHandlers(
         padding: 0,
         numberIncrement:  1,
       };
+      console.log('request', request);
       const savedConfig = await processNumberOperations.saveProcessNumberConfiguration(
         processNumberForm.modalState.selectedProcessId,
         request,

@@ -2,11 +2,16 @@ import { CreateAreaRequest, UpdateAreaRequest } from '@igrp/platform-process-man
 import { AreaService } from '../../services/area.service';
 import { AreaFormData, ExtendedArea } from '../../types';
 import { organizeAreasHierarchy, getAllAreasFlat, findAreaById } from '../../utils/area-hierarchy';
+import { useAlertDialog } from '../shared/use-alert-dialog';
+import { useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 
 export function useAreaOperations(
   areas: ExtendedArea[],
   setAreas: React.Dispatch<React.SetStateAction<ExtendedArea[]>>,
 ) {
+  const { igrpToast } = useIGRPToast();
+  const alertDialog = useAlertDialog();
+
   const handleCreateArea = async (formData: AreaFormData) => {
     try {
       const newArea = await AreaService.createArea(formData as CreateAreaRequest);
@@ -45,27 +50,38 @@ export function useAreaOperations(
   };
 
   const handleDeleteArea = async (areaId: string) => {
-    if (
-      !confirm(
-        'Tem certeza que deseja excluir esta área? Todas as subáreas também serão removidas.',
-      )
-    )
-      return;
+    alertDialog.showAlert(
+      'Confirmar exclusão',
+      'Tem certeza que deseja excluir esta área? Todas as subáreas também serão removidas.',
+      async () => {
+        try {
+          await AreaService.deleteArea(areaId);
 
-    try {
-      await AreaService.deleteArea(areaId);
-
-      // Remove the area and its subareas from the flat list and reorganize
-      const flatAreas = getAllAreasFlat(areas);
-      const filteredAreas = flatAreas.filter(
-        (area) => area.id !== areaId && area.areaId !== areaId,
-      );
-      const organizedAreas = organizeAreasHierarchy(filteredAreas);
-      setAreas(organizedAreas);
-    } catch (error) {
-      console.error('Error deleting area:', error);
-      throw error;
-    }
+          // Remove the area and its subareas from the flat list and reorganize
+          const flatAreas = getAllAreasFlat(areas);
+          const filteredAreas = flatAreas.filter(
+            (area) => area.id !== areaId && area.areaId !== areaId,
+          );
+          const organizedAreas = organizeAreasHierarchy(filteredAreas);
+          setAreas(organizedAreas);
+          if (igrpToast) {
+            igrpToast({
+              type: 'success',
+              title: 'Sucesso',
+              description: 'Área excluída com sucesso!',
+            });
+          }
+        } catch (error) {
+          console.error('Error deleting area:', error);
+          igrpToast({
+            type: 'error',
+            title: 'Erro',
+            description: 'Erro ao excluir área. Tente novamente.',
+          });
+          throw error;
+        }
+      },
+    );
   };
 
   const loadSubareas = async (parentAreaId: string) => {
@@ -105,5 +121,6 @@ export function useAreaOperations(
     handleDeleteArea,
     loadSubareas,
     getSubareasForParent,
+    alertDialog,
   };
 }

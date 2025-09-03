@@ -8,17 +8,14 @@ import {
 } from '@igrp/platform-process-management-types';
 
 const httpClient = getHttpClient();
-const applicationBase = getApplicationBase();
+//const applicationBase = getApplicationBase();
 
 // Area Management
 export const createArea = async (areaData: CreateAreaRequest): Promise<Area> => {
-  areaData.applicationBase = applicationBase;
-  console.log('createArea', areaData);
   return await httpClient.areas.createArea(areaData).then((response) => response.data as Area);
 };
 
 export const updateArea = async (id: string, areaData: UpdateAreaRequest): Promise<Area> => {
-  areaData.applicationBase = applicationBase;
   return await httpClient.areas
     .updateArea(id, areaData)
     .then((response) => response.data as Area);
@@ -37,7 +34,6 @@ export const getAreas = async (
   const response = await httpClient.areas
     .getAreas({
       name,
-      applicationBase: applicationBase,
       page,
       size,
       parentId,

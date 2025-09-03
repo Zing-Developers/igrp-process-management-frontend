@@ -20,6 +20,7 @@ import {
   IGRPTabItem,
   IGRPInputSearch,
   IGRPButton,
+  IGRPAlertDialog,
 } from '@igrp/igrp-framework-react-design-system';
 import { useProcessConfiguration } from '@/app/(myapp)/processconfiguration/hooks/use-process-configuration';
 
@@ -168,6 +169,57 @@ export default function PageProcessconfigurationComponent() {
         onFormChange={pc.processNumberForm.updateFormData}
         onSave={pc.handleSaveProcessNumber}
       ></ProcessNumberModal>
+      <IGRPAlertDialog
+        variant={`primary`}
+        actionLabel={`Confirm`}
+        cancelLabel={`Cancel`}
+        showCancel={true}
+        actionProps={{
+          variant: `default`,
+          size: `default`,
+          disabled: false,
+        }}
+        cancelProps={{
+          variant: `default`,
+          size: `default`,
+          disabled: false,
+        }}
+        className={cn()}
+        onOpenChange={(open) => !open && pc.alertDialog.area.hideAlert()}
+        onCancel={pc.alertDialog.area.handleCancel}
+        onAction={pc.alertDialog.area.handleConfirm}
+        description={pc.alertDialog.area.alertState.description}
+        title={pc.alertDialog.area.alertState.title}
+        open={pc.alertDialog.area.alertState.isOpen}
+      >
+        <></>
+      </IGRPAlertDialog>
+
+      <IGRPAlertDialog
+        variant={`primary`}
+        actionLabel={`Confirm`}
+        cancelLabel={`Cancel`}
+        showCancel={true}
+        actionProps={{
+          variant: `default`,
+          size: `default`,
+          disabled: false,
+        }}
+        cancelProps={{
+          variant: `default`,
+          size: `default`,
+          disabled: false,
+        }}
+        className={cn()}
+        onOpenChange={(open) => !open && pc.alertDialog.process.hideAlert()}
+        onCancel={pc.alertDialog.process.handleCancel}
+        onAction={pc.alertDialog.process.handleConfirm}
+        title={pc.alertDialog.process.alertState.title}
+        description={pc.alertDialog.process.alertState.description}
+        open={pc.alertDialog.process.alertState.isOpen}
+      >
+        <></>
+      </IGRPAlertDialog>
     </div>
   );
 }

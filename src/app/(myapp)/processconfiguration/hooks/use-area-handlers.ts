@@ -77,7 +77,7 @@ export function useAreaHandlers(
       throw error;
     }
   };
-
+/*
   const handleDeleteArea = async (areaId: string) => {
     try {
       await areaOperations.handleDeleteArea(areaId);
@@ -104,7 +104,7 @@ export function useAreaHandlers(
 
       throw error;
     }
-  };
+  };*/
 
   const handleLoadSubareas = async (parentAreaId: string) => {
     try {
@@ -163,7 +163,7 @@ export function useAreaHandlers(
     areaOperations,
     handleCreateArea,
     handleUpdateArea,
-    handleDeleteArea,
+    /*handleDeleteArea,*/
     handleLoadSubareas,
     handleLoadAreaProcesses, // Export the new function
   };

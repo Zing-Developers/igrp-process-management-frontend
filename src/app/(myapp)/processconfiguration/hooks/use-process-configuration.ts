@@ -54,6 +54,12 @@ export function useProcessConfiguration(igrpToast?: any) {
     // Process management
     ...processHandlers,
 
+    // Alert Dialog state
+    alertDialog: {
+      area: areaHandlers.areaOperations.alertDialog,
+      process: processHandlers.processOperations.alertDialog,
+    },
+
     // Artifact management
     artifactForm: processHandlers.artifactForm,
     processArtifacts: processHandlers.artifactForm.processArtifacts,

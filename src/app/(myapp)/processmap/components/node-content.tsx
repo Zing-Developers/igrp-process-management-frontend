@@ -1,16 +1,17 @@
 import React from 'react';
 import { ProcessTreeNode } from '../types';
 import { NodeActions } from './node-actions';
-import { Area, Process, ProcessInstance } from '@igrp/platform-process-management-types';
+import { Area, Process } from '@igrp/platform-process-management-types';
 
 interface NodeContentProps {
   node: ProcessTreeNode;
   onStartProcess: (
+    process: Process,
     processDefinitionId: string,
     processKey: string,
     businessKey?: string,
     variables?: Array<{ name: string; value: string }>,
-  ) => Promise<ProcessInstance | null>;
+  ) => void;
   onViewDetails: (process: Process) => void;
 }
 

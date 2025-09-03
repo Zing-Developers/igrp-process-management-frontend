@@ -6,8 +6,7 @@ export const getDateTemplate = (date_: string | Date) => {
   return date_ ? (
     <>
       <div className={cn('flex items-center')}>
-      <IGRPIcon name="dateIcon" iconName="Clock" size={16} className={cn('mr-1')} />
-      
+      <IGRPIcon name="dateIcon" iconName="Calendar" size={16} className={cn('mr-1')} />
         <span>{format(new Date(date_), 'MMM dd, yyyy HH:mm')}</span>
       </div>
     </>

@@ -3,18 +3,19 @@ import { ProcessTreeNode } from '../types';
 import { NodeIcon } from './node-icon';
 import { NodeContent } from './node-content';
 import { ExpandButton } from './expand-button';
-import { Process, ProcessInstance } from '@igrp/platform-process-management-types';
+import { Process } from '@igrp/platform-process-management-types';
 
 interface TreeNodeProps {
   node: ProcessTreeNode;
   expandedNodes: Set<string>;
   onToggle: (nodeId: string) => void;
   onStartProcess: (
+    process: Process,
     processDefinitionId: string,
     processKey: string,
     businessKey?: string,
     variables?: Array<{ name: string; value: string }>,
-  ) => Promise<ProcessInstance | null>;
+  ) => void;
   onViewDetails: (process: Process) => void;
   searchTerm?: string;
 }

@@ -81,6 +81,7 @@ export const getProcessById = async (id: string): Promise<Process | null> => {
  * @param processDefinitionId The ID of the process definition to start.
  * @param processKey The process key.
  * @param businessKey Optional business key for the process instance.
+ * @param priority Priority level for the process instance.
  * @param variables Optional variables to pass to the process instance.
  * @returns A promise that resolves to the newly created process instance.
  */
@@ -88,9 +89,10 @@ export const startProcess = async (
   processDefinitionId: string,
   processKey: string,
   businessKey?: string,
+  priority?: number,
   variables?: Array<{ name: string; value: string }>,
 ): Promise<ProcessInstance> => {
-  console.log('startProcess', processDefinitionId, processKey, applicationBase, businessKey, variables);
+  console.log('startProcess', processDefinitionId, processKey, applicationBase, businessKey, priority, variables);
   
   const response = await httpClient.processes.startProcess(
     processDefinitionId,
@@ -98,6 +100,7 @@ export const startProcess = async (
     applicationBase,
     businessKey,
     variables,
+    priority, // Add priority parameter
   );
   return response.data as ProcessInstance;
 };

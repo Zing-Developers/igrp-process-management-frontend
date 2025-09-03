@@ -30,11 +30,12 @@ export interface ProcessMapActions {
   loadSubareas: (areaId: string) => Promise<void>;
   selectProcess: (process: Process) => void;
   startProcess: (
+    process: Process,
     processDefinitionId: string,
     processKey: string,
     businessKey?: string,
     variables?: Array<{ name: string; value: string }>,
-  ) => Promise<ProcessInstance | null>; // Changed from Promise<ProcessI    nstance> to Promise<ProcessInstance | null>
+  ) => void; // Updated signature to match implementation
   refreshData: () => Promise<void>;
 }
 
@@ -58,5 +59,15 @@ export interface ProcessMapHookReturn extends ProcessMapState, ProcessMapActions
     open: (process: Process) => void;
     close: () => void;
     setOpen: (open: boolean) => void;
+  };
+  priorityModal: {
+    isOpen: boolean;
+    process: Process | null;
+    modalTitle: string;
+    modalSubTitle: string;
+    open: (process: Process) => void;
+    close: () => void;
+    setOpen: (open: boolean) => void;
+    onSave: (data: { priority: string }) => Promise<void>;
   };
 }

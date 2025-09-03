@@ -1,7 +1,7 @@
 import React from 'react';
 import { ProcessTreeNode } from '../types';
 import { ProcessTree } from './process-tree';
-import { Process, ProcessInstance } from '@igrp/platform-process-management-types';
+import { Process } from '@igrp/platform-process-management-types';
 
 export function ProcessTreeComponent({
   nodes,
@@ -16,11 +16,12 @@ export function ProcessTreeComponent({
   searchTerm?: string;
   onToggle: (nodeId: string) => void;
   onStartProcess: (
+    process: Process,
     processDefinitionId: string,
     processKey: string,
     businessKey?: string,
     variables?: Array<{ name: string; value: string }>,
-  ) => Promise<ProcessInstance | null>;
+  ) => void;
   onViewDetails: (process: Process) => void;
 }) {
   return (

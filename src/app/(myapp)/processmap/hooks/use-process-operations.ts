@@ -7,33 +7,61 @@ import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.share
 
 export function useProcessOperations(igrpToast?: any, router?: AppRouterInstance) {
   const [selectedProcess, setSelectedProcess] = useState<Process | undefined>();
+  const [pendingProcessStart, setPendingProcessStart] = useState<{
+    processDefinitionId: string;
+    processKey: string;
+    businessKey?: string;
+    variables?: Array<{ name: string; value: string }>;
+  } | null>(null);
 
   const selectProcess = useCallback((process: Process) => {
     setSelectedProcess(process);
   }, []);
 
-  const startProcessAction = useCallback(
-    async (
+  // Store process start parameters for later execution with priority
+  const prepareProcessStart = useCallback(
+    (
       processDefinitionId: string,
       processKey: string,
       businessKey?: string,
       variables?: Array<{ name: string; value: string }>,
-    ): Promise<ProcessInstance | null> => {
+    ) => {
+      setPendingProcessStart({
+        processDefinitionId,
+        processKey,
+        businessKey,
+        variables,
+      });
+    },
+    [],
+  );
+
+  const startProcessWithPriority = useCallback(
+    async (priority: number): Promise<ProcessInstance | null> => {
+      if (!pendingProcessStart) {
+        console.error('No pending process start found');
+        return null;
+      }
+
       try {
         const instance = await startProcess(
-          processDefinitionId,
-          processKey,
-          businessKey,
-          variables,
+          pendingProcessStart.processDefinitionId,
+          pendingProcessStart.processKey,
+          pendingProcessStart.businessKey,
+          priority, // Add priority parameter
+          pendingProcessStart.variables,
         );
+
+        // Clear pending process start
+        setPendingProcessStart(null);
 
         // Show success toast
         if (igrpToast) {
           igrpToast({
             type: 'success',
             title: 'Processo Iniciado',
-            description: processKey
-              ? `O processo ${processKey} foi iniciado com sucesso.`
+            description: pendingProcessStart.processKey
+              ? `O processo ${pendingProcessStart.processKey} foi iniciado com sucesso.`
               : 'O processo foi iniciado com sucesso.',
           });
         }
@@ -85,7 +113,7 @@ export function useProcessOperations(igrpToast?: any, router?: AppRouterInstance
             } else {
               // Fallback to process instance URL if no tasks are available
               const processUrl = urlConfig.buildProcessInstanceUrl(
-                instance.procReleaseKey || processKey,
+                instance.procReleaseKey || pendingProcessStart.processKey,
                 instance.id,
               );
               router.push(processUrl);
@@ -95,7 +123,7 @@ export function useProcessOperations(igrpToast?: any, router?: AppRouterInstance
 
             // Fallback to process instance URL if task fetching fails
             const processUrl = urlConfig.buildProcessInstanceUrl(
-              instance.procReleaseKey || processKey,
+              instance.procReleaseKey || pendingProcessStart.processKey,
               instance.id,
             );
             router.push(processUrl);
@@ -105,6 +133,9 @@ export function useProcessOperations(igrpToast?: any, router?: AppRouterInstance
         return instance;
       } catch (err) {
         console.error('Error starting process:', err);
+
+        // Clear pending process start on error
+        setPendingProcessStart(null);
 
         // Show error toast
         if (igrpToast) {
@@ -118,12 +149,14 @@ export function useProcessOperations(igrpToast?: any, router?: AppRouterInstance
         return null;
       }
     },
-    [igrpToast, router],
+    [pendingProcessStart, igrpToast, router],
   );
 
   return {
     selectedProcess,
     selectProcess,
-    startProcess: startProcessAction,
+    prepareProcessStart,
+    startProcessWithPriority,
+    pendingProcessStart,
   };
 }

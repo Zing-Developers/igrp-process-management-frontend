@@ -10,6 +10,7 @@ import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import { ProcessTreeComponent } from '@/app/(myapp)/processmap/components/process-tree-node';
 import ProcessDetail from '@/app/(igrp)/(generated)/processmap/components/processdetail';
+import PriorityModal from '@/components/prioritymodal';
 import { IGRPPageHeader, IGRPInputSearch } from '@igrp/igrp-framework-react-design-system';
 import { useProcessMap } from '@/app/(myapp)/processmap/hooks/use-process-map';
 import { useRouter } from 'next/navigation';
@@ -53,14 +54,21 @@ export default function PageProcessmapComponent() {
         expandedNodes={pm.expandedNodes}
         searchTerm={pm.searchTerm}
         onStartProcess={pm.startProcess}
-        onViewDetails={pm.detailModal.open}
         onToggle={pm.toggleNode}
+        onViewDetails={pm.detailModal.open}
       ></ProcessTreeComponent>
       <ProcessDetail
         open={pm.detailModal.isOpen}
         process={pm.detailModal.process}
         setOpen={pm.detailModal.setOpen}
       ></ProcessDetail>
+      <PriorityModal
+        open={pm.priorityModal.isOpen}
+        modalTitle={pm.priorityModal.modalTitle}
+        modalSubTitle={pm.priorityModal.modalSubTitle}
+        setOpen={pm.priorityModal.setOpen}
+        onSave={pm.priorityModal.onSave}
+      ></PriorityModal>
     </div>
   );
 }

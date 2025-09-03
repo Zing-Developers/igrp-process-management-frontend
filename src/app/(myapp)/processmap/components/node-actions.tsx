@@ -1,16 +1,17 @@
 import React from 'react';
 import { ProcessTreeNode } from '../types';
-import { Process, ProcessInstance } from '@igrp/platform-process-management-types';
+import { Process } from '@igrp/platform-process-management-types';
 import { IGRPButton } from '@igrp/igrp-framework-react-design-system';
 
 interface NodeActionsProps {
   node: ProcessTreeNode;
   onStartProcess: (
+    process: Process,
     processDefinitionId: string,
     processKey: string,
     businessKey?: string,
     variables?: Array<{ name: string; value: string }>,
-  ) => Promise<ProcessInstance | null>;
+  ) => void;
   onViewDetails: (process: Process) => void;
 }
 
@@ -23,9 +24,8 @@ export function NodeActions({ node, onStartProcess, onViewDetails }: NodeActions
     e.stopPropagation();
     if (node.data) {
       const process = node.data as Process;
-      // For now, we'll use default values for the new required parameters
-      // These should ideally come from the process data or be configurable
-      await onStartProcess(process.releaseId, process.processKey, undefined, []);
+      // Pass the process object as the first parameter
+      onStartProcess(process, process.releaseId, process.processKey, undefined, []);
     }
   };
 

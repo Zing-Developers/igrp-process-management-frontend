@@ -126,7 +126,7 @@ function executeTask (row: any): void  | undefined {
   };
 
   // Define modal subtitle with dynamic content
-  const modalSubtitle = `Libertar a tarefa "${unclaimModalState.selectedTask?.currentStep}" do processo "${unclaimModalState.selectedTask?.process}"`;
+  const modalSubtitle = `Libertar a tarefa "${unclaimModalState.selectedTask?.currentStep}" do processo "${unclaimModalState.selectedTask?.processName}"`;
 
   //-------------------reserved area end------------------------------
 
@@ -163,7 +163,6 @@ iconSize={ `md` }
 iconVariant={ `info` }
 iconPlacement={ `end` }
 itemPlacement={ `start` }
-
 showIconBorder={ false }
 showIconBackground={ true }
   className={ cn('col-span-1',) }
@@ -186,7 +185,6 @@ iconSize={ `md` }
 iconVariant={ `warning` }
 iconPlacement={ `end` }
 itemPlacement={ `start` }
-
 showIconBackground={ true }
 showIconBorder={ false }
   className={ cn('col-span-1',) }
@@ -209,7 +207,6 @@ iconSize={ `md` }
 iconVariant={ `primary` }
 iconPlacement={ `end` }
 itemPlacement={ `start` }
-
 showIconBackground={ true }
   className={ cn('col-span-1',) }
   onClick={ () => {} }
@@ -231,7 +228,6 @@ iconSize={ `md` }
 iconVariant={ `destructive` }
 iconPlacement={ `end` }
 itemPlacement={ `start` }
-
 showIconBackground={ true }
   className={ cn('col-span-1',) }
   onClick={ () => {} }
@@ -253,7 +249,6 @@ iconSize={ `md` }
 iconVariant={ `success` }
 iconPlacement={ `end` }
 itemPlacement={ `start` }
-
 showIconBackground={ true }
 showIconBorder={ false }
   className={ cn('col-span-1',) }

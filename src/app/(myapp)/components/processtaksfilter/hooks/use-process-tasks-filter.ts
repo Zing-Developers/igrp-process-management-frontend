@@ -85,34 +85,40 @@ export function useProcessTasksFilter(
   }, [transformedUserOptions, setSelectUserOptions]);
 
   // Handle filter changes
-  const handleAreaChange = (value: string) => {
+  const handleAreaChange = (selected: string | string[]) => {
+    const value = Array.isArray(selected) ? selected[0] : selected;
     const newFilters = { areaId: value, subareaId: '', processType: '' };
     updateFilters(newFilters);
     // Don't apply filters immediately for area/subarea changes as they affect dropdown options
   };
 
-  const handleSubareaChange = (value: string) => {
+  const handleSubareaChange = (selected: string | string[]) => {
+    const value = Array.isArray(selected) ? selected[0] : selected;
     const newFilters = { subareaId: value, processType: '' };
     updateFilters(newFilters);
     // Don't apply filters immediately for area/subarea changes as they affect dropdown options
   };
 
-  const handleProcessTypeChange = (value: string) => {
+  const handleProcessTypeChange = (selected: string | string[]) => {
+    const value = Array.isArray(selected) ? selected[0] : selected;
     const newFilters = { processType: value };
     updateFilters(newFilters);
   };
 
-  const handleStatusChange = (value: string) => {
+  const handleStatusChange = (selected: string | string[]) => {
+    const value = Array.isArray(selected) ? selected[0] : selected;
     const newFilters = { status: value };
     updateFilters(newFilters);
   };
 
-  const handleOrganicChange = (value: string) => {
+  const handleOrganicChange = (selected: string | string[]) => {
+    const value = Array.isArray(selected) ? selected[0] : selected;
     const newFilters = { organic: value };
     updateFilters(newFilters);
   };
 
-  const handleUserChange = (value: string) => {
+  const handleUserChange = (selected: string | string[]) => {
+    const value = Array.isArray(selected) ? selected[0] : selected;
     const newFilters = { user: value };
     updateFilters(newFilters);
   };

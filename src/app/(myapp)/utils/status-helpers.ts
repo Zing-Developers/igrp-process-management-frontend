@@ -4,6 +4,9 @@ export type ProcessInstanceStatus = "CREATED" | "RUNNING" | "SUSPENDED" | "CANCE
 // Task Status Types
 export type TaskStatus = "CREATED" | "ASSIGNED" | "COMPLETED" | "CANCELLED" | "DELETED";
 
+// Priority Types - matching your priority modal values
+export type Priority = "1" | "2" | "3" | "4" | "5";
+
 // Badge Variant Types
 export type BadgeVariant = "info" | "warning" | "success" | "destructive" | "secondary" | "default";
 
@@ -48,6 +51,27 @@ export const getTaskStatusLabel = (status: TaskStatus): string => {
 };
 
 /**
+ * Get localized label for priority - matching your priority modal labels
+ */
+export const getPriorityLabel = (priority: Priority | string | number): string => {
+  const priorityStr = priority.toString();
+  switch (priorityStr) {
+    case '5':
+      return 'Muito Alta';
+    case '4':
+      return 'Alta';
+    case '3':
+      return 'Média';
+    case '2':
+      return 'Baixa';
+    case '1':
+      return 'Muito Baixa';
+    default:
+      return 'Muito Baixa';
+  }
+};
+
+/**
  * Get badge variant for process instance status
  */
 export const getProcessInstanceStatusVariant = (status: ProcessInstanceStatus): BadgeVariant => {
@@ -86,5 +110,27 @@ export const getTaskStatusVariant = (status: TaskStatus): BadgeVariant => {
       return 'secondary';
     default:
       return 'default';
+  }
+};
+
+/**
+ * Get badge variant for priority - matching your 1-5 scale
+ */
+export const getPriorityVariant = (priority: Priority | string | number): BadgeVariant => {
+  const priorityNum = typeof priority === 'number' ? priority : parseInt(priority.toString(), 10);
+  
+  switch (priorityNum) {
+    case 5: // Muito Alta
+      return 'destructive';
+    case 4: // Alta
+      return 'warning';
+    case 3: // Média
+      return 'info';
+    case 2: // Baixa
+      return 'secondary';
+    case 1: // Muito Baixa
+      return 'secondary';
+    default:
+      return 'secondary';
   }
 };

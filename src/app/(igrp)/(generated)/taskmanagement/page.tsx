@@ -31,13 +31,15 @@ import { useTaskManagement } from '@/app/(myapp)/taskmanagement/hooks/use-task-m
 import { useRouter } from 'next/navigation';
 import { urlConfig } from '@/app/(myapp)/utils/url-config';
 import { useDashboard } from '@/app/(myapp)/dashboard/hooks/use-dashboard';
+import { getPriorityColor } from '@/app/(myapp)/utils/status-badge';
 import { getTaskStatusColor } from '@/app/(myapp)/utils/status-badge';
 
 export default function PageTaskmanagementComponent() {
   type Table1 = {
     currentStep: string;
     process: string;
-    assignedBy: string; // Changed from string to string | undefined (optional)
+    assignedBy: string;
+    priority: string;
     startedAt: string;
     endAt: string;
     waitingDays: string;
@@ -130,8 +132,8 @@ export default function PageTaskmanagementComponent() {
   }, [error, igrpToast]);
 
   // Handle assign task save
-  const handleAssignTaskSave = async (formData: { user: string; note?: string }) => {
-    const result = await handleAssignTask(formData.user, formData.note);
+  const handleAssignTaskSave = async (formData: { user: string; priority: string; note?: string }) => {
+    const result = await handleAssignTask(formData.user, formData.priority, formData.note);
 
     if (igrpToast) {
       igrpToast({
@@ -143,7 +145,7 @@ export default function PageTaskmanagementComponent() {
   };
 
   // Define modal subtitle with dynamic content
-  const modalSubtitle = `Indicar um utilizador para assumir a tarefa "${assignModalState.selectedTask?.currentStep}" do processo "${assignModalState.selectedTask?.processName}"`;
+  const modalSubtitle = `Indicar um utilizador para assumir a tarefa "${assignModalState.selectedTask?.currentStep}" do processo "${assignModalState.selectedTask?.process}"`;
 
   //-------------------reserved area end------------------------------
 
@@ -313,6 +315,24 @@ export default function PageTaskmanagementComponent() {
             filterFn: IGRPDataTableFacetedFilterFn,
           },
           {
+            header: 'Prioridade',
+            accessorKey: 'priority',
+            cell: ({ row }) => {
+              const rowData = row.original;
+
+              const { iconName, bgClass, textClass, label, className } = getPriorityColor(rowData);
+
+              return (
+                <IGRPDataTableCellBadge
+                  label={label ?? row.original.priority}
+                  variant={`soft`}
+                  badgeClassName={`${bgClass} ${textClass} ${className}`}
+                ></IGRPDataTableCellBadge>
+              );
+            },
+            filterFn: IGRPDataTableFacetedFilterFn,
+          },
+          {
             header: 'Data Início',
             accessorKey: 'startedAt',
             cell: ({ row }) => {
@@ -393,6 +413,7 @@ export default function PageTaskmanagementComponent() {
       <CommonUserTaskModalForm
         modalTitle={`Atribuir Tarefa`}
         userRequired={true}
+        showPriority={true}
         open={assignModalState.isOpen}
         modalSubTitle={modalSubtitle}
         setOpen={(open) => (open ? {} : handleCloseAssignModal())}

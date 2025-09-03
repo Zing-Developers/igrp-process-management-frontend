@@ -1,9 +1,10 @@
 import { useState, useCallback } from 'react';
-import { startProcess } from '../../external/client/services/process.service';
 import { getTasksByProcessInstance, claimTask } from '../../external/client/services/task.service';
 import { Process, ProcessInstance } from '@igrp/platform-process-management-types';
 import { urlConfig } from '../../utils/url-config';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { ProcessService } from '../../processconfiguration/services/process.service';
+import { startProcess } from '../../external/client/services/process.service';
 
 export function useProcessOperations(igrpToast?: any, router?: AppRouterInstance) {
   const [selectedProcess, setSelectedProcess] = useState<Process | undefined>();
@@ -47,8 +48,8 @@ export function useProcessOperations(igrpToast?: any, router?: AppRouterInstance
         const instance = await startProcess(
           pendingProcessStart.processDefinitionId,
           pendingProcessStart.processKey,
-          pendingProcessStart.businessKey,
           priority, // Add priority parameter
+          pendingProcessStart.businessKey,
           pendingProcessStart.variables,
         );
 

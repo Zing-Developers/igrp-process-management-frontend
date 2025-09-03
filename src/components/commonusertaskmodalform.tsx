@@ -23,6 +23,7 @@ import {
   IGRPModalDialogFooter,
   IGRPButton,
 } from '@igrp/igrp-framework-react-design-system';
+import { PRIORITY_OPTIONS } from '../app/(myapp)/enum/priority';
 
 export default function Commonusertaskmodalform({
   open,
@@ -31,6 +32,7 @@ export default function Commonusertaskmodalform({
   modalTitle,
   modalSubTitle,
   userRequired,
+  showPriority,
 }: {
   open: boolean;
   setOpen: (prompt: boolean) => void;
@@ -38,10 +40,12 @@ export default function Commonusertaskmodalform({
   modalTitle: string;
   modalSubTitle: string;
   userRequired?: boolean;
+  showPriority?: boolean;
 }) {
   const form1 = z.object({
     user: z.string().nonempty(),
     note: z.string().optional(),
+    priority: z.string().nonempty(),
   });
 
   type Form1ZodType = typeof form1;
@@ -49,11 +53,13 @@ export default function Commonusertaskmodalform({
   const initForm1: z.infer<Form1ZodType> = {
     user: undefined,
     note: undefined,
+    priority: undefined,
   };
 
   const formform1Ref = useRef<IGRPFormHandle<Form1ZodType> | null>(null);
   const [form1Data, setForm1Data] = useState<any>(initForm1);
   const [selectuserOptions, setSelectuserOptions] = useState<IGRPOptionsProps[]>([]);
+  const [selectpriorityOptions, setSelectpriorityOptions] = useState<IGRPOptionsProps[]>([]);
 
   const { igrpToast } = useIGRPToast();
 
@@ -64,6 +70,7 @@ export default function Commonusertaskmodalform({
       { value: 'igrp@nosi.cv', label: 'igrp@nosi.cv' },
       { value: 'Sistema', label: 'Sistema' },
     ];
+    setSelectpriorityOptions(PRIORITY_OPTIONS);
     setSelectuserOptions(dummyUsers);
   }, []);
 
@@ -111,6 +118,22 @@ export default function Commonusertaskmodalform({
                     className={cn('col-span-1')}
                     onChange={() => {}}
                     options={selectuserOptions}
+                  ></IGRPCombobox>
+                )}
+                {showPriority && (
+                  <IGRPCombobox
+                    name={`priority`}
+                    label={`Prioridade`}
+                    variant={`single`}
+                    placeholder={`Select an option...`}
+                    required={true}
+                    selectLabel={`No option found`}
+                    showSearch={true}
+                    showIcon={false}
+                    iconName={`CornerDownRight`}
+                    className={cn('col-span-1')}
+                    onChange={() => {}}
+                    options={selectpriorityOptions}
                   ></IGRPCombobox>
                 )}
                 <IGRPTextarea

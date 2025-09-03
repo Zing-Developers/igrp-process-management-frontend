@@ -16,6 +16,7 @@ import {
   IGRPPageHeader,
 	IGRPStatsCard,
 	IGRPDataTable,
+	IGRPDataTableCellBadge,
 	IGRPDataTableRowAction,
 	IGRPDataTableButtonLink 
 } from "@igrp/igrp-framework-react-design-system";
@@ -23,6 +24,7 @@ import {useMyTasks} from '@/app/(myapp)/mytasks/hooks/use-my-tasks'
 import { useRouter } from 'next/navigation'
 import { urlConfig } from '@/app/(myapp)/utils/url-config'
 import {useDashboard} from '@/app/(myapp)/dashboard/hooks/use-dashboard'
+import {getPriorityColor} from '@/app/(myapp)/utils/status-badge'
 
 
 export default function PageMytasksComponent() {
@@ -30,16 +32,17 @@ export default function PageMytasksComponent() {
 
   
   type Table1 = {
+    processName: string;
     currentStep: string;
     process: string;
     startedAt: string;
     endAt: string;
     waitingDays: string;
+    priority: string;
     processKey: string;
     processInstanceId: string;
     taskKey: string;
     taskId: string;
-    processName: string;
 }
 
   const [statstatsCard1Value, setStatstatsCard1Value] = useState<string | number>(0);
@@ -123,7 +126,7 @@ function executeTask (row: any): void  | undefined {
   };
 
   // Define modal subtitle with dynamic content
-  const modalSubtitle = `Libertar a tarefa "${unclaimModalState.selectedTask?.currentStep}" do processo "${unclaimModalState.selectedTask?.processName}"`;
+  const modalSubtitle = `Libertar a tarefa "${unclaimModalState.selectedTask?.currentStep}" do processo "${unclaimModalState.selectedTask?.process}"`;
 
   //-------------------reserved area end------------------------------
 
@@ -306,6 +309,24 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
 ,accessorKey: 'waitingDays',
           cell: ({ row }) => {
           return row.getValue("waitingDays")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Prioridade'
+,accessorKey: 'priority',
+          cell: ({ row }) => {
+          const rowData = row.original;
+
+const { iconName, bgClass, textClass, label, className } = getPriorityColor(rowData);
+
+return <IGRPDataTableCellBadge
+  label={ label ?? row.original.priority }
+  variant={ `soft` }
+badgeClassName={ `${bgClass} ${textClass} ${className}` }
+>
+
+</IGRPDataTableCellBadge>
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },

@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useMyTasksData } from './use-my-tasks-data';
 import { TaskTableRow } from '../types';
 import { unclaimTask } from '../../external/client/services/task.service';
-import { getDateTemplate, getProcessInfo, getUserInfo } from '../../utils/columns-template';
+import { getDateTemplate, getProcessInfo } from '../../utils/columns-template';
 
 export function useMyTasks() {
   const {
@@ -32,11 +32,12 @@ export function useMyTasks() {
         startedAt: getDateTemplate(task.startedAt),
         endAt: getDateTemplate(task.endAt),
         waitingDays: diffDays.toString(),
+        priority: task.priority + '',
         processKey: task.processKey,
         processInstanceId: task.processInstanceId,
         taskKey: task.taskKey,
         taskId: task.id,
-        processName: task.processName
+        processName: task.processName,
       };
     });
   }, [myTasksState.tasks]);
@@ -55,10 +56,10 @@ export function useMyTasks() {
   const handleUnclaimTask = async (note?: string) => {
     if (!unclaimModalState.selectedTask || !unclaimModalState.selectedTask.taskId) {
       return { success: false, message: 'Nenhuma tarefa selecionada' };
-    } 
-    
+    }
+
     try {
-      console.log("unclaimModalState.selectedTask.taskId", unclaimModalState.selectedTask.taskId)
+      console.log('unclaimModalState.selectedTask.taskId', unclaimModalState.selectedTask.taskId);
       await unclaimTask(unclaimModalState.selectedTask.taskId, note);
 
       // Close modal and refresh data

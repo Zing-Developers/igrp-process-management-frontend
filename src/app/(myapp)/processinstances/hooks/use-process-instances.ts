@@ -31,6 +31,7 @@ export function useProcessInstances() {
         startedAt: getDateTemplate(instance.startedAt),
         endedAt: getDateTemplate(instance.endedAt),
         progress: getProgressTemplate(instance.progress),
+        priority: instance.priority + '',
         status: instance.status,
         processInstanceId: instance.id,
         procReleaseKey: instance.procReleaseKey,

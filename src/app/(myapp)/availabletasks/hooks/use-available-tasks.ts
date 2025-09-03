@@ -30,6 +30,7 @@ export function useAvailableTasks() {
         processInstanceId: task.processInstanceId,
         createdDate: task.startedAt,
         assignedBy: task.assignedBy,
+        priority: task.priority + '',
       };
     });
   }, [tasksState.tasks]);

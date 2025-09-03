@@ -31,17 +31,19 @@ import { useProcessInstances } from '@/app/(myapp)/processinstances/hooks/use-pr
 import { useRouter } from 'next/navigation';
 import { urlConfig } from '@/app/(myapp)/utils/url-config';
 import { useDashboard } from '@/app/(myapp)/dashboard/hooks/use-dashboard';
+import { getPriorityColor } from '@/app/(myapp)/utils/status-badge';
 import { getTaskStatusColor } from '@/app/(myapp)/utils/status-badge';
 import { getProcessInstanceStatusColor } from '@/app/(myapp)/utils/status-badge';
 
 export default function PageProcessinstancesComponent() {
   type Table1 = {
     processInfo: string;
+    version: string;
     createBy: string;
     daysWaiting: string;
-    version: string;
     startedAt: string;
     endedAt: string;
+    priority: string;
     progress: string;
     status: string;
     processInstanceId: string;
@@ -58,7 +60,12 @@ export default function PageProcessinstancesComponent() {
 
   function goToProcessRuntime(row: any): void | undefined {
     console.log(row);
-    const taskUrl = urlConfig.buildProcessInstanceUrl(row.procReleaseKey, row.processInstanceId);
+    const taskUrl = urlConfig.buildTaskExecutionUrl(
+      row.procReleaseKey,
+      row.processInstanceId,
+      row.taskKey,
+      row.taskId,
+    );
     router.push(taskUrl);
   }
 
@@ -279,6 +286,24 @@ export default function PageProcessinstancesComponent() {
             accessorKey: 'endedAt',
             cell: ({ row }) => {
               return row.getValue('endedAt');
+            },
+            filterFn: IGRPDataTableFacetedFilterFn,
+          },
+          {
+            header: 'Prioridade',
+            accessorKey: 'priority',
+            cell: ({ row }) => {
+              const rowData = row.original;
+
+              const { iconName, bgClass, textClass, label, className } = getPriorityColor(rowData);
+
+              return (
+                <IGRPDataTableCellBadge
+                  label={label ?? row.original.priority}
+                  variant={`soft`}
+                  badgeClassName={`${bgClass} ${textClass} ${className}`}
+                ></IGRPDataTableCellBadge>
+              );
             },
             filterFn: IGRPDataTableFacetedFilterFn,
           },

@@ -9,6 +9,7 @@ export interface TaskManagementTableRow {
   assignedBy: string;
   startedAt: any;
   endAt: any;
+  priority: string;
   waitingDays: string;
   status: string;
   taskId: string;
@@ -83,6 +84,7 @@ export function useTaskManagement() {
         processKey: task.processKey,
         processInstanceId: task.processInstanceId,
         processName: task.processName,
+        priority: task.priority + '',
       };
     });
   }, [state.tasks]);
@@ -188,14 +190,14 @@ export function useTaskManagement() {
 
   // Handle task assignment
   const handleAssignTask = useCallback(
-    async (user: string, note?: string) => {
+    async (user: string, priority: string, note?: string) => {
       if (!assignModalState.selectedTask) return;
 
       setState((prev) => ({ ...prev, loading: true }));
 
       try {
-        console.log('Assign task params:', assignModalState.selectedTask.taskId, user, note);
-        await assignTask(assignModalState.selectedTask.taskId, user, note);
+        console.log('Assign task params:', assignModalState.selectedTask.taskId, user, priority, note);
+        await assignTask(assignModalState.selectedTask.taskId, user, priority, note);
 
         // Refresh tasks after successful assignment
         await fetchTasks(state.currentPage, state.pageSize, filters);

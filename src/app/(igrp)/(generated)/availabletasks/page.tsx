@@ -21,6 +21,7 @@ import {
 } from "@igrp/igrp-framework-react-design-system";
 import {useAvailableTasks} from '@/app/(myapp)/availabletasks/hooks/use-available-tasks'
 import {useDashboard} from '@/app/(myapp)/dashboard/hooks/use-dashboard'
+import {getPriorityColor} from '@/app/(myapp)/utils/status-badge'
 import {getTaskStatusColor} from '@/app/(myapp)/utils/status-badge'
 
 
@@ -33,6 +34,7 @@ export default function PageAvailabletasksComponent() {
     processInfo: string;
     startedAt: string;
     endAt: string;
+    priority: string;
     daysWaiting: string;
     status: string;
     taskId: string;
@@ -180,6 +182,24 @@ onResetFilters={ resetFilters } ></TaskProcessFilter></div>
 ,accessorKey: 'endAt',
           cell: ({ row }) => {
           return row.getValue("endAt")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Prioridade'
+,accessorKey: 'priority',
+          cell: ({ row }) => {
+          const rowData = row.original;
+
+const { iconName, bgClass, textClass, label, className } = getPriorityColor(rowData);
+
+return <IGRPDataTableCellBadge
+  label={ label ?? row.original.priority }
+  variant={ `soft` }
+badgeClassName={ `${bgClass} ${textClass} ${className}` }
+>
+
+</IGRPDataTableCellBadge>
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },

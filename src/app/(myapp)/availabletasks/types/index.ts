@@ -43,6 +43,7 @@ export interface TaskTableRow {
   processInfo: any;
   processNumber: string;
   startedAt: any;
+  endAt: any;
   createBy:  any;
   taskName: string;
   status: string;
@@ -52,4 +53,5 @@ export interface TaskTableRow {
   processInstanceId: string;
   createdDate: string;
   assignee?: string;
+  priority: string;
 }

@@ -17,15 +17,6 @@ export class ProcessService {
     return await getProcessById(id);
   }
 
-  static async startProcess(
-    processDefinitionId: string,
-    processKey: string,
-    businessKey?: string,
-    variables?: Array<{ name: string; value: string }>
-  ): Promise<ProcessInstance> {
-    return await startProcess(processDefinitionId, processKey, businessKey, variables);
-  }
-
   static async getProcessArtifacts(processDefinitionId: string): Promise<ProcessArtifact[]> {
     return await getProcessArtifacts(processDefinitionId);
   }

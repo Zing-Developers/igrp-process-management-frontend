@@ -147,10 +147,11 @@ export const unassignTask = async (
 export const assignTask = async (
   taskId: string,
   user: string,
+  priority: string,
   note?: string,
 ): Promise<PostResponse> => {
-  console.debug('Assigning task:', { taskId, user, note });
-  const response = await httpClient.tasks.assignTask(taskId, { user, note });
+  console.debug('Assigning task:', { taskId, user, priority, note });
+  const response = await httpClient.tasks.assignTask(taskId, { user, priority, note });
   console.debug('Task assigned response:', response);
   return response.data;
 };

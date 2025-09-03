@@ -2,6 +2,7 @@
 import { getHttpClient, getApplicationBase } from '../config/client.config';
 import {
   CreateProcessArtifactRequest,
+  CreateProcessInstanceRequest,
   CreateProcessSequenceRequest,
   PaginatedResponse,
   Process,
@@ -88,20 +89,20 @@ export const getProcessById = async (id: string): Promise<Process | null> => {
 export const startProcess = async (
   processDefinitionId: string,
   processKey: string,
+  priority: number,
   businessKey?: string,
-  priority?: number,
   variables?: Array<{ name: string; value: string }>,
 ): Promise<ProcessInstance> => {
-  console.log('startProcess', processDefinitionId, processKey, applicationBase, businessKey, priority, variables);
-  
-  const response = await httpClient.processes.startProcess(
+  const body:CreateProcessInstanceRequest = {
     processDefinitionId,
     processKey,
     applicationBase,
     businessKey,
     variables,
-    priority, // Add priority parameter
-  );
+    priority: priority,
+  };
+
+  const response = await httpClient.processes.startProcess(body);
   return response.data as ProcessInstance;
 };
 

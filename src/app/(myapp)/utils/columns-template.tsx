@@ -1,4 +1,3 @@
-import { IGRPProgressBarProvider } from '@igrp/framework-next-ui';
 import { IGRPIcon, cn } from '@igrp/igrp-framework-react-design-system';
 import { format } from 'date-fns';
 

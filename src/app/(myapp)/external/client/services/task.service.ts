@@ -151,7 +151,11 @@ export const assignTask = async (
   note?: string,
 ): Promise<PostResponse> => {
   console.debug('Assigning task:', { taskId, user, priority, note });
-  const response = await httpClient.tasks.assignTask(taskId, { user, priority, note });
+  const response = await httpClient.tasks.assignTask(taskId, { 
+    user, 
+    priority: parseInt(priority, 10), // ← Convert string to number
+    note 
+  });
   console.debug('Task assigned response:', response);
   return response.data;
 };

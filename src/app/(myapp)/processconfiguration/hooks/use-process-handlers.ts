@@ -166,8 +166,12 @@ export function useProcessHandlers(
     }
   };
 
-  const handleOpenProcessNumberModal = async (processId: string, processKey: string) => {
-    processNumberForm.openModal(processId, processKey);
+  const handleOpenProcessNumberModal = async (
+    processId: string,
+    processKey: string,
+    processApplicationBase: string,
+  ) => {
+    processNumberForm.openModal(processId, processKey, processApplicationBase);
 
     // Load process number configurations when modal opens
     if (processId) {
@@ -196,9 +200,10 @@ export function useProcessHandlers(
         padding: 0,
         numberIncrement: 1,
       };
-      
+
       const savedConfig = await processNumberOperations.saveProcessNumberConfiguration(
         processNumberForm.modalState.selectedProcessId,
+        processNumberForm.modalState.selectedProcessApplicationBase,
         request,
         igrpToast,
       );
@@ -220,12 +225,12 @@ export function useProcessHandlers(
       try {
         const updatedProcessesResponse = await AreaProcessService.getAreaProcesses(areaId);
         const updatedProcesses = updatedProcessesResponse.content || [];
-        setAreaProcesses(prev => ({ ...prev, [areaId]: updatedProcesses }));
+        setAreaProcesses((prev) => ({ ...prev, [areaId]: updatedProcesses }));
       } catch (error) {
         console.error('Error loading area processes:', error);
       }
     }
-    
+
     // Then open the modal
     processForm.openModal(areaId);
   };

@@ -9,7 +9,7 @@ export function ArtifactProcessesList({
 }: {
   processes: Process[];
   onArtifactEdit: (processId: string) => void;
-  onProcessNumberEdit: (processId: string, processKey: string) => void;
+  onProcessNumberEdit: (processId: string, processKey: string, processApplicationBase: string) => void;
 }) {
   if (processes.length === 0) {
     return <div className="text-sm text-muted-foreground italic">Nenhum processo encontrado</div>;
@@ -42,7 +42,7 @@ export function ArtifactProcessesList({
           </div>
           <div className="flex items-center gap-2">
             <IGRPButton
-              onClick={() => onProcessNumberEdit(process.id, process.processKey)}
+              onClick={() => onProcessNumberEdit(process.id, process.processKey, process.applicationBase)}
               variant="ghost"
               size="icon"
               iconName="Hash"

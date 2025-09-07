@@ -35,17 +35,17 @@ export const getProcessStats = async (): Promise<ProcessStats> => {
   return response.data as ProcessStats;
 };
 
-
 /**
  * Fetches a paginated list of processes.
  * @param processDefinitionId The ID of the process definition to fetch.
  * @returns A promise that resolves to a paginated response of processes.
  */
-export const getProcessArtifacts = async (processDefinitionId: string): Promise<ProcessArtifact[]> => {
+export const getProcessArtifacts = async (
+  processDefinitionId: string,
+): Promise<ProcessArtifact[]> => {
   const response = await httpClient.processes.getProcessArtifacts(processDefinitionId);
   return response.data as ProcessArtifact[];
 };
-
 
 /**
  * Creates a new process artifact.
@@ -53,7 +53,10 @@ export const getProcessArtifacts = async (processDefinitionId: string): Promise<
  * @param artifact The artifact to create.
  * @returns A promise that resolves to the created process artifact.
  */
-export const createProcessArtifact = async (processDefinitionId: string, artifact: CreateProcessArtifactRequest): Promise<ProcessArtifact> => {
+export const createProcessArtifact = async (
+  processDefinitionId: string,
+  artifact: CreateProcessArtifactRequest,
+): Promise<ProcessArtifact> => {
   const response = await httpClient.processes.createProcessArtifact(processDefinitionId, artifact);
   return response.data as ProcessArtifact;
 };
@@ -63,7 +66,9 @@ export const createProcessArtifact = async (processDefinitionId: string, artifac
  * @param processDefinitionId The ID of the process definition to fetch.
  * @returns A promise that resolves to a paginated response of processes.
  */
-export const getProcessDeployedArtifacts = async (processDefinitionId: string): Promise<ProcessArtifact[]> => {
+export const getProcessDeployedArtifacts = async (
+  processDefinitionId: string,
+): Promise<ProcessArtifact[]> => {
   const response = await httpClient.processes.getProcessDeployedArtifacts(processDefinitionId);
   return response.data as ProcessArtifact[];
 };
@@ -93,7 +98,7 @@ export const startProcess = async (
   businessKey?: string,
   variables?: Array<{ name: string; value: string }>,
 ): Promise<ProcessInstance> => {
-  const body:CreateProcessInstanceRequest = {
+  const body: CreateProcessInstanceRequest = {
     processDefinitionId,
     processKey,
     applicationBase,
@@ -105,7 +110,6 @@ export const startProcess = async (
   const response = await httpClient.processes.startProcess(body);
   return response.data as ProcessInstance;
 };
-
 
 /**
  * Process Number Configuration interface
@@ -123,7 +127,9 @@ export interface ProcessNumberConfig {
  * @param processDefinitionId The process definition ID
  * @returns A promise that resolves to process number configurations
  */
-export const getProcessNumberConfigs = async (processDefinitionId: string): Promise<ProcessSequence> => {
+export const getProcessNumberConfigs = async (
+  processDefinitionId: string,
+): Promise<ProcessSequence> => {
   const response = await httpClient.processes.getProcessSequence(processDefinitionId);
   return response.data as ProcessSequence;
 };
@@ -134,7 +140,15 @@ export const getProcessNumberConfigs = async (processDefinitionId: string): Prom
  * @param config The process number configuration to save
  * @returns A promise that resolves to the saved configuration
  */
-export const saveProcessNumberConfig = async (processDefinitionId: string, config: CreateProcessSequenceRequest): Promise<ProcessSequence> => {
-  const response = await httpClient.processes.createProcessSequence(processDefinitionId, config);
+export const saveProcessNumberConfig = async (
+  processDefinitionId: string,
+  processApplicationBase: string,
+  config: CreateProcessSequenceRequest,
+): Promise<ProcessSequence> => {
+  const response = await httpClient.processes.createProcessSequence(
+    processDefinitionId,
+    processApplicationBase,
+    config,
+  );
   return response.data as ProcessSequence;
 };

@@ -29,11 +29,12 @@ export function useProcessNumberOperations() {
 
   const saveProcessNumberConfiguration = async (
     processDefinitionId: string,
+    processApplicationBase: string,
     request: CreateProcessSequenceRequest,
     igrpToast?: any
   ): Promise<ProcessSequence | null> => {
     try {
-      const savedConfig = await saveProcessNumberConfig(processDefinitionId, request);
+      const savedConfig = await saveProcessNumberConfig(processDefinitionId, processApplicationBase, request);
       
       if (igrpToast) {
         igrpToast({

@@ -42,4 +42,5 @@ export interface ProcessNumberModalState {
   isOpen: boolean;
   selectedProcessId: string | null;
   selectedProcessKey: string | null;
+  selectedProcessApplicationBase: string | null;
 }

@@ -111,8 +111,8 @@ export default function PageProcessconfigurationComponent() {
                 <ArtifactProcessesList
                   processes={pc.allProcesses}
                   onArtifactEdit={(processId) => pc.handleOpenArtifactModal(processId)}
-                  onProcessNumberEdit={(processId, processKey) =>
-                    pc.handleOpenProcessNumberModal(processId, processKey)
+                  onProcessNumberEdit={(processId, processKey, applicationBase) =>
+                    pc.handleOpenProcessNumberModal(processId, processKey, applicationBase)
                   }
                 ></ArtifactProcessesList>
               </>
@@ -163,6 +163,7 @@ export default function PageProcessconfigurationComponent() {
             ? pc.handleOpenProcessNumberModal(
                 pc.processNumberForm.modalState.selectedProcessId || '',
                 pc.processNumberForm.modalState.selectedProcessKey || '',
+                pc.processNumberForm.modalState.selectedProcessApplicationBase || '',
               )
             : pc.processNumberForm.closeModal()
         }

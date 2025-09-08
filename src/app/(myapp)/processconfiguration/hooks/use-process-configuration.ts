@@ -7,8 +7,15 @@ import { useComputedValues } from './use-computed-values';
 
 export function useProcessConfiguration(igrpToast?: any) {
   // Configuration data
-  const { areas, setAreas, processes, areaProcesses, setAreaProcesses, loading } =
-    useConfiguration();
+  const {
+    areas,
+    setAreas,
+    processes,
+    areaProcesses,
+    setAreaProcesses,
+    allActiveProcesses,
+    loading,
+  } = useConfiguration();
 
   // Search functionality
   const searchHook = useSearch(areas);
@@ -17,7 +24,12 @@ export function useProcessConfiguration(igrpToast?: any) {
   const areaHandlers = useAreaHandlers(areas, setAreas, setAreaProcesses, igrpToast);
 
   // Process management
-  const { loading: processesLoading, ...processHandlers } = useProcessHandlers(areaProcesses, setAreaProcesses, processes, igrpToast);
+  const { loading: processesLoading, ...processHandlers } = useProcessHandlers(
+    areaProcesses,
+    setAreaProcesses,
+    processes,
+    igrpToast,
+  );
 
   // UI state - pass both loadSubareas and loadAreaProcesses functions to expansion
   const expansion = useExpansion();
@@ -26,11 +38,11 @@ export function useProcessConfiguration(igrpToast?: any) {
   const computedValues = useComputedValues(areas);
 
   // Enhanced toggle function that integrates with loadSubareas and loadAreaProcesses
-  const handleToggleExpansion = async (areaId: string) => {    
+  const handleToggleExpansion = async (areaId: string) => {
     await expansion.toggleAreaExpansion(
-      areaId, 
+      areaId,
       areaHandlers.handleLoadSubareas,
-      areaHandlers.handleLoadAreaProcesses
+      areaHandlers.handleLoadAreaProcesses,
     );
   };
 
@@ -41,6 +53,7 @@ export function useProcessConfiguration(igrpToast?: any) {
     areaProcesses,
     loading,
     processesLoading,
+    allActiveProcesses,
 
     // Search
     ...searchHook,

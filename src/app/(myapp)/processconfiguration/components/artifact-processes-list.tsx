@@ -14,7 +14,6 @@ export function ArtifactProcessesList({
   if (processes.length === 0) {
     return <div className="text-sm text-muted-foreground italic">Nenhum processo encontrado</div>;
   }
-
   return (
     <div className="space-y-2">
       {processes.map((process) => (

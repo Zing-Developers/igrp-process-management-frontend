@@ -109,7 +109,7 @@ export default function PageProcessconfigurationComponent() {
             content: (
               <>
                 <ArtifactProcessesList
-                  processes={pc.allProcesses}
+                  processes={pc.allActiveProcesses}
                   onArtifactEdit={(processId) => pc.handleOpenArtifactModal(processId)}
                   onProcessNumberEdit={(processId, processKey, applicationBase) =>
                     pc.handleOpenProcessNumberModal(processId, processKey, applicationBase)

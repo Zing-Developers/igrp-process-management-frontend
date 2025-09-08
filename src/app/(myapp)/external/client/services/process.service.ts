@@ -137,17 +137,17 @@ export const getProcessNumberConfigs = async (
 
 /**
  * Saves process number configuration
- * @param processDefinitionId The process definition ID
+ * @param processDefinitionKey The process definition key
  * @param config The process number configuration to save
  * @returns A promise that resolves to the saved configuration
  */
 export const saveProcessNumberConfig = async (
-  processDefinitionId: string,
+  processDefinitionKey: string,
   processApplicationBase: string,
   config: CreateProcessSequenceRequest,
 ): Promise<ProcessSequence> => {
   const response = await httpClient.processes.createProcessSequence(
-    processDefinitionId,
+    processDefinitionKey,
     processApplicationBase,
     config,
   );

@@ -3,7 +3,6 @@ import { getTasksByProcessInstance, claimTask } from '../../external/client/serv
 import { Process, ProcessInstance } from '@igrp/platform-process-management-types';
 import { urlConfig } from '../../utils/url-config';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import { ProcessService } from '../../processconfiguration/services/process.service';
 import { startProcess } from '../../external/client/services/process.service';
 
 export function useProcessOperations(igrpToast?: any, router?: AppRouterInstance) {
@@ -11,6 +10,7 @@ export function useProcessOperations(igrpToast?: any, router?: AppRouterInstance
   const [pendingProcessStart, setPendingProcessStart] = useState<{
     processDefinitionId: string;
     processKey: string;
+    applicationBase: string;
     businessKey?: string;
     variables?: Array<{ name: string; value: string }>;
   } | null>(null);
@@ -24,12 +24,14 @@ export function useProcessOperations(igrpToast?: any, router?: AppRouterInstance
     (
       processDefinitionId: string,
       processKey: string,
+      applicationBase: string,
       businessKey?: string,
       variables?: Array<{ name: string; value: string }>,
     ) => {
       setPendingProcessStart({
         processDefinitionId,
         processKey,
+        applicationBase,
         businessKey,
         variables,
       });
@@ -48,6 +50,7 @@ export function useProcessOperations(igrpToast?: any, router?: AppRouterInstance
         const instance = await startProcess(
           pendingProcessStart.processDefinitionId,
           pendingProcessStart.processKey,
+          pendingProcessStart.applicationBase,
           priority, // Add priority parameter
           pendingProcessStart.businessKey,
           pendingProcessStart.variables,

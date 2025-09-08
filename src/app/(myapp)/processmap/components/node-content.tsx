@@ -9,6 +9,7 @@ interface NodeContentProps {
     process: Process,
     processDefinitionId: string,
     processKey: string,
+    applicationBase: string,
     businessKey?: string,
     variables?: Array<{ name: string; value: string }>,
   ) => void;

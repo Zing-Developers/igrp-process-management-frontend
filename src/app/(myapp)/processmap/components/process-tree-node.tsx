@@ -19,6 +19,7 @@ export function ProcessTreeComponent({
     process: Process,
     processDefinitionId: string,
     processKey: string,
+    applicationBase: string,
     businessKey?: string,
     variables?: Array<{ name: string; value: string }>,
   ) => void;

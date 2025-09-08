@@ -7,6 +7,7 @@ export function useTreeComputed(
   areas: ExtendedArea[], 
   expandedNodes: Set<string>
 ) {
+
   const treeNodes = useMemo(() => {
     return buildProcessTree(areas);
   }, [areas]);

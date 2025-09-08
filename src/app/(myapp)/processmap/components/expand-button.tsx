@@ -8,7 +8,7 @@ interface ExpandButtonProps {
 }
 
 export function ExpandButton({ hasChildren, isExpanded, onToggle }: ExpandButtonProps) {
-  console.log('ExpandButton hasChildren', hasChildren);
+
   if (!hasChildren) {
     return <div className="w-6 h-6" />; // Placeholder for alignment
   }

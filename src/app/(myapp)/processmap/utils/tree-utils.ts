@@ -9,7 +9,12 @@ import { ProcessTreeNode } from '../types';
 export function buildProcessTree(areas: ExtendedArea[]): ProcessTreeNode[] {
   const treeNodes: ProcessTreeNode[] = [];
 
-  function processArea(area: ExtendedArea, level: number = 0, parentId?: string): ProcessTreeNode {
+  function processArea(
+    area: ExtendedArea,
+    applicationBase: string,
+    level: number = 0,
+    parentId?: string,
+  ): ProcessTreeNode {
     const areaNode: ProcessTreeNode = {
       id: area.id,
       name: area.name,
@@ -20,14 +25,17 @@ export function buildProcessTree(areas: ExtendedArea[]): ProcessTreeNode[] {
       children: [],
       hasChildren: true, // Assume areas can have children (subareas or processes)
       isLoaded: false, // Will be set to true when children are loaded
+      applicationBase: applicationBase,
     };
 
     // Add processes as children (processes are always loaded with the area)
     const areaProcesses = area.process || [];
     if (areaProcesses && areaProcesses.length > 0) {
       // Filter only active processes
-      const activeProcesses = areaProcesses.filter((process: Process) => process.status === 'ACTIVE');
-      
+      const activeProcesses = areaProcesses.filter(
+        (process: Process) => process.status === 'ACTIVE',
+      );
+
       const processNodes: ProcessTreeNode[] = activeProcesses.map((process: Process) => ({
         id: `process-${process.id}`,
         name: process.name || process.processKey || 'Unnamed Process',
@@ -37,13 +45,14 @@ export function buildProcessTree(areas: ExtendedArea[]): ProcessTreeNode[] {
         data: process,
         hasChildren: false,
         isLoaded: true,
+        applicationBase: applicationBase,
       }));
       areaNode.children = [...processNodes];
     }
 
     // Add subareas as children (if they exist in the hierarchy)
     if (area.subareas && area.subareas.length > 0) {
-      const subareaNodes = area.subareas.map((subarea) => processArea(subarea, level + 1, area.id));
+      const subareaNodes = area.subareas.map((subarea) => processArea(subarea, subarea.applicationBase, level + 1, area.id));
       areaNode.children = [...(areaNode.children || []), ...subareaNodes];
       areaNode.isLoaded = true; // Mark as loaded if subareas are present
     }
@@ -52,7 +61,7 @@ export function buildProcessTree(areas: ExtendedArea[]): ProcessTreeNode[] {
   }
 
   areas.forEach((area) => {
-    treeNodes.push(processArea(area));
+    treeNodes.push(processArea(area, area.applicationBase, 0));
   });
 
   return treeNodes;

@@ -67,11 +67,12 @@ export function useProcessMap(igrpToast?: any, router?: AppRouterInstance): Proc
       process: Process,
       processDefinitionId: string,
       processKey: string,
+      applicationBase: string,
       businessKey?: string,
       variables?: Array<{ name: string; value: string }>,
     ) => {
       // Prepare the process start parameters
-      prepareProcessStart(processDefinitionId, processKey, businessKey, variables);
+      prepareProcessStart(processDefinitionId, processKey, applicationBase, businessKey, variables);
 
       // Open priority modal
       priorityModal.open(process);

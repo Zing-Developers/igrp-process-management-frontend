@@ -113,7 +113,6 @@ const { igrpToast } = useIGRPToast()
   
 >
   <IGRPModalDialogTitle
-  name={ `modalDialogTitle1` }
   
   
   
@@ -121,7 +120,6 @@ const { igrpToast } = useIGRPToast()
   Número Processo
 </IGRPModalDialogTitle>
   <IGRPModalDialogDescription
-  name={ `modalDialogDescription1` }
   
   
   

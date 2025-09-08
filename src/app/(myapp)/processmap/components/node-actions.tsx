@@ -9,6 +9,7 @@ interface NodeActionsProps {
     process: Process,
     processDefinitionId: string,
     processKey: string,
+    applicationBase: string,
     businessKey?: string,
     variables?: Array<{ name: string; value: string }>,
   ) => void;
@@ -25,7 +26,7 @@ export function NodeActions({ node, onStartProcess, onViewDetails }: NodeActions
     if (node.data) {
       const process = node.data as Process;
       // Pass the process object as the first parameter
-      onStartProcess(process, process.releaseId, process.processKey, undefined, []);
+      onStartProcess(process, process.releaseId, process.processKey, node.applicationBase, undefined, []);
     }
   };
 

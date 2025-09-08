@@ -13,6 +13,7 @@ import {
   ProcessData,
 } from '@igrp/platform-process-management-types';
 import { AreaProcessService } from '../services/area-process.service';
+import { AreaService } from '../services/area.service';
 
 export function useProcessHandlers(
   areaProcesses: AreaProcessesMap,
@@ -36,8 +37,27 @@ export function useProcessHandlers(
 
     setLoading(true);
     try {
+      const areasResponse = await AreaService.getAreas('');
+
+      const areas = areasResponse.content || [];
+
+      // process is ACTIVE and releaseId is unique
+      const activeProcesses = areas
+        .flatMap((area) => (area.process || []).map((process) => ({
+          ...process,
+          applicationBase: (area as any).applicationBase,
+        })))
+        .filter((process) => process.status === 'ACTIVE');
+
+      const processList = Array.from(
+        new Map(activeProcesses.map((p) => [p.releaseId, p])).values(),
+      );
+
+      //console.log('processList', processList);
+      setAllProcesses(processList);
+/* 
       const response = await ProcessService.getProcesses(0, 100);
-      setAllProcesses(response.content || []);
+      setAllProcesses(response.content || []); */
     } catch (error) {
       console.error('Error loading processes:', error);
       // Keep using the passed processes as fallback
@@ -70,7 +90,6 @@ export function useProcessHandlers(
       }
       return;
     }
-    console.log('process', process);
     // Create the request object
     const processData: ProcessData = {
       processKey: process.processKey || '',
@@ -203,7 +222,7 @@ export function useProcessHandlers(
 
       const savedConfig = await processNumberOperations.saveProcessNumberConfiguration(
         processNumberForm.modalState.selectedProcessId,
-        processNumberForm.modalState.selectedProcessApplicationBase,
+        processNumberForm.modalState.selectedProcessApplicationBase || '',
         request,
         igrpToast,
       );

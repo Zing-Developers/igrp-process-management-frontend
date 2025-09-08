@@ -13,7 +13,7 @@ import {
 } from '@igrp/platform-process-management-types';
 
 const httpClient = getHttpClient();
-const applicationBase = getApplicationBase();
+const applicationBaseTemp = getApplicationBase();
 
 /**
  * Fetches a paginated list of processes.
@@ -94,6 +94,7 @@ export const getProcessById = async (id: string): Promise<Process | null> => {
 export const startProcess = async (
   processDefinitionId: string,
   processKey: string,
+  applicationBase: string,
   priority: number,
   businessKey?: string,
   variables?: Array<{ name: string; value: string }>,
@@ -101,7 +102,7 @@ export const startProcess = async (
   const body: CreateProcessInstanceRequest = {
     processDefinitionId,
     processKey,
-    applicationBase,
+    applicationBase: applicationBase ,
     businessKey,
     variables,
     priority: priority,

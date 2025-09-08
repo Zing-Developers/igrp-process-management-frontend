@@ -1,4 +1,4 @@
-import { Area } from '../../external/types/area';
+import { Area } from '@igrp/platform-process-management-types';
 import { ExtendedArea } from '../types';
 
 /**
@@ -45,6 +45,7 @@ export const getAllAreasFlat = (hierarchicalAreas: ExtendedArea[]): Area[] => {
         code: area.code,
         name: area.name,
         description: area.description,
+        applicationBase: area.applicationBase,
         areaId: area.areaId, // Use area_id instead of area_fk
         process: area.process,
         createdAt: area.createdAt,

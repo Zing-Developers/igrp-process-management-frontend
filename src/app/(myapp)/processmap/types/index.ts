@@ -14,6 +14,7 @@ export interface ProcessTreeNode {
   isExpanded?: boolean;
   hasChildren?: boolean;
   isLoaded?: boolean;
+  applicationBase: string;
 }
 
 export interface ProcessMapState {
@@ -33,6 +34,7 @@ export interface ProcessMapActions {
     process: Process,
     processDefinitionId: string,
     processKey: string,
+    applicationBase: string,
     businessKey?: string,
     variables?: Array<{ name: string; value: string }>,
   ) => void; // Updated signature to match implementation

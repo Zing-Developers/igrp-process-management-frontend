@@ -16,7 +16,6 @@ export function useProcessMapData() {
       
       // Load only top-level areas initially (areas without areaId)
       const areasResponse = await AreaService.getAreas('');
-      console.log("areasResponse", areasResponse);
       
       // Filter to get only top-level areas
       const topLevelAreas = areasResponse.content?.filter(area => !area.areaId) || [];
@@ -27,7 +26,6 @@ export function useProcessMapData() {
         subareas: [] // Will be loaded on-demand
       }));
       
-      console.log("topLevelAreas", extendedAreas);
       setAreas(extendedAreas);
     } catch (err) {
       setError('Failed to load process map data');
@@ -44,14 +42,11 @@ export function useProcessMapData() {
         return;
       }
 
-      console.log("Loading subareas for parent area:", parentAreaId);
       const subareas = await AreaService.getSubareas(parentAreaId);
-      console.log('loadSubareas subareas', subareas);
 
       // Update the areas state to include the loaded subareas
       setAreas((prev) => {
         const flatAreas = getAllAreasFlat(prev);
-        console.log('loadSubareas flatAreas', flatAreas);
 
         // Add the new subareas to the flat list if they don't already exist
         subareas.forEach((subarea) => {
@@ -61,7 +56,6 @@ export function useProcessMapData() {
           }
         });
 
-        console.log('loadSubareas updated flatAreas', flatAreas);
         // Reorganize the hierarchy
         return organizeAreasHierarchy(flatAreas);
       });

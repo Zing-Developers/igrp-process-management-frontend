@@ -1,5 +1,4 @@
 import React from 'react';
-import { Building, FolderOpen, Folder, FileText } from 'lucide-react';
 import { ProcessTreeNode } from '../types';
 import { cn, IGRPIcon } from '@igrp/igrp-framework-react-design-system';
 

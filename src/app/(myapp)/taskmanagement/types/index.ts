@@ -1,3 +1,5 @@
+import { Task } from "@igrp/platform-process-management-types";
+
 export interface TaskManagementTableRow {
   process: string;
   createBy: string;
@@ -27,7 +29,7 @@ export interface TaskManagementFilters {
 }
 
 export interface TaskManagementState {
-  tasks: any[];
+  tasks: Task[];
   loading: boolean;
   error: string | null;
   totalElements: number;

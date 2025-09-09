@@ -135,7 +135,7 @@ export const unassignTask = async (
   taskId: string,
   user: string,
   note?: string,
-): Promise<PostResponse> => (await httpClient.tasks.unassignTask(taskId, { user, note })).data;
+): Promise<PostResponse> => (await httpClient.tasks.assignTask(taskId, { user, note })).data;
 
 /**
  * Assigns a task to a user.
@@ -168,7 +168,7 @@ export const assignTask = async (
  * @returns A promise that resolves to a PostResponse.
  */
 export const unclaimTask = async (taskId: string, note?: string): Promise<PostResponse> =>
-  (await httpClient.tasks.unclaimTask(taskId, { note })).data;
+  (await httpClient.tasks.unclaimTask(taskId, note)).data;
 
 /**
  * Completes a task.
@@ -182,7 +182,7 @@ export const completeTask = async (
     name: string;
     value: string;
   }>,
-): Promise<PostResponse> => (await httpClient.tasks.completeTask(taskId, variables)).data;
+): Promise<PostResponse> => (await httpClient.tasks.completeTask(taskId, { variables })).data;
 
 /*
  * Fetches statistics for all tasks.

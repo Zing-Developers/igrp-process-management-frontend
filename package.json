@@ -10,7 +10,7 @@
     "publish:template": "powershell -ExecutionPolicy Bypass -File ./create-template/create-zip-template.ps1"
   },
   "dependencies": {
-    "@bprogress/next": "^3.2.12",
+   "@bprogress/next": "^3.2.12",
     "@igrp/framework-next": "latest",
     "@igrp/framework-next-types": "latest",
     "@igrp/framework-next-ui": "latest",

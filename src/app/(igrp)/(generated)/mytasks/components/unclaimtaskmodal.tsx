@@ -8,5 +8,5 @@
 
 
 
-export default function Unclaimtaskmodal({  } : {  }) {
+export default function Unclaimtaskmodal() {
 }

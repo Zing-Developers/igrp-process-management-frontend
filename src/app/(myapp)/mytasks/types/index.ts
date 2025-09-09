@@ -1,4 +1,5 @@
 import { Task } from '@igrp/platform-process-management-types';
+import { ReactNode } from 'react';
 
 export interface MyTasksFilters {
   processNumber: string;
@@ -25,9 +26,9 @@ export interface MyTasksState {
 
 export interface TaskTableRow {
   currentStep: string;
-  process: any;
-  startedAt: any;
-  endAt: any;
+  process: string;
+  startedAt: string;
+  endAt: string;
   priority: string;
   waitingDays: string;
   processKey: string;

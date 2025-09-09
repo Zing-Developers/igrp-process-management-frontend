@@ -11,7 +11,7 @@ const httpClient = getHttpClient();
  * @returns A promise that resolves to a paginated response of processes.
  */
 export const getAreaProcesses = async (areaId: string): Promise<PaginatedResponse<Process>> => {
-  return (await httpClient.areas.getAreaProcesses(areaId)).data;
+  return (await httpClient.areas.getAreaProcesses(areaId)).data as PaginatedResponse<Process>;
 };
 
 /**
@@ -29,7 +29,7 @@ export const associateProcessToArea = async (
       name: string;
     },
 ): Promise<Process> => {
-  return (await httpClient.areas.associateProcessToArea(areaId, processData)).data;
+  return (await httpClient.areas.associateProcessToArea(areaId, processData)).data as Process;
 };
 
 /**

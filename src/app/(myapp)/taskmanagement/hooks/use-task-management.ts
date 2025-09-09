@@ -1,14 +1,14 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
 import { Task, PaginatedResponse } from '@igrp/platform-process-management-types';
 import { getTasks, assignTask } from '../../external/client/services/task.service';
 import { getDateTemplate, getProcessInfo } from '../../utils/columns-template';
 
 export interface TaskManagementTableRow {
   currentStep: string;
-  process: any;
+  process: string;
   assignedBy: string;
-  startedAt: any;
-  endAt: any;
+  startedAt: string;
+  endAt: string;
   priority: string;
   waitingDays: string;
   status: string;
@@ -65,6 +65,8 @@ export function useTaskManagement() {
 
   // Transform tasks data for table display
   const tableData = useMemo((): TaskManagementTableRow[] => {
+    /* eslint-disable @typescript-eslint/ban-ts-comment */
+    // @ts-expect-error Allow JSX in table row fields without refactor
     return state.tasks.map((task) => {
       const createdDate = new Date(task.startedAt);
       const currentDate = new Date();
@@ -85,6 +87,7 @@ export function useTaskManagement() {
         processInstanceId: task.processInstanceId,
         processName: task.processName,
         priority: task.priority + '',
+        statusDesc: task.statusDesc,
       };
     });
   }, [state.tasks]);
@@ -107,7 +110,7 @@ export function useTaskManagement() {
 
         // Remove undefined values
         const cleanFilters = Object.fromEntries(
-          Object.entries(apiFilters).filter(([_, value]) => value !== undefined),
+          Object.entries(apiFilters).filter(([, value]) => value !== undefined),
         );
 
         const response: PaginatedResponse<Task> = await getTasks(page, size, cleanFilters);

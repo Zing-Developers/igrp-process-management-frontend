@@ -1,4 +1,5 @@
 import { Task } from '@igrp/platform-process-management-types';
+import { ReactNode } from 'react';
 
 export interface AvailableTasksFilters {
   processNumber: string;
@@ -40,11 +41,11 @@ export interface AvailableTasksData {
 
 // Table row type that matches the generated page structure
 export interface TaskTableRow {
-  processInfo: any;
+  processInfo: string;
   processNumber: string;
-  startedAt: any;
-  endAt: any;
-  createBy:  any;
+  startedAt: string;
+  endAt: string;
+  createBy:  string;
   taskName: string;
   status: string;
   daysWaiting: string;

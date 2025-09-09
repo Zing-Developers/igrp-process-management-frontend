@@ -1,0 +1,26 @@
+# Dependencies
+node_modules
+
+# Next.js build outputs
+.next
+out
+
+# Common build artifacts
+build
+dist
+coverage
+
+# VCS and editor
+.git
+.gitignore
+.vscode
+.DS_Store
+
+# Env files
+.env
+.env.*
+
+# Logs
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*

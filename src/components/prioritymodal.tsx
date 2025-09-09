@@ -67,7 +67,6 @@ useEffect(() => {
   
 >
   <IGRPModalDialogTitle
-  name={ `modalDialogTitle1` }
   
   
   
@@ -75,7 +74,6 @@ useEffect(() => {
   { modalTitle }
 </IGRPModalDialogTitle>
   <IGRPModalDialogDescription
-  name={ `modalDialogDescription1` }
   
   
   

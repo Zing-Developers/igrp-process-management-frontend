@@ -49,11 +49,10 @@ export default function Processmodal({
       <IGRPModalDialog onOpenChange={setOpen} open={open}>
         <IGRPModalDialogContent size={`xl`} className={cn()}>
           <IGRPModalDialogHeader className={cn('')}>
-            <IGRPModalDialogTitle name={`modalDialogTitle1`} className={cn('', 'overflow-visible')}>
+            <IGRPModalDialogTitle  className={cn('', 'overflow-visible')}>
               Associar Processo
             </IGRPModalDialogTitle>
             <IGRPModalDialogDescription
-              name={`modalDialogDescription1`}
             ></IGRPModalDialogDescription>
           </IGRPModalDialogHeader>
           <>

@@ -3,10 +3,10 @@
 import React, { useState } from 'react';
 import {
   IGRPSelect,
-  IGRPInput,
   IGRPDatePicker,
   IGRPButton,
   IGRPOptionsProps,
+  IGRPInputText,
 } from '@igrp/igrp-framework-react-design-system';
 import { useMyTasksFilter } from '../hooks/use-my-tasks-filter';
 
@@ -107,7 +107,7 @@ export default function MyTasksFilter({
 
         {/* Process Number */}
         <div>
-          <IGRPInput
+          <IGRPInputText
             label="Número do Processo"
             placeholder="Digite o número"
             value={filters.processNumber}
@@ -129,10 +129,12 @@ export default function MyTasksFilter({
         {/* Process Date */}
         <div>
           <IGRPDatePicker
+            id="processDate"
+            name="processDate"
             label="Data do Processo"
             placeholder="Selecione uma data"
-            value={filters.dateFrom}
-            onChange={(date) => handleDateChange(date || '')}
+            date={filters.dateFrom ? new Date(filters.dateFrom) : undefined}
+            onDateChange={(date) => handleDateChange(date ? date.toISOString() : '')}
           />
         </div>
 

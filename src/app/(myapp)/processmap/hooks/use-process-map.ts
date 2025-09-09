@@ -9,8 +9,9 @@ import { useTreeSearch } from './use-tree-search';
 import { useTreeComputed } from './use-tree-computed';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { Process } from '@igrp/platform-process-management-types';
+import { useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 
-export function useProcessMap(igrpToast?: any, router?: AppRouterInstance): ProcessMapHookReturn {
+export function useProcessMap(router?: AppRouterInstance): ProcessMapHookReturn {
   // Data management
   const { areas, loadedNodes, loading, error, loadSubareas, refreshData } = useProcessMapData();
 
@@ -19,7 +20,9 @@ export function useProcessMap(igrpToast?: any, router?: AppRouterInstance): Proc
 
   // Process operations (now with priority workflow)
   const { selectedProcess, selectProcess, prepareProcessStart, startProcessWithPriority } =
-    useProcessOperations(igrpToast, router);
+    useProcessOperations(router);
+
+  const { igrpToast } = useIGRPToast();
 
   // Modal management
   const { detailModal } = useProcessModal();

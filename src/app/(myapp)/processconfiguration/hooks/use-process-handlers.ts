@@ -3,6 +3,7 @@ import { useProcessOperations } from './processes/use-process-operations';
 import { useArtifactForm } from './artifacts/use-artifact-form';
 import { useArtifactOperations } from './artifacts/use-artifact-operations';
 import { useProcessNumberForm } from './sequence/use-process-number-form';
+import type { ProcessNumberConfig } from '@/app/(myapp)/external/client/services/process.service';
 import { useProcessNumberOperations } from './sequence/use-process-number-operations';
 import { AreaProcessesMap } from '../types';
 import { ProcessService } from '../services/process.service';
@@ -13,13 +14,14 @@ import {
   ProcessData,
 } from '@igrp/platform-process-management-types';
 import { AreaProcessService } from '../services/area-process.service';
+import { useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 
 export function useProcessHandlers(
   areaProcesses: AreaProcessesMap,
   setAreaProcesses: React.Dispatch<React.SetStateAction<AreaProcessesMap>>,
-  processes: Process[],
-  igrpToast?: any,
+  processes: Process[]
 ) {
+  const { igrpToast } = useIGRPToast();
   const [allProcesses, setAllProcesses] = useState<Process[]>(processes);
   const [loading, setLoading] = useState(false);
 
@@ -184,7 +186,7 @@ export function useProcessHandlers(
     }
   };
 
-  const handleSaveProcessNumber = async (data?: any) => {
+  const handleSaveProcessNumber = async (data?: ProcessNumberConfig) => {
   
     if (!processNumberForm.modalState.selectedProcessKey) return;
 
@@ -205,8 +207,7 @@ export function useProcessHandlers(
       const savedConfig = await processNumberOperations.saveProcessNumberConfiguration(
         processNumberForm.modalState.selectedProcessKey || '',
         processNumberForm.modalState.selectedProcessApplicationBase || '',
-        request,
-        igrpToast,
+        request
       );
 
       if (savedConfig) {

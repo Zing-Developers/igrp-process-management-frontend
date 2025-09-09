@@ -1,21 +1,26 @@
-import { 
-  getProcessNumberConfigs, 
-  saveProcessNumberConfig
+import {
+  getProcessNumberConfigs,
+  saveProcessNumberConfig,
 } from '@/app/(myapp)/external/client/services/process.service';
-import { CreateProcessSequenceRequest, ProcessSequence } from '@igrp/platform-process-management-types';
+import {
+  CreateProcessSequenceRequest,
+  ProcessSequence,
+} from '@igrp/platform-process-management-types';
+import { useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 
 export function useProcessNumberOperations() {
+  const { igrpToast } = useIGRPToast();
   const loadProcessNumberConfigs = async (
     processId: string,
     setProcessNumberConfigs: (configs: ProcessSequence) => void,
     setLoading: (loading: boolean) => void,
-    populateFormDataFromConfig?: (config: ProcessSequence) => void
+    populateFormDataFromConfig?: (config: ProcessSequence) => void,
   ) => {
     setLoading(true);
     try {
       const configs = await getProcessNumberConfigs(processId);
       setProcessNumberConfigs(configs);
-      
+
       // If there's an existing config, populate the form
       if (populateFormDataFromConfig) {
         populateFormDataFromConfig(configs);
@@ -31,37 +36,36 @@ export function useProcessNumberOperations() {
     processDefinitionKey: string,
     processApplicationBase: string,
     request: CreateProcessSequenceRequest,
-    igrpToast?: any
   ): Promise<ProcessSequence | null> => {
     try {
-      const savedConfig = await saveProcessNumberConfig(processDefinitionKey, processApplicationBase, request);
-      
-      if (igrpToast) {
-        igrpToast({
-          type: 'success',
-          title: 'Sucesso',
-          description: 'Configuração de número de processo salva com sucesso!',
-        });
-      }
-      
+      const savedConfig = await saveProcessNumberConfig(
+        processDefinitionKey,
+        processApplicationBase,
+        request,
+      );
+
+      igrpToast({
+        type: 'success',
+        title: 'Sucesso',
+        description: 'Configuração de número de processo salva com sucesso!',
+      });
+
       return savedConfig;
     } catch (error) {
       console.error('Error saving process number configuration:', error);
-      
-      if (igrpToast) {
-        igrpToast({
-          type: 'error',
-          title: 'Erro',
-          description: 'Erro ao salvar configuração. Tente novamente.',
-        });
-      }
-      
+
+      igrpToast({
+        type: 'error',
+        title: 'Erro',
+        description: 'Erro ao salvar configuração. Tente novamente.',
+      });
+
       return null;
     }
   };
 
   return {
     loadProcessNumberConfigs,
-    saveProcessNumberConfiguration
+    saveProcessNumberConfiguration,
   };
 }

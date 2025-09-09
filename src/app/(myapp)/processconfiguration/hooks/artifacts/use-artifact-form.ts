@@ -5,8 +5,10 @@ import {
   CreateProcessArtifactRequest,
 } from '@igrp/platform-process-management-types';
 import { ProcessService } from '../../services/process.service';
+import { useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 
 export function useArtifactForm() {
+  const { igrpToast } = useIGRPToast();
   const [modalState, setModalState] = useState<ArtifactModalState>({
     isOpen: false,
     selectedProcessId: null,
@@ -27,7 +29,7 @@ export function useArtifactForm() {
   // Add a new function to populate formData from loaded artifacts
   const populateFormDataFromArtifacts = (artifacts: ProcessArtifact[]) => {
     const newFormData: Record<string, { formKey: string }> = {};
-    artifacts.forEach(artifact => {
+    artifacts.forEach((artifact) => {
       if (artifact.formKey) {
         newFormData[artifact.key] = { formKey: artifact.formKey };
       }
@@ -52,7 +54,7 @@ export function useArtifactForm() {
     }));
   };
 
-  const saveArtifacts = async (igrpToast?: any) => {
+  const saveArtifacts = async () => {
     if (!modalState.selectedProcessId) return;
 
     console.log('Starting saveArtifacts with processId:', modalState.selectedProcessId);
@@ -80,13 +82,11 @@ export function useArtifactForm() {
       await Promise.all(promises.filter(Boolean));
       console.log('All artifacts saved successfully');
 
-      if (igrpToast) {
-        igrpToast({
-          type: 'success',
-          title: 'Sucesso',
-          description: 'Artefatos salvos com sucesso!',
-        });
-      }
+      igrpToast({
+        type: 'success',
+        title: 'Sucesso',
+        description: 'Artefatos salvos com sucesso!',
+      });
 
       closeModal();
     } catch (error) {
@@ -96,13 +96,11 @@ export function useArtifactForm() {
         stack: error instanceof Error ? error.stack : undefined,
       });
 
-      if (igrpToast) {
-        igrpToast({
-          type: 'error',
-          title: 'Erro',
-          description: 'Erro ao salvar artefatos. Tente novamente.',
-        });
-      }
+      igrpToast({
+        type: 'error',
+        title: 'Erro',
+        description: 'Erro ao salvar artefatos. Tente novamente.',
+      });
     } finally {
       setLoading(false);
       console.log('saveArtifacts completed');

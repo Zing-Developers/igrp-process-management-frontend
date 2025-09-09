@@ -1,4 +1,4 @@
-import { ProcessInstance } from '@igrp/platform-process-management-types';
+import { ProcessInstance, Task } from '@igrp/platform-process-management-types';
 import { BadgeVariant } from '../../utils/status-helpers';
 
 // Process Instance Statistics
@@ -35,7 +35,7 @@ export interface DashboardStats {
 export interface DashboardData {
   stats: DashboardStats;
   recentProcessInstances: ProcessInstance[];
-  recentTasks: any[]; // TODO: Define proper task type when available
+  recentTasks: RecentItemsCardItem[]; // TODO: Define proper task type when available
 }
 
 export interface DashboardState {

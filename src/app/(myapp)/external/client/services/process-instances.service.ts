@@ -32,10 +32,28 @@ export const getProcessInstances = async (
     endDateTo?: string;
   },
 ): Promise<PaginatedResponse<ProcessInstance>> => {
+  const allowedStatuses = [
+    'CREATED',
+    'RUNNING',
+    'SUSPENDED',
+    'COMPLETED',
+    'TERMINATED',
+    'CANCELED',
+  ] as const;
+  type ClientStatus = typeof allowedStatuses[number];
+
+  const mappedStatus = ((): ClientStatus | undefined => {
+    const raw = filters?.status?.toUpperCase();
+    return allowedStatuses.includes(raw as ClientStatus) ? (raw as ClientStatus) : undefined;
+  })();
+
   const response = await httpClient.processes.getProcessInstances({
     page,
     size,
-    ...filters,
+    number: filters?.number,
+    procReleaseKey: filters?.processKey,
+    status: mappedStatus,
+    // searchTerms, applicationBase, procReleaseId not mapped here
   });
   return response.data as PaginatedResponse<ProcessInstance>;
 };
@@ -55,8 +73,14 @@ export const getProcessInstanceById = async (id: string): Promise<ProcessInstanc
  * @returns A promise that resolves to an array of running process instances.
  */
 export const getRunningProcessInstances = async (applicationBase: string): Promise<ProcessInstance[]> => {
-  const response = await httpClient.processes.getRunningProcessInstances(applicationBase);
-  return response.data as ProcessInstance[];
+  // No direct API in client; use getProcessInstances with filters
+  const response = await httpClient.processes.getProcessInstances({
+    applicationBase,
+    status: 'RUNNING',
+    page: 0,
+    size: 1000,
+  });
+  return (response.data?.content ?? []) as ProcessInstance[];
 };
 
 /**

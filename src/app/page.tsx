@@ -1,5 +1,4 @@
 import Dashboard from '@/components/dashboard';
-import { cn } from '@/lib/utils';
 import { redirect } from 'next/navigation';
 
 export default function Home() {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ProcessTreeNode } from '../types';
-import { Process } from '../../external/types/process';
+import { Process } from '@igrp/platform-process-management-types';
 
 interface StatusBadgeProps {
   node: ProcessTreeNode;

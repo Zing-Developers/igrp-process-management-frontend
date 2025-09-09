@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Area, CreateAreaRequest, UpdateAreaRequest } from '../../external/types/area';
 import { createArea, deleteArea, updateArea } from '../../external/client/services/area.service';
+import { Area, CreateAreaRequest, UpdateAreaRequest } from '@igrp/platform-process-management-types';
 
 interface AreaFormData {
   code: string;
@@ -171,6 +171,9 @@ export function useAreaManagement(
           updatedAt: area.updatedAt,
           createdBy: area.createdBy,
           updatedBy: area.updatedBy,
+          applicationBase: area.applicationBase,
+          status: area.status,
+          statusDesc: area.statusDesc,
         });
 
         if (area.subareas && area.subareas.length > 0) {

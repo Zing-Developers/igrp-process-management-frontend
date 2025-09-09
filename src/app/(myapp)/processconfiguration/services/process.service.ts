@@ -1,8 +1,7 @@
-import { PaginatedResponse, Process, ProcessInstance, ProcessArtifact, CreateProcessArtifactRequest } from '@igrp/platform-process-management-types';
+import { PaginatedResponse, Process, ProcessArtifact, CreateProcessArtifactRequest } from '@igrp/platform-process-management-types';
 import {
   getProcesses,
   getProcessById,
-  startProcess,
   getProcessArtifacts,
   getProcessDeployedArtifacts,
   createProcessArtifact,

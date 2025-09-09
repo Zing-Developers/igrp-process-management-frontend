@@ -64,10 +64,10 @@ export default function Artifactmodal({
       <IGRPModalDialog onOpenChange={setOpen} open={open}>
         <IGRPModalDialogContent size={`xl`} className={cn()}>
           <IGRPModalDialogHeader className={cn('')}>
-            <IGRPModalDialogTitle name={`modalDialogTitle1`}>
+            <IGRPModalDialogTitle >
               User Tasks - Associar Recurso
             </IGRPModalDialogTitle>
-            <IGRPModalDialogDescription name={`modalDialogDescription1`}>
+            <IGRPModalDialogDescription >
               Associar recursos ás tarefas dos utilizadores
             </IGRPModalDialogDescription>
           </IGRPModalDialogHeader>
@@ -75,13 +75,11 @@ export default function Artifactmodal({
             className={cn('grid', 'grid-cols-1 ', 'md:grid-cols-2 ', 'lg:grid-cols-2 ', ' gap-4')}
           >
             <IGRPLabel
-              name={`label1`}
               label={`Tasks`}
               required={false}
               className={cn('col-span-1')}
             ></IGRPLabel>
             <IGRPLabel
-              name={`label2`}
               label={`FormKey`}
               required={false}
               className={cn('col-span-1')}

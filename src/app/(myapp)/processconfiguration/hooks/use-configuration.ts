@@ -53,7 +53,7 @@ export function useConfiguration() {
       .flatMap((area) =>
         (area.process || []).map((process) => ({
           ...process,
-          applicationBase: (area as any).applicationBase,
+          applicationBase: area.applicationBase,
           id: process.releaseId,
         })),
       )

@@ -1,5 +1,5 @@
+import { Process } from '@igrp/platform-process-management-types';
 import { useState, useCallback } from 'react';
-import { Process } from '../../external/types/process';
 
 export function useProcessModal() {
   const [detailModalOpen, setDetailModalOpen] = useState(false);

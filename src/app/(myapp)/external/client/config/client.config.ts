@@ -5,7 +5,7 @@ import { ProcessManagementClient } from '@igrp/platform-process-management-clien
  */
 export class ClientConfig {
   private static _instance: ClientConfig;
-  private _httpClient: any;
+  private _httpClient!: ProcessManagementClient;
   
   private constructor() {
     this.initializeClient();
@@ -66,7 +66,7 @@ export class ClientConfig {
   /**
    * Gets the configured HTTP client instance
    */
-  public getHttpClient(): any {
+  public getHttpClient(): ProcessManagementClient {
     return this._httpClient;
   }
 

@@ -26,7 +26,7 @@ import {
 	IGRPModalDialogClose 
 } from "@igrp/igrp-framework-react-design-system";
 
-export default function Areamodal({ open, setOpen, isEditing, formData, areas, onFormChange, onSave, onClose } : { open: boolean, setOpen: (prompt: boolean) => void, isEditing: boolean, formData: object, areas: object[], onFormChange: (data: any) => void, onSave: (data: any) => void, onClose: () => void }) {
+export default function Areamodal({ open, setOpen, isEditing, formData, areas, onFormChange, onSave, onClose } : { open: boolean, setOpen: (prompt: boolean) => void, isEditing: boolean, formData: object, areas: any[], onFormChange: (data: any) => void, onSave: (data: any) => void, onClose: () => void }) {
 
   
   const form1 = z.object({
@@ -95,7 +95,6 @@ onSave(data)
   
 >
   <IGRPModalDialogTitle
-  name={ `modalDialogTitle1` }
   
   
   

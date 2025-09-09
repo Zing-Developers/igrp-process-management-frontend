@@ -1,4 +1,5 @@
 import { ProcessInstance } from '@igrp/platform-process-management-types';
+import { ReactNode } from 'react';
 
 export interface ProcessInstancesFilters {
   processNumber: string;
@@ -39,13 +40,13 @@ export interface DropdownOptions {
 }
 
 export interface ProcessInstanceTableRow {
-  processInfo: any;
-  createBy: any;
+  processInfo: string;
+  createBy: string;
   daysWaiting: string;
   version: string;
-  progress: any;
-  startedAt: any;
-  endedAt: any;
+  progress: string;
+  startedAt: string;
+  endedAt: string;
   priority: string;
   status: string;
   processInstanceId: string;

@@ -4,8 +4,9 @@ import { Process, ProcessInstance } from '@igrp/platform-process-management-type
 import { urlConfig } from '../../utils/url-config';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { startProcess } from '../../external/client/services/process.service';
+import { useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 
-export function useProcessOperations(igrpToast?: any, router?: AppRouterInstance) {
+export function useProcessOperations(router?: AppRouterInstance) {
   const [selectedProcess, setSelectedProcess] = useState<Process | undefined>();
   const [pendingProcessStart, setPendingProcessStart] = useState<{
     processDefinitionId: string;
@@ -14,6 +15,8 @@ export function useProcessOperations(igrpToast?: any, router?: AppRouterInstance
     businessKey?: string;
     variables?: Array<{ name: string; value: string }>;
   } | null>(null);
+
+  const { igrpToast } = useIGRPToast();
 
   const selectProcess = useCallback((process: Process) => {
     setSelectedProcess(process);
@@ -80,11 +83,11 @@ export function useProcessOperations(igrpToast?: any, router?: AppRouterInstance
             // Check if there are active tasks available
             if (tasksResponse.content && tasksResponse.content.length > 0) {
               const firstTask = tasksResponse.content[0];
-              
+
               try {
                 // Claim the task before redirecting
                 await claimTask(firstTask.id, 'current-user'); // You may want to get the actual user from context/session
-                
+
                 // Build task execution URL using the first available task
                 const taskUrl = urlConfig.buildTaskExecutionUrl(
                   instance.procReleaseKey,
@@ -95,7 +98,7 @@ export function useProcessOperations(igrpToast?: any, router?: AppRouterInstance
                 router.push(taskUrl);
               } catch (claimError) {
                 console.warn('Error claiming task:', claimError);
-                
+
                 // Show warning toast but still redirect
                 if (igrpToast) {
                   igrpToast({
@@ -104,7 +107,7 @@ export function useProcessOperations(igrpToast?: any, router?: AppRouterInstance
                     description: 'Não foi possível assumir a tarefa automaticamente.',
                   });
                 }
-                
+
                 // Still redirect to task execution URL even if claiming fails
                 const taskUrl = urlConfig.buildTaskExecutionUrl(
                   instance.procReleaseKey,

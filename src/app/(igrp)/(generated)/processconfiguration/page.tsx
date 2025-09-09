@@ -30,7 +30,7 @@ export default function PageProcessconfigurationComponent() {
   const { igrpToast } = useIGRPToast();
 
   /*---------------------------------Reserved area begin------------------------------*/
-  const pc = useProcessConfiguration(igrpToast);
+  const pc = useProcessConfiguration();
   /*---------------------------------Reserved area end------------------------------*/
 
   return (
@@ -109,10 +109,10 @@ export default function PageProcessconfigurationComponent() {
             content: (
               <>
                 <ArtifactProcessesList
-                  processes={pc.allActiveProcesses}
+                  processes={pc.allProcesses}
                   onArtifactEdit={(processId) => pc.handleOpenArtifactModal(processId)}
-                  onProcessNumberEdit={(processId, processKey, applicationBase) =>
-                    pc.handleOpenProcessNumberModal(processId, processKey, applicationBase)
+                  onProcessNumberEdit={(processId, processKey) =>
+                    pc.handleOpenProcessNumberModal(processId, processKey, '')
                   }
                 ></ArtifactProcessesList>
               </>

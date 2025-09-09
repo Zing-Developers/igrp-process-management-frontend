@@ -1,18 +1,19 @@
 import { useAreaForm } from './areas/use-area-form';
 import { useAreaOperations } from './areas/use-area-operations';
-import { ExtendedArea, AreaProcessesMap } from '../types';
+import { ExtendedArea, AreaProcessesMap, AreaFormData } from '../types';
 import { AreaProcessService } from '../services/area-process.service';
+import { useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 
 export function useAreaHandlers(
   areas: ExtendedArea[],
   setAreas: React.Dispatch<React.SetStateAction<ExtendedArea[]>>,
   setAreaProcesses: React.Dispatch<React.SetStateAction<AreaProcessesMap>>,
-  igrpToast?: any,
 ) {
+  const { igrpToast } = useIGRPToast();
   const areaForm = useAreaForm();
   const areaOperations = useAreaOperations(areas, setAreas);
 
-  const handleCreateArea = async (formData?: any) => {
+  const handleCreateArea = async (formData?: AreaFormData) => {
     try {
       // Use the passed formData if available, otherwise fall back to areaForm.formData
       const dataToUse = formData || areaForm.formData;
@@ -45,7 +46,7 @@ export function useAreaHandlers(
     }
   };
 
-  const handleUpdateArea = async (formData?: any) => {
+  const handleUpdateArea = async (formData?: AreaFormData) => {
     if (!areaForm.modalState.editingArea) return;
 
     try {

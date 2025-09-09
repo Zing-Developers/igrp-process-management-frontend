@@ -52,6 +52,8 @@ export const getAllAreasFlat = (hierarchicalAreas: ExtendedArea[]): Area[] => {
         updatedAt: area.updatedAt,
         createdBy: area.createdBy,
         updatedBy: area.updatedBy,
+        status: area.status,
+        statusDesc: area.statusDesc,
       });
 
       if (area.subareas && area.subareas.length > 0) {

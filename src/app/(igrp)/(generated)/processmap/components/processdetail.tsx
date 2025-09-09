@@ -33,12 +33,12 @@ export default function Processdetail({
       <IGRPModalDialog onOpenChange={setOpen} open={open}>
         <IGRPModalDialogContent size={`md`} className={cn()}>
           <IGRPModalDialogHeader className={cn('')}>
-            <IGRPModalDialogTitle name={`modalDialogTitle1`}>
+            <IGRPModalDialogTitle >
               Detalhes do Processo
             </IGRPModalDialogTitle>
           </IGRPModalDialogHeader>
           <>
-            <IGRPLabel name={`label1`} label={`Nome`} required={false}></IGRPLabel>
+            <IGRPLabel  label={`Nome`} required={false}></IGRPLabel>
             <IGRPText
               name={`name`}
               variant={`primary`}

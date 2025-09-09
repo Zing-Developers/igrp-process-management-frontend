@@ -5,7 +5,7 @@ import { useAreaHandlers } from './use-area-handlers';
 import { useProcessHandlers } from './use-process-handlers';
 import { useComputedValues } from './use-computed-values';
 
-export function useProcessConfiguration(igrpToast?: any) {
+export function useProcessConfiguration() {
   // Configuration data
   const {
     areas,
@@ -21,14 +21,13 @@ export function useProcessConfiguration(igrpToast?: any) {
   const searchHook = useSearch(areas);
 
   // Area management - pass setAreaProcesses
-  const areaHandlers = useAreaHandlers(areas, setAreas, setAreaProcesses, igrpToast);
+  const areaHandlers = useAreaHandlers(areas, setAreas, setAreaProcesses);
 
   // Process management
   const { loading: processesLoading, ...processHandlers } = useProcessHandlers(
     areaProcesses,
     setAreaProcesses,
     processes,
-    igrpToast,
   );
 
   // UI state - pass both loadSubareas and loadAreaProcesses functions to expansion
@@ -77,7 +76,7 @@ export function useProcessConfiguration(igrpToast?: any) {
     artifactForm: processHandlers.artifactForm,
     processArtifacts: processHandlers.artifactForm.processArtifacts,
     handleOpenArtifactModal: processHandlers.handleOpenArtifactModal,
-    handleSaveArtifacts: () => processHandlers.artifactForm.saveArtifacts(igrpToast),
+    handleSaveArtifacts: () => processHandlers.artifactForm.saveArtifacts(),
 
     // Process Number management
     processNumberForm: processHandlers.processNumberForm,

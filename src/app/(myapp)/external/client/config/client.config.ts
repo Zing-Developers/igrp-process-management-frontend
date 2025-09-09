@@ -35,11 +35,11 @@ export class ClientConfig {
    * Gets the base URL for the Process Management API
    */
   public getBaseUrl(): string {
-    const baseUrl = process.env.PROCESS_MANAGEMENT_CLIENT_BASE_URL;
+    const baseUrl = process.env.NEXT_PUBLIC_API_GATEWAY;
     
     if (!baseUrl) {
       throw new Error(
-        'PROCESS_MANAGEMENT_CLIENT_BASE_URL environment variable is required. ' +
+        'NEXT_PUBLIC_API_GATEWAY environment variable is required. ' +
         'Please set it in your .env.local file or environment configuration.'
       );
     }

@@ -1,5 +1,4 @@
 import { ProcessInstance } from '@igrp/platform-process-management-types';
-import { ReactNode } from 'react';
 
 export interface ProcessInstancesFilters {
   processNumber: string;

@@ -1,5 +1,5 @@
 'use server';
-import { getHttpClient, getApplicationBase } from '../config/client.config';
+import { getHttpClient } from '../config/client.config';
 import {
   Area,
   CreateAreaRequest,
@@ -8,7 +8,6 @@ import {
 } from '@igrp/platform-process-management-types';
 
 const httpClient = getHttpClient();
-//const applicationBase = getApplicationBase();
 
 // Area Management
 export const createArea = async (areaData: CreateAreaRequest): Promise<Area> => {

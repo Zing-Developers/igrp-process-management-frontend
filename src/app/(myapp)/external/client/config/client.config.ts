@@ -48,22 +48,6 @@ export class ClientConfig {
   }
 
   /**
-   * Gets the application base identifier
-   */
-  public getApplicationBase(): string {
-    const applicationBase = process.env.IGRP_APPLICATION_BASE;
-    
-    if (!applicationBase) {
-      throw new Error(
-        'IGRP_APPLICATION_BASE environment variable is required. ' +
-        'Please set it in your .env.local file or environment configuration.'
-      );
-    }
-    
-    return applicationBase;
-  }
-
-  /**
    * Gets the configured HTTP client instance
    */
   public getHttpClient(): ProcessManagementClient {
@@ -87,11 +71,6 @@ export const getClientConfig = (): ClientConfig => ClientConfig.getInstance();
  * Convenience function to get the HTTP client
  */
 export const getHttpClient = () => getClientConfig().getHttpClient();
-
-/**
- * Convenience function to get the application base
- */
-export const getApplicationBase = () => getClientConfig().getApplicationBase();
 
 /**
  * Convenience function to get the base URL

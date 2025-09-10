@@ -1,5 +1,5 @@
 'use server';
-import { getHttpClient, getApplicationBase } from '../config/client.config';
+import { getHttpClient } from '../config/client.config';
 import {
   CreateProcessArtifactRequest,
   CreateProcessInstanceRequest,
@@ -13,7 +13,6 @@ import {
 } from '@igrp/platform-process-management-types';
 
 const httpClient = getHttpClient();
-const applicationBaseTemp = getApplicationBase();
 
 /**
  * Fetches a paginated list of processes.

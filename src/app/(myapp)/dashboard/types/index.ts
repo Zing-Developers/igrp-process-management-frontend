@@ -1,4 +1,4 @@
-import { ProcessInstance, Task } from '@igrp/platform-process-management-types';
+import { ProcessInstance } from '@igrp/platform-process-management-types';
 import { BadgeVariant } from '../../utils/status-helpers';
 
 // Process Instance Statistics

@@ -1,5 +1,4 @@
 import { Task } from '@igrp/platform-process-management-types';
-import { ReactNode } from 'react';
 
 export interface AvailableTasksFilters {
   processNumber: string;

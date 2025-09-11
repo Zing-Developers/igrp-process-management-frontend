@@ -1,3 +1,4 @@
+
 import { ProcessManagementClient } from '@igrp/platform-process-management-client-ts';
 
 /**
@@ -35,11 +36,11 @@ export class ClientConfig {
    * Gets the base URL for the Process Management API
    */
   public getBaseUrl(): string {
-    const baseUrl = process.env.NEXT_PUBLIC_API_GATEWAY;
+    const baseUrl = process.env.API_GATEWAY;
     
     if (!baseUrl) {
       throw new Error(
-        'NEXT_PUBLIC_API_GATEWAY environment variable is required. ' +
+        'API_GATEWAY environment variable is required. ' +
         'Please set it in your .env.local file or environment configuration.'
       );
     }

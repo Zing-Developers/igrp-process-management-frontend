@@ -40,8 +40,9 @@ export function ArtifactProcessesList({
             </div>
           </div>
           <div className="flex items-center gap-2">
+
             <IGRPButton
-              onClick={() => onProcessNumberEdit(process.id, process.processKey, process.applicationBase)}
+              onClick={() => onProcessNumberEdit(process.id, process.processKey, process.applicationBase ?? '')}
               variant="ghost"
               size="icon"
               iconName="Hash"

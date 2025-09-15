@@ -26,7 +26,7 @@ import {
 
 export default function Processnumbermodal({ open, setOpen, formData, onFormChange, onSave } : { open: boolean, setOpen: (prompt: boolean) => void, formData: any, onFormChange: (field: any, value: any) => void, onSave: (data: any) => void }) {
 
-  
+  console.log('formData', formData);
   const form1 = z.object({
     prefix: z.string().nonempty(),
     dateFormat: z.string().nonempty(),

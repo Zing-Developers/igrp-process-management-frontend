@@ -69,7 +69,8 @@ onSave(data)
   useEffect(() => {    
     setSelectapplicationBaseOptions([
       { label: 'Cadastro', value: 'CADASTRO' },
-      { label: 'Demo', value: 'demo' }
+      { label: 'Demo', value: 'demo' },
+      { label: 'IRN Processo', value: 'IRN' }
     ]);
     setSelectparentIdOptions(areas.map((area) => ({ label: area.name, value: area.id })));
   }, [areas]);

@@ -173,7 +173,6 @@ export function useProcessHandlers(
     processKey: string,
     processApplicationBase: string,
   ) => {
-    console.log('processApplicationBase', processApplicationBase);
     processNumberForm.openModal(processId, processKey, processApplicationBase);
 
     // Load process number configurations when modal opens

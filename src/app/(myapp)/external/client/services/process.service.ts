@@ -148,13 +148,11 @@ export const getProcessNumberConfigs = async (
  */
 export const saveProcessNumberConfig = async (
   processDefinitionKey: string,
-  processApplicationBase: string,
   config: CreateProcessSequenceRequest,
 ): Promise<ProcessSequence> => {
   const httpClient = getHttpClient();
   const response = await httpClient.processes.createProcessSequence(
     processDefinitionKey,
-    processApplicationBase,
     config,
   );
   return response.data as ProcessSequence;

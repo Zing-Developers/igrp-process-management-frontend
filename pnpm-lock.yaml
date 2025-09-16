@@ -27,11 +27,11 @@ importers:
         specifier: 0.1.0-beta.6
         version: 0.1.0-beta.6(@types/react-dom@19.1.9(@types/react@19.1.13))(@types/react@19.1.13)(next@15.3.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@igrp/platform-process-management-client-ts':
-        specifier: 0.0.1-beta.15
-        version: 0.0.1-beta.15
+        specifier: 0.0.1-beta.18
+        version: 0.0.1-beta.18
       '@igrp/platform-process-management-types':
-        specifier: 0.0.1-beta.15
-        version: 0.0.1-beta.15
+        specifier: 0.0.1-beta.18
+        version: 0.0.1-beta.18
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -283,15 +283,11 @@ packages:
   '@igrp/platform-access-management-client-ts@0.1.0-beta.19':
     resolution: {integrity: sha512-gLCkGBG0OrxIWYuwC48Jf3hVpOhSe+H/aB6L3r4YdMcCJeTk8+a6wIWY1wOQ/YQVhxxCFhkbzI5pmBIq73Camg==}
 
-  '@igrp/platform-process-management-client-ts@0.0.1-beta.15':
-    resolution: {integrity: sha512-fiIXE5iHd6cACP7WLxVqYtc/vasali2XBBaRN7+z9gC2dTXxDckpccknA7ZBqgMB7iIKIQ+HBV4DuSPb7IxS9Q==}
+  '@igrp/platform-process-management-client-ts@0.0.1-beta.18':
+    resolution: {integrity: sha512-SdH7KSUe9NsTAMVZTcEOf9nFZU9uYG57gjJYw+l/wRPnMgbB9ynPkJUwgbOc2Z2+nmVUWzSSTeUqUQ4KHuGY+Q==}
 
-  '@igrp/platform-process-management-types@0.0.1-beta.13':
-    resolution: {integrity: sha512-+ouIb3O4tDy4LtUeMSX7KlTurCAClwQYe00/pgc+/mc5HAsw8nmwUJUVIe4dBQBlWxAk1vc7z5IxSkKhQi4esQ==}
-    engines: {node: '>=20.x.x'}
-
-  '@igrp/platform-process-management-types@0.0.1-beta.15':
-    resolution: {integrity: sha512-+RDhc4/BrroPb1ZpQT/4y4Pik44JTZvxddG3IERGVpxS1uGnU1ehnd05e0mFc8+Ed2mAnO4Pq7poqFdro9yU9w==}
+  '@igrp/platform-process-management-types@0.0.1-beta.18':
+    resolution: {integrity: sha512-T8m92Hqpg8QBpv8zu1uQQ3DoVgFpSZmK0VM7f4Gkew8GLJz76U263HuUIN2qiTrbIF7xGad7qYlITjg+tkCQ5Q==}
     engines: {node: '>=20.x.x'}
 
   '@img/sharp-darwin-arm64@0.34.3':
@@ -3322,13 +3318,11 @@ snapshots:
 
   '@igrp/platform-access-management-client-ts@0.1.0-beta.19': {}
 
-  '@igrp/platform-process-management-client-ts@0.0.1-beta.15':
+  '@igrp/platform-process-management-client-ts@0.0.1-beta.18':
     dependencies:
-      '@igrp/platform-process-management-types': 0.0.1-beta.13
+      '@igrp/platform-process-management-types': 0.0.1-beta.18
 
-  '@igrp/platform-process-management-types@0.0.1-beta.13': {}
-
-  '@igrp/platform-process-management-types@0.0.1-beta.15': {}
+  '@igrp/platform-process-management-types@0.0.1-beta.18': {}
 
   '@img/sharp-darwin-arm64@0.34.3':
     optionalDependencies:

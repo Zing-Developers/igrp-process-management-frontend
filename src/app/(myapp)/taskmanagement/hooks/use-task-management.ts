@@ -90,6 +90,7 @@ export function useTaskManagement() {
         statusDesc: task.statusDesc,
       };
     });
+    
   }, [state.tasks]);
 
   // Fetch tasks function with filters

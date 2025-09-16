@@ -22,11 +22,5 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const layoutConfig = await configLayout();
   const config = await createConfig(layoutConfig);
-
-  setIGRPAccessClientConfig({
-    token: layoutConfig.session?.accessToken || '',
-    baseUrl: '',
-  });
-
   return <IGRPRootLayout config={config}>{children}</IGRPRootLayout>;
 }

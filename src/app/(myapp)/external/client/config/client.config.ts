@@ -1,4 +1,4 @@
-
+import { getIGRPAccessClientConfig } from '@igrp/framework-next';
 import { ProcessManagementClient } from '@igrp/platform-process-management-client-ts';
 
 /**
@@ -7,7 +7,7 @@ import { ProcessManagementClient } from '@igrp/platform-process-management-clien
 export class ClientConfig {
   private static _instance: ClientConfig;
   private _httpClient!: ProcessManagementClient;
-  
+
   private constructor() {
     this.initializeClient();
   }
@@ -21,13 +21,15 @@ export class ClientConfig {
 
   private initializeClient(): void {
     const baseUrl = this.getBaseUrl();
-    
+
+    const { token } = getIGRPAccessClientConfig();
+
     this._httpClient = ProcessManagementClient.create({
       baseUrl: baseUrl,
       timeout: 30000,
       headers: {
         // Add any default headers here
-        // Authorization: 'Bearer your-token-here',
+        Authorization: `Bearer ${token}`,
       },
     });
   }
@@ -37,14 +39,14 @@ export class ClientConfig {
    */
   public getBaseUrl(): string {
     const baseUrl = process.env.API_GATEWAY;
-    
+
     if (!baseUrl) {
       throw new Error(
         'API_GATEWAY environment variable is required. ' +
-        'Please set it in your .env.local file or environment configuration.'
+          'Please set it in your .env.local file or environment configuration.',
       );
     }
-    
+
     return baseUrl;
   }
 

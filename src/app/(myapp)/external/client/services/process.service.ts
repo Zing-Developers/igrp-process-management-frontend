@@ -12,8 +12,6 @@ import {
   ProcessStats,
 } from '@igrp/platform-process-management-types';
 
-const httpClient = getHttpClient();
-
 /**
  * Fetches a paginated list of processes.
  * @param page The page number to fetch.
@@ -21,6 +19,7 @@ const httpClient = getHttpClient();
  * @returns A promise that resolves to a paginated response of processes.
  */
 export const getProcesses = async (page = 0, size = 20): Promise<PaginatedResponse<Process>> => {
+  const httpClient = getHttpClient();
   const response = await httpClient.processes.getProcesses({ page, size });
   return response.data as PaginatedResponse<Process>;
 };
@@ -30,6 +29,7 @@ export const getProcesses = async (page = 0, size = 20): Promise<PaginatedRespon
  * @returns A promise that resolves to process statistics.
  */
 export const getProcessStats = async (): Promise<ProcessStats> => {
+  const httpClient = getHttpClient();
   const response = await httpClient.processes.getProcessStats();
   return response.data as ProcessStats;
 };
@@ -42,6 +42,7 @@ export const getProcessStats = async (): Promise<ProcessStats> => {
 export const getProcessArtifacts = async (
   processDefinitionId: string,
 ): Promise<ProcessArtifact[]> => {
+  const httpClient = getHttpClient();
   const response = await httpClient.processes.getProcessArtifacts(processDefinitionId);
   return response.data as ProcessArtifact[];
 };
@@ -56,6 +57,7 @@ export const createProcessArtifact = async (
   processDefinitionId: string,
   artifact: CreateProcessArtifactRequest,
 ): Promise<ProcessArtifact> => {
+  const httpClient = getHttpClient();
   const response = await httpClient.processes.createProcessArtifact(processDefinitionId, artifact);
   return response.data as ProcessArtifact;
 };
@@ -68,6 +70,7 @@ export const createProcessArtifact = async (
 export const getProcessDeployedArtifacts = async (
   processDefinitionId: string,
 ): Promise<ProcessArtifact[]> => {
+  const httpClient = getHttpClient();
   const response = await httpClient.processes.getProcessDeployedArtifacts(processDefinitionId);
   return response.data as ProcessArtifact[];
 };
@@ -78,6 +81,7 @@ export const getProcessDeployedArtifacts = async (
  * @returns A promise that resolves to the process, or null if not found.
  */
 export const getProcessById = async (id: string): Promise<Process | null> => {
+  const httpClient = getHttpClient();
   return (await httpClient.processes.getProcessById(id)).data as Process;
 };
 
@@ -107,6 +111,7 @@ export const startProcess = async (
     priority: priority,
   };
 
+  const httpClient = getHttpClient();
   const response = await httpClient.processes.startProcess(body);
   return response.data as ProcessInstance;
 };
@@ -130,6 +135,7 @@ export interface ProcessNumberConfig {
 export const getProcessNumberConfigs = async (
   processDefinitionId: string,
 ): Promise<ProcessSequence> => {
+  const httpClient = getHttpClient();
   const response = await httpClient.processes.getProcessSequence(processDefinitionId);
   return response.data as ProcessSequence;
 };
@@ -145,6 +151,7 @@ export const saveProcessNumberConfig = async (
   processApplicationBase: string,
   config: CreateProcessSequenceRequest,
 ): Promise<ProcessSequence> => {
+  const httpClient = getHttpClient();
   const response = await httpClient.processes.createProcessSequence(
     processDefinitionKey,
     processApplicationBase,

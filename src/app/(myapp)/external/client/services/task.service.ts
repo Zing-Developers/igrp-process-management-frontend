@@ -4,8 +4,6 @@ import { PaginatedResponse, Task, TaskStats } from '@igrp/platform-process-manag
 import { getHttpClient } from '../config/client.config';
 import { PostResponse } from '@igrp/platform-process-management-types/dist/response';
 
-const httpClient = getHttpClient();
-
 /**
  * Interface for task filter parameters used in multiple functions
  */
@@ -34,6 +32,7 @@ export const getTasks = async (
   size = 50,
   filters?: Omit<TaskFilterParams, 'page' | 'size'>,
 ): Promise<PaginatedResponse<Task>> => {
+  const httpClient = getHttpClient();
   const params = {
     page,
     size,
@@ -49,6 +48,7 @@ export const getTasks = async (
  * @returns A promise that resolves to the task, or undefined if not found.
  */
 export const getTaskById = async (id: string): Promise<Task | undefined> => {
+  const httpClient = getHttpClient();
   const response = await httpClient.tasks.getTaskById(id);
   return response.data as Task;
 };
@@ -59,6 +59,7 @@ export const getTaskById = async (id: string): Promise<Task | undefined> => {
  * @returns A promise that resolves to a paginated response of tasks.
  */
 export const getMyTasks = async (params: TaskFilterParams): Promise<PaginatedResponse<Task>> => {
+  const httpClient = getHttpClient();
   const { page = 0, size = 50, ...filterParams } = params;
 
   const response = await httpClient.tasks.getMyTasks({
@@ -76,6 +77,7 @@ export const getMyTasks = async (params: TaskFilterParams): Promise<PaginatedRes
  * @returns A promise that resolves to a list of tasks.
  */
 export const getTasksByUser = async (userId: string): Promise<PaginatedResponse<Task>> => {
+  const httpClient = getHttpClient();
   const response = await httpClient.tasks.getTasksByUser(userId);
   return response.data as PaginatedResponse<Task>;
 };
@@ -88,6 +90,7 @@ export const getTasksByUser = async (userId: string): Promise<PaginatedResponse<
 export const getAvailableTasks = async (
   params: TaskFilterParams,
 ): Promise<PaginatedResponse<Task>> => {
+  const httpClient = getHttpClient();
   const { page = 0, size = 10, ...filterParams } = params;
 
   const response = await httpClient.tasks.getAvailableTasks({
@@ -107,6 +110,7 @@ export const getAvailableTasks = async (
 export const getTasksByProcessInstance = async (
   processInstanceId: string,
 ): Promise<PaginatedResponse<Task>> => {
+  const httpClient = getHttpClient();
   const response = await httpClient.tasks.getTasksByProcessInstance(processInstanceId);
   return response.data;
 };
@@ -122,7 +126,10 @@ export const claimTask = async (
   taskId: string,
   user: string,
   note?: string,
-): Promise<PostResponse> => (await httpClient.tasks.claimTask(taskId, { user, note })).data;
+): Promise<PostResponse> => {
+  const httpClient = getHttpClient();
+  return (await httpClient.tasks.claimTask(taskId, { user, note })).data;
+};
 
 /**
  * Unassigns a task from a user.
@@ -135,7 +142,10 @@ export const unassignTask = async (
   taskId: string,
   user: string,
   note?: string,
-): Promise<PostResponse> => (await httpClient.tasks.assignTask(taskId, { user, note })).data;
+): Promise<PostResponse> => {
+  const httpClient = getHttpClient();
+  return (await httpClient.tasks.assignTask(taskId, { user, note })).data;
+};
 
 /**
  * Assigns a task to a user.
@@ -150,6 +160,7 @@ export const assignTask = async (
   priority: string,
   note?: string,
 ): Promise<PostResponse> => {
+  const httpClient = getHttpClient();
   console.debug('Assigning task:', { taskId, user, priority, note });
   const response = await httpClient.tasks.assignTask(taskId, { 
     user, 
@@ -167,8 +178,10 @@ export const assignTask = async (
  * @param note Optional note for the release action.
  * @returns A promise that resolves to a PostResponse.
  */
-export const unclaimTask = async (taskId: string, note?: string): Promise<PostResponse> =>
-  (await httpClient.tasks.unclaimTask(taskId, note)).data;
+export const unclaimTask = async (taskId: string, note?: string): Promise<PostResponse> => {
+  const httpClient = getHttpClient();
+  return (await httpClient.tasks.unclaimTask(taskId, note)).data;
+};
 
 /**
  * Completes a task.
@@ -182,13 +195,17 @@ export const completeTask = async (
     name: string;
     value: string;
   }>,
-): Promise<PostResponse> => (await httpClient.tasks.completeTask(taskId, { variables })).data;
+): Promise<PostResponse> => {
+  const httpClient = getHttpClient();
+  return (await httpClient.tasks.completeTask(taskId, { variables })).data;
+};
 
 /*
  * Fetches statistics for all tasks.
  * @returns A promise that resolves to task statistics.
  */
 export const getTaskStats = async (): Promise<TaskStats> => {
+  const httpClient = getHttpClient();
   const response = await httpClient.tasks.getTaskStats();
   return response.data;
 }
@@ -198,6 +215,7 @@ export const getTaskStats = async (): Promise<TaskStats> => {
  * @returns A promise that resolves to task statistics.
  */
 export const getMyTaskStats = async (): Promise<TaskStats> => {
+  const httpClient = getHttpClient();
   const response = await httpClient.tasks.getMyTaskStats();
   return response.data;
 }

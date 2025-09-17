@@ -85,6 +85,8 @@ function executeTask (row: any): void  | undefined {
     handleCloseUnclaimModal
   } = useMyTasks();
 
+  console.log('tableData teste', tableData);
+
   // Transform data for the table
   useEffect(() => {
     if (tableData) 

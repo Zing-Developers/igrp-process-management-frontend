@@ -58,7 +58,7 @@ export function useMyTasksData() {
       const mappedFilters = {
         processNumber: filtersToUse.processNumber || '',
         processKey: filtersToUse.processType || '', // processType maps to processKey
-        user: filtersToUse.user || '',
+        user: 'superadmin',//filtersToUse.user || '',
         status: filtersToUse.status || '',
         dateFrom: filtersToUse.dateFrom || '',
         dateTo: filtersToUse.dateTo || '',

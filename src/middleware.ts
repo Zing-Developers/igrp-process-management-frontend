@@ -2,7 +2,7 @@ import { getToken } from '@igrp/framework-next-auth/jwt';
 import { NextResponse, type NextRequest } from 'next/server';
 
 // Public paths that don't require authentication
-const publicPaths = ['/api/auth', '/login'];
+const publicPaths = ['/api/auth', '/login','/logout'];
 
 // Check if path is public
 function isPublicPath(pathname: string): boolean {

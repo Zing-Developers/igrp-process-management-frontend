@@ -128,7 +128,7 @@ export const claimTask = async (
   note?: string,
 ): Promise<PostResponse> => {
   const httpClient = getHttpClient();
-  return (await httpClient.tasks.claimTask(taskId, { user, note })).data;
+  return (await httpClient.tasks.claimTask(taskId, {})).data;
 };
 
 /**
@@ -162,10 +162,10 @@ export const assignTask = async (
 ): Promise<PostResponse> => {
   const httpClient = getHttpClient();
   console.debug('Assigning task:', { taskId, user, priority, note });
-  const response = await httpClient.tasks.assignTask(taskId, { 
-    user, 
+  const response = await httpClient.tasks.assignTask(taskId, {
+    user,
     priority: parseInt(priority, 10), // ← Convert string to number
-    note 
+    note,
   });
   console.debug('Task assigned response:', response);
   return response.data;
@@ -208,7 +208,7 @@ export const getTaskStats = async (): Promise<TaskStats> => {
   const httpClient = getHttpClient();
   const response = await httpClient.tasks.getTaskStats();
   return response.data;
-}
+};
 
 /**
  * Fetches statistics for tasks assigned to the current user.
@@ -218,4 +218,4 @@ export const getMyTaskStats = async (): Promise<TaskStats> => {
   const httpClient = getHttpClient();
   const response = await httpClient.tasks.getMyTaskStats();
   return response.data;
-}
+};

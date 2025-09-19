@@ -42,9 +42,9 @@ export function useAvailableTasks() {
 
   // Claim task function
   const handleClaimTask = useCallback(
-    async (taskId: string, user: string, note?: string) => {
+    async (taskId: string) => {
       try {
-        await claimTask(taskId, user, note);
+        await claimTask(taskId);
         // Refresh tasks after claiming
         fetchTasks(tasksState.currentPage, tasksState.pageSize);
         return { success: true };

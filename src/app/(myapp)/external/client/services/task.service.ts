@@ -123,9 +123,7 @@ export const getTasksByProcessInstance = async (
  * @returns A promise that resolves to a PostResponse.
  */
 export const claimTask = async (
-  taskId: string,
-  user: string,
-  note?: string,
+  taskId: string
 ): Promise<PostResponse> => {
   const httpClient = getHttpClient();
   return (await httpClient.tasks.claimTask(taskId, {})).data;

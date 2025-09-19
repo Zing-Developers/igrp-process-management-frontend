@@ -1,10 +1,10 @@
 'use server';
 
-import { resetIGRPAccessClientConfig, setIGRPAccessClientConfig } from '@igrp/framework-next';
 import { getServerSession as getNextAuthServerSession } from '@igrp/framework-next-auth';
 import { Session } from '@igrp/framework-next-auth';
 
 import { authOptions } from '@/lib/auth-options';
+import { igrpResetAccessClientConfig, igrpSetAccessClientConfig } from '@igrp/framework-next';
 
 export async function serverSession() {
   const apiManagement = process.env.IGRP_APP_MANAGER_API || '';
@@ -29,7 +29,7 @@ export async function serverSession() {
     const session = await getNextAuthServerSession(authOptions);
 
     if (session !== null) {
-      setIGRPAccessClientConfig({
+      igrpSetAccessClientConfig({
         token: session.accessToken || '',
         baseUrl: apiManagement,
       });
@@ -58,6 +58,6 @@ export async function getSession() {
 }
 
 export async function refreshAccessClient() {
-  resetIGRPAccessClientConfig();
+  igrpResetAccessClientConfig();
   await serverSession();
 }

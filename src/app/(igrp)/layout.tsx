@@ -1,4 +1,4 @@
-import { IGRPLayout, setIGRPAccessClientConfig } from '@igrp/framework-next';
+import { IGRPLayout } from '@igrp/framework-next';
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 

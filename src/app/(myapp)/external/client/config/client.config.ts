@@ -1,5 +1,3 @@
-import { getSession } from '@/actions/igrp/auth';
-import { getIGRPAccessClientConfig } from '@igrp/framework-next';
 import { ProcessManagementClient } from '@igrp/platform-process-management-client-ts';
 
 /**

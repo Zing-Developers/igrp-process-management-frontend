@@ -82,7 +82,7 @@ const { igrpToast } = useIGRPToast()
 
   // Handle claim task action
   const onClaimTask = async (taskId: string) => {
-    const result = await handleClaimTask(taskId, 'current-user'); // You might want to get the actual user from context/session
+    const result = await handleClaimTask(taskId); // You might want to get the actual user from context/session
 
     if (result.success) {
       igrpToast({

@@ -10,6 +10,7 @@ import { getProcessInstances } from '../../external/client/services/process-inst
 import { getMyTasks, getTasks, getTaskStats, getMyTaskStats } from '../../external/client/services/task.service';
 import { Task } from '@igrp/platform-process-management-types';
 import { getTaskStatusLabel, getTaskStatusVariant, TaskStatus } from '../../utils/status-helpers';
+import { getProcessStats } from '../../external/client/services/process.service';
 
 export function useDashboardData() {
   const [data, setData] = useState<DashboardData>({
@@ -62,6 +63,9 @@ export function useDashboardData() {
   /**
    * Load process instance statistics
    */
+  /**
+   * Load process instance statistics
+   */
   const loadProcessInstanceStats = async (): Promise<ProcessInstanceStats> => {
     const stats: ProcessInstanceStats = {
       totalInstances: 0,
@@ -69,27 +73,19 @@ export function useDashboardData() {
       totalRunning: 0,
       totalCancelled: 0,
     };
-
+  
     try {
-      // Get total process instances
-      const totalResponse = await getProcessInstances(0, 1);
-      stats.totalInstances = totalResponse.totalElements || 0;
-
-      // Get completed process instances
-      const completedResponse = await getProcessInstances(0, 1, { status: 'COMPLETED' });
-      stats.totalCompleted = completedResponse.totalElements || 0;
-
-      // Get running process instances
-      const runningResponse = await getProcessInstances(0, 1, { status: 'RUNNING' });
-      stats.totalRunning = runningResponse.totalElements || 0;
-
-      // Get cancelled process instances
-      const cancelledResponse = await getProcessInstances(0, 1, { status: 'CANCELLED' });
-      stats.totalCancelled = cancelledResponse.totalElements || 0;
+      // Use the getProcessStats service to get all stats in a single call
+      const processStats = await getProcessStats();
+      
+      stats.totalInstances = processStats.totalProcessInstances || 0;
+      stats.totalCompleted = processStats.totalCompletedProcess || 0;
+      stats.totalRunning = processStats.totalRunningProcess || 0;
+      stats.totalCancelled = processStats.totalCanceledProcess || 0;
     } catch (error) {
       console.warn('Could not load process instance statistics:', error);
     }
-
+  
     return stats;
   };
 

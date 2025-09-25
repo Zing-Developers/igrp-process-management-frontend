@@ -1,4 +1,3 @@
-
 import { ProcessManagementClient } from '@igrp/platform-process-management-client-ts';
 
 /**
@@ -7,7 +6,8 @@ import { ProcessManagementClient } from '@igrp/platform-process-management-clien
 export class ClientConfig {
   private static _instance: ClientConfig;
   private _httpClient!: ProcessManagementClient;
-  
+  private _token: string = '';
+
   private constructor() {
     this.initializeClient();
   }
@@ -21,15 +21,28 @@ export class ClientConfig {
 
   private initializeClient(): void {
     const baseUrl = this.getBaseUrl();
+
+    try {
     
-    this._httpClient = ProcessManagementClient.create({
-      baseUrl: baseUrl,
-      timeout: 30000,
-      headers: {
-        // Add any default headers here
-        // Authorization: 'Bearer your-token-here',
-      },
-    });
+      this._httpClient = ProcessManagementClient.create({
+        baseUrl: baseUrl,
+        timeout: 30000,
+        headers: {
+          // Add any default headers here
+          Authorization: `Bearer ${this._token}`,
+        },
+      });
+    } catch (error) {
+      console.warn('IGRP Access Client not configured yet, initializing without token:', error);
+      
+      this._httpClient = ProcessManagementClient.create({
+        baseUrl: baseUrl,
+        timeout: 30000,
+        headers: {
+          // Initialize without Authorization header if no token available
+        },
+      });
+    }
   }
 
   /**
@@ -37,14 +50,14 @@ export class ClientConfig {
    */
   public getBaseUrl(): string {
     const baseUrl = process.env.API_GATEWAY;
-    
+
     if (!baseUrl) {
       throw new Error(
         'API_GATEWAY environment variable is required. ' +
-        'Please set it in your .env.local file or environment configuration.'
+          'Please set it in your .env.local file or environment configuration.',
       );
     }
-    
+
     return baseUrl;
   }
 
@@ -53,6 +66,14 @@ export class ClientConfig {
    */
   public getHttpClient(): ProcessManagementClient {
     return this._httpClient;
+  }
+
+  /**
+   * Updates the client with a new token
+   */
+  public updateToken(token: string): void {
+    this._token = token;
+    this.initializeClient();
   }
 
   /**
@@ -77,3 +98,8 @@ export const getHttpClient = () => getClientConfig().getHttpClient();
  * Convenience function to get the base URL
  */
 export const getBaseUrl = () => getClientConfig().getBaseUrl();
+
+/**
+ * Convenience function to update the client token
+ */
+export const updateClientToken = (token: string) => getClientConfig().updateToken(token);

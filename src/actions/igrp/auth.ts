@@ -1,9 +1,14 @@
 'use server';
 
-import { getServerSession as getNextAuthServerSession } from 'next-auth/next';
+import { getServerSession as getNextAuthServerSession } from '@igrp/framework-next-auth';
+import { Session } from '@igrp/framework-next-auth';
+
 import { authOptions } from '@/lib/auth-options';
+import { igrpResetAccessClientConfig, igrpSetAccessClientConfig } from '@igrp/framework-next';
 
 export async function serverSession() {
+  const apiManagement = process.env.IGRP_APP_MANAGER_API || '';
+
   try {
     if (!process.env.NEXTAUTH_SECRET) {
       console.warn('Warning: NEXTAUTH_SECRET is not set. This is required for production.');
@@ -22,6 +27,13 @@ export async function serverSession() {
     }
 
     const session = await getNextAuthServerSession(authOptions);
+
+    if (session !== null) {
+      igrpSetAccessClientConfig({
+        token: session.accessToken || '',
+        baseUrl: apiManagement,
+      });
+    }
     return session;
   } catch (error) {
     console.error('::Error getting server session::', error);
@@ -30,26 +42,22 @@ export async function serverSession() {
 }
 
 export async function getSession() {
-  let session;
+  let session: Session | null;
   const isPreviewMode = process.env.IGRP_PREVIEW_MODE === 'true';
 
   if (isPreviewMode) return (session = null);
 
-  if (process.env.NODE_ENV === 'production') {
-    try {
-      session = await serverSession();
-      session = null;
-    } catch (error) {
-      console.error('Failed to get session in layout:', error);
-      session = null;
-    }
-  } else {
+  try {
+    session = await serverSession();
+  } catch (error) {
+    console.error('Failed to get session in layout:', error);
     session = null;
   }
 
-  console.log({ isPreviewMode });
-  console.log('NODE_ENV:::', process.env.NODE_ENV);
-  console.log({ session });
-
   return session;
+}
+
+export async function refreshAccessClient() {
+  igrpResetAccessClientConfig();
+  await serverSession();
 }

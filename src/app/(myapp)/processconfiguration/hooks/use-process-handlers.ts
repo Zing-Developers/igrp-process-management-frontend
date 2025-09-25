@@ -206,7 +206,6 @@ export function useProcessHandlers(
 
       const savedConfig = await processNumberOperations.saveProcessNumberConfiguration(
         processNumberForm.modalState.selectedProcessKey || '',
-        processNumberForm.modalState.selectedProcessApplicationBase || '',
         request
       );
 

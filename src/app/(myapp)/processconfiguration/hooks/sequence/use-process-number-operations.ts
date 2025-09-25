@@ -34,13 +34,11 @@ export function useProcessNumberOperations() {
 
   const saveProcessNumberConfiguration = async (
     processDefinitionKey: string,
-    processApplicationBase: string,
     request: CreateProcessSequenceRequest,
   ): Promise<ProcessSequence | null> => {
     try {
       const savedConfig = await saveProcessNumberConfig(
         processDefinitionKey,
-        processApplicationBase,
         request,
       );
 

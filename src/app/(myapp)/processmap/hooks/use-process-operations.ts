@@ -86,7 +86,7 @@ export function useProcessOperations(router?: AppRouterInstance) {
 
               try {
                 // Claim the task before redirecting
-                await claimTask(firstTask.id, 'current-user'); // You may want to get the actual user from context/session
+                await claimTask(firstTask.id); // You may want to get the actual user from context/session
 
                 // Build task execution URL using the first available task
                 const taskUrl = urlConfig.buildTaskExecutionUrl(

@@ -4,5 +4,5 @@ export const IGRP_MOCK_USER: IGRPUserArgs = {
   id: 1,
   username: 'igrp.user',
   name: 'IGRP USER',
-  email: 'igrp.user@igrp.cv',
+  email: 'igrp.user@nosi.cv',
 };

@@ -1,6 +1,6 @@
 'use server';
 
-import { getHttpClient } from '../config/client.config';
+import { getIGRPProcessClient } from '@/lib/api-client';
 import { PaginatedResponse, ProcessInstance } from '@igrp/platform-process-management-types';
 
 // Define the StatusOption interface locally since it's not exported from the types package
@@ -45,8 +45,8 @@ export const getProcessInstances = async (
     return allowedStatuses.includes(raw as ClientStatus) ? (raw as ClientStatus) : undefined;
   })();
 
-  const httpClient = getHttpClient();
-  const response = await httpClient.processes.getProcessInstances({
+  const processManagementClient = await getIGRPProcessClient();
+  const response = await processManagementClient.processes.getProcessInstances({
     page,
     size,
     number: filters?.number,
@@ -63,8 +63,8 @@ export const getProcessInstances = async (
  * @returns A promise that resolves to the process instance, or null if not found.
  */
 export const getProcessInstanceById = async (id: string): Promise<ProcessInstance | null> => {
-  const httpClient = getHttpClient();
-  return (await httpClient.processes.getProcessInstanceById(id)).data as ProcessInstance;
+  const processManagementClient = await getIGRPProcessClient();
+  return (await processManagementClient.processes.getProcessInstanceById(id)).data as ProcessInstance;
 };
 
 /**
@@ -73,9 +73,9 @@ export const getProcessInstanceById = async (id: string): Promise<ProcessInstanc
  * @returns A promise that resolves to an array of running process instances.
  */
 export const getRunningProcessInstances = async (applicationBase: string): Promise<ProcessInstance[]> => {
-  const httpClient = getHttpClient();
+  const processManagementClient = await getIGRPProcessClient();
   // No direct API in client; use getProcessInstances with filters
-  const response = await httpClient.processes.getProcessInstances({
+  const response = await processManagementClient.processes.getProcessInstances({
     applicationBase,
     status: 'RUNNING',
     page: 0,
@@ -89,6 +89,6 @@ export const getRunningProcessInstances = async (applicationBase: string): Promi
  * @returns A promise that resolves to an array of status options.
  */
 export const getProcessInstancesStatus = async (): Promise<StatusOption[]> => {
-  const httpClient = getHttpClient();
-  return (await httpClient.processes.getProcessInstancesStatus()).data as StatusOption[];
+  const processManagementClient = await getIGRPProcessClient();
+  return (await processManagementClient.processes.getProcessInstancesStatus()).data as StatusOption[];
 };

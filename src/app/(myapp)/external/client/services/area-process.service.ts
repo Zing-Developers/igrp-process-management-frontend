@@ -28,8 +28,8 @@ export const associateProcessToArea = async (
       name: string;
     },
 ): Promise<Process> => {
-  const httpClient = await getIGRPProcessClient();
-  return (await httpClient.areas.associateProcessToArea(areaId, processData)).data as Process;
+  const processManagementClient = await getIGRPProcessClient();
+  return (await processManagementClient.areas.associateProcessToArea(areaId, processData)).data as Process;
 };
 
 /**
@@ -39,6 +39,6 @@ export const associateProcessToArea = async (
  * @returns A promise that resolves when the process is removed.
  */
 export const removeProcessFromArea = async (areaId: string, processId: string): Promise<void> => {
-  const httpClient = await getIGRPProcessClient();
-  await httpClient.areas.removeProcessFromArea(areaId, processId);
+  const processManagementClient = await getIGRPProcessClient();
+  await processManagementClient.areas.removeProcessFromArea(areaId, processId);
 };

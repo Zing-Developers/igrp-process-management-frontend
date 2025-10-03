@@ -1,8 +1,8 @@
 'use server';
 
 import { PaginatedResponse, Task, TaskStats } from '@igrp/platform-process-management-types';
-import { getHttpClient } from '../config/client.config';
 import { PostResponse } from '@igrp/platform-process-management-types/dist/response';
+import { getIGRPProcessClient } from '@/lib/api-client';
 
 /**
  * Interface for task filter parameters used in multiple functions
@@ -32,13 +32,13 @@ export const getTasks = async (
   size = 50,
   filters?: Omit<TaskFilterParams, 'page' | 'size'>,
 ): Promise<PaginatedResponse<Task>> => {
-  const httpClient = getHttpClient();
+  const processManagementClient = await getIGRPProcessClient();
   const params = {
     page,
     size,
     ...filters,
   };
-  const response = await httpClient.tasks.getTasks(params);
+  const response = await processManagementClient.tasks.getTasks(params);
   return response.data as PaginatedResponse<Task>;
 };
 
@@ -48,8 +48,8 @@ export const getTasks = async (
  * @returns A promise that resolves to the task, or undefined if not found.
  */
 export const getTaskById = async (id: string): Promise<Task | undefined> => {
-  const httpClient = getHttpClient();
-  const response = await httpClient.tasks.getTaskById(id);
+  const processManagementClient = await getIGRPProcessClient();
+  const response = await processManagementClient.tasks.getTaskById(id);
   return response.data as Task;
 };
 
@@ -59,10 +59,10 @@ export const getTaskById = async (id: string): Promise<Task | undefined> => {
  * @returns A promise that resolves to a paginated response of tasks.
  */
 export const getMyTasks = async (params: TaskFilterParams): Promise<PaginatedResponse<Task>> => {
-  const httpClient = getHttpClient();
+  const processManagementClient = await getIGRPProcessClient();
   const { page = 0, size = 50, ...filterParams } = params;
 
-  const response = await httpClient.tasks.getMyTasks({
+  const response = await processManagementClient.tasks.getMyTasks({
     ...filterParams,
     status: 'ASSIGNED',
     page,
@@ -77,8 +77,8 @@ export const getMyTasks = async (params: TaskFilterParams): Promise<PaginatedRes
  * @returns A promise that resolves to a list of tasks.
  */
 export const getTasksByUser = async (userId: string): Promise<PaginatedResponse<Task>> => {
-  const httpClient = getHttpClient();
-  const response = await httpClient.tasks.getTasksByUser(userId);
+  const processManagementClient = await getIGRPProcessClient();
+  const response = await processManagementClient.tasks.getTasksByUser(userId);
   return response.data as PaginatedResponse<Task>;
 };
 
@@ -90,10 +90,10 @@ export const getTasksByUser = async (userId: string): Promise<PaginatedResponse<
 export const getAvailableTasks = async (
   params: TaskFilterParams,
 ): Promise<PaginatedResponse<Task>> => {
-  const httpClient = getHttpClient();
+  const processManagementClient = await getIGRPProcessClient();
   const { page = 0, size = 10, ...filterParams } = params;
 
-  const response = await httpClient.tasks.getAvailableTasks({
+  const response = await processManagementClient.tasks.getAvailableTasks({
     ...filterParams,
     status: 'CREATED',
     page,
@@ -110,8 +110,8 @@ export const getAvailableTasks = async (
 export const getTasksByProcessInstance = async (
   processInstanceId: string,
 ): Promise<PaginatedResponse<Task>> => {
-  const httpClient = getHttpClient();
-  const response = await httpClient.tasks.getTasksByProcessInstance(processInstanceId);
+  const processManagementClient = await getIGRPProcessClient();
+  const response = await processManagementClient.tasks.getTasksByProcessInstance(processInstanceId);
   return response.data;
 };
 
@@ -125,8 +125,8 @@ export const getTasksByProcessInstance = async (
 export const claimTask = async (
   taskId: string
 ): Promise<PostResponse> => {
-  const httpClient = getHttpClient();
-  return (await httpClient.tasks.claimTask(taskId, {})).data;
+  const processManagementClient = await getIGRPProcessClient();
+      return (await processManagementClient.tasks.claimTask(taskId, {})).data;
 };
 
 /**
@@ -141,8 +141,8 @@ export const unassignTask = async (
   user: string,
   note?: string,
 ): Promise<PostResponse> => {
-  const httpClient = getHttpClient();
-  return (await httpClient.tasks.assignTask(taskId, { user, note })).data;
+  const processManagementClient = await getIGRPProcessClient();
+  return (await processManagementClient.tasks.assignTask(taskId, { user, note })).data;
 };
 
 /**
@@ -158,9 +158,9 @@ export const assignTask = async (
   priority: string,
   note?: string,
 ): Promise<PostResponse> => {
-  const httpClient = getHttpClient();
+  const processManagementClient = await getIGRPProcessClient();
   console.debug('Assigning task:', { taskId, user, priority, note });
-  const response = await httpClient.tasks.assignTask(taskId, {
+  const response = await processManagementClient.tasks.assignTask(taskId, {
     user,
     priority: parseInt(priority, 10), // ← Convert string to number
     note,
@@ -177,8 +177,8 @@ export const assignTask = async (
  * @returns A promise that resolves to a PostResponse.
  */
 export const unclaimTask = async (taskId: string, note?: string): Promise<PostResponse> => {
-  const httpClient = getHttpClient();
-  return (await httpClient.tasks.unclaimTask(taskId, note)).data;
+  const processManagementClient = await getIGRPProcessClient();
+  return (await processManagementClient.tasks.unclaimTask(taskId, note)).data;
 };
 
 /**
@@ -194,8 +194,8 @@ export const completeTask = async (
     value: string;
   }>,
 ): Promise<PostResponse> => {
-  const httpClient = getHttpClient();
-  return (await httpClient.tasks.completeTask(taskId, { variables })).data;
+  const processManagementClient = await getIGRPProcessClient();
+  return (await processManagementClient.tasks.completeTask(taskId, { variables })).data;
 };
 
 /*
@@ -203,8 +203,8 @@ export const completeTask = async (
  * @returns A promise that resolves to task statistics.
  */
 export const getTaskStats = async (): Promise<TaskStats> => {
-  const httpClient = getHttpClient();
-  const response = await httpClient.tasks.getTaskStats();
+  const processManagementClient = await getIGRPProcessClient();
+  const response = await processManagementClient.tasks.getTaskStats();
   return response.data;
 };
 
@@ -213,7 +213,7 @@ export const getTaskStats = async (): Promise<TaskStats> => {
  * @returns A promise that resolves to task statistics.
  */
 export const getMyTaskStats = async (): Promise<TaskStats> => {
-  const httpClient = getHttpClient();
-  const response = await httpClient.tasks.getMyTaskStats();
+    const processManagementClient = await getIGRPProcessClient();
+  const response = await processManagementClient.tasks.getMyTaskStats();
   return response.data;
 };

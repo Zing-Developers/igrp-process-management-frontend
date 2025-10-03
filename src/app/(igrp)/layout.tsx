@@ -4,7 +4,6 @@ import { headers } from 'next/headers';
 
 import { configLayout } from '@/actions/igrp/layout';
 import { createConfig } from '@igrp/template-config';
-import { updateClientToken } from '../(myapp)/external/client/config/client.config';
 import { setIGRPProcessClientConfig } from '@/lib/api-config';
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -41,11 +40,6 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     baseUrl: process.env.API_GATEWAY ?? '',
     timeout: 30000,
   });
-
-  // Update ClientConfig with the session token
-  if (session?.accessToken) {
-    updateClientToken(session.accessToken);
-  }
 
   return <IGRPLayout config={config}>{children}</IGRPLayout>;
 }

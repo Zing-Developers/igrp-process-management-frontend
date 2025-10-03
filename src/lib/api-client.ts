@@ -4,12 +4,10 @@ import { getIGRPProcessClientConfig } from './api-config';
 let clientInstance: ProcessManagementClient | null = null;
 
 export async function getIGRPProcessClient(): Promise<ProcessManagementClient> {
-  // console.log({ clientInstance });
-
-  if (clientInstance) return clientInstance;
-
+  // Always get fresh config to ensure we have the latest token
   const { baseUrl, token, timeout = 45000 } = getIGRPProcessClientConfig();
 
+  // Create new client instance with current token
   clientInstance = ProcessManagementClient.create({
     baseUrl,
     timeout,
@@ -19,4 +17,8 @@ export async function getIGRPProcessClient(): Promise<ProcessManagementClient> {
   });
 
   return clientInstance;
+}
+
+export function resetIGRPProcessClient() {
+  clientInstance = null;
 }

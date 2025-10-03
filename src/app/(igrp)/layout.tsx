@@ -35,6 +35,13 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     redirect(urlLogin || urlLogout);
   }
 
+  console.log('Setting IGRP Process Client Config:', {
+    hasSession: !!session,
+    hasToken: !!session?.accessToken,
+    baseUrl: process.env.API_GATEWAY,
+    tokenPreview: session?.accessToken ? `${session.accessToken.substring(0, 20)}...` : 'No token'
+  });
+
   setIGRPProcessClientConfig({
     token: session?.accessToken ?? '',
     baseUrl: process.env.API_GATEWAY ?? '',

@@ -3,14 +3,13 @@
 import { getHttpClient } from '../config/client.config';
 import { PaginatedResponse, Process } from '@igrp/platform-process-management-types';
 
-const httpClient = getHttpClient();
-
 /**
  * Fetches all processes associated with a specific area.
  * @param areaId The ID of the area.
  * @returns A promise that resolves to a paginated response of processes.
  */
 export const getAreaProcesses = async (areaId: string): Promise<PaginatedResponse<Process>> => {
+  const httpClient = getHttpClient();
   return (await httpClient.areas.getAreaProcesses(areaId)).data as PaginatedResponse<Process>;
 };
 
@@ -29,6 +28,7 @@ export const associateProcessToArea = async (
       name: string;
     },
 ): Promise<Process> => {
+  const httpClient = getHttpClient();
   return (await httpClient.areas.associateProcessToArea(areaId, processData)).data as Process;
 };
 
@@ -39,5 +39,6 @@ export const associateProcessToArea = async (
  * @returns A promise that resolves when the process is removed.
  */
 export const removeProcessFromArea = async (areaId: string, processId: string): Promise<void> => {
+  const httpClient = getHttpClient();
   await httpClient.areas.removeProcessFromArea(areaId, processId);
 };

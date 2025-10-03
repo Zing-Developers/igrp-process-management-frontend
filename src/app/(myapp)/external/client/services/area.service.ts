@@ -7,20 +7,21 @@ import {
   UpdateAreaRequest,
 } from '@igrp/platform-process-management-types';
 
-const httpClient = getHttpClient();
-
 // Area Management
 export const createArea = async (areaData: CreateAreaRequest): Promise<Area> => {
+  const httpClient = getHttpClient();
   return await httpClient.areas.createArea(areaData).then((response) => response.data as Area);
 };
 
 export const updateArea = async (id: string, areaData: UpdateAreaRequest): Promise<Area> => {
+  const httpClient = getHttpClient();
   return await httpClient.areas
     .updateArea(id, areaData)
     .then((response) => response.data as Area);
 };
 
 export const deleteArea = async (id: string): Promise<void> => {
+  const httpClient = getHttpClient();
   await httpClient.areas.deleteArea(id);
 };
 
@@ -30,6 +31,7 @@ export const getAreas = async (
   size = 20,
   parentId?: string,
 ): Promise<PaginatedResponse<Area>> => {
+  const httpClient = getHttpClient();
   const response = await httpClient.areas
     .getAreas({
       name,
@@ -44,6 +46,7 @@ export const getAreas = async (
 };
 
 export const getAreaById = async (id: string): Promise<Area | null> => {
+  const httpClient = getHttpClient();
   return await httpClient.areas.getAreaById(id).then((response) => response.data as Area);
 };
 

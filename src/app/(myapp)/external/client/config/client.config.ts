@@ -22,26 +22,20 @@ export class ClientConfig {
   private initializeClient(): void {
     const baseUrl = this.getBaseUrl();
 
+    // Prepare headers - only include Authorization if token is available
+    const headers: Record<string, string> = {};
+    if (this._token) {
+      headers.Authorization = `Bearer ${this._token}`;
+    }
+
     try {
-    
       this._httpClient = ProcessManagementClient.create({
         baseUrl: baseUrl,
         timeout: 30000,
-        headers: {
-          // Add any default headers here
-          Authorization: `Bearer ${this._token}`,
-        },
+        headers: headers,
       });
     } catch (error) {
       console.warn('IGRP Access Client not configured yet, initializing without token:', error);
-      
-      this._httpClient = ProcessManagementClient.create({
-        baseUrl: baseUrl,
-        timeout: 30000,
-        headers: {
-          // Initialize without Authorization header if no token available
-        },
-      });
     }
   }
 
@@ -77,6 +71,14 @@ export class ClientConfig {
   }
 
   /**
+   * Clears the current token and reinitializes the client
+   */
+  public clearToken(): void {
+    this._token = '';
+    this.initializeClient();
+  }
+
+  /**
    * Reinitializes the client (useful for testing or config changes)
    */
   public reinitialize(): void {
@@ -103,3 +105,8 @@ export const getBaseUrl = () => getClientConfig().getBaseUrl();
  * Convenience function to update the client token
  */
 export const updateClientToken = (token: string) => getClientConfig().updateToken(token);
+
+/**
+ * Convenience function to clear the client token
+ */
+export const clearClientToken = () => getClientConfig().clearToken();

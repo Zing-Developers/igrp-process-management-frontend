@@ -8,6 +8,7 @@ import { IGRP_META_THEME_COLORS } from '@igrp/igrp-framework-react-design-system
 
 import { configLayout } from '@/actions/igrp/layout';
 import { createConfig } from '@/igrp.template.config';
+import { setIGRPProcessClientConfig } from '@/lib/api-config';
 
 export const metadata: Metadata = {
   title: 'IGRP | Applications Center',
@@ -22,6 +23,23 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const layoutConfig = await configLayout();
   const config = await createConfig(layoutConfig);
+
+  // Set up IGRP Process Client configuration early in the request lifecycle
+  const { layout } = config;
+  const { session } = layout ?? {};
+
+  console.log('Root Layout - Setting IGRP Process Client Config:', {
+    hasSession: !!session,
+    hasToken: !!session?.accessToken,
+    baseUrl: process.env.API_GATEWAY,
+    tokenPreview: session?.accessToken ? `${session.accessToken.substring(0, 20)}...` : 'No token'
+  });
+
+  setIGRPProcessClientConfig({
+    token: session?.accessToken ?? '',
+    baseUrl: process.env.API_GATEWAY ?? '',
+    timeout: 30000,
+  });
 
   return <IGRPRootLayout config={config}>{children}</IGRPRootLayout>;
 }

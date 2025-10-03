@@ -4,7 +4,6 @@ import { headers } from 'next/headers';
 
 import { configLayout } from '@/actions/igrp/layout';
 import { createConfig } from '@igrp/template-config';
-import { setIGRPProcessClientConfig } from '@/lib/api-config';
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const layoutConfig = await configLayout();
@@ -35,18 +34,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     redirect(urlLogin || urlLogout);
   }
 
-  console.log('Setting IGRP Process Client Config:', {
-    hasSession: !!session,
-    hasToken: !!session?.accessToken,
-    baseUrl: process.env.API_GATEWAY,
-    tokenPreview: session?.accessToken ? `${session.accessToken.substring(0, 20)}...` : 'No token'
-  });
-
-  setIGRPProcessClientConfig({
-    token: session?.accessToken ?? '',
-    baseUrl: process.env.API_GATEWAY ?? '',
-    timeout: 30000,
-  });
+  // Configuration is now set in the root layout
 
   return <IGRPLayout config={config}>{children}</IGRPLayout>;
 }

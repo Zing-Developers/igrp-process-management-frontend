@@ -22,7 +22,6 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     '';
 
   const baseUrl = process.env.NEXTAUTH_URL;
-  
 
   const urlLogin = loginUrl ?? '/login';
   const urlLogout = logoutUrl ?? '/logout';
@@ -40,6 +39,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     getIGRPProcessClientConfig();
     console.log('IGRP Process Client Config already set');
   } catch (error) {
+    console.log(error);
     console.log('IGRP Process Client Config not set, setting it now');
     setIGRPProcessClientConfig({
       token: session?.accessToken ?? '',

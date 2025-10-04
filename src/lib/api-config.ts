@@ -7,6 +7,12 @@ export type IGRPClientRuntimeConfig = {
 let runtimeConfig: IGRPClientRuntimeConfig | null = null;
 
 export function setIGRPProcessClientConfig(config: IGRPClientRuntimeConfig) {
+  console.log('Setting IGRP Process Client Config:', {
+    baseUrl: config.baseUrl,
+    hasToken: !!config.token,
+    tokenPreview: config.token ? `${config.token.substring(0, 20)}...` : 'No token',
+    timeout: config.timeout
+  });
   runtimeConfig = config;
 }
 
@@ -17,7 +23,17 @@ export function getIGRPProcessClientConfig(): IGRPClientRuntimeConfig {
       API_GATEWAY: process.env.API_GATEWAY,
       NODE_ENV: process.env.NODE_ENV,
     });
-    throw new Error('[process-client]: Configuração do cliente de processo não definida. Call setIGRPProcessClientConfig() first.');
+    
+    // Auto-initialize with default configuration if not set
+    console.log('Auto-initializing IGRP Process Client Config with default values');
+    const defaultConfig: IGRPClientRuntimeConfig = {
+      baseUrl: process.env.API_GATEWAY || 'http://localhost:8086',
+      token: '', // Empty token - will be updated when session is available
+      timeout: 30000,
+    };
+    
+    runtimeConfig = defaultConfig;
+    console.log('Auto-initialized config:', defaultConfig);
   }
   return runtimeConfig;
 }

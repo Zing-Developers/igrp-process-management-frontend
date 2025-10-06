@@ -2,6 +2,7 @@
 
 import { getIGRPProcessClient } from '@/lib/api-client';
 import { PaginatedResponse, ProcessInstance } from '@igrp/platform-process-management-types';
+import { ensureAuthenticatedApiClient } from '@/lib/server-api-utils';
 
 // Define the StatusOption interface locally since it's not exported from the types package
 interface StatusOption {
@@ -46,6 +47,9 @@ export const getProcessInstances = async (
   })();
 
   try {
+    // Ensure API client is properly configured with current session
+    await ensureAuthenticatedApiClient();
+
     const processManagementClient = await getIGRPProcessClient();
     const response = await processManagementClient.processes.getProcessInstances({
       page,
@@ -91,6 +95,9 @@ export const getProcessInstances = async (
  * @returns A promise that resolves to the process instance, or null if not found.
  */
 export const getProcessInstanceById = async (id: string): Promise<ProcessInstance | null> => {
+  // Ensure API client is properly configured with current session
+  await ensureAuthenticatedApiClient();
+
   const processManagementClient = await getIGRPProcessClient();
   return (await processManagementClient.processes.getProcessInstanceById(id)).data as ProcessInstance;
 };
@@ -101,6 +108,9 @@ export const getProcessInstanceById = async (id: string): Promise<ProcessInstanc
  * @returns A promise that resolves to an array of running process instances.
  */
 export const getRunningProcessInstances = async (applicationBase: string): Promise<ProcessInstance[]> => {
+  // Ensure API client is properly configured with current session
+  await ensureAuthenticatedApiClient();
+
   const processManagementClient = await getIGRPProcessClient();
   // No direct API in client; use getProcessInstances with filters
   const response = await processManagementClient.processes.getProcessInstances({
@@ -117,6 +127,9 @@ export const getRunningProcessInstances = async (applicationBase: string): Promi
  * @returns A promise that resolves to an array of status options.
  */
 export const getProcessInstancesStatus = async (): Promise<StatusOption[]> => {
+  // Ensure API client is properly configured with current session
+  await ensureAuthenticatedApiClient();
+
   const processManagementClient = await getIGRPProcessClient();
   return (await processManagementClient.processes.getProcessInstancesStatus()).data as StatusOption[];
 };

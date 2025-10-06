@@ -6,14 +6,21 @@ import {
   PaginatedResponse,
   UpdateAreaRequest,
 } from '@igrp/platform-process-management-types';
+import { ensureAuthenticatedApiClient } from '@/lib/server-api-utils';
 
 // Area Management
 export const createArea = async (areaData: CreateAreaRequest): Promise<Area> => {
+  // Ensure API client is properly configured with current session
+  await ensureAuthenticatedApiClient();
+
   const httpClient = await getIGRPProcessClient();
   return await httpClient.areas.createArea(areaData).then((response) => response.data as Area);
 };
 
 export const updateArea = async (id: string, areaData: UpdateAreaRequest): Promise<Area> => {
+  // Ensure API client is properly configured with current session
+  await ensureAuthenticatedApiClient();
+
   const httpClient = await getIGRPProcessClient();
   return await httpClient.areas
     .updateArea(id, areaData)
@@ -21,6 +28,9 @@ export const updateArea = async (id: string, areaData: UpdateAreaRequest): Promi
 };
 
 export const deleteArea = async (id: string): Promise<void> => {
+  // Ensure API client is properly configured with current session
+  await ensureAuthenticatedApiClient();
+
   const httpClient = await getIGRPProcessClient();
   await httpClient.areas.deleteArea(id);
 };
@@ -32,6 +42,9 @@ export const getAreas = async (
   parentId?: string,
 ): Promise<PaginatedResponse<Area>> => {
   try {
+    // Ensure API client is properly configured with current session
+    await ensureAuthenticatedApiClient();
+
     const httpClient = await getIGRPProcessClient();
     const response = await httpClient.areas
       .getAreas({
@@ -74,6 +87,9 @@ export const getAreas = async (
 };
 
 export const getAreaById = async (id: string): Promise<Area | null> => {
+  // Ensure API client is properly configured with current session
+  await ensureAuthenticatedApiClient();
+
   const httpClient = await getIGRPProcessClient();
   return await httpClient.areas.getAreaById(id).then((response) => response.data as Area);
 };

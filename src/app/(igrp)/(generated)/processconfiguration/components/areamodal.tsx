@@ -153,7 +153,8 @@ required={ true }
 rows={ 3 }
 required={ false }
   className={ cn() }
-  
+  maxLength={255}
+  minLength={0}
   
 >
 </IGRPTextarea>

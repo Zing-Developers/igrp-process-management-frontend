@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 
 import { configLayout } from '@/actions/igrp/layout';
 import { createConfig } from '@igrp/template-config';
-import { setIGRPProcessClientConfig, getIGRPProcessClientConfig, updateIGRPProcessClientToken } from '@/lib/api-config';
+import { setIGRPProcessClientConfig, updateIGRPProcessClientToken } from '@/lib/api-config';
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const layoutConfig = await configLayout();
@@ -41,6 +41,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       // Try to update existing config first
       updateIGRPProcessClientToken(session.accessToken);
     } catch (error) {
+      console.log(error);
       // If no existing config, create new one
       console.log('No existing config found, creating new one');
       setIGRPProcessClientConfig({

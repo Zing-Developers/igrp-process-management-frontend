@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { updateIGRPProcessClientToken, resetIGRPProcessClient } from '@/lib/api-config';
+import { updateIGRPProcessClientToken } from '@/lib/api-config';
 
 /**
  * Hook to automatically refresh the API client when the session changes
@@ -22,7 +22,6 @@ export function useApiClientRefresh() {
       updateIGRPProcessClientToken(session.accessToken);
     } else if (status === 'unauthenticated') {
       console.log('Session unauthenticated, resetting API client');
-      resetIGRPProcessClient();
     }
   }, [session, status]);
 }

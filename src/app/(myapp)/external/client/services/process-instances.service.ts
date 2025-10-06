@@ -56,16 +56,27 @@ export const getProcessInstances = async (
       // searchTerms, applicationBase, procReleaseId not mapped here
     });
     return response.data as PaginatedResponse<ProcessInstance>;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching process instances:', error);
     
     // Handle authentication errors specifically
-    if (error?.status === 401 || error?.message?.includes('401') || error?.message?.includes('Unauthorized')) {
+    if (
+      (error && typeof error === 'object' && 'status' in error && error.status === 401) ||
+      (error && typeof error === 'object' && 'message' in error && 
+       typeof error.message === 'string' && 
+       (error.message.includes('401') || error.message.includes('Unauthorized')))
+    ) {
       throw new Error('Authentication failed. Please log in again to continue.');
     }
     
     // Handle other errors
-    if (error?.message?.includes('Authentication required')) {
+    if (
+      error && 
+      typeof error === 'object' && 
+      'message' in error && 
+      typeof error.message === 'string' && 
+      error.message.includes('Authentication required')
+    ) {
       throw new Error('Authentication required. Please log in to access this feature.');
     }
     

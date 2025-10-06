@@ -45,16 +45,33 @@ export const getProcessInstances = async (
     return allowedStatuses.includes(raw as ClientStatus) ? (raw as ClientStatus) : undefined;
   })();
 
-  const processManagementClient = await getIGRPProcessClient();
-  const response = await processManagementClient.processes.getProcessInstances({
-    page,
-    size,
-    number: filters?.number,
-    procReleaseKey: filters?.processKey,
-    status: mappedStatus,
-    // searchTerms, applicationBase, procReleaseId not mapped here
-  });
-  return response.data as PaginatedResponse<ProcessInstance>;
+  try {
+    const processManagementClient = await getIGRPProcessClient();
+    const response = await processManagementClient.processes.getProcessInstances({
+      page,
+      size,
+      number: filters?.number,
+      procReleaseKey: filters?.processKey,
+      status: mappedStatus,
+      // searchTerms, applicationBase, procReleaseId not mapped here
+    });
+    return response.data as PaginatedResponse<ProcessInstance>;
+  } catch (error: any) {
+    console.error('Error fetching process instances:', error);
+    
+    // Handle authentication errors specifically
+    if (error?.status === 401 || error?.message?.includes('401') || error?.message?.includes('Unauthorized')) {
+      throw new Error('Authentication failed. Please log in again to continue.');
+    }
+    
+    // Handle other errors
+    if (error?.message?.includes('Authentication required')) {
+      throw new Error('Authentication required. Please log in to access this feature.');
+    }
+    
+    // Re-throw other errors
+    throw error;
+  }
 };
 
 /**

@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 
 import { configLayout } from '@/actions/igrp/layout';
 import { createConfig } from '@igrp/template-config';
-import { setIGRPProcessClientConfig, getIGRPProcessClientConfig } from '@/lib/api-config';
+import { setIGRPProcessClientConfig, getIGRPProcessClientConfig, updateIGRPProcessClientToken } from '@/lib/api-config';
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const layoutConfig = await configLayout();
@@ -34,18 +34,23 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     redirect(urlLogin || urlLogout);
   }
 
-  // Ensure configuration is set (fallback if root layout didn't set it)
-  try {
-    getIGRPProcessClientConfig();
-    console.log('IGRP Process Client Config already set');
-  } catch (error) {
-    console.log(error);
-    console.log('IGRP Process Client Config not set, setting it now');
-    setIGRPProcessClientConfig({
-      token: session?.accessToken ?? '',
-      baseUrl: process.env.API_GATEWAY ?? '',
-      timeout: 30000,
-    });
+  // Update configuration with current session token if available
+  if (session?.accessToken) {
+    console.log('IGRP Layout - Updating IGRP Process Client Config with current session token');
+    try {
+      // Try to update existing config first
+      updateIGRPProcessClientToken(session.accessToken);
+    } catch (error) {
+      // If no existing config, create new one
+      console.log('No existing config found, creating new one');
+      setIGRPProcessClientConfig({
+        token: session.accessToken,
+        baseUrl: process.env.API_GATEWAY ?? '',
+        timeout: 30000,
+      });
+    }
+  } else {
+    console.log('IGRP Layout - No session token available, keeping existing config');
   }
 
   return <IGRPLayout config={config}>{children}</IGRPLayout>;

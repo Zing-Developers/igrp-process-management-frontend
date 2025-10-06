@@ -9,6 +9,7 @@ import { IGRP_META_THEME_COLORS } from '@igrp/igrp-framework-react-design-system
 import { configLayout } from '@/actions/igrp/layout';
 import { createConfig } from '@/igrp.template.config';
 import { setIGRPProcessClientConfig } from '@/lib/api-config';
+import { ApiClientRefreshProvider } from '../components/api-client-refresh-provider';
 
 export const metadata: Metadata = {
   title: 'IGRP | Applications Center',
@@ -41,5 +42,11 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     timeout: 30000,
   });
 
-  return <IGRPRootLayout config={config}>{children}</IGRPRootLayout>;
+  return (
+    <IGRPRootLayout config={config}>
+      <ApiClientRefreshProvider>
+        {children}
+      </ApiClientRefreshProvider>
+    </IGRPRootLayout>
+  );
 }

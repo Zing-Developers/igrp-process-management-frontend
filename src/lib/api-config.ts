@@ -41,3 +41,12 @@ export function getIGRPProcessClientConfig(): IGRPClientRuntimeConfig {
 export function resetIGRPProcessClientConfig() {
   runtimeConfig = null;
 }
+
+export function updateIGRPProcessClientToken(token: string) {
+  if (runtimeConfig) {
+    console.log('Updating IGRP Process Client token');
+    runtimeConfig.token = token;
+  } else {
+    console.log('No existing config to update token for');
+  }
+}

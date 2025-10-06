@@ -16,11 +16,17 @@ export async function getIGRPProcessClient(): Promise<ProcessManagementClient> {
       tokenPreview: token ? `${token.substring(0, 20)}...` : 'No token'
     });
 
-    // Prepare headers - only include Authorization if token is available and not empty
-    const headers: Record<string, string> = {};
-    if (token && token.trim() !== '') {
-      headers.Authorization = `Bearer ${token}`;
+    // Validate that we have a token before creating the client
+    if (!token || token.trim() === '') {
+      throw new Error('No authentication token available. Please ensure you are logged in.');
     }
+
+    // Prepare headers with authentication
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    };
 
     // Create new client instance with current token
     clientInstance = ProcessManagementClient.create({
@@ -33,24 +39,9 @@ export async function getIGRPProcessClient(): Promise<ProcessManagementClient> {
   } catch (error) {
     console.error('Error getting IGRP Process Client config:', error);
     
-    // Fallback: create client with default configuration
-    console.log('Creating fallback IGRP Process Client with default config');
-    
-    // Try to get token from environment or session if available
-    const fallbackBaseUrl = process.env.API_GATEWAY || 'http://localhost:8086';
-    const fallbackHeaders: Record<string, string> = {};
-    
-    // Check if we can get token from somewhere else (this is a temporary fallback)
-    // In production, you might want to handle this differently
-    console.log('Fallback client created without authentication token');
-    
-    clientInstance = ProcessManagementClient.create({
-      baseUrl: fallbackBaseUrl,
-      timeout: 45000,
-      headers: fallbackHeaders,
-    });
-
-    return clientInstance;
+    // Don't create a fallback client without authentication
+    // This will force the user to log in again
+    throw new Error('Authentication required. Please log in to access this feature.');
   }
 }
 

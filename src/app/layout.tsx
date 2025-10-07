@@ -29,13 +29,6 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const { layout } = config;
   const { session } = layout ?? {};
 
-  console.log('Root Layout - Setting IGRP Process Client Config:', {
-    hasSession: !!session,
-    hasToken: !!session?.accessToken,
-    baseUrl: process.env.API_GATEWAY,
-    tokenPreview: session?.accessToken ? `${session.accessToken.substring(0, 20)}...` : 'No token'
-  });
-
   setIGRPProcessClientConfig({
     token: session?.accessToken ?? '',
     baseUrl: process.env.API_GATEWAY ?? '',

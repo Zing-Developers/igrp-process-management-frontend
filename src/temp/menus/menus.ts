@@ -12,7 +12,7 @@ export const IGRP_DEFAULT_MENU: IGRPMenuItemArgs[] = [
     url: '/',
     parentCode: null,
     applicationCode: 'APP_TEST_1',
-    permissions: [],
+    roles: [],
     code: 'MENU_PAGE_1',
 
   },
@@ -27,7 +27,7 @@ export const IGRP_DEFAULT_MENU: IGRPMenuItemArgs[] = [
     url: '/processconfiguration',
     parentCode: null,
     applicationCode: 'APP_TEST_1',
-    permissions: [],
+    roles: [],
     code: 'MENU_PAGE_2',
   },
   {
@@ -41,7 +41,7 @@ export const IGRP_DEFAULT_MENU: IGRPMenuItemArgs[] = [
     url: '/processmap',
     parentCode: null,
     applicationCode: 'APP_TEST_1',
-    permissions: [],
+    roles: [],
     code: 'MENU_PAGE_3',
   },
   {
@@ -55,7 +55,7 @@ export const IGRP_DEFAULT_MENU: IGRPMenuItemArgs[] = [
     url: '/availabletasks',
     parentCode: null,
     applicationCode: 'APP_TEST_1',
-    permissions: [],
+    roles: [],
     code: 'MENU_PAGE_4',
   },
   {
@@ -69,7 +69,7 @@ export const IGRP_DEFAULT_MENU: IGRPMenuItemArgs[] = [
     url: '/processinstances',
     parentCode: null,
     applicationCode: 'APP_TEST_1',
-    permissions: [],
+    roles: [],
     code: 'MENU_PAGE_5',
   },
   {
@@ -83,7 +83,7 @@ export const IGRP_DEFAULT_MENU: IGRPMenuItemArgs[] = [
     url: '/mytasks',
     parentCode: null,
     applicationCode: 'APP_TEST_1',
-    permissions: [],
+    roles: [],
     code: 'MENU_PAGE_6',
   },
   {
@@ -97,7 +97,7 @@ export const IGRP_DEFAULT_MENU: IGRPMenuItemArgs[] = [
     url: '/taskmanagement',
     parentCode: null,
     applicationCode: 'APP_TEST_1',
-    permissions: [],
+    roles: [],
     code: 'MENU_PAGE_7',
   },
 ];

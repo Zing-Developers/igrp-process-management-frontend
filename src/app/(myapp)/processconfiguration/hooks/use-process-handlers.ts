@@ -147,9 +147,9 @@ export function useProcessHandlers(
       console.warn(`No processes found for area ${areaId}, returning all available processes`);
       return allProcesses; // Return all loaded processes if no area-specific processes are loaded
     }
-    const associatedProcessIds = areaProcessList.map((process) => process.processKey);
+    const associatedProcessIds = areaProcessList.map((process) => `${process.processKey}:${String(process.version ?? '')}`);
     const filteredProcesses = allProcesses.filter(
-      (process) => !associatedProcessIds.includes(process.processKey),
+      (process) => !associatedProcessIds.includes(`${process.processKey}:${String(process.version ?? '')}`),
     );
     return filteredProcesses;
   };

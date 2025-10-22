@@ -3,13 +3,14 @@ import { IGRPLayout } from '@igrp/framework-next';
 
 import { configLayout } from '@/actions/igrp/layout';
 import { createConfig } from '@igrp/template-config';
+import { IGRPLayoutConfigArgs } from '@igrp/framework-next-types';
 // import { headers } from 'next/headers';
 
 export default async function IGRPRootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const layoutConfig = await configLayout();
-  const config = await createConfig(layoutConfig);
+  const config = await createConfig(layoutConfig as IGRPLayoutConfigArgs);
 
   // const { layout, previewMode } = config;
   // const { session } = layout ?? {};

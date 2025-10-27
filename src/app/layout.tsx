@@ -1,4 +1,8 @@
 import '@/styles/globals.css';
+/* start area to add custom styles */
+
+/* end area to add custom styles */
+
 import '@igrp/framework-next-ui/dist/styles.css';
 import '@igrp/igrp-framework-react-design-system/dist/styles.css';
 
@@ -8,6 +12,7 @@ import { IGRP_META_THEME_COLORS } from '@igrp/igrp-framework-react-design-system
 
 import { configLayout } from '@/actions/igrp/layout';
 import { createConfig } from '@/igrp.template.config';
+import { IGRPLayoutConfigArgs } from '@igrp/framework-next-types';
 
 export const metadata: Metadata = {
   title: 'IGRP | Applications Center',
@@ -21,7 +26,7 @@ export const viewport: Viewport = {
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const layoutConfig = await configLayout();
-  const config = await createConfig(layoutConfig);
+  const config = await createConfig(layoutConfig as IGRPLayoutConfigArgs);
 
   return <IGRPRootLayout config={config}>{children}</IGRPRootLayout>;
 }

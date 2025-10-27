@@ -28,7 +28,7 @@ export default function PageProcessconfigurationComponent() {
   const [tabstabs1Items, setTabstabs1Items] = useState<IGRPTabItem[]>([]);
 
   const { igrpToast } = useIGRPToast();
-
+ 
   /*---------------------------------Reserved area begin------------------------------*/
   const pc = useProcessConfiguration();
   /*---------------------------------Reserved area end------------------------------*/

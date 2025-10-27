@@ -47,10 +47,9 @@ export function AreaCard({
   const hasSubareas = area.subareas && area.subareas.length > 0
   const hasProcesses = processes.length > 0
   
-  // For top-level areas, we assume they might have subareas even if not loaded yet
-  // For subareas, we only show expansion if they actually have subareas loaded
   const canHaveSubareas = level === 0 || hasSubareas
-  const hasContent = hasSubareas || hasProcesses || (level === 0 && !isExpanded)
+  // Show toggle even when collapsed to allow lazy loading on subareas
+  const hasContent = hasSubareas || hasProcesses || !isExpanded
 
   const handleToggleExpansion = async () => {
     console.log("Toggling expansion for area:", area.id);
@@ -62,7 +61,7 @@ export function AreaCard({
       <div className="p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 flex-1">
-            {(hasContent || canHaveSubareas) && (
+            {(hasContent || canHaveSubareas || level > 0) && (
               <button
                 onClick={handleToggleExpansion}
                 className="p-1 hover:bg-muted rounded"

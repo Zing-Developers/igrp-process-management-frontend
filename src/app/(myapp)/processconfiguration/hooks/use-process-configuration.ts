@@ -46,7 +46,7 @@ export function useProcessConfiguration() {
     );
   };
 
-  const { applicationsList } = useAccessManagement();
+  const { applicationsOptions } = useAccessManagement();
 
   return {
     // Data
@@ -92,6 +92,6 @@ export function useProcessConfiguration() {
       ...expansion,
       handleToggleExpansion,
     },
-    applications: applicationsList,
+    applications: applicationsOptions,
   };
 }

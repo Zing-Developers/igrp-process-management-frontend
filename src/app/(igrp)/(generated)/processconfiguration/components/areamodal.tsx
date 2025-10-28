@@ -69,7 +69,7 @@ onSave(data)
   useEffect(() => {    
     setSelectapplicationBaseOptions(applications||[]);
     setSelectparentIdOptions(areas.map((area) => ({ label: area.name, value: area.id })));
-  }, [areas]);
+  }, [applications,areas]);
 
   const title = isEditing ? 'Editar Área' : 'Nova Área';
 

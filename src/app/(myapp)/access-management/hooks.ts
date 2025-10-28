@@ -12,10 +12,12 @@ export const useAccessManagement = () => {
   }, []);
 
   //i want to return the list map applciatipns code, name to value and label
-  const applicationsList = applications.map((application) => ({
+  const applicationsOptions = applications.map((application) => ({
     value: application.code,
     label: application.name,
   }));
 
-  return { applications, applicationsList };
+  console.log('applicationsOptions', applicationsOptions);
+
+  return { applications, applicationsOptions };
 };

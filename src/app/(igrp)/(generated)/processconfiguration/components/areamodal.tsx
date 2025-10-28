@@ -67,10 +67,7 @@ onSave(data)
   }, [formData]);
 
   useEffect(() => {    
-    setSelectapplicationBaseOptions([
-      { label: 'Cadastro', value: 'CADASTRO' },
-      { label: 'Demo', value: 'demo' }
-    ]);
+    setSelectapplicationBaseOptions(applications||[]);
     setSelectparentIdOptions(areas.map((area) => ({ label: area.name, value: area.id })));
   }, [areas]);
 

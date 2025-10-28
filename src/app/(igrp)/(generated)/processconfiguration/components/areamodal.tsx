@@ -26,7 +26,7 @@ import {
 	IGRPModalDialogClose 
 } from "@igrp/igrp-framework-react-design-system";
 
-export default function Areamodal({ open, setOpen, isEditing, formData, areas, onFormChange, onSave, onClose } : { open: boolean, setOpen: (prompt: boolean) => void, isEditing: boolean, formData: object, areas: any[], onFormChange: (data: any) => void, onSave: (data: any) => void, onClose: () => void }) {
+export default function Areamodal({ open, setOpen, isEditing, formData, areas, onFormChange, onSave, onClose, applications } : { open: boolean, setOpen: (prompt: boolean) => void, isEditing: boolean, formData: object, areas: any[], onFormChange: (data: any) => void, onSave: (data: any) => void, onClose: () => void, applications: any }) {
 
   
   const form1 = z.object({
@@ -67,13 +67,9 @@ onSave(data)
   }, [formData]);
 
   useEffect(() => {    
-    setSelectapplicationBaseOptions([
-      { label: 'Cadastro', value: 'CADASTRO' },
-      { label: 'Demo', value: 'demo' },
-      { label: 'IRN Processo', value: 'IRN' }
-    ]);
+    setSelectapplicationBaseOptions(applications||[]);
     setSelectparentIdOptions(areas.map((area) => ({ label: area.name, value: area.id })));
-  }, [areas]);
+  }, [applications,areas]);
 
   const title = isEditing ? 'Editar Área' : 'Nova Área';
 
@@ -96,6 +92,7 @@ onSave(data)
   
 >
   <IGRPModalDialogTitle
+  name={ `modalDialogTitle1` }
   
   
   
@@ -153,8 +150,7 @@ required={ true }
 rows={ 3 }
 required={ false }
   className={ cn() }
-  maxLength={255}
-  minLength={0}
+  
   
 >
 </IGRPTextarea>

@@ -28,7 +28,7 @@ export default function PageProcessconfigurationComponent() {
   const [tabstabs1Items, setTabstabs1Items] = useState<IGRPTabItem[]>([]);
 
   const { igrpToast } = useIGRPToast();
- 
+
   /*---------------------------------Reserved area begin------------------------------*/
   const pc = useProcessConfiguration();
   /*---------------------------------Reserved area end------------------------------*/
@@ -111,8 +111,8 @@ export default function PageProcessconfigurationComponent() {
                 <ArtifactProcessesList
                   processes={pc.allProcesses}
                   onArtifactEdit={(processId) => pc.handleOpenArtifactModal(processId)}
-                  onProcessNumberEdit={(processId, processKey, processApplicationBase) =>
-                    pc.handleOpenProcessNumberModal(processId, processKey, processApplicationBase ?? '')
+                  onProcessNumberEdit={(processId, processKey) =>
+                    pc.handleOpenProcessNumberModal(processId, processKey, '')
                   }
                 ></ArtifactProcessesList>
               </>
@@ -125,6 +125,7 @@ export default function PageProcessconfigurationComponent() {
         formData={pc.areaForm.formData}
         areas={pc.allAreasFlat}
         open={pc.areaForm.modalState.isOpen}
+        applications={pc.applications}
         setOpen={(open) => (open ? pc.areaForm.openModal() : pc.areaForm.closeModal())}
         onFormChange={pc.areaForm.setFormData}
         onSave={pc.areaForm.modalState.editingArea ? pc.handleUpdateArea : pc.handleCreateArea}

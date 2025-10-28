@@ -4,6 +4,7 @@ import { useSearch } from './use-search';
 import { useAreaHandlers } from './use-area-handlers';
 import { useProcessHandlers } from './use-process-handlers';
 import { useComputedValues } from './use-computed-values';
+import { useAccessManagement } from '../../access-management/hooks';
 
 export function useProcessConfiguration() {
   // Configuration data
@@ -44,6 +45,8 @@ export function useProcessConfiguration() {
       areaHandlers.handleLoadAreaProcesses,
     );
   };
+
+  const { applicationsOptions } = useAccessManagement();
 
   return {
     // Data
@@ -89,5 +92,6 @@ export function useProcessConfiguration() {
       ...expansion,
       handleToggleExpansion,
     },
+    applications: applicationsOptions,
   };
 }

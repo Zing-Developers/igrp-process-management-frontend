@@ -2,8 +2,6 @@
  * Centralized URL configuration for process management
  */
 
-const BASE_RUNTIME_URL = process.env.IGRP_APP_BASE_RUNTIME_URL ?? '';
-
 /**
  * URL builders for process management
  */
@@ -15,6 +13,7 @@ export const urlConfig = {
    * @returns Complete URL for process instance
    */
   buildProcessInstanceUrl: (procReleaseKey: string, processInstanceId: string): string => {
+    const BASE_RUNTIME_URL = process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL ?? '';
     return `${BASE_RUNTIME_URL}/process/${procReleaseKey}/${processInstanceId}`;
   },
 
@@ -32,6 +31,8 @@ export const urlConfig = {
     taskKey: string,
     taskId: string,
   ): string => {
+    const BASE_RUNTIME_URL = process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL ?? '';
+
     return `${BASE_RUNTIME_URL}/process/${procReleaseKey}/${processInstanceId}/${taskKey}/${taskId}`;
   },
 
@@ -41,6 +42,8 @@ export const urlConfig = {
    * @returns Complete URL with provided segments
    */
   buildProcessUrl: (...segments: string[]): string => {
+    const BASE_RUNTIME_URL = process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL ?? '';
+
     return `${BASE_RUNTIME_URL}/process/${segments.join('/')}`;
   },
 } as const;

@@ -178,7 +178,7 @@ export function useProcessHandlers(
     // Load process number configurations when modal opens
     if (processId) {
       await processNumberOperations.loadProcessNumberConfigs(
-        processId,
+        processKey,
         processNumberForm.setProcessNumberConfigs,
         processNumberForm.setLoading,
         processNumberForm.populateFormDataFromConfig,

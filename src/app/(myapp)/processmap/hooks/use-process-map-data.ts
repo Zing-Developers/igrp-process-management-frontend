@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { ExtendedArea } from '../../processconfiguration/types';
 import { AreaService } from '../../processconfiguration/services/area.service';
 import { organizeAreasHierarchy, getAllAreasFlat } from '../../processconfiguration/utils/area-hierarchy';
+import { keepLatestByKey } from '../utils/versioning';
 
 export function useProcessMapData() {
   const [areas, setAreas] = useState<ExtendedArea[]>([]);
@@ -14,18 +15,15 @@ export function useProcessMapData() {
       setLoading(true);
       setError(undefined);
       
-      // Load only top-level areas initially (areas without areaId)
       const areasResponse = await AreaService.getAreas('');
-      
-      // Filter to get only top-level areas
       const topLevelAreas = areasResponse.content?.filter(area => !area.areaId) || [];
-      
-      // Convert to ExtendedArea format
+
       const extendedAreas: ExtendedArea[] = topLevelAreas.map(area => ({
         ...area,
-        subareas: [] // Will be loaded on-demand
+        process: area.process ? keepLatestByKey(area.process) : undefined,
+        subareas: []
       }));
-      
+
       setAreas(extendedAreas);
     } catch (err) {
       setError('Failed to load process map data');
@@ -37,30 +35,33 @@ export function useProcessMapData() {
 
   const loadSubareas = useCallback(async (parentAreaId: string) => {
     try {
-      // Check if already loaded
       if (loadedNodes.has(parentAreaId)) {
         return;
       }
 
       const subareas = await AreaService.getSubareas(parentAreaId);
+      console.log('Loaded subareas for area', parentAreaId, ':', subareas);
 
-      // Update the areas state to include the loaded subareas
+      const normalizedSubareas = subareas.map(sa => ({
+        ...sa,
+        process: sa.process ? keepLatestByKey(sa.process) : undefined,
+      }));
+
       setAreas((prev) => {
         const flatAreas = getAllAreasFlat(prev);
 
-        // Add the new subareas to the flat list if they don't already exist
-        subareas.forEach((subarea) => {
+        normalizedSubareas.forEach((subarea) => {
           const exists = flatAreas.find((area) => area.id === subarea.id);
           if (!exists) {
-            flatAreas.push(subarea);
+            flatAreas.push(subarea as ExtendedArea);
           }
         });
+        console.log('Updated flat areas after adding subareas:', flatAreas);
 
-        // Reorganize the hierarchy
         return organizeAreasHierarchy(flatAreas);
       });
+      console.log('Updated areas after loading subareas:', areas);
 
-      // Mark this node as loaded
       setLoadedNodes(prev => new Set([...prev, parentAreaId]));
     } catch (error) {
       console.error('Error loading subareas:', error);

@@ -17,7 +17,5 @@ export const useAccessManagement = () => {
     label: application.name,
   }));
 
-  console.log('applicationsOptions', applicationsOptions);
-
   return { applications, applicationsOptions };
 };

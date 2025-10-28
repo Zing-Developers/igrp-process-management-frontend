@@ -28,7 +28,6 @@ export const organizeAreasHierarchy = (flatAreas: Area[]): ExtendedArea[] => {
       topLevelAreas.push(extendedArea);
     }
   });
-  console.log('organizeAreasHierarchy topLevelAreas', topLevelAreas);
   return topLevelAreas;
 };
 

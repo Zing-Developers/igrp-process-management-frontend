@@ -2,7 +2,6 @@
 
 import { cookies } from 'next/headers';
 
-//import { getSession } from './auth';
 import { getAccessToken } from '@/lib/auth-helpers';
 
 export async function getTheme() {

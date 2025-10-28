@@ -6,9 +6,9 @@ import {
 } from '@igrp/framework-next';
 import { AccessManagementClient } from '@igrp/platform-access-management-client-ts';
 
-const IGRP_APP_MANAGER_API = process.env.IGRP_APP_MANAGER_API || '';
-
 export async function getClientAccess(): Promise<AccessManagementClient> {
+  const IGRP_APP_MANAGER_API = process.env.IGRP_APP_MANAGER_API || '';
+
   igrpResetAccessClientConfig();
   const session = await getAccessToken();
 

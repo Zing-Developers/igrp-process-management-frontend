@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY iGRP STUDIO. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -8,48 +8,58 @@
 
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
-import { IGRPFormHandle } from "@igrp/igrp-framework-react-design-system";
-import { z } from "zod"
-import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
-import { 
+import { IGRPFormHandle } from '@igrp/igrp-framework-react-design-system';
+import { z } from 'zod';
+import { IGRPOptionsProps } from '@igrp/igrp-framework-react-design-system';
+import {
   IGRPModalDialog,
-	IGRPModalDialogContent,
-	IGRPModalDialogHeader,
-	IGRPModalDialogTitle,
-	IGRPModalDialogDescription,
-	IGRPForm,
-	IGRPInputText,
-	IGRPCombobox,
-	IGRPModalDialogFooter,
-	IGRPButton 
-} from "@igrp/igrp-framework-react-design-system";
+  IGRPModalDialogContent,
+  IGRPModalDialogHeader,
+  IGRPModalDialogTitle,
+  IGRPModalDialogDescription,
+  IGRPForm,
+  IGRPInputText,
+  IGRPCombobox,
+  IGRPModalDialogFooter,
+  IGRPButton,
+} from '@igrp/igrp-framework-react-design-system';
 
-export default function Processnumbermodal({ open, setOpen, formData, onFormChange, onSave } : { open: boolean, setOpen: (prompt: boolean) => void, formData: any, onFormChange: (field: any, value: any) => void, onSave: (data: any) => void }) {
-
+export default function Processnumbermodal({
+  open,
+  setOpen,
+  formData,
+  onFormChange,
+  onSave,
+}: {
+  open: boolean;
+  setOpen: (prompt: boolean) => void;
+  formData: any;
+  onFormChange: (field: any, value: any) => void;
+  onSave: (data: any) => void;
+}) {
   console.log('formData', formData);
   const form1 = z.object({
     prefix: z.string().nonempty(),
     dateFormat: z.string().nonempty(),
-    checkdigit: z.string().nonempty()
-})
+    checkdigit: z.string().nonempty(),
+  });
 
-type Form1ZodType = typeof form1;
+  type Form1ZodType = typeof form1;
 
-const initForm1: z.infer<Form1ZodType> = {
+  const initForm1: z.infer<Form1ZodType> = {
     prefix: ``,
     dateFormat: ``,
-    checkdigit: ``
-}
-
+    checkdigit: ``,
+  };
 
   const formform1Ref = useRef<IGRPFormHandle<Form1ZodType> | null>(null);
   const [form1Data, setForm1Data] = useState<any>(initForm1);
   const [selectdateFormatOptions, setSelectdateFormatOptions] = useState<IGRPOptionsProps[]>([]);
   const [selectcheckdigitOptions, setSelectcheckdigitOptions] = useState<IGRPOptionsProps[]>([]);
-  
-const { igrpToast } = useIGRPToast()
 
-/* BEGIN-NOSIRESERVED-AREA */
+  const { igrpToast } = useIGRPToast();
+
+  /* BEGIN-NOSIRESERVED-AREA */
   // Load combobox options on component mount
   useEffect(() => {
     setSelectdateFormatOptions([
@@ -66,7 +76,7 @@ const { igrpToast } = useIGRPToast()
       { label: '4', value: '4' },
     ]);
   }, []);
-  
+
   // Update form data when formData prop changes
   useEffect(() => {
     if (formData) {
@@ -79,7 +89,7 @@ const { igrpToast } = useIGRPToast()
       setForm1Data(updatedData);
       formform1Ref.current?.reset(updatedData);
     }
-  }, [formData]); 
+  }, [formData]);
 
   const handleSubmit = async (data: any) => {
     // Map form data to ProcessNumberConfig format
@@ -94,108 +104,86 @@ const { igrpToast } = useIGRPToast()
   };
   /* END-NOSIRESERVED-AREA */
 
-
   return (
-<div className={ cn('component',)}    >
-	<IGRPModalDialog
-  onOpenChange={ setOpen }
-  open={ open }
->
-  <IGRPModalDialogContent
-  size={ `lg` }
-  className={ cn() }
-  
-  
->
-  <IGRPModalDialogHeader
-  className={ cn('',) }
-  
-  
->
-  <IGRPModalDialogTitle
-  
-  
-  
->
-  Número Processo
-</IGRPModalDialogTitle>
-  <IGRPModalDialogDescription
-  
-  
-  
->
-  Configure o formato do número do processo especificando um prefixo, formato de data e comprimento do dígito verificador
-</IGRPModalDialogDescription>
-</IGRPModalDialogHeader>
-  <IGRPForm
-  schema={ form1 }
-  validationMode={ `onBlur` }
-formRef={ formform1Ref }
-  className={ cn('',) }
-  onSubmit={ async (data) => await handleSubmit(data) }
-  defaultValues={ form1Data }
->
-  <>
-  <div className={ cn('grid','grid-cols-1 ','md:grid-cols-1 ','lg:grid-cols-1 ',' gap-4',)}    >
-	<IGRPInputText
-  name={ `prefix` }
-  label={ `Prefixo` }
-showIcon={ false }
-required={ true }
-  className={ cn('col-span-1',) }
-  
-  
->
-</IGRPInputText>
-<IGRPCombobox
-  name={ `dateFormat` }
-  label={ `Data Formato` }
-variant={ `single` }
-placeholder={ `Select an option...` }
-required={ true }
-selectLabel={ `No option found` }
-showSearch={ true }
-showIcon={ false }
-iconName={ `CornerDownRight` }
-  className={ cn('col-span-1',) }
-  onChange={ () => {} }
-  options={ selectdateFormatOptions }
->
-</IGRPCombobox>
-<IGRPCombobox
-  name={ `checkdigit` }
-  label={ `Check Digit` }
-variant={ `single` }
-placeholder={ `Select an option...` }
-required={ true }
-selectLabel={ `No option found` }
-showSearch={ true }
-showIcon={ false }
-iconName={ `CornerDownRight` }
-  className={ cn('col-span-1',) }
-  onChange={ () => {} }
-  options={ selectcheckdigitOptions }
->
-</IGRPCombobox></div>
-</>
-</IGRPForm>
-  <IGRPModalDialogFooter
-  className={ cn('',) }
-  
-  
->
-  <IGRPButton
-  name={ `button1` }
-  variant={ `default` }
-size={ `default` }
-showIcon={ false }
-  onClick={ () => formform1Ref.current?.submit() }
-  
->
-  Gravar
-</IGRPButton>
-</IGRPModalDialogFooter>
-</IGRPModalDialogContent>
-</IGRPModalDialog></div>
+    <div className={cn('component')}>
+      <IGRPModalDialog onOpenChange={setOpen} open={open}>
+        <IGRPModalDialogContent size={`lg`} className={cn()}>
+          <IGRPModalDialogHeader className={cn('')}>
+            <IGRPModalDialogTitle>Número Processo</IGRPModalDialogTitle>
+            <IGRPModalDialogDescription>
+              Configure o formato do número do processo especificando um prefixo, formato de data e
+              comprimento do dígito verificador
+            </IGRPModalDialogDescription>
+          </IGRPModalDialogHeader>
+          <IGRPForm
+            schema={form1}
+            validationMode={`onBlur`}
+            formRef={formform1Ref}
+            className={cn('')}
+            onSubmit={async (data) => await handleSubmit(data)}
+            defaultValues={form1Data}
+          >
+            <>
+              <div
+                className={cn(
+                  'grid',
+                  'grid-cols-1 ',
+                  'md:grid-cols-1 ',
+                  'lg:grid-cols-1 ',
+                  ' gap-4',
+                )}
+              >
+                <IGRPInputText
+                  name={`prefix`}
+                  label={`Prefixo`}
+                  showIcon={false}
+                  required={true}
+                  className={cn('col-span-1')}
+                ></IGRPInputText>
+                <IGRPCombobox
+                  name={`dateFormat`}
+                  label={`Data Formato`}
+                  variant={`single`}
+                  placeholder={`Select an option...`}
+                  required={true}
+                  selectLabel={`No option found`}
+                  showSearch={true}
+                  showIcon={false}
+                  iconName={`CornerDownRight`}
+                  className={cn('col-span-1')}
+                  onChange={() => {}}
+                  options={selectdateFormatOptions}
+                ></IGRPCombobox>
+                <IGRPCombobox
+                  name={`checkdigit`}
+                  label={`Check Digit`}
+                  variant={`single`}
+                  placeholder={`Select an option...`}
+                  required={true}
+                  selectLabel={`No option found`}
+                  showSearch={true}
+                  showIcon={false}
+                  iconName={`CornerDownRight`}
+                  className={cn('col-span-1')}
+                  onChange={() => {}}
+                  options={selectcheckdigitOptions}
+                ></IGRPCombobox>
+              </div>
+            </>
+          </IGRPForm>
+          <IGRPModalDialogFooter className={cn('')}>
+            <IGRPButton
+              name={`button1`}
+              variant={`default`}
+              size={`default`}
+              showIcon={false}
+              onClick={() => formform1Ref.current?.submit()}
+            >
+              Gravar
+            </IGRPButton>
+          </IGRPModalDialogFooter>
+        </IGRPModalDialogContent>
+      </IGRPModalDialog>
+    </div>
   );
 }

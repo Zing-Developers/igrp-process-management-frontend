@@ -11,16 +11,15 @@ import { useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 export function useProcessNumberOperations() {
   const { igrpToast } = useIGRPToast();
   const loadProcessNumberConfigs = async (
-    processId: string,
+    processKey: string,
     setProcessNumberConfigs: (configs: ProcessSequence) => void,
     setLoading: (loading: boolean) => void,
     populateFormDataFromConfig?: (config: ProcessSequence) => void,
   ) => {
     setLoading(true);
     try {
-      const configs = await getProcessNumberConfigs(processId);
+      const configs = await getProcessNumberConfigs(processKey);
       setProcessNumberConfigs(configs);
-
       // If there's an existing config, populate the form
       if (populateFormDataFromConfig) {
         populateFormDataFromConfig(configs);

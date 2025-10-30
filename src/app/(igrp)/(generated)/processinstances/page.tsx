@@ -56,7 +56,7 @@ export default function PageProcessinstancesComponent() {
   
 const { igrpToast } = useIGRPToast()
 
-function goToProcessRuntime (row: any): void  | undefined {
+async function goToProcessRuntime (row: any): Promise<void  | undefined> {
 
   const taskUrl = await urlConfig.buildTaskExecutionUrl(
   row.procReleaseKey,

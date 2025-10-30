@@ -17,10 +17,13 @@ export function useMyTasks() {
     handleCloseUnclaimModal,
   } = useMyTasksData();
 
+
+
   // Transform tasks data for the table
   const tableData = useMemo((): TaskTableRow[] => {
     /* eslint-disable @typescript-eslint/ban-ts-comment */
     // @ts-expect-error Allow JSX in table row fields without refactor
+    
     return myTasksState.tasks.map((task) => {
       // Calculate waiting days
       const createdDate = new Date(task.startedAt);
@@ -40,6 +43,7 @@ export function useMyTasks() {
         taskKey: task.taskKey,
         taskId: task.id,
         processName: task.processName,
+        applicationBase: task.applicationBase,
       };
     });
   }, [myTasksState.tasks]);

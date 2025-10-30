@@ -51,7 +51,6 @@ export function useMyTasksData() {
 
     // Use custom filters if provided, otherwise use current filters state
     const filtersToUse = customFilters ? { ...filters, ...customFilters } : filters;
-    console.log('Fetching my tasks with filters:', filtersToUse);
 
     try {
       // Map filter fields to match the service interface

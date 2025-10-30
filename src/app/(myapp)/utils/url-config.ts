@@ -1,3 +1,4 @@
+
 /**
  * Centralized URL configuration for process management
  */
@@ -30,7 +31,9 @@ export const urlConfig = {
     processInstanceId: string,
     taskKey: string,
     taskId: string,
+    applicationBase: string,
   ): string => {
+    console.log('applicationBase', applicationBase);
     const BASE_RUNTIME_URL = process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL ?? '';
 
     return `${BASE_RUNTIME_URL}/process/${procReleaseKey}/${processInstanceId}/${taskKey}/${taskId}`;

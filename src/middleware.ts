@@ -19,9 +19,11 @@ export async function middleware(request: NextRequest) {
   if (isPublicPath(pathname)) return NextResponse.next();
 
   const token = await getToken({ req: request });
-  
+
   if (token?.error === 'RefreshAccessTokenError') {
-    return NextResponse.redirect(new URL('/login', request.url));
+    return NextResponse.redirect(
+      new URL('/login', process.env.NEXTAUTH_URL_INTERNAL ?? request.url),
+    );
   }
 
   return NextResponse.next();

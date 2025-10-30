@@ -1,9 +1,19 @@
-
 /**
  * Centralized URL configuration for process management
  */
 
-import { getApplication } from "../access-management/applications";
+import { getApplication } from '../access-management/applications';
+
+export function formatSlug(slug: string): string {
+  let baseUrl = '';
+  if (slug.startsWith('/apps')) {
+    baseUrl = slug;
+  } else {
+    baseUrl = `/apps/${slug}`;
+  }
+
+  return new URL(baseUrl).toString();
+}
 
 /**
  * URL builders for process management
@@ -36,10 +46,16 @@ export const urlConfig = {
     applicationBase: string,
   ): Promise<string> => {
     const application = await getApplication(applicationBase);
-    console.log('application', application);
-    const BASE_RUNTIME_URL = process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL ?? '';
 
-    return `${BASE_RUNTIME_URL}/process/${procReleaseKey}/${processInstanceId}/${taskKey}/${taskId}`;
+    const { slug, url } = application;
+
+    const href = process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL
+      ? process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL
+      : slug
+        ? formatSlug(slug)
+        : (url ?? '');
+
+    return `${href}/process/${procReleaseKey}/${processInstanceId}/${taskKey}/${taskId}`;
   },
 
   /**

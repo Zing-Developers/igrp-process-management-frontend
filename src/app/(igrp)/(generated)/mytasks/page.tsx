@@ -57,16 +57,15 @@ const { igrpToast } = useIGRPToast()
 
 async function executeTask (row: any): Promise<void  | undefined> {
 
-  console.log('Executing task:', row);
-    // Navigate to task execution page using centralized URL config
-    const taskUrl =await urlConfig.buildTaskExecutionUrl(
-      row.processKey,
-      row.processInstanceId,
-      row.taskKey,
-      row.taskId,
-      row.applicationBase,
-    );
-    router.push(taskUrl);
+  // Navigate to task execution page using centralized URL config
+const taskUrl = await urlConfig.buildTaskExecutionUrl(
+  row.processKey,
+  row.processInstanceId,
+  row.taskKey,
+  row.taskId,
+  row.applicationBase,
+);
+router.push(taskUrl);
 
 }
 

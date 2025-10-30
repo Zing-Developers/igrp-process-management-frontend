@@ -14,3 +14,15 @@ export async function getApplications(): Promise<ApplicationDTO[]> {
     throw error;
   }
 }
+
+export async function getApplication(appCode: string): Promise<ApplicationDTO> {
+  const client = await getClientAccess();
+
+  try {
+    const result = await client.applications.getApplicationByCode(appCode);
+    return result.data as ApplicationDTO;
+  } catch (error) {
+    console.error('[apps] Não foi possível obter os dados:', error);
+    throw error;
+  }
+}

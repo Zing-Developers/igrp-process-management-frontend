@@ -87,8 +87,7 @@ export function useTaskManagement() {
         processInstanceId: task.processInstanceId,
         processName: task.processName,
         priority: task.priority + '',
-        statusDesc: task.statusDesc,
-        applicationBase: task.applicationBase,
+        statusDesc: task.statusDesc
       };
     });
     

@@ -55,7 +55,7 @@ export default function PageMytasksComponent() {
   
 const { igrpToast } = useIGRPToast()
 
-function executeTask (row: any): void  | undefined {
+async function executeTask (row: any): Promise<void  | undefined> {
 
   console.log('Executing task:', row);
     // Navigate to task execution page using centralized URL config

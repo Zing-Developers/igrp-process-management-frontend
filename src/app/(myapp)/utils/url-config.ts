@@ -3,6 +3,8 @@
  * Centralized URL configuration for process management
  */
 
+import { getApplication } from "../access-management/applications";
+
 /**
  * URL builders for process management
  */
@@ -26,14 +28,15 @@ export const urlConfig = {
    * @param taskId - Task ID
    * @returns Complete URL for task execution
    */
-  buildTaskExecutionUrl: (
+  buildTaskExecutionUrl: async (
     procReleaseKey: string,
     processInstanceId: string,
     taskKey: string,
     taskId: string,
     applicationBase: string,
-  ): string => {
-    console.log('applicationBase', applicationBase);
+  ): Promise<string> => {
+    const application = await getApplication(applicationBase);
+    console.log('application', application);
     const BASE_RUNTIME_URL = process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL ?? '';
 
     return `${BASE_RUNTIME_URL}/process/${procReleaseKey}/${processInstanceId}/${taskKey}/${taskId}`;

@@ -68,6 +68,7 @@ export default function PageTaskmanagementComponent() {
       row.processInstanceId,
       row.taskKey,
       row.taskId,
+      row.applicationBase,
     );
     router.push(taskUrl);
   }

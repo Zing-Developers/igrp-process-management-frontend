@@ -64,6 +64,7 @@ function executeTask (row: any): void  | undefined {
       row.processInstanceId,
       row.taskKey,
       row.taskId,
+      row.applicationBase,
     );
     router.push(taskUrl);
 

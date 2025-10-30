@@ -59,7 +59,7 @@ async function executeTask (row: any): Promise<void  | undefined> {
 
   console.log('Executing task:', row);
     // Navigate to task execution page using centralized URL config
-    const taskUrl = urlConfig.buildTaskExecutionUrl(
+    const taskUrl =await urlConfig.buildTaskExecutionUrl(
       row.processKey,
       row.processInstanceId,
       row.taskKey,

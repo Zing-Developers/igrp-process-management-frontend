@@ -78,8 +78,6 @@ export function useProcessOperations(router?: AppRouterInstance) {
           try {
             // Fetch tasks for the process instance to get task execution info
             const tasksResponse = await getTasksByProcessInstance(instance.id);
-            console.log('instance', instance);
-            console.log('tasksResponse', tasksResponse);
             // Check if there are active tasks available
             if (tasksResponse.content && tasksResponse.content.length > 0) {
               const firstTask = tasksResponse.content[0];
@@ -89,11 +87,12 @@ export function useProcessOperations(router?: AppRouterInstance) {
                 await claimTask(firstTask.id); // You may want to get the actual user from context/session
 
                 // Build task execution URL using the first available task
-                const taskUrl = urlConfig.buildTaskExecutionUrl(
+                const taskUrl = await urlConfig.buildTaskExecutionUrl(
                   instance.procReleaseKey,
                   firstTask.processInstanceId,
                   firstTask.taskKey,
                   firstTask.id,
+                  firstTask.applicationBase ?? '',
                 );
                 router.push(taskUrl);
               } catch (claimError) {
@@ -109,11 +108,12 @@ export function useProcessOperations(router?: AppRouterInstance) {
                 }
 
                 // Still redirect to task execution URL even if claiming fails
-                const taskUrl = urlConfig.buildTaskExecutionUrl(
+                const taskUrl = await urlConfig.buildTaskExecutionUrl(
                   instance.procReleaseKey,
                   firstTask.processInstanceId,
                   firstTask.taskKey,
                   firstTask.id,
+                  firstTask.applicationBase ?? '',
                 );
                 router.push(taskUrl);
               }

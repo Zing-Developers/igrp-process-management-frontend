@@ -65,7 +65,7 @@ export const urlConfig = {
       : slug
         ? formatSlug(slug)
         : (url ?? '');
-    console.log('href', href);
+    
     return `${href}/process/${procReleaseKey}/${processInstanceId}/${taskKey}/${taskId}`;
   },
 

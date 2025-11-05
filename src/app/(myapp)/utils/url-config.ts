@@ -12,7 +12,19 @@ export function formatSlug(slug: string): string {
     baseUrl = `/apps/${slug}`;
   }
 
-  return new URL(baseUrl).toString();
+  // Check if baseUrl is already a full URL
+  if (baseUrl.startsWith('http://') || baseUrl.startsWith('https://')) {
+    return baseUrl;
+  }
+
+  // If it's a relative path, construct a full URL using the current origin
+  // In browser context, use window.location.origin; otherwise return as relative path
+  if (typeof window !== 'undefined' && window.location) {
+    return `${window.location.origin}${baseUrl}`;
+  }
+
+  // Server-side or fallback: return relative path (will work with Next.js router)
+  return baseUrl;
 }
 
 /**
@@ -45,14 +57,7 @@ export const urlConfig = {
     taskId: string,
     applicationBase: string,
   ): Promise<string> => {
-    console.log('applicationBase', applicationBase);
-    console.log(
-      'process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL',
-      process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL,
-    );
     const application = await getApplication(applicationBase);
-    console.log('application', application);
-
     const { slug, url } = application;
 
     const href = process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL

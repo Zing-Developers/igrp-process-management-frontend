@@ -21,7 +21,7 @@ export async function getApplication(appCode: string): Promise<ApplicationDTO> {
   try {
     const result = await client.applications.getApplicationByCode(appCode);
     return result.data as ApplicationDTO;
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('[apps] Não foi possível obter os dados:', error);
     throw error;
   }

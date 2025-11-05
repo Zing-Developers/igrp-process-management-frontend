@@ -45,7 +45,13 @@ export const urlConfig = {
     taskId: string,
     applicationBase: string,
   ): Promise<string> => {
+    console.log('applicationBase', applicationBase);
+    console.log(
+      'process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL',
+      process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL,
+    );
     const application = await getApplication(applicationBase);
+    console.log('application', application);
 
     const { slug, url } = application;
 
@@ -54,7 +60,7 @@ export const urlConfig = {
       : slug
         ? formatSlug(slug)
         : (url ?? '');
-
+    console.log('href', href);
     return `${href}/process/${procReleaseKey}/${processInstanceId}/${taskKey}/${taskId}`;
   },
 

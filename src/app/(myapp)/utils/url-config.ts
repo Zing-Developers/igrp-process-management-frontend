@@ -57,6 +57,10 @@ export const urlConfig = {
     taskId: string,
     applicationBase: string,
   ): Promise<string> => {
+    
+    if(process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL) {
+      return `${process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL}/process/${procReleaseKey}/${processInstanceId}/${taskKey}/${taskId}`;
+    }
     const application = await getApplication(applicationBase);
     const { slug, url } = application;
 

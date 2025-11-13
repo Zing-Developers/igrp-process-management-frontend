@@ -158,7 +158,6 @@ required={ false }
   name={ `parentId` }
   label={ `Área Pai` }
 placeholder={ `Select an option...` }
-gridSize={ `full` }
   className={ cn() }
   
   options={ selectparentIdOptions }

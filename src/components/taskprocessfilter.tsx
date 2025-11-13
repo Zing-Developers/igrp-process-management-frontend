@@ -214,7 +214,6 @@ export default function Taskprocessfilter({
             label={`Data`}
             startDate={new Date(`1900-01-01`)}
             endDate={new Date(`2099-12-31`)}
-            gridSize={`full`}
             dateFormat={`dd/MM/yyyy`}
             today={new Date(`2025-01-01`)}
             defaultMonth={new Date(`2025-01-01`)}

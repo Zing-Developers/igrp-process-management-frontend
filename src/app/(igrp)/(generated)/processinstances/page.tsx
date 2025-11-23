@@ -129,7 +129,7 @@ const router = useRouter()
   return (
 <div className={ cn('page','space-y-6',)}    >
 	<IGRPPageHeader
-  name={ `pageHeader1` }
+  id={ `pageHeader1` }
   title={ `Processos` }
   description={ `Visualize processos em curso por área e subárea` }
   iconBackButton={ `ArrowLeft` }
@@ -142,9 +142,9 @@ const router = useRouter()
 </div>
 </IGRPPageHeader>
 
-<div className={ cn('grid','grid-cols-1 ','md:grid-cols-2 ','lg:grid-cols-4 ',' gap-4',)}    >
+<div className={ cn('grid','md:grid-cols-2 ','lg:grid-cols-4 ',' gap-4',)}    >
 	<IGRPStatsCard
-  name={ `statsCard1` }
+  id={ `statsCard1` }
   cardBorderPosition={ `top` }
 cardBorder={ `rounded-lg` }
 cardVariant={ `info` }
@@ -160,12 +160,13 @@ iconPlacement={ `end` }
 itemPlacement={ `start` }
 showIconBorder={ false }
 showIconBackground={ true }
+  className={ cn('col-span-1',) }
   onClick={ () => {} }
   value={ statstatsCard1Value }
 >
 </IGRPStatsCard>
 <IGRPStatsCard
-  name={ `statsCard2` }
+  id={ `statsCard2` }
   cardBorderPosition={ `top` }
 cardBorder={ `rounded-lg` }
 cardVariant={ `warning` }
@@ -181,12 +182,13 @@ iconPlacement={ `end` }
 itemPlacement={ `start` }
 showIconBackground={ true }
 showIconBorder={ false }
+  className={ cn('col-span-1',) }
   onClick={ () => {} }
   value={ statstatsCard2Value }
 >
 </IGRPStatsCard>
 <IGRPStatsCard
-  name={ `statsCard4` }
+  id={ `statsCard4` }
   cardBorderPosition={ `top` }
 cardBorder={ `rounded-lg` }
 cardVariant={ `destructive` }
@@ -201,12 +203,13 @@ iconVariant={ `destructive` }
 iconPlacement={ `end` }
 itemPlacement={ `start` }
 showIconBackground={ true }
+  className={ cn('col-span-1',) }
   onClick={ () => {} }
   value={ statstatsCard4Value }
 >
 </IGRPStatsCard>
 <IGRPStatsCard
-  name={ `statsCard3` }
+  id={ `statsCard3` }
   cardBorderPosition={ `top` }
 cardBorder={ `rounded-lg` }
 cardVariant={ `success` }
@@ -222,6 +225,7 @@ iconPlacement={ `end` }
 itemPlacement={ `start` }
 showIconBackground={ true }
 showIconBorder={ false }
+  className={ cn('col-span-1',) }
   onClick={ () => {} }
   value={ statstatsCard3Value }
 >
@@ -231,6 +235,7 @@ showIconBorder={ false }
 onApplyFilters={ handleApplyFilters }
 onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
 <IGRPDataTable<Table1, Table1>
+  id={ `processes` }
   showFilter={ true }
   showPagination={ true }
   paginationClassName={ `px-3 pb-3` }

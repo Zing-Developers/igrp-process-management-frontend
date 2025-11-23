@@ -134,7 +134,7 @@ router.push(taskUrl);
   return (
 <div className={ cn('page','space-y-6',)}    >
 	<IGRPPageHeader
-  name={ `pageHeader1` }
+  id={ `pageHeader1` }
   title={ `Minhas Tarefas` }
   description={ `Tarefas atribuídas a você` }
   iconBackButton={ `ArrowLeft` }
@@ -147,9 +147,9 @@ router.push(taskUrl);
 </div>
 </IGRPPageHeader>
 
-<div className={ cn('grid','grid-cols-1 ','md:grid-cols-2 ','lg:grid-cols-3 ','xl:grid-cols-5 ',' gap-4',)}    >
+<div className={ cn('grid','md:grid-cols-2 ','lg:grid-cols-3 ','xl:grid-cols-5 ',' gap-4',)}    >
 	<IGRPStatsCard
-  name={ `statsCard1` }
+  id={ `statsCard1` }
   cardBorderPosition={ `top` }
 cardBorder={ `rounded-lg` }
 cardVariant={ `info` }
@@ -171,7 +171,7 @@ showIconBackground={ true }
 >
 </IGRPStatsCard>
 <IGRPStatsCard
-  name={ `statsCard2` }
+  id={ `statsCard2` }
   cardBorderPosition={ `top` }
 cardBorder={ `rounded-lg` }
 cardVariant={ `warning` }
@@ -193,7 +193,7 @@ showIconBorder={ false }
 >
 </IGRPStatsCard>
 <IGRPStatsCard
-  name={ `statsCard5` }
+  id={ `statsCard5` }
   cardBorderPosition={ `top` }
 cardBorder={ `rounded-lg` }
 cardVariant={ `primary` }
@@ -214,7 +214,7 @@ showIconBackground={ true }
 >
 </IGRPStatsCard>
 <IGRPStatsCard
-  name={ `statsCard4` }
+  id={ `statsCard4` }
   cardBorderPosition={ `top` }
 cardBorder={ `rounded-lg` }
 cardVariant={ `destructive` }
@@ -235,7 +235,7 @@ showIconBackground={ true }
 >
 </IGRPStatsCard>
 <IGRPStatsCard
-  name={ `statsCard3` }
+  id={ `statsCard3` }
   cardBorderPosition={ `top` }
 cardBorder={ `rounded-lg` }
 cardVariant={ `success` }
@@ -261,6 +261,7 @@ showIconBorder={ false }
 onApplyFilters={ handleApplyFilters }
 onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
 <IGRPDataTable<Table1, Table1>
+  id={ `table1` }
   showFilter={ true }
   showPagination={ true }
   paginationClassName={ `px-3 pb-3` }

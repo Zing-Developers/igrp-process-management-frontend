@@ -48,7 +48,7 @@ const { igrpToast } = useIGRPToast()
 <div className={ cn('component',)}    >
 	<div className={ cn(' space-y-6',)}    >
 	<IGRPPageHeader
-  name={ `pageHeader1` }
+  id={ `pageHeader1` }
   title={ `Dashboard` }
   description={ `Visão geral do sistema de gestão de processos` }
   iconBackButton={ `Search` }
@@ -60,9 +60,9 @@ const { igrpToast } = useIGRPToast()
 </div>
 </IGRPPageHeader>
 
-<div className={ cn('grid','grid-cols-1 ','md:grid-cols-2 ','lg:grid-cols-4 ',' gap-4',)}    >
+<div className={ cn('grid','grid-cols-2 ','md:grid-cols-2 ','lg:grid-cols-4 ',' gap-4',)}    >
 	<IGRPStatsCard
-  name={ `statsCard1` }
+  id={ `statsCard1` }
   cardBorderPosition={ `top` }
 cardBorder={ `rounded-lg` }
 cardVariant={ `info` }
@@ -84,7 +84,7 @@ showIconBackground={ true }
 >
 </IGRPStatsCard>
 <IGRPStatsCard
-  name={ `statsCard2` }
+  id={ `statsCard2` }
   cardBorderPosition={ `top` }
 cardBorder={ `rounded-lg` }
 cardVariant={ `warning` }
@@ -106,7 +106,7 @@ showIconBorder={ false }
 >
 </IGRPStatsCard>
 <IGRPStatsCard
-  name={ `statsCard4` }
+  id={ `statsCard4` }
   cardBorderPosition={ `top` }
 cardBorder={ `rounded-lg` }
 cardVariant={ `destructive` }
@@ -127,7 +127,7 @@ showIconBackground={ true }
 >
 </IGRPStatsCard>
 <IGRPStatsCard
-  name={ `statsCard3` }
+  id={ `statsCard3` }
   cardBorderPosition={ `top` }
 cardBorder={ `rounded-lg` }
 cardVariant={ `success` }

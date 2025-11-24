@@ -118,7 +118,7 @@ const { igrpToast } = useIGRPToast()
 </div>
 </IGRPPageHeader>
 
-<div className={ cn('grid','md:grid-cols-2 ','lg:grid-cols-2 ',' gap-4',)}    >
+<div className={ cn('grid','md:grid-cols-2 ','lg:grid-cols-3 ',' gap-4',)}    >
 	<IGRPStatsCard
   id={ `statsCard1` }
   cardBorderPosition={ `top` }

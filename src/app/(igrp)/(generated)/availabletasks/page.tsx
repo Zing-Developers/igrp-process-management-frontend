@@ -82,7 +82,7 @@ const { igrpToast } = useIGRPToast()
 
   // Handle claim task action
   const onClaimTask = async (taskId: string) => {
-    const result = await handleClaimTask(taskId); // You might want to get the actual user from context/session
+    const result = await handleClaimTask(taskId, 'current-user'); // You might want to get the actual user from context/session
 
     if (result.success) {
       igrpToast({
@@ -105,7 +105,7 @@ const { igrpToast } = useIGRPToast()
   return (
 <div className={ cn('page','space-y-6',)}    >
 	<IGRPPageHeader
-  name={ `pageHeader1` }
+  id={ `pageHeader1` }
   title={ `Tarefas Disponíveis` }
   description={ `Visualize e atribua tarefas disponíveis para você` }
   iconBackButton={ `ArrowLeft` }
@@ -118,9 +118,9 @@ const { igrpToast } = useIGRPToast()
 </div>
 </IGRPPageHeader>
 
-<div className={ cn('grid','grid-cols-1 ','md:grid-cols-2 ','lg:grid-cols-2 ',' gap-4',)}    >
+<div className={ cn('grid','md:grid-cols-2 ','lg:grid-cols-2 ',' gap-4',)}    >
 	<IGRPStatsCard
-  name={ `statsCard1` }
+  id={ `statsCard1` }
   cardBorderPosition={ `top` }
 cardBorder={ `rounded-lg` }
 cardVariant={ `info` }
@@ -134,7 +134,6 @@ iconSize={ `md` }
 iconVariant={ `info` }
 iconPlacement={ `end` }
 itemPlacement={ `start` }
-
 showIconBorder={ false }
 showIconBackground={ true }
   className={ cn('col-span-1',) }
@@ -147,6 +146,7 @@ showIconBackground={ true }
 onApplyFilters={ applyFilters }
 onResetFilters={ resetFilters } ></TaskProcessFilter></div>
 <IGRPDataTable<Table1, Table1>
+  id={ `tasks` }
   showFilter={ true }
   showPagination={ true }
   paginationClassName={ `px-3 pb-3` }

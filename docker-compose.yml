@@ -1,0 +1,9 @@
+services:
+  process-management-frontend-ui-development:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    image: process-management-frontend-ui-development
+    ports:
+      - '3002:3000'

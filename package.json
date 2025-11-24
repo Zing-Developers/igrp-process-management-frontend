@@ -1,6 +1,6 @@
 {
   "name": "process-management-frontend",
-  "version": "1.0.0-dev.1",
+  "version": "1.0.0-dev.2",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

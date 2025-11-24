@@ -44,7 +44,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 # Set up pnpm
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-ENV NEXT_PUBLIC_BASE_PATH="/apps/igrp-process-runtime"
+ENV NEXT_PUBLIC_BASE_PATH="/apps/igrp-process-management"
 ENV NEXT_PUBLIC_ALLOWED_DOMAINS="dsv-backoffice.irn.lan,apisix.zingdevelopers.com,*.irn.lan,img.youtube.com,*.nosi.cv,*.railway.app"
 
 # Update Corepack to the version with the fix and enable PNPM

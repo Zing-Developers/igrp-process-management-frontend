@@ -1,14 +1,16 @@
-
-import { IGRPButton, IGRPIcon } from '@igrp/igrp-framework-react-design-system';
-import { cn } from '@/lib/utils';
-import { Process } from '@igrp/platform-process-management-types';
+import { IGRPButton, IGRPIcon } from "@igrp/igrp-framework-react-design-system";
+import { cn } from "@/lib/utils";
+import { Process } from "@igrp/platform-process-management-types";
 
 interface ProcessesListProps {
   processes: Process[];
   onRemoveProcess: (processId: string) => void;
 }
 
-export function ProcessesList({ processes, onRemoveProcess }: ProcessesListProps) {
+export function ProcessesList({
+  processes,
+  onRemoveProcess,
+}: ProcessesListProps) {
   if (processes.length === 0) {
     return (
       <div className="text-sm text-muted-foreground italic">
@@ -28,9 +30,9 @@ export function ProcessesList({ processes, onRemoveProcess }: ProcessesListProps
           <div className="flex items-center gap-2">
             <IGRPIcon
               name={`icon1`}
-              iconName={'Settings'}
+              iconName={"Settings"}
               size={18}
-              className={cn('text-muted-foreground')}
+              className={cn("text-muted-foreground")}
             ></IGRPIcon>
             <div>
               <span className="text-sm font-medium text-foreground">
@@ -43,16 +45,16 @@ export function ProcessesList({ processes, onRemoveProcess }: ProcessesListProps
               </div>
             </div>
           </div>
-          
-            <IGRPButton
-              onClick={() => onRemoveProcess(process.id)}
-              variant="ghost"
-              size="icon"
-              iconName="Trash2"
-              className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded"
-              iconClassName="w-4 h-4"
-              title="Remover processo"
-            />
+
+          <IGRPButton
+            onClick={() => onRemoveProcess(process.id)}
+            variant="ghost"
+            size="icon"
+            iconName="Trash2"
+            className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded"
+            iconClassName="w-4 h-4"
+            title="Remover processo"
+          />
         </div>
       ))}
     </div>

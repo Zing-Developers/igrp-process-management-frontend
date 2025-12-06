@@ -1,7 +1,13 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Task, PaginatedResponse } from '@igrp/platform-process-management-types';
-import { getTasks, assignTask } from '../../external/client/services/task.service';
-import { getDateTemplate, getProcessInfo } from '../../utils/columns-template';
+import { useState, useEffect, useCallback, useMemo } from "react";
+import {
+  Task,
+  PaginatedResponse,
+} from "@igrp/platform-process-management-types";
+import {
+  getTasks,
+  assignTask,
+} from "../../external/client/services/task.service";
+import { getDateTemplate, getProcessInfo } from "../../utils/columns-template";
 
 export interface TaskManagementTableRow {
   currentStep: string;
@@ -58,10 +64,11 @@ export function useTaskManagement() {
   const [filters, setFilters] = useState<TaskFilters>({});
 
   // Add modal state for assign task
-  const [assignModalState, setAssignModalState] = useState<AssignTaskModalState>({
-    isOpen: false,
-    selectedTask: null,
-  });
+  const [assignModalState, setAssignModalState] =
+    useState<AssignTaskModalState>({
+      isOpen: false,
+      selectedTask: null,
+    });
 
   // Transform tasks data for table display
   const tableData = useMemo((): TaskManagementTableRow[] => {
@@ -76,7 +83,7 @@ export function useTaskManagement() {
       return {
         currentStep: task.name,
         process: getProcessInfo(task.processName, task.processNumber),
-        assignedBy: task.assignedBy || '',
+        assignedBy: task.assignedBy || "",
         startedAt: getDateTemplate(task.startedAt),
         endAt: getDateTemplate(task.endAt),
         waitingDays: diffDays.toString(),
@@ -86,12 +93,11 @@ export function useTaskManagement() {
         processKey: task.processKey,
         processInstanceId: task.processInstanceId,
         processName: task.processName,
-        priority: task.priority + '',
+        priority: task.priority + "",
         statusDesc: task.statusDesc,
         applicationBase: task.applicationBase,
       };
     });
-    
   }, [state.tasks]);
 
   // Fetch tasks function with filters
@@ -115,7 +121,11 @@ export function useTaskManagement() {
           Object.entries(apiFilters).filter(([, value]) => value !== undefined),
         );
 
-        const response: PaginatedResponse<Task> = await getTasks(page, size, cleanFilters);
+        const response: PaginatedResponse<Task> = await getTasks(
+          page,
+          size,
+          cleanFilters,
+        );
 
         setState((prev) => ({
           ...prev,
@@ -127,11 +137,11 @@ export function useTaskManagement() {
           loading: false,
         }));
       } catch (error) {
-        console.error('Error fetching tasks:', error);
+        console.error("Error fetching tasks:", error);
         setState((prev) => ({
           ...prev,
           loading: false,
-          error: 'Erro ao carregar tarefas. Tente novamente.',
+          error: "Erro ao carregar tarefas. Tente novamente.",
         }));
       }
     },
@@ -159,7 +169,9 @@ export function useTaskManagement() {
   // Handle filter application
   const applyFilters = useCallback(
     (newFilters?: TaskFilters) => {
-      const updatedFilters = newFilters ? { ...filters, ...newFilters } : filters;
+      const updatedFilters = newFilters
+        ? { ...filters, ...newFilters }
+        : filters;
       setFilters(updatedFilters);
       fetchTasks(0, state.pageSize, updatedFilters);
     },
@@ -201,8 +213,19 @@ export function useTaskManagement() {
       setState((prev) => ({ ...prev, loading: true }));
 
       try {
-        console.log('Assign task params:', assignModalState.selectedTask.taskId, user, priority, note);
-        await assignTask(assignModalState.selectedTask.taskId, user, priority, note);
+        console.log(
+          "Assign task params:",
+          assignModalState.selectedTask.taskId,
+          user,
+          priority,
+          note,
+        );
+        await assignTask(
+          assignModalState.selectedTask.taskId,
+          user,
+          priority,
+          note,
+        );
 
         // Refresh tasks after successful assignment
         await fetchTasks(state.currentPage, state.pageSize, filters);
@@ -210,11 +233,14 @@ export function useTaskManagement() {
         // Close modal
         handleCloseAssignModal();
 
-        return { success: true, message: 'Tarefa atribuída com sucesso!' };
+        return { success: true, message: "Tarefa atribuída com sucesso!" };
       } catch (error) {
-        console.error('Error assigning task:', error);
+        console.error("Error assigning task:", error);
         setState((prev) => ({ ...prev, loading: false }));
-        return { success: false, message: 'Erro ao atribuir tarefa. Tente novamente.' };
+        return {
+          success: false,
+          message: "Erro ao atribuir tarefa. Tente novamente.",
+        };
       }
     },
     [

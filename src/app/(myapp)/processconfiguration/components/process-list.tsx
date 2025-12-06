@@ -1,5 +1,5 @@
-import { IGRPButton } from '@igrp/igrp-framework-react-design-system';
-import { Process } from '@igrp/platform-process-management-types';
+import { IGRPButton } from "@igrp/igrp-framework-react-design-system";
+import { Process } from "@igrp/platform-process-management-types";
 
 export function ProcessList({
   processes,
@@ -15,8 +15,8 @@ export function ProcessList({
       {processes.length === 0 ? (
         <p className="text-muted-foreground text-center py-8">
           {availableProcesses && availableProcesses.length === 0
-            ? 'Todos os processos já estão associados a esta área'
-            : 'Nenhum processo encontrado'}
+            ? "Todos os processos já estão associados a esta área"
+            : "Nenhum processo encontrado"}
         </p>
       ) : (
         <div className="space-y-2">

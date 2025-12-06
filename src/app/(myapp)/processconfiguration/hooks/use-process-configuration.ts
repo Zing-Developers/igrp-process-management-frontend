@@ -1,10 +1,10 @@
-import { useConfiguration } from './use-configuration';
-import { useExpansion } from './shared/use-expansion';
-import { useSearch } from './use-search';
-import { useAreaHandlers } from './use-area-handlers';
-import { useProcessHandlers } from './use-process-handlers';
-import { useComputedValues } from './use-computed-values';
-import { useAccessManagement } from '../../access-management/hooks';
+import { useConfiguration } from "./use-configuration";
+import { useExpansion } from "./shared/use-expansion";
+import { useSearch } from "./use-search";
+import { useAreaHandlers } from "./use-area-handlers";
+import { useProcessHandlers } from "./use-process-handlers";
+import { useComputedValues } from "./use-computed-values";
+import { useAccessManagement } from "../../access-management/hooks";
 
 export function useProcessConfiguration() {
   // Configuration data
@@ -83,7 +83,8 @@ export function useProcessConfiguration() {
 
     // Process Number management
     processNumberForm: processHandlers.processNumberForm,
-    processNumberConfigs: processHandlers.processNumberForm.processNumberConfigs,
+    processNumberConfigs:
+      processHandlers.processNumberForm.processNumberConfigs,
     handleOpenProcessNumberModal: processHandlers.handleOpenProcessNumberModal,
     handleSaveProcessNumber: processHandlers.handleSaveProcessNumber,
 

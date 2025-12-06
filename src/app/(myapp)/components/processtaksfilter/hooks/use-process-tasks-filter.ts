@@ -1,6 +1,6 @@
-import { useMemo, useEffect } from 'react';
-import { useFilterData } from './use-filter-data';
-import { IGRPOptionsProps } from '@igrp/igrp-framework-react-design-system';
+import { useMemo, useEffect } from "react";
+import { useFilterData } from "./use-filter-data";
+import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
 
 export function useProcessTasksFilter(
   setSelectAreaOptions: (options: IGRPOptionsProps[]) => void,
@@ -8,52 +8,48 @@ export function useProcessTasksFilter(
   setSelectProcesstypeOptions: (options: IGRPOptionsProps[]) => void,
   setSelectStatusOptions: (options: IGRPOptionsProps[]) => void,
   setSelectOrganicOptions: (options: IGRPOptionsProps[]) => void,
-  setSelectUserOptions: (options: IGRPOptionsProps[]) => void
+  setSelectUserOptions: (options: IGRPOptionsProps[]) => void,
 ) {
-  const {
-    filters,
-    dropdownOptions,
-    updateFilters,
-  } = useFilterData();
+  const { filters, dropdownOptions, updateFilters } = useFilterData();
 
   // Transform dropdown options to IGRP format
   const transformedAreaOptions = useMemo((): IGRPOptionsProps[] => {
-    return dropdownOptions.areas.map(option => ({
+    return dropdownOptions.areas.map((option) => ({
       label: option.label,
       value: option.value,
     }));
   }, [dropdownOptions.areas]);
 
   const transformedSubareaOptions = useMemo((): IGRPOptionsProps[] => {
-    return dropdownOptions.subareas.map(option => ({
+    return dropdownOptions.subareas.map((option) => ({
       label: option.label,
       value: option.value,
     }));
   }, [dropdownOptions.subareas]);
 
   const transformedProcesstypeOptions = useMemo((): IGRPOptionsProps[] => {
-    return dropdownOptions.processTypes.map(option => ({
+    return dropdownOptions.processTypes.map((option) => ({
       label: option.label,
       value: option.value,
     }));
   }, [dropdownOptions.processTypes]);
 
   const transformedStatusOptions = useMemo((): IGRPOptionsProps[] => {
-    return dropdownOptions.statuses.map(option => ({
+    return dropdownOptions.statuses.map((option) => ({
       label: option.label,
       value: option.value,
     }));
   }, [dropdownOptions.statuses]);
 
   const transformedOrganicOptions = useMemo((): IGRPOptionsProps[] => {
-    return dropdownOptions.organics.map(option => ({
+    return dropdownOptions.organics.map((option) => ({
       label: option.label,
       value: option.value,
     }));
   }, [dropdownOptions.organics]);
 
   const transformedUserOptions = useMemo((): IGRPOptionsProps[] => {
-    return dropdownOptions.users.map(option => ({
+    return dropdownOptions.users.map((option) => ({
       label: option.label,
       value: option.value,
     }));
@@ -87,14 +83,14 @@ export function useProcessTasksFilter(
   // Handle filter changes
   const handleAreaChange = (selected: string | string[]) => {
     const value = Array.isArray(selected) ? selected[0] : selected;
-    const newFilters = { areaId: value, subareaId: '', processType: '' };
+    const newFilters = { areaId: value, subareaId: "", processType: "" };
     updateFilters(newFilters);
     // Don't apply filters immediately for area/subarea changes as they affect dropdown options
   };
 
   const handleSubareaChange = (selected: string | string[]) => {
     const value = Array.isArray(selected) ? selected[0] : selected;
-    const newFilters = { subareaId: value, processType: '' };
+    const newFilters = { subareaId: value, processType: "" };
     updateFilters(newFilters);
     // Don't apply filters immediately for area/subarea changes as they affect dropdown options
   };
@@ -129,14 +125,14 @@ export function useProcessTasksFilter(
   };
 
   const handleDateChange = (dateFrom: string, dateTo?: string) => {
-    const newFilters = { dateFrom, dateTo: dateTo || '' };
+    const newFilters = { dateFrom, dateTo: dateTo || "" };
     updateFilters(newFilters);
   };
 
   return {
     // Filter values
     filters,
-    
+
     // Actions
     handleAreaChange,
     handleSubareaChange,

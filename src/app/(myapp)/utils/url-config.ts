@@ -2,24 +2,24 @@
  * Centralized URL configuration for process management
  */
 
-import { getApplication } from '../access-management/applications';
+import { getApplication } from "../access-management/applications";
 
 export function formatSlug(slug: string): string {
-  let baseUrl = '';
-  if (slug.startsWith('/apps')) {
+  let baseUrl = "";
+  if (slug.startsWith("/apps")) {
     baseUrl = slug;
   } else {
     baseUrl = `/apps/${slug}`;
   }
 
   // Check if baseUrl is already a full URL
-  if (baseUrl.startsWith('http://') || baseUrl.startsWith('https://')) {
+  if (baseUrl.startsWith("http://") || baseUrl.startsWith("https://")) {
     return baseUrl;
   }
 
   // If it's a relative path, construct a full URL using the current origin
   // In browser context, use window.location.origin; otherwise return as relative path
-  if (typeof window !== 'undefined' && window.location) {
+  if (typeof window !== "undefined" && window.location) {
     return `${window.location.origin}${baseUrl}`;
   }
 
@@ -37,8 +37,11 @@ export const urlConfig = {
    * @param processInstanceId - Process instance ID
    * @returns Complete URL for process instance
    */
-  buildProcessInstanceUrl: (procReleaseKey: string, processInstanceId: string): string => {
-    const BASE_RUNTIME_URL = process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL ?? '';
+  buildProcessInstanceUrl: (
+    procReleaseKey: string,
+    processInstanceId: string,
+  ): string => {
+    const BASE_RUNTIME_URL = process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL ?? "";
     return `${BASE_RUNTIME_URL}/process/${procReleaseKey}/${processInstanceId}`;
   },
 
@@ -57,8 +60,7 @@ export const urlConfig = {
     taskId: string,
     applicationBase: string,
   ): Promise<string> => {
-    
-    if(process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL) {
+    if (process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL) {
       return `${process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL}/process/${procReleaseKey}/${processInstanceId}/${taskKey}/${taskId}`;
     }
     const application = await getApplication(applicationBase);
@@ -68,8 +70,8 @@ export const urlConfig = {
       ? process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL
       : slug
         ? formatSlug(slug)
-        : (url ?? '');
-    
+        : (url ?? "");
+
     return `${href}/process/${procReleaseKey}/${processInstanceId}/${taskKey}/${taskId}`;
   },
 
@@ -79,9 +81,9 @@ export const urlConfig = {
    * @returns Complete URL with provided segments
    */
   buildProcessUrl: (...segments: string[]): string => {
-    const BASE_RUNTIME_URL = process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL ?? '';
+    const BASE_RUNTIME_URL = process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL ?? "";
 
-    return `${BASE_RUNTIME_URL}/process/${segments.join('/')}`;
+    return `${BASE_RUNTIME_URL}/process/${segments.join("/")}`;
   },
 } as const;
 
@@ -89,8 +91,9 @@ export const urlConfig = {
  * URL patterns for reference
  */
 export const urlPatterns = {
-  PROCESS_INSTANCE: '/process/{procReleaseKey}/{processInstanceId}',
-  TASK_EXECUTION: '/process/{procReleaseKey}/{processInstanceId}/{taskKey}/{taskId}',
+  PROCESS_INSTANCE: "/process/{procReleaseKey}/{processInstanceId}",
+  TASK_EXECUTION:
+    "/process/{procReleaseKey}/{processInstanceId}/{taskKey}/{taskId}",
 } as const;
 
 export default urlConfig;

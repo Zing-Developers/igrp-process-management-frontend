@@ -1,9 +1,11 @@
-import { Process } from '@igrp/platform-process-management-types';
-import { useState, useCallback } from 'react';
+import { Process } from "@igrp/platform-process-management-types";
+import { useState, useCallback } from "react";
 
 export function useProcessModal() {
   const [detailModalOpen, setDetailModalOpen] = useState(false);
-  const [detailModalProcess, setDetailModalProcess] = useState<Process | undefined>();
+  const [detailModalProcess, setDetailModalProcess] = useState<
+    Process | undefined
+  >();
 
   const openDetailModal = useCallback((process: Process) => {
     setDetailModalProcess(process);
@@ -15,13 +17,16 @@ export function useProcessModal() {
     setDetailModalProcess(undefined);
   }, []);
 
-  const setDetailModalOpenState = useCallback((open: boolean) => {
-    if (!open) {
-      closeDetailModal();
-    } else {
-      setDetailModalOpen(true);
-    }
-  }, [closeDetailModal]);
+  const setDetailModalOpenState = useCallback(
+    (open: boolean) => {
+      if (!open) {
+        closeDetailModal();
+      } else {
+        setDetailModalOpen(true);
+      }
+    },
+    [closeDetailModal],
+  );
 
   return {
     detailModal: {

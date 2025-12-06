@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { getAreas } from '../../../external/client/services/area.service';
-import { getAreaProcesses } from '../../../external/client/services/area-process.service';
-import { getProcessInstancesStatus } from '../../../external/client/services/process-instances.service';
+import { useState, useEffect } from "react";
+import { getAreas } from "../../../external/client/services/area.service";
+import { getAreaProcesses } from "../../../external/client/services/area-process.service";
+import { getProcessInstancesStatus } from "../../../external/client/services/process-instances.service";
 
 export interface DropdownOption {
   label: string;
@@ -44,7 +44,7 @@ export function useDropdownData(filters: FilterState) {
     const loadDropdownOptions = async () => {
       try {
         // Load areas
-        const areasResponse = await getAreas('', 0, 100);
+        const areasResponse = await getAreas("", 0, 100);
         const areaOptions = areasResponse.content.map((area) => ({
           label: area.name,
           value: area.id,
@@ -59,7 +59,7 @@ export function useDropdownData(filters: FilterState) {
           statuses: statusOptions,
         }));
       } catch (error) {
-        console.error('Error loading dropdown options:', error);
+        console.error("Error loading dropdown options:", error);
       }
     };
 
@@ -70,12 +70,16 @@ export function useDropdownData(filters: FilterState) {
   useEffect(() => {
     const loadSubareas = async () => {
       if (!filters.areaId) {
-        setDropdownOptions((prev) => ({ ...prev, subareas: [], processTypes: [] }));
+        setDropdownOptions((prev) => ({
+          ...prev,
+          subareas: [],
+          processTypes: [],
+        }));
         return;
       }
 
       try {
-        const subareasResponse = await getAreas('', 0, 100, filters.areaId);
+        const subareasResponse = await getAreas("", 0, 100, filters.areaId);
         const subareaOptions = subareasResponse.content.map((subarea) => ({
           label: subarea.name,
           value: subarea.id,
@@ -86,8 +90,12 @@ export function useDropdownData(filters: FilterState) {
           subareas: subareaOptions,
         }));
       } catch (error) {
-        console.error('Error loading subareas:', error);
-        setDropdownOptions((prev) => ({ ...prev, subareas: [], processTypes: [] }));
+        console.error("Error loading subareas:", error);
+        setDropdownOptions((prev) => ({
+          ...prev,
+          subareas: [],
+          processTypes: [],
+        }));
       }
     };
 
@@ -112,21 +120,25 @@ export function useDropdownData(filters: FilterState) {
         processPromises.push(getAreaProcesses(filters.areaId));
 
         // If subarea is selected, also fetch processes from subarea
-        if (filters.subareaId) processPromises.push(getAreaProcesses(filters.subareaId));
+        if (filters.subareaId)
+          processPromises.push(getAreaProcesses(filters.subareaId));
 
         const processResponses = await Promise.all(processPromises);
 
         // Merge all processes from area and subarea
-        const allProcesses = processResponses.flatMap((response) => response.content);
+        const allProcesses = processResponses.flatMap(
+          (response) => response.content,
+        );
 
         // Remove duplicates based on processKey
         const uniqueProcesses = allProcesses.filter(
           (process, index, self) =>
-            index === self.findIndex((p) => p.processKey === process.processKey),
+            index ===
+            self.findIndex((p) => p.processKey === process.processKey),
         );
 
         const processTypeOptions = uniqueProcesses.map((process) => ({
-          label: process.name || process.processKey || 'Processo sem nome',
+          label: process.name || process.processKey || "Processo sem nome",
           value: process.processKey,
         }));
 
@@ -135,7 +147,7 @@ export function useDropdownData(filters: FilterState) {
           processTypes: processTypeOptions,
         }));
       } catch (error) {
-        console.error('Error loading process types:', error);
+        console.error("Error loading process types:", error);
         setDropdownOptions((prev) => ({ ...prev, processTypes: [] }));
       }
     };

@@ -1,6 +1,6 @@
-import { ProcessManagementClient } from '@igrp/platform-process-management-client-ts';
-import { getIGRPProcessClientConfig } from './api-config';
-import { getAccessToken } from './auth-helpers';
+import { ProcessManagementClient } from "@igrp/platform-process-management-client-ts";
+import { getIGRPProcessClientConfig } from "./api-config";
+import { getAccessToken } from "./auth-helpers";
 
 let clientInstance: ProcessManagementClient | null = null;
 
@@ -14,8 +14,8 @@ export async function getIGRPProcessClient(): Promise<ProcessManagementClient> {
 
   // Prepare headers with authentication
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
+    "Content-Type": "application/json",
+    Accept: "application/json",
     Authorization: `Bearer ${token?.accessToken}`,
   };
 

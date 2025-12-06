@@ -1,4 +1,4 @@
-import { Area, Process } from '@igrp/platform-process-management-types';
+import { Area, Process } from "@igrp/platform-process-management-types";
 
 // Extended interfaces for UI components
 export interface ExtendedArea extends Area {

@@ -1,7 +1,7 @@
-import { useCallback, useState } from 'react';
-import { getMyTasks } from '../../external/client/services/task.service';
-import { MyTasksState, MyTasksFilters } from '../types';
-import { useFilterData } from '../../components/processtaksfilter/hooks/use-filter-data';
+import { useCallback, useState } from "react";
+import { getMyTasks } from "../../external/client/services/task.service";
+import { MyTasksState, MyTasksFilters } from "../types";
+import { useFilterData } from "../../components/processtaksfilter/hooks/use-filter-data";
 
 export interface MyTasksTableRow {
   currentStep: string;
@@ -34,10 +34,12 @@ export function useMyTasksData() {
   });
 
   // Add unclaim modal state
-  const [unclaimModalState, setUnclaimModalState] = useState<UnclaimModalState>({
-    isOpen: false,
-    selectedTask: null,
-  });
+  const [unclaimModalState, setUnclaimModalState] = useState<UnclaimModalState>(
+    {
+      isOpen: false,
+      selectedTask: null,
+    },
+  );
 
   const { filters, updateFilters, resetFilters } = useFilterData();
 
@@ -50,17 +52,19 @@ export function useMyTasksData() {
     setMyTasksState((prev) => ({ ...prev, loading: true, error: null }));
 
     // Use custom filters if provided, otherwise use current filters state
-    const filtersToUse = customFilters ? { ...filters, ...customFilters } : filters;
+    const filtersToUse = customFilters
+      ? { ...filters, ...customFilters }
+      : filters;
 
     try {
       // Map filter fields to match the service interface
       const mappedFilters = {
-        processNumber: filtersToUse.processNumber || '',
-        processKey: filtersToUse.processType || '', // processType maps to processKey
-        user: 'superadmin',//filtersToUse.user || '',
-        status: filtersToUse.status || '',
-        dateFrom: filtersToUse.dateFrom || '',
-        dateTo: filtersToUse.dateTo || '',
+        processNumber: filtersToUse.processNumber || "",
+        processKey: filtersToUse.processType || "", // processType maps to processKey
+        user: "superadmin", //filtersToUse.user || '',
+        status: filtersToUse.status || "",
+        dateFrom: filtersToUse.dateFrom || "",
+        dateTo: filtersToUse.dateTo || "",
         page,
         size,
       };
@@ -77,11 +81,12 @@ export function useMyTasksData() {
         loading: false,
       }));
     } catch (error) {
-      console.error('Error fetching my tasks:', error);
+      console.error("Error fetching my tasks:", error);
       setMyTasksState((prev) => ({
         ...prev,
         loading: false,
-        error: error instanceof Error ? error.message : 'Failed to fetch my tasks',
+        error:
+          error instanceof Error ? error.message : "Failed to fetch my tasks",
       }));
     }
   };
@@ -95,19 +100,19 @@ export function useMyTasksData() {
   const handleResetFilters = () => {
     resetFilters();
     fetchMyTasks(0, myTasksState.pageSize, {
-      processNumber: '',
-      processKey: '',
-      user: '',
-      status: '',
-      dateFrom: '',
-      dateTo: '',
+      processNumber: "",
+      processKey: "",
+      user: "",
+      status: "",
+      dateFrom: "",
+      dateTo: "",
     });
   };
 
   // Add unclaim modal handlers
 
   const handleOpenUnclaimModal = useCallback((task: MyTasksTableRow) => {
-    console.log('Opening unclaim modal for task:', task);
+    console.log("Opening unclaim modal for task:", task);
     setUnclaimModalState({
       isOpen: true,
       selectedTask: task,

@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { ProcessNumberModalState } from '../../types';
-import { ProcessNumberConfig } from '@/app/(myapp)/external/client/services/process.service';
-import { ProcessSequence } from '@igrp/platform-process-management-types';
+import { useState } from "react";
+import { ProcessNumberModalState } from "../../types";
+import { ProcessNumberConfig } from "@/app/(myapp)/external/client/services/process.service";
+import { ProcessSequence } from "@igrp/platform-process-management-types";
 
 export function useProcessNumberForm() {
   const [modalState, setModalState] = useState<ProcessNumberModalState>({
@@ -11,16 +11,21 @@ export function useProcessNumberForm() {
     selectedProcessApplicationBase: null,
   });
 
-  const [processNumberConfigs, setProcessNumberConfigs] = useState<ProcessSequence>();
+  const [processNumberConfigs, setProcessNumberConfigs] =
+    useState<ProcessSequence>();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<ProcessNumberConfig>({
-    name: '',
-    prefix: '',
-    dateFormat: '',
+    name: "",
+    prefix: "",
+    dateFormat: "",
     checkDigit: 0,
   });
 
-  const openModal = (processId: string, processKey: string, processApplicationBase: string) => {
+  const openModal = (
+    processId: string,
+    processKey: string,
+    processApplicationBase: string,
+  ) => {
     setModalState({
       isOpen: true,
       selectedProcessId: processId,
@@ -29,9 +34,9 @@ export function useProcessNumberForm() {
     });
     // Reset form data when opening modal
     setFormData({
-      name: '',
-      prefix: '',
-      dateFormat: '',
+      name: "",
+      prefix: "",
+      dateFormat: "",
       checkDigit: 0,
     });
   };
@@ -45,14 +50,17 @@ export function useProcessNumberForm() {
     });
     setProcessNumberConfigs(undefined);
     setFormData({
-      name: '',
-      prefix: '',
-      dateFormat: '',
+      name: "",
+      prefix: "",
+      dateFormat: "",
       checkDigit: 0,
     });
   };
 
-  const updateFormData = (field: keyof ProcessNumberConfig, value: string | boolean) => {
+  const updateFormData = (
+    field: keyof ProcessNumberConfig,
+    value: string | boolean,
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,

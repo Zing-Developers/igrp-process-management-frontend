@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   IGRPSelect,
   IGRPDatePicker,
   IGRPButton,
   IGRPOptionsProps,
   IGRPInputText,
-} from '@igrp/igrp-framework-react-design-system';
-import { useMyTasksFilter } from '../hooks/use-my-tasks-filter';
+} from "@igrp/igrp-framework-react-design-system";
+import { useMyTasksFilter } from "../hooks/use-my-tasks-filter";
 
 interface MyTasksFilterProps {
   onSearch?: (searchTerm: string) => void;
@@ -22,12 +22,24 @@ export default function MyTasksFilter({
   onResetFilters,
 }: MyTasksFilterProps) {
   // State for dropdown options (these would be set by the filter hook)
-  const [selectAreaOptions, setSelectAreaOptions] = useState<IGRPOptionsProps[]>([]);
-  const [selectSubareaOptions, setSelectSubareaOptions] = useState<IGRPOptionsProps[]>([]);
-  const [selectProcesstypeOptions, setSelectProcesstypeOptions] = useState<IGRPOptionsProps[]>([]);
-  const [selectStatusOptions, setSelectStatusOptions] = useState<IGRPOptionsProps[]>([]);
-  const [selectOrganicOptions, setSelectOrganicOptions] = useState<IGRPOptionsProps[]>([]);
-  const [selectUserOptions, setSelectUserOptions] = useState<IGRPOptionsProps[]>([]);
+  const [selectAreaOptions, setSelectAreaOptions] = useState<
+    IGRPOptionsProps[]
+  >([]);
+  const [selectSubareaOptions, setSelectSubareaOptions] = useState<
+    IGRPOptionsProps[]
+  >([]);
+  const [selectProcesstypeOptions, setSelectProcesstypeOptions] = useState<
+    IGRPOptionsProps[]
+  >([]);
+  const [selectStatusOptions, setSelectStatusOptions] = useState<
+    IGRPOptionsProps[]
+  >([]);
+  const [selectOrganicOptions, setSelectOrganicOptions] = useState<
+    IGRPOptionsProps[]
+  >([]);
+  const [selectUserOptions, setSelectUserOptions] = useState<
+    IGRPOptionsProps[]
+  >([]);
 
   // Use the filter hook
   const {
@@ -46,7 +58,7 @@ export default function MyTasksFilter({
     setSelectProcesstypeOptions,
     setSelectStatusOptions,
     setSelectOrganicOptions,
-    setSelectUserOptions
+    setSelectUserOptions,
   );
 
   const handleSearchSubmit = () => {
@@ -134,7 +146,9 @@ export default function MyTasksFilter({
             label="Data do Processo"
             placeholder="Selecione uma data"
             date={filters.dateFrom ? new Date(filters.dateFrom) : undefined}
-            onDateChange={(date) => handleDateChange(date ? date.toISOString() : '')}
+            onDateChange={(date) =>
+              handleDateChange(date ? date.toISOString() : "")
+            }
           />
         </div>
 
@@ -163,22 +177,13 @@ export default function MyTasksFilter({
 
       {/* Action Buttons */}
       <div className="flex gap-2">
-        <IGRPButton
-          variant="default"
-          onClick={handleApplyFiltersClick}
-        >
+        <IGRPButton variant="default" onClick={handleApplyFiltersClick}>
           Aplicar Filtros
         </IGRPButton>
-        <IGRPButton
-          variant="outline"
-          onClick={handleResetFiltersClick}
-        >
+        <IGRPButton variant="outline" onClick={handleResetFiltersClick}>
           Limpar Filtros
         </IGRPButton>
-        <IGRPButton
-          variant="secondary"
-          onClick={handleSearchSubmit}
-        >
+        <IGRPButton variant="secondary" onClick={handleSearchSubmit}>
           Pesquisar
         </IGRPButton>
       </div>

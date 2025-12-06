@@ -1,6 +1,14 @@
-import { useState } from 'react';
-import { createArea, deleteArea, updateArea } from '../../external/client/services/area.service';
-import { Area, CreateAreaRequest, UpdateAreaRequest } from '@igrp/platform-process-management-types';
+import { useState } from "react";
+import {
+  createArea,
+  deleteArea,
+  updateArea,
+} from "../../external/client/services/area.service";
+import {
+  Area,
+  CreateAreaRequest,
+  UpdateAreaRequest,
+} from "@igrp/platform-process-management-types";
 
 interface AreaFormData {
   code: string;
@@ -20,9 +28,9 @@ export function useAreaManagement(
   const [showAreaModal, setShowAreaModal] = useState(false);
   const [editingArea, setEditingArea] = useState<Area | null>(null);
   const [areaForm, setAreaForm] = useState<AreaFormData>({
-    code: '',
-    name: '',
-    description: '',
+    code: "",
+    name: "",
+    description: "",
     area_id: undefined, // Changed from area_fk to area_id
   });
 
@@ -32,15 +40,15 @@ export function useAreaManagement(
       setAreaForm({
         code: area.code,
         name: area.name,
-        description: area.description || '',
+        description: area.description || "",
         area_id: area.areaId, // Changed from area_fk to area_id
       });
     } else {
       setEditingArea(null);
       setAreaForm({
-        code: '',
-        name: '',
-        description: '',
+        code: "",
+        name: "",
+        description: "",
         area_id: parentAreaId, // Changed from area_fk to area_id
       });
     }
@@ -55,9 +63,9 @@ export function useAreaManagement(
 
   const resetAreaForm = () => {
     setAreaForm({
-      code: '',
-      name: '',
-      description: '',
+      code: "",
+      name: "",
+      description: "",
       area_id: undefined, // Changed from area_fk to area_id
     });
   };
@@ -103,7 +111,7 @@ export function useAreaManagement(
 
       closeAreaModal();
     } catch (error) {
-      console.error('Error creating area:', error);
+      console.error("Error creating area:", error);
       throw error;
     }
   };
@@ -112,7 +120,10 @@ export function useAreaManagement(
     if (!editingArea) return;
 
     try {
-      const updatedArea = await updateArea(editingArea.id, areaForm as UpdateAreaRequest);
+      const updatedArea = await updateArea(
+        editingArea.id,
+        areaForm as UpdateAreaRequest,
+      );
 
       // Update the area in the flat list and reorganize
       const flatAreas = getAllAreasFlat(areas);
@@ -125,7 +136,7 @@ export function useAreaManagement(
 
       closeAreaModal();
     } catch (error) {
-      console.error('Error updating area:', error);
+      console.error("Error updating area:", error);
       throw error;
     }
   };
@@ -133,7 +144,7 @@ export function useAreaManagement(
   const handleDeleteArea = async (areaId: string) => {
     if (
       !confirm(
-        'Tem certeza que deseja excluir esta área? Todas as subáreas também serão removidas.',
+        "Tem certeza que deseja excluir esta área? Todas as subáreas também serão removidas.",
       )
     )
       return;
@@ -149,7 +160,7 @@ export function useAreaManagement(
       const organizedAreas = organizeAreasHierarchy(filteredAreas);
       setAreas(organizedAreas);
     } catch (error) {
-      console.error('Error deleting area:', error);
+      console.error("Error deleting area:", error);
       throw error;
     }
   };

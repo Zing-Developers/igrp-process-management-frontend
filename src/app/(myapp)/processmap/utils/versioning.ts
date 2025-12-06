@@ -22,7 +22,7 @@ function extractMaxNumber(str: string | null): number {
 }
 
 function getTime(p: ProcessLike): number {
-  const t = p.updatedAt || p.createdAt || '';
+  const t = p.updatedAt || p.createdAt || "";
   const parsed = t ? Date.parse(t) : 0;
   return Number.isNaN(parsed) ? 0 : parsed;
 }
@@ -37,9 +37,9 @@ function versionRank(p: ProcessLike): VersionRank {
   }
 
   // 2) Next, the version segment in `releaseId` (key:version:uuid)
-  const rel = p.releaseId ?? '';
+  const rel = p.releaseId ?? "";
   if (rel) {
-    const parts = rel.split(':');
+    const parts = rel.split(":");
     if (parts.length >= 2) {
       const segNum = extractNumber(parts[1]);
       if (!Number.isNaN(segNum)) {
@@ -67,7 +67,7 @@ export function keepLatestByKey<T extends ProcessLike>(processes: T[]): T[] {
   const latestByKey = new Map<string, T>();
 
   for (const p of processes) {
-    const key = (p.processKey ?? '').trim();
+    const key = (p.processKey ?? "").trim();
     if (!key) {
       continue;
     }

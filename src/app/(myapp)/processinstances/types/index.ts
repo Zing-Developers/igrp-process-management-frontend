@@ -1,4 +1,4 @@
-import { ProcessInstance } from '@igrp/platform-process-management-types';
+import { ProcessInstance } from "@igrp/platform-process-management-types";
 
 export interface ProcessInstancesFilters {
   processNumber: string;

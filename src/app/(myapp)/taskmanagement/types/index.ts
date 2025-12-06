@@ -38,4 +38,4 @@ export interface TaskManagementState {
   pageSize: number;
 }
 
-export type TaskManagementTab = 'myTasks' | 'availableTasks';
+export type TaskManagementTab = "myTasks" | "availableTasks";

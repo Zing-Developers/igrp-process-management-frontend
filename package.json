@@ -1,6 +1,7 @@
 {
   "name": "process-management-frontend",
   "version": "0.0.1-alpha.5",
+  "description": "Process Management Frontend for IGRP",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

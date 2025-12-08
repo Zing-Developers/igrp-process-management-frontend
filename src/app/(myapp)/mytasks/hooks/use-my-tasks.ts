@@ -1,8 +1,8 @@
-import { useMemo } from 'react';
-import { useMyTasksData } from './use-my-tasks-data';
-import { TaskTableRow } from '../types';
-import { unclaimTask } from '../../external/client/services/task.service';
-import { getDateTemplate, getProcessInfo } from '../../utils/columns-template';
+import { useMemo } from "react";
+import { useMyTasksData } from "./use-my-tasks-data";
+import { TaskTableRow } from "../types";
+import { unclaimTask } from "../../external/client/services/task";
+import { getDateTemplate, getProcessInfo } from "../../utils/columns-template";
 
 export function useMyTasks() {
   const {
@@ -17,13 +17,11 @@ export function useMyTasks() {
     handleCloseUnclaimModal,
   } = useMyTasksData();
 
-
-
   // Transform tasks data for the table
   const tableData = useMemo((): TaskTableRow[] => {
     /* eslint-disable @typescript-eslint/ban-ts-comment */
     // @ts-expect-error Allow JSX in table row fields without refactor
-    
+
     return myTasksState.tasks.map((task) => {
       // Calculate waiting days
       const createdDate = new Date(task.startedAt);
@@ -37,7 +35,7 @@ export function useMyTasks() {
         startedAt: getDateTemplate(task.startedAt),
         endAt: getDateTemplate(task.endAt),
         waitingDays: diffDays.toString(),
-        priority: task.priority + '',
+        priority: task.priority + "",
         processKey: task.processKey,
         processInstanceId: task.processInstanceId,
         taskKey: task.taskKey,
@@ -60,24 +58,31 @@ export function useMyTasks() {
 
   // Add unclaim task handler
   const handleUnclaimTask = async (note?: string) => {
-    if (!unclaimModalState.selectedTask || !unclaimModalState.selectedTask.taskId) {
-      return { success: false, message: 'Nenhuma tarefa selecionada' };
+    if (
+      !unclaimModalState.selectedTask ||
+      !unclaimModalState.selectedTask.taskId
+    ) {
+      return { success: false, message: "Nenhuma tarefa selecionada" };
     }
 
     try {
-      console.log('unclaimModalState.selectedTask.taskId', unclaimModalState.selectedTask.taskId);
+      console.log(
+        "unclaimModalState.selectedTask.taskId",
+        unclaimModalState.selectedTask.taskId,
+      );
       await unclaimTask(unclaimModalState.selectedTask.taskId, note);
 
       // Close modal and refresh data
       handleCloseUnclaimModal();
       await fetchMyTasks(myTasksState.currentPage, myTasksState.pageSize);
 
-      return { success: true, message: 'Tarefa libertada com sucesso!' };
+      return { success: true, message: "Tarefa libertada com sucesso!" };
     } catch (error) {
-      console.error('Error unclaiming task:', error);
+      console.error("Error unclaiming task:", error);
       return {
         success: false,
-        message: error instanceof Error ? error.message : 'Erro ao libertar tarefa',
+        message:
+          error instanceof Error ? error.message : "Erro ao libertar tarefa",
       };
     }
   };

@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { ArtifactModalState } from '../../types';
+import { useState } from "react";
+import { ArtifactModalState } from "../../types";
 import {
   ProcessArtifact,
   CreateProcessArtifactRequest,
-} from '@igrp/platform-process-management-types';
-import { ProcessService } from '../../services/process.service';
-import { useIGRPToast } from '@igrp/igrp-framework-react-design-system';
+} from "@igrp/platform-process-management-types";
+import { ProcessService } from "../../services/process.service";
+import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
 
 export function useArtifactForm() {
   const { igrpToast } = useIGRPToast();
@@ -14,9 +14,13 @@ export function useArtifactForm() {
     selectedProcessId: null,
   });
 
-  const [processArtifacts, setProcessArtifacts] = useState<ProcessArtifact[]>([]);
+  const [processArtifacts, setProcessArtifacts] = useState<ProcessArtifact[]>(
+    [],
+  );
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState<Record<string, { formKey: string }>>({});
+  const [formData, setFormData] = useState<Record<string, { formKey: string }>>(
+    {},
+  );
 
   const openModal = (processId: string) => {
     setModalState({
@@ -35,7 +39,7 @@ export function useArtifactForm() {
       }
     });
     setFormData(newFormData);
-    console.log('Populated formData from artifacts:', newFormData);
+    console.log("Populated formData from artifacts:", newFormData);
   };
 
   const closeModal = () => {
@@ -57,53 +61,61 @@ export function useArtifactForm() {
   const saveArtifacts = async () => {
     if (!modalState.selectedProcessId) return;
 
-    console.log('Starting saveArtifacts with processId:', modalState.selectedProcessId);
-    console.log('Current formData:', formData);
+    console.log(
+      "Starting saveArtifacts with processId:",
+      modalState.selectedProcessId,
+    );
+    console.log("Current formData:", formData);
 
     setLoading(true);
     try {
-      const promises = Object.entries(formData).map(async ([artifactKey, data]) => {
-        console.log('Processing artifact:', artifactKey, 'with data:', data);
+      const promises = Object.entries(formData).map(
+        async ([artifactKey, data]) => {
+          console.log("Processing artifact:", artifactKey, "with data:", data);
 
-        const artifact = processArtifacts.find((a) => a.key === artifactKey);
-        console.log('Found matching artifact:', artifact);
+          const artifact = processArtifacts.find((a) => a.key === artifactKey);
+          console.log("Found matching artifact:", artifact);
 
-        if (artifact && data.formKey) {
-          const createRequest: CreateProcessArtifactRequest = {
-            name: artifact.name,
-            key: artifact.key,
-            formKey: data.formKey,
-          };
-          console.log('Sending create request:', createRequest);
-          await ProcessService.createProcessArtifact(modalState.selectedProcessId!, createRequest);
-        }
-      });
+          if (artifact && data.formKey) {
+            const createRequest: CreateProcessArtifactRequest = {
+              name: artifact.name,
+              key: artifact.key,
+              formKey: data.formKey,
+            };
+            console.log("Sending create request:", createRequest);
+            await ProcessService.createProcessArtifact(
+              modalState.selectedProcessId!,
+              createRequest,
+            );
+          }
+        },
+      );
 
       await Promise.all(promises.filter(Boolean));
-      console.log('All artifacts saved successfully');
+      console.log("All artifacts saved successfully");
 
       igrpToast({
-        type: 'success',
-        title: 'Sucesso',
-        description: 'Artefatos salvos com sucesso!',
+        type: "success",
+        title: "Sucesso",
+        description: "Artefatos salvos com sucesso!",
       });
 
       closeModal();
     } catch (error) {
-      console.error('Error saving artifacts:', error);
-      console.log('Error details:', {
-        message: error instanceof Error ? error.message : 'Unknown error',
+      console.error("Error saving artifacts:", error);
+      console.log("Error details:", {
+        message: error instanceof Error ? error.message : "Unknown error",
         stack: error instanceof Error ? error.stack : undefined,
       });
 
       igrpToast({
-        type: 'error',
-        title: 'Erro',
-        description: 'Erro ao salvar artefatos. Tente novamente.',
+        type: "error",
+        title: "Erro",
+        description: "Erro ao salvar artefatos. Tente novamente.",
       });
     } finally {
       setLoading(false);
-      console.log('saveArtifacts completed');
+      console.log("saveArtifacts completed");
     }
   };
 

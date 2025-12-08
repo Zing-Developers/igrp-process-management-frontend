@@ -1,4 +1,4 @@
-import { Task } from '@igrp/platform-process-management-types';
+import { Task } from "@igrp/platform-process-management-types";
 
 export interface MyTasksFilters {
   processNumber: string;

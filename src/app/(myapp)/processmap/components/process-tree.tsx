@@ -1,10 +1,13 @@
-import React from 'react';
-import { ProcessTreeNode } from '../types';
-import { TreeNode } from './tree-node';
-import { InfoCard } from '../../components/info-card';
-import { IGRPCard, IGRPCardContent } from '@igrp/igrp-framework-react-design-system';
-import { cn } from '@/lib/utils';
-import { Process } from '@igrp/platform-process-management-types';
+import React from "react";
+import { ProcessTreeNode } from "../types";
+import { TreeNode } from "./tree-node";
+import { InfoCard } from "../../components/info-card";
+import {
+  IGRPCard,
+  IGRPCardContent,
+} from "@igrp/igrp-framework-react-design-system";
+import { cn } from "@/lib/utils";
+import { Process } from "@igrp/platform-process-management-types";
 
 interface ProcessTreeProps {
   nodes: ProcessTreeNode[];
@@ -41,8 +44,8 @@ export function ProcessTree({
   }
 
   return (
-     <IGRPCard name={`card1`} className={cn('w-full ')}>
-      <IGRPCardContent className={cn('px-3 py-3')}>
+    <IGRPCard name={`card1`} className={cn("w-full ")}>
+      <IGRPCardContent className={cn("px-3 py-3")}>
         {nodes.map((node) => (
           <TreeNode
             key={node.id}

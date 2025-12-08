@@ -1,6 +1,6 @@
-import { IGRPButton, IGRPIcon } from '@igrp/igrp-framework-react-design-system';
-import { cn } from '@/lib/utils';
-import { Process } from '@igrp/platform-process-management-types';
+import { IGRPButton, IGRPIcon } from "@igrp/igrp-framework-react-design-system";
+import { cn } from "@/lib/utils";
+import { Process } from "@igrp/platform-process-management-types";
 
 export function ArtifactProcessesList({
   processes,
@@ -9,10 +9,18 @@ export function ArtifactProcessesList({
 }: {
   processes: Process[];
   onArtifactEdit: (processId: string) => void;
-  onProcessNumberEdit: (processId: string, processKey: string, processApplicationBase: string) => void;
+  onProcessNumberEdit: (
+    processId: string,
+    processKey: string,
+    processApplicationBase: string,
+  ) => void;
 }) {
   if (processes.length === 0) {
-    return <div className="text-sm text-muted-foreground italic">Nenhum processo encontrado</div>;
+    return (
+      <div className="text-sm text-muted-foreground italic">
+        Nenhum processo encontrado
+      </div>
+    );
   }
   return (
     <div className="space-y-2">
@@ -24,9 +32,9 @@ export function ArtifactProcessesList({
           <div className="flex items-center gap-2">
             <IGRPIcon
               name={`icon1`}
-              iconName={'Settings'}
+              iconName={"Settings"}
               size={18}
-              className={cn('text-muted-foreground')}
+              className={cn("text-muted-foreground")}
             ></IGRPIcon>
             <div>
               <span className="text-sm font-medium text-foreground">
@@ -40,9 +48,14 @@ export function ArtifactProcessesList({
             </div>
           </div>
           <div className="flex items-center gap-2">
-
             <IGRPButton
-              onClick={() => onProcessNumberEdit(process.id, process.processKey, process.applicationBase ?? '')}
+              onClick={() =>
+                onProcessNumberEdit(
+                  process.id,
+                  process.processKey,
+                  process.applicationBase ?? "",
+                )
+              }
               variant="ghost"
               size="icon"
               iconName="Hash"

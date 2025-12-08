@@ -1,10 +1,10 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
 export function useTreeExpansion() {
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
 
   const toggleNode = useCallback((nodeId: string) => {
-    setExpandedNodes(prev => {
+    setExpandedNodes((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(nodeId)) {
         newSet.delete(nodeId);
@@ -16,11 +16,11 @@ export function useTreeExpansion() {
   }, []);
 
   const expandNode = useCallback((nodeId: string) => {
-    setExpandedNodes(prev => new Set(prev).add(nodeId));
+    setExpandedNodes((prev) => new Set(prev).add(nodeId));
   }, []);
 
   const collapseNode = useCallback((nodeId: string) => {
-    setExpandedNodes(prev => {
+    setExpandedNodes((prev) => {
       const newSet = new Set(prev);
       newSet.delete(nodeId);
       return newSet;

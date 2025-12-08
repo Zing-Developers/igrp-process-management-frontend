@@ -1,25 +1,25 @@
-import { useProcessForm } from './processes/use-process-form';
-import { useProcessOperations } from './processes/use-process-operations';
-import { useArtifactForm } from './artifacts/use-artifact-form';
-import { useArtifactOperations } from './artifacts/use-artifact-operations';
-import { useProcessNumberForm } from './sequence/use-process-number-form';
-import type { ProcessNumberConfig } from '@/app/(myapp)/external/client/services/process.service';
-import { useProcessNumberOperations } from './sequence/use-process-number-operations';
-import { AreaProcessesMap } from '../types';
-import { ProcessService } from '../services/process.service';
-import { useState, useEffect } from 'react';
+import { useProcessForm } from "./processes/use-process-form";
+import { useProcessOperations } from "./processes/use-process-operations";
+import { useArtifactForm } from "./artifacts/use-artifact-form";
+import { useArtifactOperations } from "./artifacts/use-artifact-operations";
+import { useProcessNumberForm } from "./sequence/use-process-number-form";
+import type { ProcessNumberConfig } from "@/app/(myapp)/external/client/services/process";
+import { useProcessNumberOperations } from "./sequence/use-process-number-operations";
+import { AreaProcessesMap } from "../types";
+import { ProcessService } from "../services/process.service";
+import { useState, useEffect } from "react";
 import {
   CreateProcessSequenceRequest,
   Process,
   ProcessData,
-} from '@igrp/platform-process-management-types';
-import { AreaProcessService } from '../services/area-process.service';
-import { useIGRPToast } from '@igrp/igrp-framework-react-design-system';
+} from "@igrp/platform-process-management-types";
+import { AreaProcessService } from "../services/area-process.service";
+import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
 
 export function useProcessHandlers(
   areaProcesses: AreaProcessesMap,
   setAreaProcesses: React.Dispatch<React.SetStateAction<AreaProcessesMap>>,
-  processes: Process[]
+  processes: Process[],
 ) {
   const { igrpToast } = useIGRPToast();
   const [allProcesses, setAllProcesses] = useState<Process[]>(processes);
@@ -38,11 +38,10 @@ export function useProcessHandlers(
 
     setLoading(true);
     try {
- 
       const response = await ProcessService.getProcesses(0, 100);
-      setAllProcesses(response.content || []); 
+      setAllProcesses(response.content || []);
     } catch (error) {
-      console.error('Error loading processes:', error);
+      console.error("Error loading processes:", error);
       // Keep using the passed processes as fallback
       setAllProcesses(processes);
     } finally {
@@ -63,21 +62,21 @@ export function useProcessHandlers(
     // Find the process by processKey from our loaded processes
     const process = allProcesses.find((p) => p.processKey === processKey);
     if (!process) {
-      console.error('Process not found:', processKey);
+      console.error("Process not found:", processKey);
       if (igrpToast) {
         igrpToast({
-          type: 'error',
-          title: 'Erro',
-          description: 'Processo não encontrado.',
+          type: "error",
+          title: "Erro",
+          description: "Processo não encontrado.",
         });
       }
       return;
     }
     // Create the request object
     const processData: ProcessData = {
-      processKey: process.processKey || '',
-      name: process.name || '',
-      releaseId: process.id || '',
+      processKey: process.processKey || "",
+      name: process.name || "",
+      releaseId: process.id || "",
       version: process.version.toString(),
     };
 
@@ -91,20 +90,20 @@ export function useProcessHandlers(
       // Show success toast
       if (igrpToast) {
         igrpToast({
-          type: 'success',
-          title: 'Sucesso',
-          description: 'Processo associado com sucesso!',
+          type: "success",
+          title: "Sucesso",
+          description: "Processo associado com sucesso!",
         });
       }
     } catch (error) {
-      console.error('Error associating process:', error);
+      console.error("Error associating process:", error);
 
       // Show error toast
       if (igrpToast) {
         igrpToast({
-          type: 'error',
-          title: 'Erro',
-          description: 'Erro ao associar processo. Tente novamente.',
+          type: "error",
+          title: "Erro",
+          description: "Erro ao associar processo. Tente novamente.",
         });
       }
 
@@ -112,27 +111,30 @@ export function useProcessHandlers(
     }
   };
 
-  const handleRemoveProcess = async (areaId: string, processDefinitionId: string) => {
+  const handleRemoveProcess = async (
+    areaId: string,
+    processDefinitionId: string,
+  ) => {
     try {
       await processOperations.handleRemoveProcess(areaId, processDefinitionId);
 
       // Show success toast
       if (igrpToast) {
         igrpToast({
-          type: 'success',
-          title: 'Sucesso',
-          description: 'Processo removido com sucesso!',
+          type: "success",
+          title: "Sucesso",
+          description: "Processo removido com sucesso!",
         });
       }
     } catch (error) {
-      console.error('Error removing process:', error);
+      console.error("Error removing process:", error);
 
       // Show error toast
       if (igrpToast) {
         igrpToast({
-          type: 'error',
-          title: 'Erro',
-          description: 'Erro ao remover processo. Tente novamente.',
+          type: "error",
+          title: "Erro",
+          description: "Erro ao remover processo. Tente novamente.",
         });
       }
 
@@ -144,12 +146,19 @@ export function useProcessHandlers(
     // Ensure areaProcesses[areaId] is an array before calling .map()
     const areaProcessList = areaProcesses[areaId];
     if (!Array.isArray(areaProcessList)) {
-      console.warn(`No processes found for area ${areaId}, returning all available processes`);
+      console.warn(
+        `No processes found for area ${areaId}, returning all available processes`,
+      );
       return allProcesses; // Return all loaded processes if no area-specific processes are loaded
     }
-    const associatedProcessIds = areaProcessList.map((process) => `${process.processKey}:${String(process.version ?? '')}`);
+    const associatedProcessIds = areaProcessList.map(
+      (process) => `${process.processKey}:${String(process.version ?? "")}`,
+    );
     const filteredProcesses = allProcesses.filter(
-      (process) => !associatedProcessIds.includes(`${process.processKey}:${String(process.version ?? '')}`),
+      (process) =>
+        !associatedProcessIds.includes(
+          `${process.processKey}:${String(process.version ?? "")}`,
+        ),
     );
     return filteredProcesses;
   };
@@ -187,7 +196,6 @@ export function useProcessHandlers(
   };
 
   const handleSaveProcessNumber = async (data?: ProcessNumberConfig) => {
-  
     if (!processNumberForm.modalState.selectedProcessKey) return;
 
     processNumberForm.setLoading(true);
@@ -196,7 +204,7 @@ export function useProcessHandlers(
       const formData = data || processNumberForm.formData;
 
       const request: CreateProcessSequenceRequest = {
-        name: processNumberForm.modalState.selectedProcessKey + '_sequence',
+        name: processNumberForm.modalState.selectedProcessKey + "_sequence",
         prefix: formData.prefix,
         dateFormat: formData.dateFormat,
         checkDigitSize: formData.checkDigit,
@@ -204,16 +212,17 @@ export function useProcessHandlers(
         numberIncrement: 1,
       };
 
-      const savedConfig = await processNumberOperations.saveProcessNumberConfiguration(
-        processNumberForm.modalState.selectedProcessKey || '',
-        request
-      );
+      const savedConfig =
+        await processNumberOperations.saveProcessNumberConfiguration(
+          processNumberForm.modalState.selectedProcessKey || "",
+          request,
+        );
 
       if (savedConfig) {
         processNumberForm.closeModal();
       }
     } catch (error) {
-      console.error('Error saving process number configuration:', error);
+      console.error("Error saving process number configuration:", error);
     } finally {
       processNumberForm.setLoading(false);
     }
@@ -224,11 +233,12 @@ export function useProcessHandlers(
     // Preload area processes if not already loaded
     if (!Array.isArray(areaProcesses[areaId])) {
       try {
-        const updatedProcessesResponse = await AreaProcessService.getAreaProcesses(areaId);
+        const updatedProcessesResponse =
+          await AreaProcessService.getAreaProcesses(areaId);
         const updatedProcesses = updatedProcessesResponse.content || [];
         setAreaProcesses((prev) => ({ ...prev, [areaId]: updatedProcesses }));
       } catch (error) {
-        console.error('Error loading area processes:', error);
+        console.error("Error loading area processes:", error);
       }
     }
 

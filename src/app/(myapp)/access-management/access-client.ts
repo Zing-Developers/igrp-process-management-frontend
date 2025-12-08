@@ -1,13 +1,13 @@
-import { getAccessToken } from '@/lib/auth-helpers';
+import { getAccessToken } from "@/lib/auth-helpers";
 import {
   igrpGetAccessClient,
   igrpResetAccessClientConfig,
   igrpSetAccessClientConfig,
-} from '@igrp/framework-next';
-import { AccessManagementClient } from '@igrp/platform-access-management-client-ts';
+} from "@igrp/framework-next";
+import { AccessManagementClient } from "@igrp/platform-access-management-client-ts";
 
 export async function getClientAccess(): Promise<AccessManagementClient> {
-  const IGRP_APP_MANAGER_API = process.env.IGRP_APP_MANAGER_API || '';
+  const igrpAccessManagementApi = process.env.IGRP_ACCESS_MANAGEMENT_API || "";
 
   igrpResetAccessClientConfig();
   const session = await getAccessToken();
@@ -15,7 +15,7 @@ export async function getClientAccess(): Promise<AccessManagementClient> {
   if (session !== null) {
     igrpSetAccessClientConfig({
       token: session.accessToken as string,
-      baseUrl: IGRP_APP_MANAGER_API,
+      baseUrl: igrpAccessManagementApi,
     });
   }
 

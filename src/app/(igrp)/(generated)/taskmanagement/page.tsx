@@ -68,7 +68,7 @@ const taskUrl = await urlConfig.buildTaskExecutionUrl(
   row.taskId,
   row.applicationBase
 );
-router.push(taskUrl);
+router.push(taskUrl as any);
 
 }
 

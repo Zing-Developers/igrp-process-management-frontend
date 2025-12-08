@@ -1,8 +1,13 @@
-import { useMemo } from 'react';
-import { useProcessInstancesData } from './use-process-instances-data';
-import { getProcessInstanceStatusVariant } from '../../utils/status-helpers';
-import { ProcessInstanceTableRow } from '../types';
-import { getDateTemplate, getProcessInfo, getProgressTemplate, getUserInfo } from '../../utils/columns-template';
+import { useMemo } from "react";
+import { useProcessInstancesData } from "./use-process-instances-data";
+import { getProcessInstanceStatusVariant } from "../../utils/status-helpers";
+import { ProcessInstanceTableRow } from "../types";
+import {
+  getDateTemplate,
+  getProcessInfo,
+  getProgressTemplate,
+  getUserInfo,
+} from "../../utils/columns-template";
 
 export function useProcessInstances() {
   const {
@@ -33,7 +38,7 @@ export function useProcessInstances() {
         startedAt: getDateTemplate(instance.startedAt),
         endedAt: getDateTemplate(instance.endedAt),
         progress: getProgressTemplate(instance.progress),
-        priority: instance.priority + '',
+        priority: instance.priority + "",
         status: instance.status,
         processInstanceId: instance.id,
         procReleaseKey: instance.procReleaseKey,

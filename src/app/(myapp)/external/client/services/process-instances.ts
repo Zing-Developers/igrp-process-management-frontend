@@ -1,7 +1,10 @@
-'use server';
+"use server";
 
-import { getIGRPProcessClient } from '@/lib/api-client';
-import { PaginatedResponse, ProcessInstance } from '@igrp/platform-process-management-types';
+import { getIGRPProcessClient } from "@/lib/api-client";
+import {
+  PaginatedResponse,
+  ProcessInstance,
+} from "@igrp/platform-process-management-types";
 
 // Define the StatusOption interface locally since it's not exported from the types package
 interface StatusOption {
@@ -31,18 +34,20 @@ export const getProcessInstances = async (
   },
 ): Promise<PaginatedResponse<ProcessInstance>> => {
   const allowedStatuses = [
-    'CREATED',
-    'RUNNING',
-    'SUSPENDED',
-    'COMPLETED',
-    'TERMINATED',
-    'CANCELED',
+    "CREATED",
+    "RUNNING",
+    "SUSPENDED",
+    "COMPLETED",
+    "TERMINATED",
+    "CANCELED",
   ] as const;
   type ClientStatus = (typeof allowedStatuses)[number];
 
   const mappedStatus = ((): ClientStatus | undefined => {
     const raw = filters?.status?.toUpperCase();
-    return allowedStatuses.includes(raw as ClientStatus) ? (raw as ClientStatus) : undefined;
+    return allowedStatuses.includes(raw as ClientStatus)
+      ? (raw as ClientStatus)
+      : undefined;
   })();
 
   const processManagementClient = await getIGRPProcessClient();
@@ -54,7 +59,7 @@ export const getProcessInstances = async (
     status: mappedStatus,
     // searchTerms, applicationBase, procReleaseId not mapped here
   });
-  return response.data as PaginatedResponse<ProcessInstance>;
+  return response.data;
 };
 
 /**
@@ -62,10 +67,11 @@ export const getProcessInstances = async (
  * @param id The ID of the process instance to fetch.
  * @returns A promise that resolves to the process instance, or null if not found.
  */
-export const getProcessInstanceById = async (id: string): Promise<ProcessInstance | null> => {
+export const getProcessInstanceById = async (
+  id: string,
+): Promise<ProcessInstance | null> => {
   const processManagementClient = await getIGRPProcessClient();
-  return (await processManagementClient.processes.getProcessInstanceById(id))
-    .data as ProcessInstance;
+  return (await processManagementClient.processes.getProcessInstanceById(id)).data;
 };
 
 /**
@@ -80,11 +86,11 @@ export const getRunningProcessInstances = async (
   // No direct API in client; use getProcessInstances with filters
   const response = await processManagementClient.processes.getProcessInstances({
     applicationBase,
-    status: 'RUNNING',
+    status: "RUNNING",
     page: 0,
     size: 1000,
   });
-  return (response.data?.content ?? []) as ProcessInstance[];
+  return (response.data?.content ?? []);
 };
 
 /**
@@ -93,6 +99,5 @@ export const getRunningProcessInstances = async (
  */
 export const getProcessInstancesStatus = async (): Promise<StatusOption[]> => {
   const processManagementClient = await getIGRPProcessClient();
-  return (await processManagementClient.processes.getProcessInstancesStatus())
-    .data as StatusOption[];
+  return (await processManagementClient.processes.getProcessInstancesStatus()).data;
 };

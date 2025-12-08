@@ -1,10 +1,16 @@
-import { useState, useCallback } from 'react';
-import { getTasksByProcessInstance, claimTask } from '../../external/client/services/task.service';
-import { Process, ProcessInstance } from '@igrp/platform-process-management-types';
-import { urlConfig } from '../../utils/url-config';
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import { startProcess } from '../../external/client/services/process.service';
-import { useIGRPToast } from '@igrp/igrp-framework-react-design-system';
+import { useState, useCallback } from "react";
+import {
+  getTasksByProcessInstance,
+  claimTask,
+} from "../../external/client/services/task";
+import {
+  Process,
+  ProcessInstance,
+} from "@igrp/platform-process-management-types";
+import { urlConfig } from "../../utils/url-config";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { startProcess } from "../../external/client/services/process";
+import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
 
 export function useProcessOperations(router?: AppRouterInstance) {
   const [selectedProcess, setSelectedProcess] = useState<Process | undefined>();
@@ -45,7 +51,7 @@ export function useProcessOperations(router?: AppRouterInstance) {
   const startProcessWithPriority = useCallback(
     async (priority: number): Promise<ProcessInstance | null> => {
       if (!pendingProcessStart) {
-        console.error('No pending process start found');
+        console.error("No pending process start found");
         return null;
       }
 
@@ -65,11 +71,11 @@ export function useProcessOperations(router?: AppRouterInstance) {
         // Show success toast
         if (igrpToast) {
           igrpToast({
-            type: 'success',
-            title: 'Processo Iniciado',
+            type: "success",
+            title: "Processo Iniciado",
             description: pendingProcessStart.processKey
               ? `O processo ${pendingProcessStart.processKey} foi iniciado com sucesso.`
-              : 'O processo foi iniciado com sucesso.',
+              : "O processo foi iniciado com sucesso.",
           });
         }
 
@@ -92,18 +98,19 @@ export function useProcessOperations(router?: AppRouterInstance) {
                   firstTask.processInstanceId,
                   firstTask.taskKey,
                   firstTask.id,
-                  firstTask.applicationBase ?? '',
+                  firstTask.applicationBase ?? "",
                 );
                 router.push(taskUrl);
               } catch (claimError) {
-                console.warn('Error claiming task:', claimError);
+                console.warn("Error claiming task:", claimError);
 
                 // Show warning toast but still redirect
                 if (igrpToast) {
                   igrpToast({
-                    type: 'warning',
-                    title: 'Aviso',
-                    description: 'Não foi possível assumir a tarefa automaticamente.',
+                    type: "warning",
+                    title: "Aviso",
+                    description:
+                      "Não foi possível assumir a tarefa automaticamente.",
                   });
                 }
 
@@ -113,7 +120,7 @@ export function useProcessOperations(router?: AppRouterInstance) {
                   firstTask.processInstanceId,
                   firstTask.taskKey,
                   firstTask.id,
-                  firstTask.applicationBase ?? '',
+                  firstTask.applicationBase ?? "",
                 );
                 router.push(taskUrl);
               }
@@ -126,7 +133,10 @@ export function useProcessOperations(router?: AppRouterInstance) {
               router.push(processUrl);
             }
           } catch (taskError) {
-            console.warn('Error fetching tasks for process instance:', taskError);
+            console.warn(
+              "Error fetching tasks for process instance:",
+              taskError,
+            );
 
             // Fallback to process instance URL if task fetching fails
             const processUrl = urlConfig.buildProcessInstanceUrl(
@@ -139,7 +149,7 @@ export function useProcessOperations(router?: AppRouterInstance) {
 
         return instance;
       } catch (err) {
-        console.error('Error starting process:', err);
+        console.error("Error starting process:", err);
 
         // Clear pending process start on error
         setPendingProcessStart(null);
@@ -147,9 +157,9 @@ export function useProcessOperations(router?: AppRouterInstance) {
         // Show error toast
         if (igrpToast) {
           igrpToast({
-            type: 'error',
-            title: 'Erro ao Iniciar Processo',
-            description: 'Ocorreu um erro ao tentar iniciar o processo.',
+            type: "error",
+            title: "Erro ao Iniciar Processo",
+            description: "Ocorreu um erro ao tentar iniciar o processo.",
           });
         }
 

@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import { useDropdownData, FilterState } from './use-dropdown-data';
+import { useState } from "react";
+import { useDropdownData, FilterState } from "./use-dropdown-data";
 
 export function useFilterData() {
   const [filters, setFilters] = useState<FilterState>({
-    areaId: '',
-    subareaId: '',
-    processType: '',
-    processNumber: '',
-    status: '',
-    dateFrom: '',
-    dateTo: '',
-    organic: '',
-    user: '',
+    areaId: "",
+    subareaId: "",
+    processType: "",
+    processNumber: "",
+    status: "",
+    dateFrom: "",
+    dateTo: "",
+    organic: "",
+    user: "",
   });
 
   const { dropdownOptions } = useDropdownData(filters);
@@ -24,15 +24,15 @@ export function useFilterData() {
 
   const resetFilters = () => {
     setFilters({
-      areaId: '',
-      subareaId: '',
-      processType: '',
-      processNumber: '',
-      status: '',
-      dateFrom: '',
-      dateTo: '',
-      organic: '',
-      user: '',
+      areaId: "",
+      subareaId: "",
+      processType: "",
+      processNumber: "",
+      status: "",
+      dateFrom: "",
+      dateTo: "",
+      organic: "",
+      user: "",
     });
   };
 

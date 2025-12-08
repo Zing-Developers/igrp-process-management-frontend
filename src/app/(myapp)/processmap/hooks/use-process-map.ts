@@ -1,26 +1,33 @@
-import { useCallback } from 'react';
-import { ProcessMapHookReturn } from '../types';
-import { useProcessMapData } from './use-process-map-data';
-import { useTreeExpansion } from './use-tree-expansion';
-import { useProcessOperations } from './use-process-operations';
-import { useProcessModal } from './use-process-modal';
-import { usePriorityModal } from './use-priority-modal';
-import { useTreeSearch } from './use-tree-search';
-import { useTreeComputed } from './use-tree-computed';
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import { Process } from '@igrp/platform-process-management-types';
-import { useIGRPToast } from '@igrp/igrp-framework-react-design-system';
+import { useCallback } from "react";
+import { ProcessMapHookReturn } from "../types";
+import { useProcessMapData } from "./use-process-map-data";
+import { useTreeExpansion } from "./use-tree-expansion";
+import { useProcessOperations } from "./use-process-operations";
+import { useProcessModal } from "./use-process-modal";
+import { usePriorityModal } from "./use-priority-modal";
+import { useTreeSearch } from "./use-tree-search";
+import { useTreeComputed } from "./use-tree-computed";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { Process } from "@igrp/platform-process-management-types";
+import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
 
-export function useProcessMap(router?: AppRouterInstance): ProcessMapHookReturn {
+export function useProcessMap(
+  router?: AppRouterInstance,
+): ProcessMapHookReturn {
   // Data management
-  const { areas, loadedNodes, loading, error, loadSubareas, refreshData } = useProcessMapData();
+  const { areas, loadedNodes, loading, error, loadSubareas, refreshData } =
+    useProcessMapData();
 
   // Tree expansion state
   const { expandedNodes, toggleNode: originalToggleNode } = useTreeExpansion();
 
   // Process operations (now with priority workflow)
-  const { selectedProcess, selectProcess, prepareProcessStart, startProcessWithPriority } =
-    useProcessOperations(router);
+  const {
+    selectedProcess,
+    selectProcess,
+    prepareProcessStart,
+    startProcessWithPriority,
+  } = useProcessOperations(router);
 
   const { igrpToast } = useIGRPToast();
 
@@ -35,7 +42,8 @@ export function useProcessMap(router?: AppRouterInstance): ProcessMapHookReturn 
   );
 
   // Search functionality
-  const { searchTerm, setSearchTerm, filteredNodes, clearSearch } = useTreeSearch(treeNodes);
+  const { searchTerm, setSearchTerm, filteredNodes, clearSearch } =
+    useTreeSearch(treeNodes);
 
   // Enhanced toggle node that also loads subareas when expanding
   const toggleNode = useCallback(
@@ -50,12 +58,12 @@ export function useProcessMap(router?: AppRouterInstance): ProcessMapHookReturn 
         try {
           await loadSubareas(nodeId);
         } catch (error) {
-          console.error('Failed to load subareas:', error);
+          console.error("Failed to load subareas:", error);
           if (igrpToast) {
             igrpToast({
-              type: 'error',
-              title: 'Erro',
-              description: 'Erro ao carregar subáreas. Tente novamente.',
+              type: "error",
+              title: "Erro",
+              description: "Erro ao carregar subáreas. Tente novamente.",
             });
           }
         }
@@ -75,7 +83,13 @@ export function useProcessMap(router?: AppRouterInstance): ProcessMapHookReturn 
       variables?: Array<{ name: string; value: string }>,
     ) => {
       // Prepare the process start parameters
-      prepareProcessStart(processDefinitionId, processKey, applicationBase, businessKey, variables);
+      prepareProcessStart(
+        processDefinitionId,
+        processKey,
+        applicationBase,
+        businessKey,
+        variables,
+      );
 
       // Open priority modal
       priorityModal.open(process);
@@ -93,9 +107,9 @@ export function useProcessMap(router?: AppRouterInstance): ProcessMapHookReturn 
       } else {
         if (igrpToast) {
           igrpToast({
-            type: 'error',
-            title: 'Erro',
-            description: 'Por favor, selecione uma prioridade válida.',
+            type: "error",
+            title: "Erro",
+            description: "Por favor, selecione uma prioridade válida.",
           });
         }
       }

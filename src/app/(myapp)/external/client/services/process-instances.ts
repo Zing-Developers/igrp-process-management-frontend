@@ -59,7 +59,7 @@ export const getProcessInstances = async (
     status: mappedStatus,
     // searchTerms, applicationBase, procReleaseId not mapped here
   });
-  return response.data as PaginatedResponse<ProcessInstance>;
+  return response.data;
 };
 
 /**
@@ -71,8 +71,7 @@ export const getProcessInstanceById = async (
   id: string,
 ): Promise<ProcessInstance | null> => {
   const processManagementClient = await getIGRPProcessClient();
-  return (await processManagementClient.processes.getProcessInstanceById(id))
-    .data as ProcessInstance;
+  return (await processManagementClient.processes.getProcessInstanceById(id)).data;
 };
 
 /**
@@ -91,7 +90,7 @@ export const getRunningProcessInstances = async (
     page: 0,
     size: 1000,
   });
-  return (response.data?.content ?? []) as ProcessInstance[];
+  return (response.data?.content ?? []);
 };
 
 /**
@@ -100,6 +99,5 @@ export const getRunningProcessInstances = async (
  */
 export const getProcessInstancesStatus = async (): Promise<StatusOption[]> => {
   const processManagementClient = await getIGRPProcessClient();
-  return (await processManagementClient.processes.getProcessInstancesStatus())
-    .data as StatusOption[];
+  return (await processManagementClient.processes.getProcessInstancesStatus()).data;
 };

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getProcessInstances } from "../../external/client/services/process-instances.service";
+import { getProcessInstances } from "../../external/client/services/process-instances";
 import { useFilterData } from "../../components/processtaksfilter/hooks/use-filter-data";
 import { ProcessInstancesFilters, ProcessInstancesState } from "../types";
 

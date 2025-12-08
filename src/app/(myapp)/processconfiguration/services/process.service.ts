@@ -10,7 +10,7 @@ import {
   getProcessArtifacts,
   getProcessDeployedArtifacts,
   createProcessArtifact,
-} from "../../external/client/services/process.service";
+} from "../../external/client/services/process";
 
 export class ProcessService {
   static async getProcesses(

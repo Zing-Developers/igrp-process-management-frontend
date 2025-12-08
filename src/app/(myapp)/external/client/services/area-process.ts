@@ -15,8 +15,7 @@ export const getAreaProcesses = async (
   areaId: string,
 ): Promise<PaginatedResponse<Process>> => {
   const httpClient = await getIGRPProcessClient();
-  return (await httpClient.areas.getAreaProcesses(areaId))
-    .data as PaginatedResponse<Process>;
+  return (await httpClient.areas.getAreaProcesses(areaId)).data;
 };
 
 /**
@@ -40,7 +39,7 @@ export const associateProcessToArea = async (
       areaId,
       processData,
     )
-  ).data as Process;
+  ).data;
 };
 
 /**

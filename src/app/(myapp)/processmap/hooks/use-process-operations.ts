@@ -2,14 +2,14 @@ import { useState, useCallback } from "react";
 import {
   getTasksByProcessInstance,
   claimTask,
-} from "../../external/client/services/task.service";
+} from "../../external/client/services/task";
 import {
   Process,
   ProcessInstance,
 } from "@igrp/platform-process-management-types";
 import { urlConfig } from "../../utils/url-config";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { startProcess } from "../../external/client/services/process.service";
+import { startProcess } from "../../external/client/services/process";
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
 
 export function useProcessOperations(router?: AppRouterInstance) {

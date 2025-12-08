@@ -27,7 +27,7 @@ export const getProcesses = async (
     page,
     size,
   });
-  return response.data as PaginatedResponse<Process>;
+  return response.data;
 };
 
 /**
@@ -37,7 +37,7 @@ export const getProcesses = async (
 export const getProcessStats = async (): Promise<ProcessStats> => {
   const processManagementClient = await getIGRPProcessClient();
   const response = await processManagementClient.processes.getProcessStats();
-  return response.data as ProcessStats;
+  return response.data;
 };
 
 /**
@@ -53,7 +53,7 @@ export const getProcessArtifacts = async (
     await processManagementClient.processes.getProcessArtifacts(
       processDefinitionId,
     );
-  return response.data as ProcessArtifact[];
+  return response.data;
 };
 
 /**
@@ -72,7 +72,7 @@ export const createProcessArtifact = async (
       processDefinitionId,
       artifact,
     );
-  return response.data as ProcessArtifact;
+  return response.data;
 };
 
 /**
@@ -88,7 +88,7 @@ export const getProcessDeployedArtifacts = async (
     await processManagementClient.processes.getProcessDeployedArtifacts(
       processDefinitionId,
     );
-  return response.data as ProcessArtifact[];
+  return response.data;
 };
 
 /**
@@ -98,8 +98,7 @@ export const getProcessDeployedArtifacts = async (
  */
 export const getProcessById = async (id: string): Promise<Process | null> => {
   const processManagementClient = await getIGRPProcessClient();
-  return (await processManagementClient.processes.getProcessById(id))
-    .data as Process;
+    return (await processManagementClient.processes.getProcessById(id)).data;
 };
 
 /**
@@ -130,7 +129,7 @@ export const startProcess = async (
 
   const processManagementClient = await getIGRPProcessClient();
   const response = await processManagementClient.processes.startProcess(body);
-  return response.data as ProcessInstance;
+  return response.data;
 };
 
 /**
@@ -157,7 +156,7 @@ export const getProcessNumberConfigs = async (
     await processManagementClient.processes.getProcessSequence(
       processDefinitionId,
     );
-  return response.data as ProcessSequence;
+  return response.data;
 };
 
 /**
@@ -177,5 +176,5 @@ export const saveProcessNumberConfig = async (
       "",
       config,
     );
-  return response.data as ProcessSequence;
+  return response.data;
 };

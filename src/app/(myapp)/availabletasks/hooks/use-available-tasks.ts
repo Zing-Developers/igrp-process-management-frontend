@@ -1,6 +1,6 @@
 import { useMemo, useCallback } from "react";
 import { useAvailableTasksData } from "./use-available-tasks-data";
-import { claimTask } from "../../external/client/services/task.service";
+import { claimTask } from "../../external/client/services/task";
 import { TaskTableRow } from "../types";
 import {
   getDateTemplate,

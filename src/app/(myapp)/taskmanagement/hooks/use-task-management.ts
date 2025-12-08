@@ -6,7 +6,7 @@ import {
 import {
   getTasks,
   assignTask,
-} from "../../external/client/services/task.service";
+} from "../../external/client/services/task";
 import { getDateTemplate, getProcessInfo } from "../../utils/columns-template";
 
 export interface TaskManagementTableRow {

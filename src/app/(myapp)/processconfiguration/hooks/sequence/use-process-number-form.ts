@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ProcessNumberModalState } from "../../types";
-import { ProcessNumberConfig } from "@/app/(myapp)/external/client/services/process.service";
+import { ProcessNumberConfig } from "@/app/(myapp)/external/client/services/process";
 import { ProcessSequence } from "@igrp/platform-process-management-types";
 
 export function useProcessNumberForm() {

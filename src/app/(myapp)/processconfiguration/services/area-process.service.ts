@@ -7,7 +7,7 @@ import {
   getAreaProcesses,
   associateProcessToArea,
   removeProcessFromArea,
-} from "../../external/client/services/area-process.service";
+} from "../../external/client/services/area-process";
 
 export class AreaProcessService {
   static async getAreaProcesses(

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { getAvailableTasks } from "../../external/client/services/task.service";
+
+import { getAvailableTasks } from "../../external/client/services/task";
 import { useFilterData } from "../../components/processtaksfilter/hooks/use-filter-data";
 import { AvailableTasksFilters, AvailableTasksState } from "../types";
 

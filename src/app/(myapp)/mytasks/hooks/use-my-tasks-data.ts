@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { getMyTasks } from "../../external/client/services/task.service";
+import { getMyTasks } from "../../external/client/services/task";
 import { MyTasksState, MyTasksFilters } from "../types";
 import { useFilterData } from "../../components/processtaksfilter/hooks/use-filter-data";
 

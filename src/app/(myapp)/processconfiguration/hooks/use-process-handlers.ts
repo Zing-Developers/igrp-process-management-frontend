@@ -3,7 +3,7 @@ import { useProcessOperations } from "./processes/use-process-operations";
 import { useArtifactForm } from "./artifacts/use-artifact-form";
 import { useArtifactOperations } from "./artifacts/use-artifact-operations";
 import { useProcessNumberForm } from "./sequence/use-process-number-form";
-import type { ProcessNumberConfig } from "@/app/(myapp)/external/client/services/process.service";
+import type { ProcessNumberConfig } from "@/app/(myapp)/external/client/services/process";
 import { useProcessNumberOperations } from "./sequence/use-process-number-operations";
 import { AreaProcessesMap } from "../types";
 import { ProcessService } from "../services/process.service";

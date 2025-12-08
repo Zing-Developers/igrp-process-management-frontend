@@ -3,7 +3,7 @@ import {
   createArea,
   deleteArea,
   updateArea,
-} from "../../external/client/services/area.service";
+} from "../../external/client/services/area";
 import {
   Area,
   CreateAreaRequest,

@@ -1,7 +1,7 @@
 import {
   getProcessNumberConfigs,
   saveProcessNumberConfig,
-} from "@/app/(myapp)/external/client/services/process.service";
+} from "@/app/(myapp)/external/client/services/process";
 import {
   CreateProcessSequenceRequest,
   ProcessSequence,

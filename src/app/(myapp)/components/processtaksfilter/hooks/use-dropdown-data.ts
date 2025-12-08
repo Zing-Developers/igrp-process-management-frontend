@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { getAreas } from "../../../external/client/services/area.service";
-import { getAreaProcesses } from "../../../external/client/services/area-process.service";
-import { getProcessInstancesStatus } from "../../../external/client/services/process-instances.service";
+import { getAreas } from "../../../external/client/services/area";
+import { getAreaProcesses } from "../../../external/client/services/area-process";
+import { getProcessInstancesStatus } from "../../../external/client/services/process-instances";
 
 export interface DropdownOption {
   label: string;

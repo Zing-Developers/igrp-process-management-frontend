@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useMyTasksData } from "./use-my-tasks-data";
 import { TaskTableRow } from "../types";
-import { unclaimTask } from "../../external/client/services/task.service";
+import { unclaimTask } from "../../external/client/services/task";
 import { getDateTemplate, getProcessInfo } from "../../utils/columns-template";
 
 export function useMyTasks() {

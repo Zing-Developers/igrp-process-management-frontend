@@ -10,7 +10,7 @@ import {
   getAreas,
   getSubareas,
   updateArea,
-} from "../../external/client/services/area.service";
+} from "../../external/client/services/area";
 
 export class AreaService {
   static async createArea(areaData: CreateAreaRequest): Promise<Area> {

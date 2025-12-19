@@ -21,7 +21,7 @@ import {
  */
 export const getProcesses = async (
   page = 0,
-  size = 20
+  size = 20,
 ): Promise<PaginatedResponse<Process>> => {
   const processManagementClient = await getIGRPProcessClient();
   const response = await processManagementClient.processes.getProcesses({
@@ -47,12 +47,12 @@ export const getProcessStats = async (): Promise<ProcessStats> => {
  * @returns A promise that resolves to a paginated response of processes.
  */
 export const getProcessArtifacts = async (
-  processDefinitionId: string
+  processDefinitionId: string,
 ): Promise<ProcessArtifact[]> => {
   const processManagementClient = await getIGRPProcessClient();
   const response =
     await processManagementClient.processes.getProcessArtifacts(
-      processDefinitionId
+      processDefinitionId,
     );
   return response.data;
 };
@@ -65,13 +65,13 @@ export const getProcessArtifacts = async (
  */
 export const createProcessArtifact = async (
   processDefinitionId: string,
-  artifact: CreateProcessArtifactRequest
+  artifact: CreateProcessArtifactRequest,
 ): Promise<ProcessArtifact> => {
   const processManagementClient = await getIGRPProcessClient();
   const response =
     await processManagementClient.processes.createProcessArtifact(
       processDefinitionId,
-      artifact
+      artifact,
     );
   return response.data;
 };
@@ -84,13 +84,13 @@ export const createProcessArtifact = async (
  */
 export const updateProcessArtifact = async (
   processDefinitionId: string,
-  artifact: CreateProcessArtifactRequest
+  artifact: CreateProcessArtifactRequest,
 ): Promise<ProcessArtifact> => {
   const processManagementClient = await getIGRPProcessClient();
   const response =
     await processManagementClient.processes.updateProcessArtifact(
       processDefinitionId,
-      artifact
+      artifact,
     );
   return response.data;
 };
@@ -101,12 +101,12 @@ export const updateProcessArtifact = async (
  * @returns A promise that resolves to a paginated response of processes.
  */
 export const getProcessDeployedArtifacts = async (
-  processDefinitionId: string
+  processDefinitionId: string,
 ): Promise<ProcessArtifact[]> => {
   const processManagementClient = await getIGRPProcessClient();
   const response =
     await processManagementClient.processes.getProcessDeployedArtifacts(
-      processDefinitionId
+      processDefinitionId,
     );
   return response.data;
 };
@@ -136,7 +136,7 @@ export const createProcessInstance = async (
   applicationBase: string,
   priority: number,
   businessKey?: string,
-  variables?: Array<{ name: string; value: string }>
+  variables?: Array<{ name: string; value: string }>,
 ): Promise<ProcessInstance> => {
   const body: CreateProcessInstanceRequest = {
     processDefinitionId,
@@ -164,18 +164,17 @@ export const createProcessInstance = async (
  */
 export const startProcessInstance = async (
   processInstanceId: string,
-  variables?: Array<{ name: string; value: string }>
+  variables?: Array<{ name: string; value: string }>,
 ): Promise<ProcessInstance> => {
   const body: StartProcessInstanceRequest = {
     variables,
   };
 
   const processManagementClient = await getIGRPProcessClient();
-  const response =
-    await processManagementClient.processes.createProcessInstance(
-      processInstanceId,
-      body
-    );
+  const response = await processManagementClient.processes.startProcessInstance(
+    processInstanceId,
+    body,
+  );
   return response.data;
 };
 
@@ -194,7 +193,7 @@ export const createAndStartProcess = async (
   applicationBase: string,
   priority: number,
   businessKey?: string,
-  variables?: Array<{ name: string; value: string }>
+  variables?: Array<{ name: string; value: string }>,
 ): Promise<ProcessInstance> => {
   const body: CreateProcessInstanceRequest = {
     processDefinitionId,
@@ -228,12 +227,12 @@ export interface ProcessNumberConfig {
  * @returns A promise that resolves to process number configurations
  */
 export const getProcessNumberConfigs = async (
-  processDefinitionId: string
+  processDefinitionId: string,
 ): Promise<ProcessSequence> => {
   const processManagementClient = await getIGRPProcessClient();
   const response =
     await processManagementClient.processes.getProcessSequence(
-      processDefinitionId
+      processDefinitionId,
     );
   return response.data;
 };
@@ -246,14 +245,14 @@ export const getProcessNumberConfigs = async (
  */
 export const saveProcessNumberConfig = async (
   processDefinitionKey: string,
-  config: CreateProcessSequenceRequest
+  config: CreateProcessSequenceRequest,
 ): Promise<ProcessSequence> => {
   const processManagementClient = await getIGRPProcessClient();
   const response =
     await processManagementClient.processes.createProcessSequence(
       processDefinitionKey,
       "",
-      config
+      config,
     );
   return response.data;
 };

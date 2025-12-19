@@ -15,11 +15,11 @@ export function useArtifactForm() {
   });
 
   const [processArtifacts, setProcessArtifacts] = useState<ProcessArtifact[]>(
-    []
+    [],
   );
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<Record<string, { formKey: string }>>(
-    {}
+    {},
   );
 
   const openModal = (processId: string) => {
@@ -51,7 +51,12 @@ export function useArtifactForm() {
   };
 
   const updateFormData = (artifactKey: string, formKey: string) => {
-    console.log("Updating formData for artifact:", artifactKey, "with formKey:", formKey);
+    console.log(
+      "Updating formData for artifact:",
+      artifactKey,
+      "with formKey:",
+      formKey,
+    );
     setFormData((prev) => ({
       ...prev,
       [artifactKey]: { formKey },
@@ -65,7 +70,6 @@ export function useArtifactForm() {
     try {
       const promises = Object.entries(formData).map(
         async ([artifactKey, data]) => {
-
           const artifact = processArtifacts.find((a) => a.key === artifactKey);
 
           if (artifact && data.formKey) {
@@ -76,10 +80,10 @@ export function useArtifactForm() {
             };
             await ProcessService.createProcessArtifact(
               modalState.selectedProcessId!,
-              createRequest
+              createRequest,
             );
           }
-        }
+        },
       );
 
       await Promise.all(promises.filter(Boolean));

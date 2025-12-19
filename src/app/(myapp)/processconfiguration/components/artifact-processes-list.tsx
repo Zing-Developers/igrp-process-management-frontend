@@ -13,7 +13,7 @@ export function ArtifactProcessesList({
   onProcessNumberEdit: (
     processId: string,
     processKey: string,
-    processApplicationBase: string
+    processApplicationBase: string,
   ) => void;
 }) {
   if (processes.length === 0) {
@@ -52,7 +52,7 @@ export function ArtifactProcessesList({
                 onProcessNumberEdit(
                   process.id,
                   process.processKey,
-                  process.applicationBase ?? ""
+                  process.applicationBase ?? "",
                 )
               }
               variant="ghost"

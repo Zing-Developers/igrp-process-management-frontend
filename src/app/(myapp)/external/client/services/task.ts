@@ -151,7 +151,9 @@ export const unassignTask = async (
   note?: string,
 ): Promise<PostResponse> => {
   const processManagementClient = await getIGRPProcessClient();
-  return (await processManagementClient.tasks.assignTask(taskId, { user, note })).data;
+  return (
+    await processManagementClient.tasks.assignTask(taskId, { user, note })
+  ).data;
 };
 
 /**
@@ -207,7 +209,9 @@ export const completeTask = async (
   }>,
 ): Promise<PostResponse> => {
   const processManagementClient = await getIGRPProcessClient();
-  return (await processManagementClient.tasks.completeTask(taskId, { variables })).data;
+  return (
+    await processManagementClient.tasks.completeTask(taskId, { variables })
+  ).data;
 };
 
 /*

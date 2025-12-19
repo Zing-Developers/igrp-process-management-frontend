@@ -24,9 +24,13 @@ export function useArtifactOperations() {
         const savedArtifact = savedArtifacts.find(
           (saved) => saved.key === deployedArtifact.key,
         );
-        const candidateGroupsValue = (savedArtifact as any)?.candidateGroups || (deployedArtifact as any).candidateGroups;
-        const candidateGroupsString = candidateGroupsValue 
-          ? (Array.isArray(candidateGroupsValue) ? candidateGroupsValue.join(",") : String(candidateGroupsValue))
+        const candidateGroupsValue =
+          (savedArtifact as any)?.candidateGroups ||
+          (deployedArtifact as any).candidateGroups;
+        const candidateGroupsString = candidateGroupsValue
+          ? Array.isArray(candidateGroupsValue)
+            ? candidateGroupsValue.join(",")
+            : String(candidateGroupsValue)
           : "";
         return {
           ...deployedArtifact,

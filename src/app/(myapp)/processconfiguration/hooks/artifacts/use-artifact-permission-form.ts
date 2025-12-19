@@ -67,7 +67,7 @@ export function useArtifactPermissionForm() {
       const promises = Object.entries(formData).map(
         async ([artifactKey, data]) => {
           const artifact = processArtifactsPermission.find(
-            (a) => a.key === artifactKey
+            (a) => a.key === artifactKey,
           );
 
           if (data.candidateGroups) {
@@ -79,10 +79,10 @@ export function useArtifactPermissionForm() {
             };
             await ProcessService.updateProcessArtifact(
               modalState.selectedProcessId!,
-              createRequest
+              createRequest,
             );
           }
-        }
+        },
       );
 
       await Promise.all(promises.filter(Boolean));

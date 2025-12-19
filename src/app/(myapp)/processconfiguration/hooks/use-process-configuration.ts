@@ -28,7 +28,7 @@ export function useProcessConfiguration() {
   const { loading: processesLoading, ...processHandlers } = useProcessHandlers(
     areaProcesses,
     setAreaProcesses,
-    processes
+    processes,
   );
 
   // UI state - pass both loadSubareas and loadAreaProcesses functions to expansion
@@ -42,7 +42,7 @@ export function useProcessConfiguration() {
     await expansion.toggleAreaExpansion(
       areaId,
       areaHandlers.handleLoadSubareas,
-      areaHandlers.handleLoadAreaProcesses
+      areaHandlers.handleLoadAreaProcesses,
     );
   };
 
@@ -83,9 +83,12 @@ export function useProcessConfiguration() {
 
     // Artifact management permission
     artifactPermissionForm: processHandlers.artifactPermissionForm,
-    processArtifactsPermission: processHandlers.artifactPermissionForm.processArtifactsPermission,
-    handleOpenArtifactPermissionModal: processHandlers.handleOpenArtifactPermissionModal,
-    handleSaveArtifactPermission: () => processHandlers.artifactPermissionForm.saveArtifactPermission(),
+    processArtifactsPermission:
+      processHandlers.artifactPermissionForm.processArtifactsPermission,
+    handleOpenArtifactPermissionModal:
+      processHandlers.handleOpenArtifactPermissionModal,
+    handleSaveArtifactPermission: () =>
+      processHandlers.artifactPermissionForm.saveArtifactPermission(),
 
     // Process Number management
     processNumberForm: processHandlers.processNumberForm,

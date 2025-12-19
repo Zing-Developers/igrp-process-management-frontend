@@ -15,11 +15,12 @@ import {
 } from "@igrp/platform-process-management-types";
 import { AreaProcessService } from "../services/area-process.service";
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
+import { useArtifactPermissionForm } from "./artifacts/use-artifact-permission-form";
 
 export function useProcessHandlers(
   areaProcesses: AreaProcessesMap,
   setAreaProcesses: React.Dispatch<React.SetStateAction<AreaProcessesMap>>,
-  processes: Process[],
+  processes: Process[]
 ) {
   const { igrpToast } = useIGRPToast();
   const [allProcesses, setAllProcesses] = useState<Process[]>(processes);
@@ -28,6 +29,7 @@ export function useProcessHandlers(
   const processForm = useProcessForm();
   const processOperations = useProcessOperations(setAreaProcesses);
   const artifactForm = useArtifactForm();
+  const artifactPermissionForm = useArtifactPermissionForm();
   const artifactOperations = useArtifactOperations();
   const processNumberForm = useProcessNumberForm();
   const processNumberOperations = useProcessNumberOperations();
@@ -83,7 +85,7 @@ export function useProcessHandlers(
     try {
       await processOperations.handleAssociateProcess(
         processForm.modalState.selectedAreaId,
-        processData,
+        processData
       );
       processForm.closeModal();
 
@@ -113,7 +115,7 @@ export function useProcessHandlers(
 
   const handleRemoveProcess = async (
     areaId: string,
-    processDefinitionId: string,
+    processDefinitionId: string
   ) => {
     try {
       await processOperations.handleRemoveProcess(areaId, processDefinitionId);
@@ -146,19 +148,16 @@ export function useProcessHandlers(
     // Ensure areaProcesses[areaId] is an array before calling .map()
     const areaProcessList = areaProcesses[areaId];
     if (!Array.isArray(areaProcessList)) {
-      console.warn(
-        `No processes found for area ${areaId}, returning all available processes`,
-      );
       return allProcesses; // Return all loaded processes if no area-specific processes are loaded
     }
     const associatedProcessIds = areaProcessList.map(
-      (process) => `${process.processKey}:${String(process.version ?? "")}`,
+      (process) => `${process.processKey}:${String(process.version ?? "")}`
     );
     const filteredProcesses = allProcesses.filter(
       (process) =>
         !associatedProcessIds.includes(
-          `${process.processKey}:${String(process.version ?? "")}`,
-        ),
+          `${process.processKey}:${String(process.version ?? "")}`
+        )
     );
     return filteredProcesses;
   };
@@ -172,7 +171,21 @@ export function useProcessHandlers(
         processId,
         artifactForm.setProcessArtifacts,
         artifactForm.setLoading,
-        artifactForm.populateFormDataFromArtifacts, // Pass the populate function
+        artifactForm.populateFormDataFromArtifacts // Pass the populate function
+      );
+    }
+  };
+
+  const handleOpenArtifactPermissionModal = async (processId: string) => {
+    artifactPermissionForm.openModal(processId);
+
+    // Load artifacts when modal opens
+    if (processId) {
+      await artifactOperations.loadProcessArtifacts(
+        processId,
+        artifactPermissionForm.setProcessArtifactsPermission,
+        artifactPermissionForm.setLoading,
+        artifactPermissionForm.populateFormDataFromArtifacts // Pass the populate function
       );
     }
   };
@@ -180,7 +193,7 @@ export function useProcessHandlers(
   const handleOpenProcessNumberModal = async (
     processId: string,
     processKey: string,
-    processApplicationBase: string,
+    processApplicationBase: string
   ) => {
     processNumberForm.openModal(processId, processKey, processApplicationBase);
 
@@ -190,7 +203,7 @@ export function useProcessHandlers(
         processKey,
         processNumberForm.setProcessNumberConfigs,
         processNumberForm.setLoading,
-        processNumberForm.populateFormDataFromConfig,
+        processNumberForm.populateFormDataFromConfig
       );
     }
   };
@@ -215,7 +228,7 @@ export function useProcessHandlers(
       const savedConfig =
         await processNumberOperations.saveProcessNumberConfiguration(
           processNumberForm.modalState.selectedProcessKey || "",
-          request,
+          request
         );
 
       if (savedConfig) {
@@ -250,11 +263,13 @@ export function useProcessHandlers(
     processOperations,
     artifactForm,
     artifactOperations,
+    artifactPermissionForm,
     processNumberForm,
     processNumberOperations,
     handleAssociateProcess,
     handleRemoveProcess,
     handleOpenArtifactModal,
+    handleOpenArtifactPermissionModal,
     handleOpenProcessModal,
     handleOpenProcessNumberModal,
     handleSaveProcessNumber,

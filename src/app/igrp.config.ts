@@ -62,5 +62,6 @@ export default {
     "processconfiguration/components/artifact-processes-list",
     "processmap/components/process-tree-node",
     "components/recent-items-card",
+    "components/loading-page",
   ],
 };

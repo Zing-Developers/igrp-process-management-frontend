@@ -105,7 +105,7 @@ export function useTaskManagement() {
     async (page: number, size: number, appliedFilters?: TaskFilters) => {
       setState((prev) => ({ ...prev, loading: true, error: null }));
 
-      try {
+     /*  try { */
         // Convert filters to API format
         const apiFilters = {
           processNumber: appliedFilters?.processNumber,
@@ -136,14 +136,14 @@ export function useTaskManagement() {
           pageSize: size,
           loading: false,
         }));
-      } catch (error) {
+     /*  } catch (error) {
         console.error("Error fetching tasks:", error);
         setState((prev) => ({
           ...prev,
           loading: false,
           error: "Erro ao carregar tarefas. Tente novamente.",
         }));
-      }
+      } */
     },
     [],
   );

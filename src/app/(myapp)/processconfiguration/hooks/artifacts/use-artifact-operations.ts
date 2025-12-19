@@ -9,30 +9,29 @@ export function useArtifactOperations() {
     populateFormData?: (artifacts: ProcessArtifact[]) => void, // Add this parameter
   ) => {
     try {
-      console.log(
-        "Loading process artifacts for processDefinitionId:",
-        processDefinitionId,
-      );
       setLoading(true);
 
       // First, load the deployed artifacts (base artifacts)
       const deployedArtifacts =
         await ProcessService.getProcessDeployedArtifacts(processDefinitionId);
-      console.log("Deployed artifacts:", deployedArtifacts);
 
       // Then, load the saved artifacts (with FormKey associations)
       const savedArtifacts =
         await ProcessService.getProcessArtifacts(processDefinitionId);
-      console.log("Saved artifacts with FormKey:", savedArtifacts);
 
       // Merge the data: use deployed artifacts as base, but override with saved FormKey data
       const mergedArtifacts = deployedArtifacts.map((deployedArtifact) => {
         const savedArtifact = savedArtifacts.find(
           (saved) => saved.key === deployedArtifact.key,
         );
+        const candidateGroupsValue = (savedArtifact as any)?.candidateGroups || (deployedArtifact as any).candidateGroups;
+        const candidateGroupsString = candidateGroupsValue 
+          ? (Array.isArray(candidateGroupsValue) ? candidateGroupsValue.join(",") : String(candidateGroupsValue))
+          : "";
         return {
           ...deployedArtifact,
           formKey: savedArtifact?.formKey || deployedArtifact.formKey || "",
+          candidateGroups: candidateGroupsString,
         };
       });
 

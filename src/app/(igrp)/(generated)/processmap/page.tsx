@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY iGRP STUDIO. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -6,14 +6,21 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { use, useState, useEffect, useRef } from 'react';
-import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
-import { ProcessTreeComponent } from '@/app/(myapp)/processmap/components/process-tree-node';
-import ProcessDetail from '@/app/(igrp)/(generated)/processmap/components/processdetail';
-import PriorityModal from '@/components/prioritymodal';
-import { IGRPPageHeader, IGRPInputSearch } from '@igrp/igrp-framework-react-design-system';
-import { useProcessMap } from '@/app/(myapp)/processmap/hooks/use-process-map';
-import { useRouter } from 'next/navigation';
+import { use, useState, useEffect, useRef } from "react";
+import {
+  cn,
+  useIGRPMenuNavigation,
+  useIGRPToast,
+} from "@igrp/igrp-framework-react-design-system";
+import { ProcessTreeComponent } from "@/app/(myapp)/processmap/components/process-tree-node";
+import ProcessDetail from "@/app/(igrp)/(generated)/processmap/components/processdetail";
+import PriorityModal from "@/components/prioritymodal";
+import {
+  IGRPPageHeader,
+  IGRPInputSearch,
+} from "@igrp/igrp-framework-react-design-system";
+import { useProcessMap } from "@/app/(myapp)/processmap/hooks/use-process-map";
+import { useRouter } from "next/navigation";
 
 export default function PageProcessmapComponent() {
   const { igrpToast } = useIGRPToast();
@@ -24,7 +31,7 @@ export default function PageProcessmapComponent() {
   /*---------------------------------Reserved area end------------------------------*/
 
   return (
-    <div className={cn('page', 'space-y-6')}>
+    <div className={cn("page", "space-y-6")}>
       <IGRPPageHeader
         name={`pageHeader1`}
         title={`Mapa de Processos`}

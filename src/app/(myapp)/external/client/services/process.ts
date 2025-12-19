@@ -4,6 +4,7 @@ import {
   CreateProcessArtifactRequest,
   CreateProcessInstanceRequest,
   CreateProcessSequenceRequest,
+  StartProcessInstanceRequest,
   PaginatedResponse,
   Process,
   ProcessArtifact,
@@ -20,7 +21,7 @@ import {
  */
 export const getProcesses = async (
   page = 0,
-  size = 20,
+  size = 20
 ): Promise<PaginatedResponse<Process>> => {
   const processManagementClient = await getIGRPProcessClient();
   const response = await processManagementClient.processes.getProcesses({
@@ -46,12 +47,12 @@ export const getProcessStats = async (): Promise<ProcessStats> => {
  * @returns A promise that resolves to a paginated response of processes.
  */
 export const getProcessArtifacts = async (
-  processDefinitionId: string,
+  processDefinitionId: string
 ): Promise<ProcessArtifact[]> => {
   const processManagementClient = await getIGRPProcessClient();
   const response =
     await processManagementClient.processes.getProcessArtifacts(
-      processDefinitionId,
+      processDefinitionId
     );
   return response.data;
 };
@@ -64,13 +65,32 @@ export const getProcessArtifacts = async (
  */
 export const createProcessArtifact = async (
   processDefinitionId: string,
-  artifact: CreateProcessArtifactRequest,
+  artifact: CreateProcessArtifactRequest
 ): Promise<ProcessArtifact> => {
   const processManagementClient = await getIGRPProcessClient();
   const response =
     await processManagementClient.processes.createProcessArtifact(
       processDefinitionId,
-      artifact,
+      artifact
+    );
+  return response.data;
+};
+
+/**
+ * Creates a new process artifact.
+ * @param processDefinitionId The ID of the process definition to create the artifact for.
+ * @param artifact The artifact to create.
+ * @returns A promise that resolves to the created process artifact.
+ */
+export const updateProcessArtifact = async (
+  processDefinitionId: string,
+  artifact: CreateProcessArtifactRequest
+): Promise<ProcessArtifact> => {
+  const processManagementClient = await getIGRPProcessClient();
+  const response =
+    await processManagementClient.processes.updateProcessArtifact(
+      processDefinitionId,
+      artifact
     );
   return response.data;
 };
@@ -81,12 +101,12 @@ export const createProcessArtifact = async (
  * @returns A promise that resolves to a paginated response of processes.
  */
 export const getProcessDeployedArtifacts = async (
-  processDefinitionId: string,
+  processDefinitionId: string
 ): Promise<ProcessArtifact[]> => {
   const processManagementClient = await getIGRPProcessClient();
   const response =
     await processManagementClient.processes.getProcessDeployedArtifacts(
-      processDefinitionId,
+      processDefinitionId
     );
   return response.data;
 };
@@ -98,11 +118,11 @@ export const getProcessDeployedArtifacts = async (
  */
 export const getProcessById = async (id: string): Promise<Process | null> => {
   const processManagementClient = await getIGRPProcessClient();
-    return (await processManagementClient.processes.getProcessById(id)).data;
+  return (await processManagementClient.processes.getProcessById(id)).data;
 };
 
 /**
- * Starts a new process instance.
+ * Create a new process instance.
  * @param processDefinitionId The ID of the process definition to start.
  * @param processKey The process key.
  * @param businessKey Optional business key for the process instance.
@@ -110,13 +130,13 @@ export const getProcessById = async (id: string): Promise<Process | null> => {
  * @param variables Optional variables to pass to the process instance.
  * @returns A promise that resolves to the newly created process instance.
  */
-export const startProcess = async (
+export const createProcessInstance = async (
   processDefinitionId: string,
   processKey: string,
   applicationBase: string,
   priority: number,
   businessKey?: string,
-  variables?: Array<{ name: string; value: string }>,
+  variables?: Array<{ name: string; value: string }>
 ): Promise<ProcessInstance> => {
   const body: CreateProcessInstanceRequest = {
     processDefinitionId,
@@ -128,7 +148,66 @@ export const startProcess = async (
   };
 
   const processManagementClient = await getIGRPProcessClient();
-  const response = await processManagementClient.processes.startProcess(body);
+  const response =
+    await processManagementClient.processes.createProcessInstance(body);
+  return response.data;
+};
+
+/**
+ * Starts a new process instance.
+ * @param processDefinitionId The ID of the process definition to start.
+ * @param processKey The process key.
+ * @param businessKey Optional business key for the process instance.
+ * @param priority Priority level for the process instance.
+ * @param variables Optional variables to pass to the process instance.
+ * @returns A promise that resolves to the newly created process instance.
+ */
+export const startProcessInstance = async (
+  processInstanceId: string,
+  variables?: Array<{ name: string; value: string }>
+): Promise<ProcessInstance> => {
+  const body: StartProcessInstanceRequest = {
+    variables,
+  };
+
+  const processManagementClient = await getIGRPProcessClient();
+  const response =
+    await processManagementClient.processes.createProcessInstance(
+      processInstanceId,
+      body
+    );
+  return response.data;
+};
+
+/**
+ * Create and Starts a new process instance.
+ * @param processDefinitionId The ID of the process definition to start.
+ * @param processKey The process key.
+ * @param businessKey Optional business key for the process instance.
+ * @param priority Priority level for the process instance.
+ * @param variables Optional variables to pass to the process instance.
+ * @returns A promise that resolves to the newly created process instance.
+ */
+export const createAndStartProcess = async (
+  processDefinitionId: string,
+  processKey: string,
+  applicationBase: string,
+  priority: number,
+  businessKey?: string,
+  variables?: Array<{ name: string; value: string }>
+): Promise<ProcessInstance> => {
+  const body: CreateProcessInstanceRequest = {
+    processDefinitionId,
+    processKey,
+    applicationBase: applicationBase,
+    businessKey,
+    variables,
+    priority: priority,
+  };
+
+  const processManagementClient = await getIGRPProcessClient();
+  const response =
+    await processManagementClient.processes.createAndStartProcess(body);
   return response.data;
 };
 
@@ -149,12 +228,12 @@ export interface ProcessNumberConfig {
  * @returns A promise that resolves to process number configurations
  */
 export const getProcessNumberConfigs = async (
-  processDefinitionId: string,
+  processDefinitionId: string
 ): Promise<ProcessSequence> => {
   const processManagementClient = await getIGRPProcessClient();
   const response =
     await processManagementClient.processes.getProcessSequence(
-      processDefinitionId,
+      processDefinitionId
     );
   return response.data;
 };
@@ -167,14 +246,14 @@ export const getProcessNumberConfigs = async (
  */
 export const saveProcessNumberConfig = async (
   processDefinitionKey: string,
-  config: CreateProcessSequenceRequest,
+  config: CreateProcessSequenceRequest
 ): Promise<ProcessSequence> => {
   const processManagementClient = await getIGRPProcessClient();
   const response =
     await processManagementClient.processes.createProcessSequence(
       processDefinitionKey,
       "",
-      config,
+      config
     );
   return response.data;
 };

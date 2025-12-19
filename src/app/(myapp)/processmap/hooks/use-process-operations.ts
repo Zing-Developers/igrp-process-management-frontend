@@ -9,7 +9,7 @@ import {
 } from "@igrp/platform-process-management-types";
 import { urlConfig } from "../../utils/url-config";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { startProcess } from "../../external/client/services/process";
+import { createAndStartProcess } from "../../external/client/services/process";
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
 
 export function useProcessOperations(router?: AppRouterInstance) {
@@ -56,7 +56,7 @@ export function useProcessOperations(router?: AppRouterInstance) {
       }
 
       try {
-        const instance = await startProcess(
+        const instance = await createAndStartProcess(
           pendingProcessStart.processDefinitionId,
           pendingProcessStart.processKey,
           pendingProcessStart.applicationBase,

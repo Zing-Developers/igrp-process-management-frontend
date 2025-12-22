@@ -7,20 +7,20 @@ import {
 import { ProcessService } from "../../services/process.service";
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
 
-export function useArtifactForm() {
+export function useArtifactPermissionForm() {
   const { igrpToast } = useIGRPToast();
   const [modalState, setModalState] = useState<ArtifactModalState>({
     isOpen: false,
     selectedProcessId: null,
   });
 
-  const [processArtifacts, setProcessArtifacts] = useState<ProcessArtifact[]>(
-    [],
-  );
+  const [processArtifactsPermission, setProcessArtifactsPermission] = useState<
+    ProcessArtifact[]
+  >([]);
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState<Record<string, { formKey: string }>>(
-    {},
-  );
+  const [formData, setFormData] = useState<
+    Record<string, { candidateGroups: string }>
+  >({});
 
   const openModal = (processId: string) => {
     setModalState({
@@ -32,10 +32,12 @@ export function useArtifactForm() {
 
   // Add a new function to populate formData from loaded artifacts
   const populateFormDataFromArtifacts = (artifacts: ProcessArtifact[]) => {
-    const newFormData: Record<string, { formKey: string }> = {};
+    const newFormData: Record<string, { candidateGroups: string }> = {};
     artifacts.forEach((artifact) => {
-      if (artifact.formKey) {
-        newFormData[artifact.key] = { formKey: artifact.formKey };
+      if (artifact.candidateGroups) {
+        newFormData[artifact.key] = {
+          candidateGroups: artifact.candidateGroups || "",
+        };
       }
     });
     setFormData(newFormData);
@@ -46,39 +48,36 @@ export function useArtifactForm() {
       isOpen: false,
       selectedProcessId: null,
     });
-    setProcessArtifacts([]);
+    setProcessArtifactsPermission([]);
     setFormData({});
   };
 
-  const updateFormData = (artifactKey: string, formKey: string) => {
-    console.log(
-      "Updating formData for artifact:",
-      artifactKey,
-      "with formKey:",
-      formKey,
-    );
+  const updateFormData = (artifactKey: string, candidateGroups: string) => {
     setFormData((prev) => ({
       ...prev,
-      [artifactKey]: { formKey },
+      [artifactKey]: { candidateGroups },
     }));
   };
 
-  const saveArtifacts = async () => {
+  const saveArtifactPermission = async () => {
     if (!modalState.selectedProcessId) return;
 
     setLoading(true);
     try {
       const promises = Object.entries(formData).map(
         async ([artifactKey, data]) => {
-          const artifact = processArtifacts.find((a) => a.key === artifactKey);
+          const artifact = processArtifactsPermission.find(
+            (a) => a.key === artifactKey,
+          );
 
-          if (artifact && data.formKey) {
+          if (data.candidateGroups) {
             const createRequest: CreateProcessArtifactRequest = {
-              name: artifact.name,
-              key: artifact.key,
-              formKey: data.formKey,
+              key: artifactKey,
+              formKey: artifact?.formKey || "",
+              name: artifact?.name || "",
+              candidateGroups: data.candidateGroups || "",
             };
-            await ProcessService.createProcessArtifact(
+            await ProcessService.updateProcessArtifact(
               modalState.selectedProcessId!,
               createRequest,
             );
@@ -97,7 +96,6 @@ export function useArtifactForm() {
       closeModal();
     } catch (error) {
       console.error("Error saving artifacts:", error);
-
       igrpToast({
         type: "error",
         title: "Erro",
@@ -110,14 +108,14 @@ export function useArtifactForm() {
 
   return {
     modalState,
-    processArtifacts,
-    setProcessArtifacts,
+    processArtifactsPermission,
+    setProcessArtifactsPermission,
     loading,
     setLoading,
     formData,
     updateFormData,
     populateFormDataFromArtifacts, // Add this new function
-    saveArtifacts,
+    saveArtifactPermission,
     openModal,
     closeModal,
   };

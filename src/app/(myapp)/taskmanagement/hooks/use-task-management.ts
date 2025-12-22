@@ -3,10 +3,7 @@ import {
   Task,
   PaginatedResponse,
 } from "@igrp/platform-process-management-types";
-import {
-  getTasks,
-  assignTask,
-} from "../../external/client/services/task";
+import { getTasks, assignTask } from "../../external/client/services/task";
 import { getDateTemplate, getProcessInfo } from "../../utils/columns-template";
 
 export interface TaskManagementTableRow {
@@ -105,45 +102,45 @@ export function useTaskManagement() {
     async (page: number, size: number, appliedFilters?: TaskFilters) => {
       setState((prev) => ({ ...prev, loading: true, error: null }));
 
-      try {
-        // Convert filters to API format
-        const apiFilters = {
-          processNumber: appliedFilters?.processNumber,
-          processKey: appliedFilters?.processKey,
-          user: appliedFilters?.user,
-          status: appliedFilters?.status,
-          dateFrom: appliedFilters?.dateFrom,
-          dateTo: appliedFilters?.dateTo,
-        };
+      /*  try { */
+      // Convert filters to API format
+      const apiFilters = {
+        processNumber: appliedFilters?.processNumber,
+        processKey: appliedFilters?.processKey,
+        user: appliedFilters?.user,
+        status: appliedFilters?.status,
+        dateFrom: appliedFilters?.dateFrom,
+        dateTo: appliedFilters?.dateTo,
+      };
 
-        // Remove undefined values
-        const cleanFilters = Object.fromEntries(
-          Object.entries(apiFilters).filter(([, value]) => value !== undefined),
-        );
+      // Remove undefined values
+      const cleanFilters = Object.fromEntries(
+        Object.entries(apiFilters).filter(([, value]) => value !== undefined),
+      );
 
-        const response: PaginatedResponse<Task> = await getTasks(
-          page,
-          size,
-          cleanFilters,
-        );
+      const response: PaginatedResponse<Task> = await getTasks(
+        page,
+        size,
+        cleanFilters,
+      );
 
-        setState((prev) => ({
-          ...prev,
-          tasks: response.content || [],
-          totalElements: response.totalElements || 0,
-          totalPages: response.totalPages || 0,
-          currentPage: page,
-          pageSize: size,
-          loading: false,
-        }));
-      } catch (error) {
+      setState((prev) => ({
+        ...prev,
+        tasks: response.content || [],
+        totalElements: response.totalElements || 0,
+        totalPages: response.totalPages || 0,
+        currentPage: page,
+        pageSize: size,
+        loading: false,
+      }));
+      /*  } catch (error) {
         console.error("Error fetching tasks:", error);
         setState((prev) => ({
           ...prev,
           loading: false,
           error: "Erro ao carregar tarefas. Tente novamente.",
         }));
-      }
+      } */
     },
     [],
   );

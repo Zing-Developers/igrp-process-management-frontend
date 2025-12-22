@@ -30,11 +30,11 @@ importers:
         specifier: 0.1.0-beta.63
         version: 0.1.0-beta.63
       '@igrp/platform-process-management-client-ts':
-        specifier: 0.0.1-beta.21
-        version: 0.0.1-beta.21
+        specifier: 0.0.1-beta.23
+        version: 0.0.1-beta.23
       '@igrp/platform-process-management-types':
-        specifier: latest
-        version: 0.0.1-beta.20
+        specifier: 0.0.1-beta.23
+        version: 0.0.1-beta.23
       '@tanstack/react-query':
         specifier: ^5.90.12
         version: 5.90.12(react@19.2.1)
@@ -70,7 +70,7 @@ importers:
         version: 1.4.0
       zod:
         specifier: ^4.1.13
-        version: 4.2.0
+        version: 4.2.1
     devDependencies:
       '@biomejs/biome':
         specifier: 2.2.6
@@ -224,11 +224,11 @@ packages:
   '@igrp/platform-access-management-client-ts@0.1.0-beta.63':
     resolution: {integrity: sha512-RhxxTRTFZxzRMNWQaoZbaTCdKyY8k4Mv6N282qXnE2irW3n5VX4mo/wdrRisMkz0csx3lSwVN43lPW4ORyUfqA==}
 
-  '@igrp/platform-process-management-client-ts@0.0.1-beta.21':
-    resolution: {integrity: sha512-BxaDXsbWU1AzwYm9QMQXdg4/mpfjhC7MHVbqnxuCb6ATrx3pIrAlSkGXevK5DoREUgJg6VY7f3xA9SKozqIbaw==}
+  '@igrp/platform-process-management-client-ts@0.0.1-beta.23':
+    resolution: {integrity: sha512-s3lYw2IbcGb1bsqJlSLd7rbkpJmodJOTYJQF9Y4MldLwE1FJM8+7RSSek6UWVXvKyIxXYQP5/8CaAUStmTfnEw==}
 
-  '@igrp/platform-process-management-types@0.0.1-beta.20':
-    resolution: {integrity: sha512-wGyLgjrXLYVASKIjvyyBvlXZLqCtlFH1ZFDc4X3AOuw47EYRxXB0UgYfrzDMkehFUXcPwZjpW1NEkfP+0Zxeig==}
+  '@igrp/platform-process-management-types@0.0.1-beta.23':
+    resolution: {integrity: sha512-gl5lrrWEySdtK0gR7BZchXQARSE0qt7aaOhCNYrU1Y+OXOgyDD4K3B9SdXcYODyVl18HeUORq87BPEe3ySgnHA==}
     engines: {node: '>=20.x.x'}
 
   '@img/colour@1.0.0':
@@ -1581,8 +1581,8 @@ packages:
   prop-types@15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
 
-  react-day-picker@9.12.0:
-    resolution: {integrity: sha512-t8OvG/Zrciso5CQJu5b1A7yzEmebvST+S3pOVQJWxwjjVngyG/CA2htN/D15dLI4uTEuLLkbZyS4YYt480FAtA==}
+  react-day-picker@9.13.0:
+    resolution: {integrity: sha512-euzj5Hlq+lOHqI53NiuNhCP8HWgsPf/bBAVijR50hNaY1XwjKjShAnIe8jm8RD2W9IJUvihDIZ+KrmqfFzNhFQ==}
     engines: {node: '>=18'}
     peerDependencies:
       react: '>=16.8.0'
@@ -1775,8 +1775,8 @@ packages:
   yallist@4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
 
-  zod@4.2.0:
-    resolution: {integrity: sha512-Bd5fw9wlIhtqCCxotZgdTOMwGm1a0u75wARVEY9HMs1X17trvA/lMi4+MGK5EUfYkXVTbX8UDiDKW4OgzHVUZw==}
+  zod@4.2.1:
+    resolution: {integrity: sha512-0wZ1IRqGGhMP76gLqz8EyfBXKk0J2qo2+H3fi4mcUP/KtTocoX08nmIAHl1Z2kJIZbZee8KOpBCSNPRgauucjw==}
 
 snapshots:
 
@@ -1875,7 +1875,7 @@ snapshots:
       react: 19.2.1
       react-dom: 19.2.1(react@19.2.1)
       tailwind-merge: 3.4.0
-      zod: 4.2.0
+      zod: 4.2.1
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
@@ -1935,7 +1935,7 @@ snapshots:
       next: 15.5.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       next-themes: 0.4.6(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       react: 19.2.1
-      react-day-picker: 9.12.0(react@19.2.1)
+      react-day-picker: 9.13.0(react@19.2.1)
       react-dom: 19.2.1(react@19.2.1)
       react-hook-form: 7.68.0(react@19.2.1)
       react-phone-number-input: 3.4.14(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -1945,18 +1945,18 @@ snapshots:
       tailwind-merge: 3.4.0
       tailwindcss: 4.1.18
       vaul: 1.1.2(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
-      zod: 4.2.0
+      zod: 4.2.1
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
 
   '@igrp/platform-access-management-client-ts@0.1.0-beta.63': {}
 
-  '@igrp/platform-process-management-client-ts@0.0.1-beta.21':
+  '@igrp/platform-process-management-client-ts@0.0.1-beta.23':
     dependencies:
-      '@igrp/platform-process-management-types': 0.0.1-beta.20
+      '@igrp/platform-process-management-types': 0.0.1-beta.23
 
-  '@igrp/platform-process-management-types@0.0.1-beta.20': {}
+  '@igrp/platform-process-management-types@0.0.1-beta.23': {}
 
   '@img/colour@1.0.0':
     optional: true
@@ -3198,7 +3198,7 @@ snapshots:
       object-assign: 4.1.1
       react-is: 16.13.1
 
-  react-day-picker@9.12.0(react@19.2.1):
+  react-day-picker@9.13.0(react@19.2.1):
     dependencies:
       '@date-fns/tz': 1.4.1
       date-fns: 4.1.0
@@ -3410,4 +3410,4 @@ snapshots:
 
   yallist@4.0.0: {}
 
-  zod@4.2.0: {}
+  zod@4.2.1: {}

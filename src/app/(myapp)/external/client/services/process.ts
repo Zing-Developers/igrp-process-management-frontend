@@ -4,6 +4,7 @@ import {
   CreateProcessArtifactRequest,
   CreateProcessInstanceRequest,
   CreateProcessSequenceRequest,
+  StartProcessInstanceRequest,
   PaginatedResponse,
   Process,
   ProcessArtifact,
@@ -76,6 +77,25 @@ export const createProcessArtifact = async (
 };
 
 /**
+ * Creates a new process artifact.
+ * @param processDefinitionId The ID of the process definition to create the artifact for.
+ * @param artifact The artifact to create.
+ * @returns A promise that resolves to the created process artifact.
+ */
+export const updateProcessArtifact = async (
+  processDefinitionId: string,
+  artifact: CreateProcessArtifactRequest,
+): Promise<ProcessArtifact> => {
+  const processManagementClient = await getIGRPProcessClient();
+  const response =
+    await processManagementClient.processes.updateProcessArtifact(
+      processDefinitionId,
+      artifact,
+    );
+  return response.data;
+};
+
+/**
  * Fetches a paginated list of processes.
  * @param processDefinitionId The ID of the process definition to fetch.
  * @returns A promise that resolves to a paginated response of processes.
@@ -98,11 +118,11 @@ export const getProcessDeployedArtifacts = async (
  */
 export const getProcessById = async (id: string): Promise<Process | null> => {
   const processManagementClient = await getIGRPProcessClient();
-    return (await processManagementClient.processes.getProcessById(id)).data;
+  return (await processManagementClient.processes.getProcessById(id)).data;
 };
 
 /**
- * Starts a new process instance.
+ * Create a new process instance.
  * @param processDefinitionId The ID of the process definition to start.
  * @param processKey The process key.
  * @param businessKey Optional business key for the process instance.
@@ -110,7 +130,7 @@ export const getProcessById = async (id: string): Promise<Process | null> => {
  * @param variables Optional variables to pass to the process instance.
  * @returns A promise that resolves to the newly created process instance.
  */
-export const startProcess = async (
+export const createProcessInstance = async (
   processDefinitionId: string,
   processKey: string,
   applicationBase: string,
@@ -128,7 +148,65 @@ export const startProcess = async (
   };
 
   const processManagementClient = await getIGRPProcessClient();
-  const response = await processManagementClient.processes.startProcess(body);
+  const response =
+    await processManagementClient.processes.createProcessInstance(body);
+  return response.data;
+};
+
+/**
+ * Starts a new process instance.
+ * @param processDefinitionId The ID of the process definition to start.
+ * @param processKey The process key.
+ * @param businessKey Optional business key for the process instance.
+ * @param priority Priority level for the process instance.
+ * @param variables Optional variables to pass to the process instance.
+ * @returns A promise that resolves to the newly created process instance.
+ */
+export const startProcessInstance = async (
+  processInstanceId: string,
+  variables?: Array<{ name: string; value: string }>,
+): Promise<ProcessInstance> => {
+  const body: StartProcessInstanceRequest = {
+    variables,
+  };
+
+  const processManagementClient = await getIGRPProcessClient();
+  const response = await processManagementClient.processes.startProcessInstance(
+    processInstanceId,
+    body,
+  );
+  return response.data;
+};
+
+/**
+ * Create and Starts a new process instance.
+ * @param processDefinitionId The ID of the process definition to start.
+ * @param processKey The process key.
+ * @param businessKey Optional business key for the process instance.
+ * @param priority Priority level for the process instance.
+ * @param variables Optional variables to pass to the process instance.
+ * @returns A promise that resolves to the newly created process instance.
+ */
+export const createAndStartProcess = async (
+  processDefinitionId: string,
+  processKey: string,
+  applicationBase: string,
+  priority: number,
+  businessKey?: string,
+  variables?: Array<{ name: string; value: string }>,
+): Promise<ProcessInstance> => {
+  const body: CreateProcessInstanceRequest = {
+    processDefinitionId,
+    processKey,
+    applicationBase: applicationBase,
+    businessKey,
+    variables,
+    priority: priority,
+  };
+
+  const processManagementClient = await getIGRPProcessClient();
+  const response =
+    await processManagementClient.processes.createAndStartProcess(body);
   return response.data;
 };
 

@@ -29,7 +29,7 @@ export default function Taskprocessfilter({
   onResetFilters,
 }: {
   onSearch: (searchTerm: string) => void;
-  onApplyFilters: () => void;
+  onApplyFilters: (filters: any) => void;
   onResetFilters: () => void;
 }) {
   const [selectAreaOptions, setSelectAreaOptions] = useState<
@@ -83,7 +83,7 @@ export default function Taskprocessfilter({
 
   // Handle filter application
   const handleApplyFilters = () => {
-    onApplyFilters();
+    onApplyFilters(filters);
   };
 
   // Handle filter reset

@@ -10,6 +10,7 @@ import {
   getProcessArtifacts,
   getProcessDeployedArtifacts,
   createProcessArtifact,
+  updateProcessArtifact,
 } from "../../external/client/services/process";
 
 export class ProcessService {
@@ -41,5 +42,12 @@ export class ProcessService {
     artifact: CreateProcessArtifactRequest,
   ): Promise<ProcessArtifact> {
     return await createProcessArtifact(processDefinitionId, artifact);
+  }
+
+  static async updateProcessArtifact(
+    processDefinitionId: string,
+    artifact: CreateProcessArtifactRequest,
+  ): Promise<ProcessArtifact> {
+    return await updateProcessArtifact(processDefinitionId, artifact);
   }
 }

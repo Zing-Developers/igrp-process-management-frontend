@@ -56,6 +56,7 @@ export default {
     "utils/url-config",
     "utils/status-badge",
     "processinstances/hooks/use-process-details",
+    "taskmanagement/hooks/use-task-details",
   ],
   components: [
     "processconfiguration/components/areas-list",
@@ -69,5 +70,7 @@ export default {
     "components/filter-data",
     "components/task-history",
     "components/variables-view",
+    "taskmanagement/components/task-information",
+    "components/task-instance-events-view"
   ],
 };

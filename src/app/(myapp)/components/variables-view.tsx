@@ -153,7 +153,7 @@ export function VariablesView({ variables }: VariablesViewProps) {
             },
             filterFn: IGRPDataTableFacetedFilterFn,
           },
-          {
+          /* {
             header: "Última Atualização",
             accessorKey: "lastUpdatedTime",
             cell: ({ row }) => {
@@ -169,7 +169,7 @@ export function VariablesView({ variables }: VariablesViewProps) {
               );
             },
             filterFn: IGRPDataTableFacetedFilterFn,
-          },
+          }, */
         ]}
         clientFilters={[]}
         data={variables}

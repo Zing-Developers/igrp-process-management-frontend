@@ -30,11 +30,11 @@ importers:
         specifier: 0.1.0-beta.63
         version: 0.1.0-beta.63
       '@igrp/platform-process-management-client-ts':
-        specifier: 0.0.1-beta.23.5
-        version: 0.0.1-beta.23.5
+        specifier: 0.0.1-beta.23.6
+        version: 0.0.1-beta.23.6
       '@igrp/platform-process-management-types':
-        specifier: 0.0.1-beta.23.3
-        version: 0.0.1-beta.23.3
+        specifier: 0.0.1-beta.23.4
+        version: 0.0.1-beta.23.4
       '@tanstack/react-query':
         specifier: ^5.90.12
         version: 5.90.12(react@19.2.1)
@@ -227,15 +227,15 @@ packages:
   '@igrp/platform-access-management-client-ts@0.1.0-beta.63':
     resolution: {integrity: sha512-RhxxTRTFZxzRMNWQaoZbaTCdKyY8k4Mv6N282qXnE2irW3n5VX4mo/wdrRisMkz0csx3lSwVN43lPW4ORyUfqA==}
 
-  '@igrp/platform-process-management-client-ts@0.0.1-beta.23.5':
-    resolution: {integrity: sha512-DvpPJkMxZT0A5VDwMqYbjwgVLYyxYuMT8UAj9fcQ97qR8UPC+I2I4omEiu6uPBZRvbqm1ysER9giU9ugBaEqjA==}
+  '@igrp/platform-process-management-client-ts@0.0.1-beta.23.6':
+    resolution: {integrity: sha512-X2280PxpE/XXl5wAjySoejRQ24wYPcxYxsCcnhZF3ZW26n/X2Emrc2kB4hmpskFIkUZfyXtpQzOEgyufvZWpgg==}
 
   '@igrp/platform-process-management-types@0.0.1-beta.23.2':
     resolution: {integrity: sha512-G82YM8ThkGm17NNuiMgDn7OUubyoyiagW7P/99qpPZS38oiVBKy9n0smhGdz8JYT3shEfstSNgYG46AJ9iWvmQ==}
     engines: {node: '>=20.x.x'}
 
-  '@igrp/platform-process-management-types@0.0.1-beta.23.3':
-    resolution: {integrity: sha512-NEfgConbs1QXlYBW4HjZUrqtZBdGTLEg+MnKTui2nTxeoGpSfVYAa4LUxd/rnX81+vxPMgtx1eJiDKnNRwqtsg==}
+  '@igrp/platform-process-management-types@0.0.1-beta.23.4':
+    resolution: {integrity: sha512-akcMrAAUQ9LDXGrTwpAAAbKMzWsTWGeSXii+p7PrNnV/mGmzy2FziTXcrbgHaSlwTBQa+AUummQCtomU3JqPPw==}
     engines: {node: '>=20.x.x'}
 
   '@img/colour@1.0.0':
@@ -1976,13 +1976,13 @@ snapshots:
 
   '@igrp/platform-access-management-client-ts@0.1.0-beta.63': {}
 
-  '@igrp/platform-process-management-client-ts@0.0.1-beta.23.5':
+  '@igrp/platform-process-management-client-ts@0.0.1-beta.23.6':
     dependencies:
       '@igrp/platform-process-management-types': 0.0.1-beta.23.2
 
   '@igrp/platform-process-management-types@0.0.1-beta.23.2': {}
 
-  '@igrp/platform-process-management-types@0.0.1-beta.23.3': {}
+  '@igrp/platform-process-management-types@0.0.1-beta.23.4': {}
 
   '@img/colour@1.0.0':
     optional: true

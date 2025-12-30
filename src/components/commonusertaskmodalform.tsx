@@ -34,7 +34,7 @@ export default function Commonusertaskmodalform({ open, setOpen, onSave, modalTi
   const form1 = z.object({
     user: z.string().optional(),
     candidateGroups: z.string().optional(),
-    priority: z.string().nonempty(),
+    priority: z.string().optional(),
     note: z.string().optional()
 })
 
@@ -123,7 +123,7 @@ formRef={ formform1Ref }
 >
   <>
   <div className={ cn('grid','grid-cols-1 ','md:grid-cols-1 ','lg:grid-cols-1 ',' gap-4',)}    >
-	<IGRPRadioGroup
+	{ userRequired && (<IGRPRadioGroup
   id={ `atribuirTask` }
   dir={ `ltr` }
 orientation={ `horizontal` }
@@ -136,7 +136,7 @@ required={ true }
   onValueChange={ (e) => {setAtribuirTask(e)} }
   options={ radioatribuirTaskOptions }
 >
-</IGRPRadioGroup>
+</IGRPRadioGroup>)}
 { (userRequired && atribuirTask === 'user') && (<IGRPCombobox
   id={ `user` }
   label={ `Utilizador` }
@@ -167,7 +167,7 @@ required={ true }
   label={ `Prioridade` }
 variant={ `single` }
 placeholder={ `Select an option...` }
-required={ true }
+required={ false }
 selectLabel={ `No option found` }
 showSearch={ true }
 showIcon={ false }

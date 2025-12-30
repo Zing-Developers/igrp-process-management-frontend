@@ -25,8 +25,8 @@ export interface FilterState {
   processType: string;
   processNumber: string;
   status: string;
-  dateFrom: string;
-  dateTo: string;
+  dateFrom: string | null;
+  dateTo: string | null;
   organic: string;
   user: string;
   variables: VariableFilter[];

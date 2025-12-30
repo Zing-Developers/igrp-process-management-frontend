@@ -116,11 +116,7 @@ value={ filters.status }
   placeholder={ `Selecione uma data` }
   id={ `datePickerRange1` }
   dateFormat={ `dd/MM/yyyy` }
-  onDateChange={ (date) =>
-              handleDateChange(
-                date?.from?.toISOString() || "",
-                date?.to?.toISOString() || ""
-              ) }
+  onDateChange={ (date) => handleDateChange(date ?? null) }
   
   className={ cn() }
 />
@@ -192,7 +188,6 @@ disabled={ !filters.areaId }
   label={ `Tipo Processo` }
 variant={ `single` }
 placeholder={ `Select an option...` }
-required={ undefined }
 selectLabel={ `No option found` }
 showSearch={ true }
 showIcon={ false }
@@ -210,7 +205,6 @@ disabled={ !filters.areaId && !filters.subareaId }
   label={ `Departamento` }
 variant={ `single` }
 placeholder={ `Selecione uma departamento...` }
-required={ undefined }
 selectLabel={ `No option found` }
 showSearch={ true }
 showIcon={ false }

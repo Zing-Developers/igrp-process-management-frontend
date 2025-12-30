@@ -26,43 +26,29 @@ export const getProcessInstances = async (
   filters?: {
     processType?: string;
     number?: string;
-    status?: string;
+    status?:
+      | "CREATED"
+      | "RUNNING"
+      | "SUSPENDED"
+      | "CANCELED"
+      | "COMPLETED"
+      | "TERMINATED";
     businessKey?: string;
-    startDateFrom?: string;
-    startDateTo?: string;
-    endDateFrom?: string;
-    endDateTo?: string;
+    dateFrom?: Date | null;
+    dateTo?: Date | null;
     variables?: VariableFilter[];
   }
 ): Promise<PaginatedResponse<ProcessInstance>> => {
   const { variables, ...rest } = filters ?? {};
-  console.log("filters", filters);
-
-  const allowedStatuses = [
-    "CREATED",
-    "RUNNING",
-    "SUSPENDED",
-    "COMPLETED",
-    "TERMINATED",
-    "CANCELED",
-  ] as const;
-  type ClientStatus = (typeof allowedStatuses)[number];
-
-  const mappedStatus = ((): ClientStatus | undefined => {
-    const raw = rest?.status?.toUpperCase();
-    return allowedStatuses.includes(raw as ClientStatus)
-      ? (raw as ClientStatus)
-      : undefined;
-  })();
 
   const processManagementClient = await getIGRPProcessClient();
   const response = await processManagementClient.processes.getProcessInstances(
     {
+      ...rest,
       page,
       size,
       number: rest?.number,
       procReleaseKey: rest?.processType,
-      status: mappedStatus,
     },
     { variables }
   );

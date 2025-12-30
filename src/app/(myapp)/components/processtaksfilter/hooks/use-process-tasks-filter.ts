@@ -1,7 +1,11 @@
 import { useMemo, useEffect } from "react";
 import { useFilterData } from "./use-filter-data";
-import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
+import {
+  DateRange,
+  IGRPOptionsProps,
+} from "@igrp/igrp-framework-react-design-system";
 import { VariableFilter } from "../../filter-data";
+import { format } from "date-fns";
 
 export function useProcessTasksFilter(
   setSelectAreaOptions: (options: IGRPOptionsProps[]) => void,
@@ -125,9 +129,10 @@ export function useProcessTasksFilter(
     updateFilters(newFilters);
   };
 
-  const handleDateChange = (dateFrom: string, dateTo?: string) => {
-    const newFilters = { dateFrom, dateTo: dateTo || "" };
-    updateFilters(newFilters);
+  const handleDateChange = (date: DateRange | null) => {
+    const dateFrom = date?.from ? format(date.from, "dd-MM-yyyy") : null;
+    const dateTo = date?.to ? format(date.to, "dd-MM-yyyy") : null;
+    updateFilters({ dateFrom, dateTo });
   };
 
   const handleFiltersChange = (variables: VariableFilter[]) => {

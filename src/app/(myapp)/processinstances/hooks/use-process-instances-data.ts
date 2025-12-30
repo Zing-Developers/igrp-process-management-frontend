@@ -1,20 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { getProcessInstances } from "../../external/client/services/process-instances";
 import { useFilterData } from "../../components/processtaksfilter/hooks/use-filter-data";
 import { ProcessInstancesFilters, ProcessInstancesState } from "../types";
+import { useQuery } from "@tanstack/react-query";
 
 export function useProcessInstancesData() {
-  const [processInstancesState, setProcessInstancesState] =
-    useState<ProcessInstancesState>({
-      processInstances: [],
-      loading: false,
-      error: null,
-      totalElements: 0,
-      totalPages: 0,
-      currentPage: 0,
-      pageSize: 1000,
-    });
-
   // Use the shared filter data hook
   const { filters, dropdownOptions, updateFilters, resetFilters } =
     useFilterData();
@@ -30,85 +20,54 @@ export function useProcessInstancesData() {
     ],
   };
 
-  // Fetch process instances function
-  const fetchProcessInstances = async (
-    page = 0,
-    size = 1000,
-    customFilters?: Partial<ProcessInstancesFilters>,
+  // State for pagination
+  const [page, setPage] = useState(0);
+  const [size, setSize] = useState(1000);
+  const [customFilters, setCustomFilters] = useState<Partial<ProcessInstancesFilters> | undefined>();
+
+  // Use query at the top level - hooks must be called at the top level
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["process-instances", page, size, filters, customFilters],
+    queryFn: () => {
+      const filtersToUse = customFilters
+        ? { ...filters, ...customFilters }
+        : filters;
+      return getProcessInstances(page, size, filtersToUse);
+    },
+  });
+
+  // Transform query result to state format
+  const processInstancesState: ProcessInstancesState = {
+    processInstances: data?.content || [],
+    loading: isLoading,
+    error: error instanceof Error ? error.message : (error ? "Failed to fetch process instances" : null),
+    totalElements: data?.totalElements || 0,
+    totalPages: data?.totalPages || 0,
+    currentPage: data?.pageNumber || 0,
+    pageSize: data?.pageSize || 1000,
+  };
+
+  // Fetch process instances function - now just updates state to trigger refetch
+  const fetchProcessInstances = (
+    newPage = 0,
+    newSize = 1000,
+    newCustomFilters?: Partial<ProcessInstancesFilters>
   ) => {
-    setProcessInstancesState((prev) => ({
-      ...prev,
-      loading: true,
-      error: null,
-    }));
-
-    // Use custom filters if provided, otherwise use current filters state
-    const filtersToUse = customFilters
-      ? { ...filters, ...customFilters }
-      : filters;
-    console.log("Fetching process instances with filters:", filtersToUse);
-
-    try {
-      // Map the filter fields to match the ProcessInstanceFilters interface
-      const mappedFilters = {
-        procReleaseKey: filtersToUse.processType || undefined,
-        number: filtersToUse.processNumber || "",
-        status: filtersToUse.status as
-          | "CREATED"
-          | "COMPLETED"
-          | "SUSPENDED"
-          | "TERMINATED"
-          | "RUNNING"
-          | undefined,
-        // Note: dateFrom and dateTo are not supported by the current ProcessInstanceFilters interface
-        // You may need to extend the interface or handle these differently
-      };
-
-      // Call the service with separate parameters: page, size, filters
-      const response = await getProcessInstances(page, size, mappedFilters);
-      console.log("response:", response);
-
-      setProcessInstancesState({
-        processInstances: response.content,
-        loading: false,
-        error: null,
-        totalElements: response.totalElements,
-        totalPages: response.totalPages,
-        currentPage: response.pageNumber,
-        pageSize: response.pageSize,
-      });
-    } catch (error) {
-      console.error("Error fetching process instances:", error);
-      setProcessInstancesState((prev) => ({
-        ...prev,
-        loading: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : "Failed to fetch process instances",
-      }));
-    }
+    setPage(newPage);
+    setSize(newSize);
+    setCustomFilters(newCustomFilters);
   };
 
   // Apply filters and fetch process instances
-  const applyFilters = (customFilters?: Partial<ProcessInstancesFilters>) => {
-    // Use a callback to get the most current filter values
-    const filtersToApply = customFilters || filters;
-    console.log("Applying filters:", filtersToApply);
-
+  const applyFilters = (newCustomFilters?: Partial<ProcessInstancesFilters>) => {
     // Update filters if custom filters provided
-    if (customFilters) {
-      updateFilters(customFilters);
+    if (newCustomFilters) {
+      updateFilters(newCustomFilters);
     }
 
     // Fetch process instances with the filter values
-    fetchProcessInstances(0, processInstancesState.pageSize, filtersToApply);
+    fetchProcessInstances(0, processInstancesState.pageSize, newCustomFilters);
   };
-
-  // Initial load
-  useEffect(() => {
-    fetchProcessInstances();
-  }, []);
 
   return {
     processInstancesState,

@@ -12,13 +12,12 @@ export function useFilterData() {
     dateTo: "",
     organic: "",
     user: "",
+    variables: [],
   });
 
   const { dropdownOptions } = useDropdownData(filters);
 
   const updateFilters = (newFilters: Partial<FilterState>) => {
-    console.log("newFilters", newFilters);
-
     setFilters((prev) => ({ ...prev, ...newFilters }));
   };
 
@@ -33,6 +32,7 @@ export function useFilterData() {
       dateTo: "",
       organic: "",
       user: "",
+      variables: [],
     });
   };
 

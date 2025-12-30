@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { getAreas } from "../../../external/client/services/area";
 import { getAreaProcesses } from "../../../external/client/services/area-process";
 import { getProcessInstancesStatus } from "../../../external/client/services/process-instances";
+import { VariableFilter } from "../../filter-data";
 
 export interface DropdownOption {
   label: string;
@@ -27,133 +29,91 @@ export interface FilterState {
   dateTo: string;
   organic: string;
   user: string;
+  variables: VariableFilter[];
 }
 
 export function useDropdownData(filters: FilterState) {
-  const [dropdownOptions, setDropdownOptions] = useState<DropdownOptions>({
-    areas: [],
-    subareas: [],
-    processTypes: [],
-    statuses: [],
-    organics: [],
-    users: [],
+  // Load areas and statuses
+  const { data: areasData } = useQuery({
+    queryKey: ["areas"],
+    queryFn: async () => {
+      const areasResponse = await getAreas("", 0, 100);
+      return areasResponse.content.map((area) => ({
+        label: area.name,
+        value: area.id,
+      }));
+    },
   });
 
-  // Load dropdown options
-  useEffect(() => {
-    const loadDropdownOptions = async () => {
-      try {
-        // Load areas
-        const areasResponse = await getAreas("", 0, 100);
-        const areaOptions = areasResponse.content.map((area) => ({
-          label: area.name,
-          value: area.id,
-        }));
-
-        // Load status options
-        const statusOptions = await getProcessInstancesStatus();
-
-        setDropdownOptions((prev) => ({
-          ...prev,
-          areas: areaOptions,
-          statuses: statusOptions,
-        }));
-      } catch (error) {
-        console.error("Error loading dropdown options:", error);
-      }
-    };
-
-    loadDropdownOptions();
-  }, []);
+  const { data: statusesData } = useQuery({
+    queryKey: ["process-instances-status"],
+    queryFn: () => getProcessInstancesStatus(),
+  });
 
   // Load subareas when area is selected
-  useEffect(() => {
-    const loadSubareas = async () => {
-      if (!filters.areaId) {
-        setDropdownOptions((prev) => ({
-          ...prev,
-          subareas: [],
-          processTypes: [],
-        }));
-        return;
-      }
-
-      try {
-        const subareasResponse = await getAreas("", 0, 100, filters.areaId);
-        const subareaOptions = subareasResponse.content.map((subarea) => ({
-          label: subarea.name,
-          value: subarea.id,
-        }));
-
-        setDropdownOptions((prev) => ({
-          ...prev,
-          subareas: subareaOptions,
-        }));
-      } catch (error) {
-        console.error("Error loading subareas:", error);
-        setDropdownOptions((prev) => ({
-          ...prev,
-          subareas: [],
-          processTypes: [],
-        }));
-      }
-    };
-
-    loadSubareas();
-  }, [filters.areaId]);
+  const { data: subareasData } = useQuery({
+    queryKey: ["subareas", filters.areaId],
+    queryFn: async () => {
+      if (!filters.areaId) return [];
+      const subareasResponse = await getAreas("", 0, 100, filters.areaId);
+      return subareasResponse.content.map((subarea) => ({
+        label: subarea.name,
+        value: subarea.id,
+      }));
+    },
+    enabled: !!filters.areaId,
+  });
 
   // Load process types when area or subarea is selected
-  useEffect(() => {
-    const loadProcessTypes = async () => {
-      if (!filters.areaId) {
-        setDropdownOptions((prev) => ({ ...prev, processTypes: [] }));
-        return;
+  const { data: processTypesData } = useQuery({
+    queryKey: ["process-types", filters.areaId, filters.subareaId],
+    queryFn: async () => {
+      if (!filters.areaId) return [];
+
+      const processPromises = [];
+
+      // Always fetch processes from the main area
+      processPromises.push(getAreaProcesses(filters.areaId));
+
+      // If subarea is selected, also fetch processes from subarea
+      if (filters.subareaId) {
+        processPromises.push(getAreaProcesses(filters.subareaId));
       }
 
-      // Clear dropdown before loading
-      setDropdownOptions((prev) => ({ ...prev, processTypes: [] }));
+      const processResponses = await Promise.all(processPromises);
 
-      try {
-        const processPromises = [];
+      // Merge all processes from area and subarea
+      const allProcesses = processResponses.flatMap(
+        (response) => response.content,
+      );
 
-        // Always fetch processes from the main area
-        processPromises.push(getAreaProcesses(filters.areaId));
+      // Remove duplicates based on processKey
+      const uniqueProcesses = allProcesses.filter(
+        (process, index, self) =>
+          index ===
+          self.findIndex((p) => p.processKey === process.processKey),
+      );
 
-        // If subarea is selected, also fetch processes from subarea
-        if (filters.subareaId)
-          processPromises.push(getAreaProcesses(filters.subareaId));
+      return uniqueProcesses.map((process) => ({
+        label: process.name || process.processKey || "Processo sem nome",
+        value: process.processKey,
+      }));
+    },
+    enabled: !!filters.areaId,
+  });
 
-        const processResponses = await Promise.all(processPromises);
-
-        // Merge all processes from area and subarea
-        const allProcesses = processResponses.flatMap(
-          (response) => response.content,
-        );
-
-        // Remove duplicates based on processKey
-        const uniqueProcesses = allProcesses.filter(
-          (process, index, self) =>
-            index ===
-            self.findIndex((p) => p.processKey === process.processKey),
-        );
-
-        const processTypeOptions = uniqueProcesses.map((process) => ({
-          label: process.name || process.processKey || "Processo sem nome",
-          value: process.processKey,
-        }));
-
-        setDropdownOptions((prev) => ({
-          ...prev,
-          processTypes: processTypeOptions,
-        }));
-      } catch (error) {
-        console.error("Error loading process types:", error);
-        setDropdownOptions((prev) => ({ ...prev, processTypes: [] }));
-      }
-    };
-
-    loadProcessTypes();
-  }, [filters.areaId, filters.subareaId]);
+  // Combine all dropdown options
+  const dropdownOptions = useMemo<DropdownOptions>(
+    () => ({
+      areas: areasData || [],
+      subareas: subareasData || [],
+      processTypes: processTypesData || [],
+      statuses: statusesData || [],
+      organics: [],
+      users: [],
+    }),
+    [areasData, subareasData, processTypesData, statusesData]
+  );
 
   return {
     dropdownOptions,

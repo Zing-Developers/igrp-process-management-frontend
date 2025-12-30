@@ -51,4 +51,5 @@ export interface ProcessInstanceTableRow {
   processInstanceId: string;
   procReleaseKey: string;
   startedBy: string;
+  businessKey: string;
 }

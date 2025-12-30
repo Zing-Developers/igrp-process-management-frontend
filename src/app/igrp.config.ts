@@ -55,6 +55,7 @@ export default {
     "dashboard/hooks/use-dashboard-data",
     "utils/url-config",
     "utils/status-badge",
+    "processinstances/hooks/use-process-details",
   ],
   components: [
     "processconfiguration/components/areas-list",
@@ -63,5 +64,10 @@ export default {
     "processmap/components/process-tree-node",
     "components/recent-items-card",
     "components/loading-page",
+    "components/stat-card",
+    "components/activity-timeline", 
+    "components/filter-data",
+    "components/task-history",
+    "components/variables-view",
   ],
 };

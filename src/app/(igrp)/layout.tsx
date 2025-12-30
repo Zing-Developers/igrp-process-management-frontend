@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 
 import { configLayout } from "@/actions/igrp/layout";
 import { isPreviewMode as checkPreviewMode } from "@/lib/utils";
+import { QueryProvider } from "@/components/providers";
 
 export default async function IGRPRootLayout({
   children,
@@ -40,5 +41,9 @@ export default async function IGRPRootLayout({
     redirect(urlLogin);
   }
 
-  return <IGRPLayout config={config}>{children}</IGRPLayout>;
+  return (
+    <IGRPLayout config={config}>
+      <QueryProvider>{children}</QueryProvider>
+    </IGRPLayout>
+  );
 }

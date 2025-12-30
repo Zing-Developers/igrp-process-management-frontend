@@ -1,6 +1,7 @@
 import { useMemo, useEffect } from "react";
 import { useFilterData } from "./use-filter-data";
 import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
+import { VariableFilter } from "../../filter-data";
 
 export function useProcessTasksFilter(
   setSelectAreaOptions: (options: IGRPOptionsProps[]) => void,
@@ -8,7 +9,7 @@ export function useProcessTasksFilter(
   setSelectProcesstypeOptions: (options: IGRPOptionsProps[]) => void,
   setSelectStatusOptions: (options: IGRPOptionsProps[]) => void,
   setSelectOrganicOptions: (options: IGRPOptionsProps[]) => void,
-  setSelectUserOptions: (options: IGRPOptionsProps[]) => void,
+  setSelectUserOptions: (options: IGRPOptionsProps[]) => void
 ) {
   const { filters, dropdownOptions, updateFilters } = useFilterData();
 
@@ -129,6 +130,10 @@ export function useProcessTasksFilter(
     updateFilters(newFilters);
   };
 
+  const handleFiltersChange = (variables: VariableFilter[]) => {
+    updateFilters({ variables });
+  };
+
   return {
     // Filter values
     filters,
@@ -142,5 +147,6 @@ export function useProcessTasksFilter(
     handleUserChange,
     handleProcessNumberChange,
     handleDateChange,
+    handleFiltersChange,
   };
 }

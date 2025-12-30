@@ -168,15 +168,15 @@ export const assignTask = async (
   user: string,
   priority: string,
   note?: string,
+  candidateGroups?: string,
 ): Promise<PostResponse> => {
   const processManagementClient = await getIGRPProcessClient();
-  console.debug("Assigning task:", { taskId, user, priority, note });
   const response = await processManagementClient.tasks.assignTask(taskId, {
     user,
     priority: parseInt(priority, 10), // ← Convert string to number
     note,
+    candidateGroups,
   });
-  console.debug("Task assigned response:", response);
   return response.data;
 };
 

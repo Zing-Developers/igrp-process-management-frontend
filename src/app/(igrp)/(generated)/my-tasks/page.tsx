@@ -65,9 +65,10 @@ const taskUrl = await urlConfig.buildTaskExecutionUrl(
   row.taskId,
   row.applicationBase,
 );
-router.push(taskUrl as any);
+router.push(taskUrl);
 
 }
+
 //-------------------reserved area start----------------------------
   const router = useRouter();
 

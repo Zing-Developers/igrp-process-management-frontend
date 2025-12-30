@@ -1,13 +1,19 @@
 import { useMemo } from "react";
 import { useProcessInstancesData } from "./use-process-instances-data";
-import { getProcessInstanceStatusVariant } from "../../utils/status-helpers";
+import {
+  getProcessInstanceStatusVariant,
+  ProcessInstanceStatus,
+} from "../../utils/status-helpers";
 import { ProcessInstanceTableRow } from "../types";
 import {
+  formatDuration,
+  getBusinessKeyTemplate,
   getDateTemplate,
   getProcessInfo,
+  getProcessStatusTemplate,
   getProgressTemplate,
-  getUserInfo,
 } from "../../utils/columns-template";
+import { format, formatDistanceToNow } from "date-fns";
 
 export function useProcessInstances() {
   const {
@@ -28,22 +34,30 @@ export function useProcessInstances() {
       const createdDate = new Date(instance.startedAt);
       const now = new Date();
       const diffTime = Math.abs(now.getTime() - createdDate.getTime());
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
       return {
         processInfo: getProcessInfo(instance.name, instance.number),
-        createBy: getUserInfo(instance.startedBy),
-        daysWaiting: diffDays.toString(),
-        version: instance.version,
-        startedAt: getDateTemplate(instance.startedAt),
+        createBy: undefined, //getUserInfo(instance.startedBy),
+        daysWaiting:
+          diffTime > 0
+            ? formatDuration(diffTime)
+            : formatDistanceToNow(instance.startedAt, { addSuffix: false }),
+        version: `v${instance.version}`,
+        startedAt: format(instance.startedAt, "dd MMM, HH:mm"),
         endedAt: getDateTemplate(instance.endedAt),
-        progress: getProgressTemplate(instance.progress),
+        progress: getProgressTemplate(
+          instance.progress,
+          instance.status as ProcessInstanceStatus
+        ),
         priority: instance.priority + "",
-        status: instance.status,
+        status: getProcessStatusTemplate(
+          instance.status as ProcessInstanceStatus
+        ),
         processInstanceId: instance.id,
         procReleaseKey: instance.procReleaseKey,
         startedBy: instance.startedBy,
         statusDesc: instance.statusDesc,
+        businessKey: getBusinessKeyTemplate(instance.businessKey ?? ""),
       };
     });
   }, [processInstancesState.processInstances]);

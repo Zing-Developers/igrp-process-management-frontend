@@ -11,6 +11,7 @@ import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-re
 import TaskProcessFilter from '@/components/taskprocessfilter'
 import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
+import {LoadingPage} from '@/app/(myapp)/components/loading-page'
 import CommonUserTaskModalForm from '@/components/commonusertaskmodalform'
 import { 
   IGRPPageHeader,
@@ -36,8 +37,7 @@ export default function PageMytasksComponent() {
     currentStep: string;
     process: string;
     startedAt: string;
-    endAt: string;
-    waitingDays: string;
+    duration: string;
     priority: string;
     processKey: string;
     processInstanceId: string;
@@ -75,6 +75,7 @@ router.push(taskUrl as any);
   const { stats, loading: statsLoading } = useDashboard();
   const {
     tableData,
+    loading,
     unclaimModalState,
     fetchMyTasks,
     applyFilters,
@@ -260,7 +261,7 @@ showIconBorder={ false }
 	<TaskProcessFilter   onSearch={ handleSearchSubmit }
 onApplyFilters={ handleApplyFilters }
 onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
-<IGRPDataTable<Table1, Table1>
+{ !loading && (<IGRPDataTable<Table1, Table1>
   id={ `table1` }
   showFilter={ true }
   showPagination={ true }
@@ -269,7 +270,7 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
   columns={
     [
         {
-          header: 'Tarefa'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Tarefa` } />)
 ,accessorKey: 'currentStep',
           cell: ({ row }) => {
           return row.getValue("currentStep")
@@ -277,7 +278,7 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Processo'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Processo` } />)
 ,accessorKey: 'process',
           cell: ({ row }) => {
           return row.getValue("process")
@@ -285,7 +286,7 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Data Início'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Data Início` } />)
 ,accessorKey: 'startedAt',
           cell: ({ row }) => {
           return row.getValue("startedAt")
@@ -293,23 +294,15 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Data Fim'
-,accessorKey: 'endAt',
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Duraçāo` } />)
+,accessorKey: 'duration',
           cell: ({ row }) => {
-          return row.getValue("endAt")
+          return row.getValue("duration")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Dias em espera'
-,accessorKey: 'waitingDays',
-          cell: ({ row }) => {
-          return row.getValue("waitingDays")
-          },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: 'Prioridade'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Prioridade` } />)
 ,accessorKey: 'priority',
           cell: ({ row }) => {
           const rowData = row.original;
@@ -362,7 +355,8 @@ return (
   }
   
   data={ contentTabletable1 }
-/>
+/>)}
+<LoadingPage  isLoading={ loading }   ></LoadingPage>
 <CommonUserTaskModalForm  modalTitle={ `Libertar Tarefa` } modalSubTitle={ modalSubtitle } open={ unclaimModalState.isOpen }  setOpen={ (open) => (open ? {} : handleCloseUnclaimModal()) }
 onSave={ handleUnclaimTaskSave } ></CommonUserTaskModalForm></div>
   );

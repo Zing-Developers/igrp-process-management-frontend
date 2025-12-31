@@ -30,11 +30,11 @@ importers:
         specifier: 0.1.0-beta.63
         version: 0.1.0-beta.63
       '@igrp/platform-process-management-client-ts':
-        specifier: 0.0.1-beta.23.8
-        version: 0.0.1-beta.23.8
+        specifier: 0.0.1-beta.24
+        version: 0.0.1-beta.24
       '@igrp/platform-process-management-types':
-        specifier: 0.0.1-beta.23.5
-        version: 0.0.1-beta.23.5
+        specifier: 0.0.1-beta.24
+        version: 0.0.1-beta.24
       '@tanstack/react-query':
         specifier: ^5.90.12
         version: 5.90.16(react@19.2.1)
@@ -73,7 +73,7 @@ importers:
         version: 1.4.0
       zod:
         specifier: ^4.1.13
-        version: 4.2.1
+        version: 4.3.2
     devDependencies:
       '@biomejs/biome':
         specifier: 2.2.6
@@ -227,11 +227,11 @@ packages:
   '@igrp/platform-access-management-client-ts@0.1.0-beta.63':
     resolution: {integrity: sha512-RhxxTRTFZxzRMNWQaoZbaTCdKyY8k4Mv6N282qXnE2irW3n5VX4mo/wdrRisMkz0csx3lSwVN43lPW4ORyUfqA==}
 
-  '@igrp/platform-process-management-client-ts@0.0.1-beta.23.8':
-    resolution: {integrity: sha512-1KNC9/3M9ZLUGIo9D+DvbEw0UWisNZzWJkxk8NxDgo7MDZVV2DPjG8ygGOmkKFJ25zT+jo7nfzFItR1undC2uA==}
+  '@igrp/platform-process-management-client-ts@0.0.1-beta.24':
+    resolution: {integrity: sha512-9l/96iRixJWMOEkGdu6L0CjPMSbND7043MFmxH2bbOu7xaR7V4bX8Yx9dGQ0/N3EHRSTKl01UP14tJ2RYLm9/g==}
 
-  '@igrp/platform-process-management-types@0.0.1-beta.23.5':
-    resolution: {integrity: sha512-CoTeCZzrrRQmLxuteSWRREEguJEaSz8QpZ2WolZvv9DMfSc0s+tfWTlZAM2IDtUkmGwYNbDCS+BavuHX7dNjmQ==}
+  '@igrp/platform-process-management-types@0.0.1-beta.24':
+    resolution: {integrity: sha512-xE6//8II+bAWJABoruRwbTxq5A+ZVks79j4SRTnZuFFEX7nPcKRcypr80K/9Ees51lysOwZ5cbPyHeYu1ytRCg==}
     engines: {node: '>=20.x.x'}
 
   '@img/colour@1.0.0':
@@ -1795,8 +1795,8 @@ packages:
   yallist@4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
 
-  zod@4.2.1:
-    resolution: {integrity: sha512-0wZ1IRqGGhMP76gLqz8EyfBXKk0J2qo2+H3fi4mcUP/KtTocoX08nmIAHl1Z2kJIZbZee8KOpBCSNPRgauucjw==}
+  zod@4.3.2:
+    resolution: {integrity: sha512-b8L8yn4rIVfiXyHAmnr52/ZEpDumlT0bmxiq3Ws1ybrinhflGpt12Hvv54kYnEsGPRs6o/Ka3/ppA2OWY21IVg==}
 
 snapshots:
 
@@ -1895,7 +1895,7 @@ snapshots:
       react: 19.2.1
       react-dom: 19.2.1(react@19.2.1)
       tailwind-merge: 3.4.0
-      zod: 4.2.1
+      zod: 4.3.2
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
@@ -1965,18 +1965,18 @@ snapshots:
       tailwind-merge: 3.4.0
       tailwindcss: 4.1.18
       vaul: 1.1.2(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
-      zod: 4.2.1
+      zod: 4.3.2
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
 
   '@igrp/platform-access-management-client-ts@0.1.0-beta.63': {}
 
-  '@igrp/platform-process-management-client-ts@0.0.1-beta.23.8':
+  '@igrp/platform-process-management-client-ts@0.0.1-beta.24':
     dependencies:
-      '@igrp/platform-process-management-types': 0.0.1-beta.23.5
+      '@igrp/platform-process-management-types': 0.0.1-beta.24
 
-  '@igrp/platform-process-management-types@0.0.1-beta.23.5': {}
+  '@igrp/platform-process-management-types@0.0.1-beta.24': {}
 
   '@img/colour@1.0.0':
     optional: true
@@ -3443,4 +3443,4 @@ snapshots:
 
   yallist@4.0.0: {}
 
-  zod@4.2.1: {}
+  zod@4.3.2: {}

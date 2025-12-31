@@ -7,6 +7,8 @@ import {
   getProcessInfo,
   getUserInfo,
 } from "../../utils/columns-template";
+import { format, formatDistanceToNow } from "date-fns";
+import { formatDuration } from "../../utils/shared";
 
 export function useAvailableTasks() {
   const {
@@ -28,17 +30,19 @@ export function useAvailableTasks() {
       const createdDate = new Date(task.startedAt);
       const now = new Date();
       const diffTime = Math.abs(now.getTime() - createdDate.getTime());
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       //TODO: Fix this
       return {
         processInfo: getProcessInfo(task.processName, task.processNumber),
         processNumber: task.processNumber,
-        startedAt: getDateTemplate(task.startedAt),
+        startedAt: format(task.startedAt, "dd MMM, HH:mm"),
         endAt: null, //getDateTemplate(task.endAt ?? ''),
         createBy: getUserInfo(task.assignedBy),
         taskName: task.name,
         status: task.status,
-        daysWaiting: diffDays.toString(),
+        duration:
+          diffTime > 0
+            ? formatDuration(diffTime)
+            : formatDistanceToNow(task.startedAt, { addSuffix: false }),
         taskId: task.id,
         processInstanceId: task.processInstanceId,
         createdDate: task.startedAt,

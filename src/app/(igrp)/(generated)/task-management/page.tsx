@@ -11,6 +11,7 @@ import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-re
 import TaskProcessFilter from '@/components/taskprocessfilter'
 import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
+import {LoadingPage} from '@/app/(myapp)/components/loading-page'
 import CommonUserTaskModalForm from '@/components/commonusertaskmodalform'
 import { 
   IGRPPageHeader,
@@ -300,7 +301,7 @@ showIconBorder={ false }
 	<TaskProcessFilter   onSearch={ handleSearchSubmit }
 onApplyFilters={ handleApplyFilters }
 onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
-<IGRPDataTable<Table1, Table1>
+{ !loading && (<IGRPDataTable<Table1, Table1>
   id={ `table1` }
   showFilter={ true }
   showPagination={ true }
@@ -309,7 +310,7 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
   columns={
     [
         {
-          header: 'Tarefa'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Tarefa` } />)
 ,accessorKey: 'currentStep',
           cell: ({ row }) => {
           return row.getValue("currentStep")
@@ -317,7 +318,7 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Tarefa ID'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Tarefa ID` } />)
 ,accessorKey: 'taskKey',
           cell: ({ row }) => {
           return row.getValue("taskKey")
@@ -325,7 +326,7 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Processo'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Processo` } />)
 ,accessorKey: 'process',
           cell: ({ row }) => {
           return row.getValue("process")
@@ -333,7 +334,7 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Prioridade'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Prioridade` } />)
 ,accessorKey: 'priority',
           cell: ({ row }) => {
           const rowData = row.original;
@@ -351,7 +352,7 @@ badgeClassName={ `${bgClass} ${textClass} ${className}` }
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Utilizador'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Utilizador` } />)
 ,accessorKey: 'assignedBy',
           cell: ({ row }) => {
           return row.getValue("assignedBy")
@@ -359,7 +360,7 @@ badgeClassName={ `${bgClass} ${textClass} ${className}` }
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Data Início'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Data Início` } />)
 ,accessorKey: 'startedAt',
           cell: ({ row }) => {
           return row.getValue("startedAt")
@@ -367,7 +368,7 @@ badgeClassName={ `${bgClass} ${textClass} ${className}` }
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Data Fim'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Data Fim` } />)
 ,accessorKey: 'endedAt',
           cell: ({ row }) => {
           return row.getValue("endedAt")
@@ -375,7 +376,7 @@ badgeClassName={ `${bgClass} ${textClass} ${className}` }
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Estado'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Estado` } />)
 ,accessorKey: 'status',
           cell: ({ row }) => {
           const rowData = row.original;
@@ -437,7 +438,8 @@ return (
   }
   
   data={ tableData }
-/>
+/>)}
+<LoadingPage  isLoading={ loading }   ></LoadingPage>
 <CommonUserTaskModalForm  modalTitle={ `Atribuir Tarefa` } userRequired={ true } showPriority={ true } open={ assignModalState.isOpen } modalSubTitle={ modalSubtitle }  setOpen={ (open) => open? {} : handleCloseAssignModal() }
 onSave={ handleAssignTaskSave } ></CommonUserTaskModalForm></div>
   );

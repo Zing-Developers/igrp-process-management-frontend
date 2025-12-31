@@ -1,20 +1,10 @@
-import { useState, useEffect } from "react";
-
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { getAvailableTasks } from "../../external/client/services/task";
 import { useFilterData } from "../../components/processtaksfilter/hooks/use-filter-data";
 import { AvailableTasksFilters, AvailableTasksState } from "../types";
 
 export function useAvailableTasksData() {
-  const [tasksState, setTasksState] = useState<AvailableTasksState>({
-    tasks: [],
-    loading: false,
-    error: null,
-    totalElements: 0,
-    totalPages: 0,
-    currentPage: 0,
-    pageSize: 10,
-  });
-
   // Use the shared filter data hook
   const { filters, dropdownOptions, updateFilters, resetFilters } =
     useFilterData();
@@ -29,21 +19,23 @@ export function useAvailableTasksData() {
     ],
   };
 
-  // Fetch tasks function
-  const fetchTasks = async (
-    page = 0,
-    size = 10,
-    customFilters?: Partial<AvailableTasksFilters>,
-  ) => {
-    setTasksState((prev) => ({ ...prev, loading: true, error: null }));
+  // State for pagination
+  const [page, setPage] = useState(0);
+  const [size, setSize] = useState(10);
+  const [customFilters, setCustomFilters] = useState<
+    Partial<AvailableTasksFilters> | undefined
+  >();
 
-    // Use custom filters if provided, otherwise use current filters state
-    const filtersToUse = customFilters
-      ? { ...filters, ...customFilters }
-      : filters;
+  // Use query at the top level - hooks must be called at the top level
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["available-tasks", page, size, filters, customFilters],
+    queryFn: () => {
+      // Use custom filters if provided, otherwise use current filters state
+      const filtersToUse = customFilters
+        ? { ...filters, ...customFilters }
+        : filters;
 
-    try {
-      const response = await getAvailableTasks({
+      return getAvailableTasks({
         processNumber: filtersToUse.processNumber,
         processKey: filtersToUse.processType || "", // Map processType to processKey
         user: filtersToUse.user,
@@ -53,47 +45,46 @@ export function useAvailableTasksData() {
         page,
         size,
       });
+    },
+  });
 
-      setTasksState({
-        tasks: response.content,
-        loading: false,
-        error: null,
-        totalElements: response.totalElements,
-        totalPages: response.totalPages,
-        currentPage: response.pageNumber,
-        pageSize: response.pageSize,
-      });
-    } catch (error) {
-      setTasksState((prev) => ({
-        ...prev,
-        loading: false,
-        error: error instanceof Error ? error.message : "Failed to fetch tasks",
-      }));
-    }
+  // Transform query result to state format
+  const tasksState: AvailableTasksState = {
+    tasks: data?.content || [],
+    loading: isLoading,
+    error:
+      error instanceof Error
+        ? error.message
+        : error
+          ? "Failed to fetch tasks"
+          : null,
+    totalElements: data?.totalElements || 0,
+    totalPages: data?.totalPages || 0,
+    currentPage: data?.pageNumber || 0,
+    pageSize: data?.pageSize || 10,
+  };
+
+  // Fetch tasks function - now just updates state to trigger refetch
+  const fetchTasks = (
+    newPage = 0,
+    newSize = 10,
+    newCustomFilters?: Partial<AvailableTasksFilters>,
+  ) => {
+    setPage(newPage);
+    setSize(newSize);
+    setCustomFilters(newCustomFilters);
   };
 
   // Apply filters and fetch tasks
-  const applyFilters = (customFilters?: Partial<AvailableTasksFilters>) => {
-    // Use a callback to get the most current filter values
-    const filtersToApply = customFilters || filters;
-
+  const applyFilters = (newCustomFilters?: Partial<AvailableTasksFilters>) => {
     // Update filters if custom filters provided
-    if (customFilters) {
-      updateFilters(customFilters);
+    if (newCustomFilters) {
+      updateFilters(newCustomFilters);
     }
 
     // Fetch tasks with the filter values
-    fetchTasks(
-      0,
-      tasksState.pageSize,
-      filtersToApply as Partial<AvailableTasksFilters>,
-    );
+    fetchTasks(0, tasksState.pageSize, newCustomFilters);
   };
-
-  // Initial load
-  useEffect(() => {
-    fetchTasks();
-  }, []);
 
   return {
     tasksState,

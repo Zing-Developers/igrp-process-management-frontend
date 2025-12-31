@@ -239,7 +239,7 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
   columns={
     [
         {
-          header: 'Processo'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Processo` } />)
 ,accessorKey: 'processInfo',
           cell: ({ row }) => {
           return row.getValue("processInfo")
@@ -247,7 +247,7 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Estado'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Estado` } />)
 ,accessorKey: 'status',
           cell: ({ row }) => {
           return row.getValue("status")
@@ -255,7 +255,7 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Prioridade'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Prioridade` } />)
 ,accessorKey: 'priority',
           cell: ({ row }) => {
           const rowData = row.original;
@@ -273,7 +273,7 @@ badgeClassName={ `${bgClass} ${textClass} ${className}` }
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Ver.'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Ver.` } />)
 ,accessorKey: 'version',
           cell: ({ row }) => {
           return row.getValue("version")
@@ -289,7 +289,7 @@ badgeClassName={ `${bgClass} ${textClass} ${className}` }
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Business Key'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Business Key` } />)
 ,accessorKey: 'businessKey',
           cell: ({ row }) => {
           return row.getValue("businessKey")
@@ -297,7 +297,7 @@ badgeClassName={ `${bgClass} ${textClass} ${className}` }
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Iniciado'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Iniciado` } />)
 ,accessorKey: 'startedAt',
           cell: ({ row }) => {
           return row.getValue("startedAt")
@@ -305,7 +305,7 @@ badgeClassName={ `${bgClass} ${textClass} ${className}` }
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Duraçāo'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Duraçāo` } />)
 ,accessorKey: 'daysWaiting',
           cell: ({ row }) => {
           return row.getValue("daysWaiting")
@@ -313,7 +313,7 @@ badgeClassName={ `${bgClass} ${textClass} ${className}` }
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Iniciado por'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Iniciado por` } />)
 ,accessorKey: 'startedBy',
           cell: ({ row }) => {
           return row.getValue("startedBy")

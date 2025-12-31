@@ -31,7 +31,6 @@ export const getProcesses = async (
   return response.data;
 };
 
-
 /**
  * Fetches process instance statistics.
  * @returns A promise that resolves to process statistics.

@@ -43,7 +43,7 @@ export const useProcessDetails = (processInstanceId: string) => {
 
   const taskHistoryTransformed = useMemo(() => {
     return taskProgressTransformed?.filter(
-      (activity: ActivityProgress) => activity.type === "USER_TASK"
+      (activity: ActivityProgress) => activity.type === "USER_TASK",
     );
   }, [taskProgressTransformed]);
 
@@ -74,12 +74,12 @@ export const useProcessDetails = (processInstanceId: string) => {
           ...activity,
           activityDetails,
         };
-      }
+      },
     );
   }, [taskHistoryTransformed, activityDetailsQueries]);
 
   const isLoadingActivityDetails = activityDetailsQueries.some(
-    (query) => query.isLoading
+    (query) => query.isLoading,
   );
 
   const transformedProcess = useMemo(() => {
@@ -96,7 +96,7 @@ export const useProcessDetails = (processInstanceId: string) => {
   }, [data?.processInstance]);
 
   const variables = taskHistoryWithDetails.flatMap(
-    (task) => task.activityDetails?.variables || []
+    (task) => task.activityDetails?.variables || [],
   );
 
   return {

@@ -9,7 +9,7 @@ import {
   getPriorityVariant,
 } from "../../utils/status-helpers";
 import {
-  IGRPColorRole,
+  IGRPColorVariants,
   useIGRPToast,
 } from "@igrp/igrp-framework-react-design-system";
 import { useCallback, useMemo } from "react";
@@ -32,7 +32,9 @@ export const useTaskDetails = (taskId: string) => {
     return {
       ...data,
       priorityLabel: getPriorityLabel(data.priority || 0),
-      priorityVariant: getPriorityVariant(data.priority || 0) as IGRPColorRole,
+      priorityVariant: getPriorityVariant(
+        data.priority || 0,
+      ) as IGRPColorVariants,
     };
   }, [data]);
 
@@ -43,7 +45,7 @@ export const useTaskDetails = (taskId: string) => {
   // Add unclaim task handler
   const onUnclaimTask = async (
     note?: string,
-    onSuccess?: () => void
+    onSuccess?: () => void,
   ): Promise<void> => {
     if (taskId === "") {
       igrpToast({
@@ -86,7 +88,7 @@ export const useTaskDetails = (taskId: string) => {
       candidateGroups?: string;
       assigneTo?: string;
     },
-    onSuccess?: () => void
+    onSuccess?: () => void,
   ) => {
     if (formData.assigneTo === "user" && formData.user === "") {
       igrpToast({
@@ -111,7 +113,7 @@ export const useTaskDetails = (taskId: string) => {
         formData.user,
         formData.priority ?? "",
         formData.note ?? "",
-        formData.candidateGroups ?? ""
+        formData.candidateGroups ?? "",
       );
 
       igrpToast({

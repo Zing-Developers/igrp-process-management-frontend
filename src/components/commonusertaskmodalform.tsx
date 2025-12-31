@@ -127,7 +127,7 @@ export default function Commonusertaskmodalform({
                   "grid-cols-1 ",
                   "md:grid-cols-1 ",
                   "lg:grid-cols-1 ",
-                  " gap-4"
+                  " gap-4",
                 )}
               >
                 {userRequired && (
@@ -203,7 +203,7 @@ export default function Commonusertaskmodalform({
               className={cn(
                 "flex",
                 "flex-1",
-                "flex flex-row flex-nowrap items-stretch justify-end gap-2"
+                "flex flex-row flex-nowrap items-stretch justify-end gap-2",
               )}
             >
               <IGRPButton

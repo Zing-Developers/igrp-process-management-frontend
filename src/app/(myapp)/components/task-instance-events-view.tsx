@@ -15,7 +15,6 @@ import {
 import { TaskInstanceEvent } from "@igrp/platform-process-management-types";
 import { format } from "date-fns";
 
-
 interface TaskInstanceEventsViewProps {
   events: TaskInstanceEvent[];
 }

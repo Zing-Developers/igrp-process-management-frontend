@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { formatDuration } from "../utils/shared";
 
 interface ActivityEvent {
-  id: string;
+  activityId: string;
   type: string;
   activityName: string;
   activityKey: string;
@@ -27,7 +27,10 @@ export function ActivityTimeline({
       current: "Atual",
       pending: "Pendente",
     };
-    return statusMap[status.toLowerCase()] || status.charAt(0).toUpperCase() + status.slice(1);
+    return (
+      statusMap[status.toLowerCase()] ||
+      status.charAt(0).toUpperCase() + status.slice(1)
+    );
   };
   const activityIcons: Record<string, React.ReactNode> = {
     USER_TASK: <IGRPIcon iconName="User" />,

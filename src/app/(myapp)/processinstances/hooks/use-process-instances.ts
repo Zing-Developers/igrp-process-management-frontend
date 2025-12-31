@@ -47,11 +47,11 @@ export function useProcessInstances() {
         endedAt: getDateTemplate(instance.endedAt),
         progress: getProgressTemplate(
           instance.progress,
-          instance.status as ProcessInstanceStatus
+          instance.status as ProcessInstanceStatus,
         ),
         priority: instance.priority + "",
         status: getProcessStatusTemplate(
-          instance.status as ProcessInstanceStatus
+          instance.status as ProcessInstanceStatus,
         ),
         processInstanceId: instance.id,
         procReleaseKey: instance.procReleaseKey,

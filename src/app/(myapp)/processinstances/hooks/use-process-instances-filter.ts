@@ -4,6 +4,7 @@ import {
   DateRange,
   IGRPOptionsProps,
 } from "@igrp/igrp-framework-react-design-system";
+import { format } from "date-fns";
 
 export function useProcessInstancesFilter(
   setSelectAreaOptions: (options: IGRPOptionsProps[]) => void,
@@ -11,7 +12,7 @@ export function useProcessInstancesFilter(
   setSelectProcesstypeOptions: (options: IGRPOptionsProps[]) => void,
   setSelectStatusOptions: (options: IGRPOptionsProps[]) => void,
   setSelectOrganicOptions: (options: IGRPOptionsProps[]) => void,
-  setSelectUserOptions: (options: IGRPOptionsProps[]) => void
+  setSelectUserOptions: (options: IGRPOptionsProps[]) => void,
 ) {
   const { filters, dropdownOptions, updateFilters } = useFilterData();
 
@@ -120,8 +121,9 @@ export function useProcessInstancesFilter(
   };
 
   const handleDateChange = (date: DateRange | null) => {
-    const newFilters = { dateFrom: date?.from, dateTo: date?.to };
-    updateFilters({ ...newFilters });
+    const dateFrom = date?.from ? format(date.from, "dd-MM-yyyy") : null;
+    const dateTo = date?.to ? format(date.to, "dd-MM-yyyy") : null;
+    updateFilters({ dateFrom, dateTo });
   };
 
   return {

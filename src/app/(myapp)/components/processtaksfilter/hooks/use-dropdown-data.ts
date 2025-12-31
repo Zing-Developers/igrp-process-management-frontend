@@ -90,8 +90,7 @@ export function useDropdownData(filters: FilterState) {
       // Remove duplicates based on processKey
       const uniqueProcesses = allProcesses.filter(
         (process, index, self) =>
-          index ===
-          self.findIndex((p) => p.processKey === process.processKey),
+          index === self.findIndex((p) => p.processKey === process.processKey),
       );
 
       return uniqueProcesses.map((process) => ({
@@ -112,7 +111,7 @@ export function useDropdownData(filters: FilterState) {
       organics: [],
       users: [],
     }),
-    [areasData, subareasData, processTypesData, statusesData]
+    [areasData, subareasData, processTypesData, statusesData],
   );
 
   return {

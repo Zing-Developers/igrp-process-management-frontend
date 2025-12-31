@@ -9,7 +9,7 @@
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import {ProcessTreeComponent} from '@/app/(myapp)/processmap/components/process-tree-node'
-import ProcessDetail from '@/app/(igrp)/(generated)/processmap/components/processdetail'
+import ProcessDetail from '@/app/(igrp)/(generated)/process-map/components/processdetail'
 import PriorityModal from '@/components/prioritymodal'
 import { 
   IGRPPageHeader,

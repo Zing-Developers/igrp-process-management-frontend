@@ -10,11 +10,11 @@ import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import {AreasList} from '@/app/(myapp)/processconfiguration/components/areas-list'
 import {ArtifactProcessesList} from '@/app/(myapp)/processconfiguration/components/artifact-processes-list'
-import AreaModal from '@/app/(igrp)/(generated)/processconfiguration/components/areamodal'
-import ProcessModal from '@/app/(igrp)/(generated)/processconfiguration/components/processmodal'
-import ArtifactModal from '@/app/(igrp)/(generated)/processconfiguration/components/artifactmodal'
-import ProcessConfigurationPermission from '@/app/(igrp)/(generated)/processconfiguration/components/processconfigurationpermission'
-import ProcessNumberModal from '@/app/(igrp)/(generated)/processconfiguration/components/processnumbermodal'
+import AreaModal from '@/app/(igrp)/(generated)/process-configuration/components/areamodal'
+import ProcessModal from '@/app/(igrp)/(generated)/process-configuration/components/processmodal'
+import ArtifactModal from '@/app/(igrp)/(generated)/process-configuration/components/artifactmodal'
+import ProcessConfigurationPermission from '@/app/(igrp)/(generated)/process-configuration/components/processconfigurationpermission'
+import ProcessNumberModal from '@/app/(igrp)/(generated)/process-configuration/components/processnumbermodal'
 import { 
   IGRPPageHeader,
 	IGRPTabs,

@@ -12,14 +12,20 @@ import { Task } from "@igrp/platform-process-management-types";
 import { format } from "date-fns";
 
 interface TaskInformationProps extends Task {
-  description: string;
-  dueDate: Date;
-  followUpDate: Date;
-  priorityLabel: string;
-  priorityVariant: IGRPColorVariants;
+  description?: string;
+  dueDate?: Date;
+  followUpDate?: Date;
+  priorityLabel?: string;
+  priorityVariant?: IGRPColorVariants;
 }
 
-export function TaskInformation({ task }: { task: TaskInformationProps }) {
+export function TaskInformation({
+  task,
+}: {
+  task: TaskInformationProps | null;
+}) {
+  if (!task) return null;
+
   const candidateGroups = task?.candidateGroups
     ? task?.candidateGroups.split(",")
     : [];

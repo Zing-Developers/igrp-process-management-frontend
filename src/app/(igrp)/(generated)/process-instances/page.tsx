@@ -62,7 +62,7 @@ async function goToProcessRuntime (row: any): Promise<void  | undefined> {
   row.taskId,
   row.applicationBase
 );
-router.push(taskUrl);
+router.push(taskUrl as any);
 
 }
 

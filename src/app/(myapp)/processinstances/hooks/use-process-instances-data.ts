@@ -23,7 +23,9 @@ export function useProcessInstancesData() {
   // State for pagination
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(1000);
-  const [customFilters, setCustomFilters] = useState<Partial<ProcessInstancesFilters> | undefined>();
+  const [customFilters, setCustomFilters] = useState<
+    Partial<ProcessInstancesFilters> | undefined
+  >();
 
   // Use query at the top level - hooks must be called at the top level
   const { data, isLoading, error } = useQuery({
@@ -32,7 +34,11 @@ export function useProcessInstancesData() {
       const filtersToUse = customFilters
         ? { ...filters, ...customFilters }
         : filters;
-      return getProcessInstances(page, size, filtersToUse);
+      return getProcessInstances(
+        page,
+        size,
+        filtersToUse as Partial<ProcessInstancesFilters>,
+      );
     },
   });
 
@@ -40,7 +46,12 @@ export function useProcessInstancesData() {
   const processInstancesState: ProcessInstancesState = {
     processInstances: data?.content || [],
     loading: isLoading,
-    error: error instanceof Error ? error.message : (error ? "Failed to fetch process instances" : null),
+    error:
+      error instanceof Error
+        ? error.message
+        : error
+          ? "Failed to fetch process instances"
+          : null,
     totalElements: data?.totalElements || 0,
     totalPages: data?.totalPages || 0,
     currentPage: data?.pageNumber || 0,
@@ -51,7 +62,7 @@ export function useProcessInstancesData() {
   const fetchProcessInstances = (
     newPage = 0,
     newSize = 1000,
-    newCustomFilters?: Partial<ProcessInstancesFilters>
+    newCustomFilters?: Partial<ProcessInstancesFilters>,
   ) => {
     setPage(newPage);
     setSize(newSize);
@@ -59,7 +70,9 @@ export function useProcessInstancesData() {
   };
 
   // Apply filters and fetch process instances
-  const applyFilters = (newCustomFilters?: Partial<ProcessInstancesFilters>) => {
+  const applyFilters = (
+    newCustomFilters?: Partial<ProcessInstancesFilters>,
+  ) => {
     // Update filters if custom filters provided
     if (newCustomFilters) {
       updateFilters(newCustomFilters);

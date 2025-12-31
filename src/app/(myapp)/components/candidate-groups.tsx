@@ -26,7 +26,7 @@ export default function CandidateGroups({
   };
   const handleRemoveGroup = (group: string) => {
     setSelectedCandidateGroupsState(
-      selectedCandidateGroupsState.filter((g) => g !== group)
+      selectedCandidateGroupsState.filter((g) => g !== group),
     );
   };
 

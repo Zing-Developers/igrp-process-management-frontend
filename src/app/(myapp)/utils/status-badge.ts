@@ -13,7 +13,7 @@ import {
 // Shared utility function to map badge variants to CSS classes
 const getBgClass = (
   variant: string,
-  useBlueForInfo: boolean = false
+  useBlueForInfo: boolean = false,
 ): string => {
   switch (variant) {
     case "success":

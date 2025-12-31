@@ -31,7 +31,7 @@ export type BadgeVariant =
  * Get localized status label for process instances
  */
 export const getProcessInstanceStatusLabel = (
-  status: ProcessInstanceStatus
+  status: ProcessInstanceStatus,
 ): string => {
   switch (status) {
     case "CREATED":
@@ -73,7 +73,7 @@ export const getTaskStatusLabel = (status: TaskStatus): string => {
  * Get localized label for priority - matching your priority modal labels
  */
 export const getPriorityLabel = (
-  priority: Priority | string | number
+  priority: Priority | string | number,
 ): string => {
   const priorityStr = priority.toString();
   switch (priorityStr) {
@@ -96,7 +96,7 @@ export const getPriorityLabel = (
  * Get badge variant for process instance status
  */
 export const getProcessInstanceStatusVariant = (
-  status: ProcessInstanceStatus
+  status: ProcessInstanceStatus,
 ): BadgeVariant => {
   switch (status) {
     case "CREATED":
@@ -140,7 +140,7 @@ export const getTaskStatusVariant = (status: TaskStatus): BadgeVariant => {
  * Get badge variant for priority - matching your 1-5 scale
  */
 export const getPriorityVariant = (
-  priority: Priority | string | number
+  priority: Priority | string | number,
 ): BadgeVariant => {
   const priorityNum =
     typeof priority === "number" ? priority : parseInt(priority.toString(), 10);
@@ -183,7 +183,7 @@ export const priorityConfig = {
 
 // Map priority numbers (1-5) to config keys
 export const mapPriorityToConfig = (
-  num: number
+  num: number,
 ): keyof typeof priorityConfig => {
   if (num <= 2) return "low"; // 1-2: Muito Baixa, Baixa
   if (num === 3) return "medium"; // 3: Média

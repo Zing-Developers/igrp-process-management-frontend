@@ -21,15 +21,24 @@ export interface VariableFilter {
 
 const operatorOptions: IGRPOptionsProps[] = [
   { label: "Igual", value: "EQUALS" },
-  { label: "Igual (Ignorar Maiúsculas/Minúsculas)", value: "EQUALS_IGNORE_CASE" },
+  {
+    label: "Igual (Ignorar Maiúsculas/Minúsculas)",
+    value: "EQUALS_IGNORE_CASE",
+  },
   { label: "Diferente", value: "NOT_EQUALS" },
-  { label: "Diferente (Ignorar Maiúsculas/Minúsculas)", value: "NOT_EQUALS_IGNORE_CASE" },
+  {
+    label: "Diferente (Ignorar Maiúsculas/Minúsculas)",
+    value: "NOT_EQUALS_IGNORE_CASE",
+  },
   { label: "Maior Que", value: "GREATER_THAN" },
   { label: "Maior ou Igual", value: "GREATER_THAN_OR_EQUAL" },
   { label: "Menor Que", value: "LESS_THAN" },
   { label: "Menor ou Igual", value: "LESS_THAN_OR_EQUAL" },
   { label: "Contém", value: "LIKE" },
-  { label: "Contém (Ignorar Maiúsculas/Minúsculas)", value: "LIKE_IGNORE_CASE" },
+  {
+    label: "Contém (Ignorar Maiúsculas/Minúsculas)",
+    value: "LIKE_IGNORE_CASE",
+  },
 ];
 
 function FilterData({
@@ -55,10 +64,10 @@ function FilterData({
 
   const updateVariableFilter = (
     id: string,
-    updates: Partial<VariableFilter>
+    updates: Partial<VariableFilter>,
   ) => {
     const updatedFilters = variableFilters.map((f) =>
-      f.id === id ? { ...f, ...updates } : f
+      f.id === id ? { ...f, ...updates } : f,
     );
     setVariableFilters(updatedFilters);
     onChange(updatedFilters);
@@ -98,7 +107,9 @@ function FilterData({
       <IGRPPopoverContentPrimitive className="w-[480px] p-4" align="start">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h4 className="font-medium text-sm">Filtrar por Variáveis do Processo</h4>
+            <h4 className="font-medium text-sm">
+              Filtrar por Variáveis do Processo
+            </h4>
             {variableFilters.length > 0 && (
               <IGRPButtonPrimitive
                 variant="ghost"
@@ -113,8 +124,8 @@ function FilterData({
 
           {variableFilters.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              Nenhum filtro de variável aplicado. Adicione um filtro para reduzir
-              os processos.
+              Nenhum filtro de variável aplicado. Adicione um filtro para
+              reduzir os processos.
             </p>
           ) : (
             <div className="space-y-3">

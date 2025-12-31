@@ -41,7 +41,6 @@ export function useAvailableTasksData() {
     const filtersToUse = customFilters
       ? { ...filters, ...customFilters }
       : filters;
-    console.log("Fetching tasks with filters:", filtersToUse);
 
     try {
       const response = await getAvailableTasks({
@@ -49,8 +48,8 @@ export function useAvailableTasksData() {
         processKey: filtersToUse.processType || "", // Map processType to processKey
         user: filtersToUse.user,
         status: filtersToUse.status,
-        dateFrom: filtersToUse.dateFrom,
-        dateTo: filtersToUse.dateTo,
+        dateFrom: filtersToUse.dateFrom || undefined,
+        dateTo: filtersToUse.dateTo || undefined,
         page,
         size,
       });
@@ -65,7 +64,6 @@ export function useAvailableTasksData() {
         pageSize: response.pageSize,
       });
     } catch (error) {
-      console.error("Error fetching tasks:", error);
       setTasksState((prev) => ({
         ...prev,
         loading: false,
@@ -78,7 +76,6 @@ export function useAvailableTasksData() {
   const applyFilters = (customFilters?: Partial<AvailableTasksFilters>) => {
     // Use a callback to get the most current filter values
     const filtersToApply = customFilters || filters;
-    console.log("Applying filters:", filtersToApply);
 
     // Update filters if custom filters provided
     if (customFilters) {
@@ -86,7 +83,11 @@ export function useAvailableTasksData() {
     }
 
     // Fetch tasks with the filter values
-    fetchTasks(0, tasksState.pageSize, filtersToApply);
+    fetchTasks(
+      0,
+      tasksState.pageSize,
+      filtersToApply as Partial<AvailableTasksFilters>,
+    );
   };
 
   // Initial load

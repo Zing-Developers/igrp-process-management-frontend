@@ -13,13 +13,13 @@ import {
  */
 export const getActivityProgress = async (
   processInstanceId: string,
-  type?: string
+  type?: string,
 ): Promise<ActivityProgress[] | null> => {
   const processManagementClient = await getIGRPProcessClient();
   return (
     await processManagementClient.activities.getActivityProgress(
       processInstanceId,
-      type
+      type,
     )
   ).data;
 };
@@ -32,13 +32,13 @@ export const getActivityProgress = async (
  */
 export const getActivityInstances = async (
   processInstanceId: string,
-  type?: string
+  type?: string,
 ): Promise<ActivityEvent[]> => {
   const processManagementClient = await getIGRPProcessClient();
   return (
     await processManagementClient.activities.getActivityInstances(
       processInstanceId,
-      type
+      type,
     )
   ).data;
 };
@@ -49,7 +49,7 @@ export const getActivityInstances = async (
  * @returns A promise that resolves to the activity, or null if not found.
  */
 export const getActivityById = async (
-  id: string
+  id: string,
 ): Promise<ActivityEvent | null> => {
   const processManagementClient = await getIGRPProcessClient();
   return (await processManagementClient.activities.getActivityById(id)).data;

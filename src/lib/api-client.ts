@@ -22,7 +22,7 @@ export async function getIGRPProcessClient(): Promise<ProcessManagementClient> {
   if (token.expiresAt && token.expiresAt < Date.now()) {
     console.log("[API Client] Token expired, refreshing...");
     token = await refreshAccessToken(token);
-    
+
     if (token.error) {
       console.error("[API Client] Failed to refresh token:", token.error);
       throw new Error("Failed to refresh authentication token");

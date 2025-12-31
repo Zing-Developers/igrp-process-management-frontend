@@ -254,7 +254,7 @@ iconName={ `TimerReset` }
   
 >
 </IGRPHeadline>
-  <TaskInstanceEventsView  events={ task?.taskInstanceEvents }   ></TaskInstanceEventsView>
+  <TaskInstanceEventsView  events={ task?.taskInstanceEvents || [] }   ></TaskInstanceEventsView>
 </IGRPCardContent>
 </IGRPCard>
 <CommonUserTaskModalForm  modalTitle={ `Libertar Tarefa` } open={ libertarTarefa } modalSubTitle={ modalSubtitle }  setOpen={ setLibertarTarefa

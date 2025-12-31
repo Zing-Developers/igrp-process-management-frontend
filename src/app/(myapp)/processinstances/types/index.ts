@@ -4,7 +4,14 @@ export interface ProcessInstancesFilters {
   processNumber: string;
   processKey: string;
   user: string;
-  status: string;
+  status:
+    | "CREATED"
+    | "RUNNING"
+    | "SUSPENDED"
+    | "CANCELED"
+    | "COMPLETED"
+    | "TERMINATED"
+    | undefined;
   dateFrom: string;
   dateTo: string;
   areaId?: string;

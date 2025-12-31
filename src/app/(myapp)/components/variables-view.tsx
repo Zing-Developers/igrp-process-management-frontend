@@ -10,7 +10,11 @@ import {
   IGRPBadgePrimitive,
 } from "@igrp/igrp-framework-react-design-system";
 import { TaskVariables } from "@igrp/platform-process-management-types";
-import { getTypeColor, getTypeFromValue, getTypeIcon } from "../utils/columns-template";
+import {
+  getTypeColor,
+  getTypeFromValue,
+  getTypeIcon,
+} from "../utils/columns-template";
 
 interface VariablesViewProps {
   variables: TaskVariables[];
@@ -195,7 +199,7 @@ export function VariablesView({ variables }: VariablesViewProps) {
                       Criado:{" "}
                       {format(
                         (variable as any).createTime,
-                        "MMM d, yyyy HH:mm"
+                        "MMM d, yyyy HH:mm",
                       )}
                     </span>
                   )}

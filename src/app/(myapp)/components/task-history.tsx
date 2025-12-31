@@ -10,34 +10,42 @@ import {
   cn,
   IGRPBadgePrimitive,
 } from "@igrp/igrp-framework-react-design-system";
-import { formatDuration, getTypeColor, getTypeFromValue, getTypeIcon } from "../utils/columns-template";
+import {
+  formatDuration,
+  getTypeColor,
+  getTypeFromValue,
+  getTypeIcon,
+} from "../utils/columns-template";
 import { getPriorityLabel } from "../utils/status-helpers";
 import { getPriorityColor } from "../utils/status-badge";
+import {
+  ActivityProgress,
+  ActivityEvent,
+} from "@igrp/platform-process-management-types";
 
 export interface TaskVariable {
   name: string;
-  type: string;
+  type?: string;
   value: unknown;
 }
 
-export interface HistoricTask {
+export interface HistoricTask
+  extends Omit<ActivityProgress, "activityDetails"> {
   activityId: string;
   activityName: string;
   activityKey: string;
-  name: string;
-  assignee?: string;
+  name?: string;
+  assignee: string;
   owner?: string;
-  startTime: Date;
-  claimTime?: Date;
-  endTime?: Date;
-  dueDate?: Date;
-  priority: number;
+  claimTime?: string;
+  dueDate?: string;
+  priority?: number;
   formKey?: string;
   outcome?: string;
-  duration: number;
+  duration?: number;
   status: string;
   variables?: TaskVariable[];
-  activityDetails?: HistoricTask;
+  activityDetails?: ActivityEvent | null;
 }
 
 interface TaskHistoryProps {
@@ -52,7 +60,10 @@ function TaskHistory({ tasks }: TaskHistoryProps) {
       pending: "Pendente",
     };
     const normalizedStatus = status.toLowerCase();
-    return statusMap[normalizedStatus] || status.charAt(0).toUpperCase() + status.toLowerCase().slice(1);
+    return (
+      statusMap[normalizedStatus] ||
+      status.charAt(0).toUpperCase() + status.toLowerCase().slice(1)
+    );
   };
 
   const renderVariableValue = (variable: TaskVariable) => {
@@ -204,7 +215,7 @@ function TaskHistory({ tasks }: TaskHistoryProps) {
                         "flex flex-row items-center gap-1",
                         task.status === "COMPLETED"
                           ? "text-[oklch(0.7_0.18_150)] border-[oklch(0.7_0.18_150)]"
-                          : "text-muted-foreground"
+                          : "text-muted-foreground",
                       )}
                     >
                       <IGRPIcon iconName="CircleCheck" className="h-3 w-3" />
@@ -240,7 +251,8 @@ function TaskHistory({ tasks }: TaskHistoryProps) {
             <div className="px-4 py-3 bg-muted/20 rounded-b-md">
               <div className="ml-10">
                 <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-3">
-                  Variáveis da Tarefa ({task.activityDetails?.variables!.length})
+                  Variáveis da Tarefa ({task.activityDetails?.variables!.length}
+                  )
                 </h4>
                 <div className="space-y-2">
                   {task.activityDetails?.variables!.map((variable, idx) => (

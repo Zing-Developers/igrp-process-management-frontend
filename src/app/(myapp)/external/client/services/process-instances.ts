@@ -34,10 +34,10 @@ export const getProcessInstances = async (
       | "COMPLETED"
       | "TERMINATED";
     businessKey?: string;
-    dateFrom?: Date | null;
-    dateTo?: Date | null;
+    dateFrom?: string | null;
+    dateTo?: string | null;
     variables?: VariableFilter[];
-  }
+  },
 ): Promise<PaginatedResponse<ProcessInstance>> => {
   const { variables, ...rest } = filters ?? {};
 
@@ -47,10 +47,12 @@ export const getProcessInstances = async (
       ...rest,
       page,
       size,
+      dateFrom: rest?.dateFrom || undefined,
+      dateTo: rest?.dateTo || undefined,
       number: rest?.number,
-      procReleaseKey: rest?.processType,
+      procReleaseKey: rest?.processType || undefined,
     },
-    { variables }
+    { variables },
   );
   return response.data;
 };
@@ -61,7 +63,7 @@ export const getProcessInstances = async (
  * @returns A promise that resolves to the process instance, or null if not found.
  */
 export const getProcessInstanceById = async (
-  id: string
+  id: string,
 ): Promise<ProcessInstance | null> => {
   const processManagementClient = await getIGRPProcessClient();
   return (await processManagementClient.processes.getProcessInstanceById(id))
@@ -74,7 +76,7 @@ export const getProcessInstanceById = async (
  * @returns A promise that resolves to an array of running process instances.
  */
 export const getRunningProcessInstances = async (
-  applicationBase: string
+  applicationBase: string,
 ): Promise<ProcessInstance[]> => {
   const processManagementClient = await getIGRPProcessClient();
   // No direct API in client; use getProcessInstances with filters

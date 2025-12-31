@@ -66,11 +66,11 @@ export default {
     "components/recent-items-card",
     "components/loading-page",
     "components/stat-card",
-    "components/activity-timeline", 
+    "components/activity-timeline",
     "components/filter-data",
     "components/task-history",
     "components/variables-view",
     "taskmanagement/components/task-information",
-    "components/task-instance-events-view"
+    "components/task-instance-events-view",
   ],
 };

@@ -61,7 +61,7 @@ export const getUserInfo = (assignee: string) => {
     <div className={cn("flex items-center")}>
       <div
         className={cn(
-          "flex-shrink-0 h-8 w-8 bg-muted rounded-full flex items-center justify-center"
+          "flex-shrink-0 h-8 w-8 bg-muted rounded-full flex items-center justify-center",
         )}
       >
         <IGRPIcon
@@ -129,7 +129,7 @@ export const getProgressTemplate = (progress: string, status: string) => {
   const progressColorClass = progressColor(status.toLowerCase());
 
   const progressValue = Number(
-    ((completedTasks * 100) / totalTasks).toFixed(2)
+    ((completedTasks * 100) / totalTasks).toFixed(2),
   );
 
   return (

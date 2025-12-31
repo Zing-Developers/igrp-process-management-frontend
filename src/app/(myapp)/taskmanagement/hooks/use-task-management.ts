@@ -13,13 +13,13 @@ export interface TaskManagementTableRow {
   startedAt: string;
   endedAt: string;
   priority: string;
-  waitingDays: string;
+  duration?: string;
   status: string;
   taskId: string;
   taskKey: string;
-  processKey: string;
-  processInstanceId: string;
-  processName: string;
+  processKey?: string;
+  processInstanceId?: string;
+  processName?: string;
 }
 
 interface TaskManagementState {
@@ -82,8 +82,8 @@ export function useTaskManagement() {
         process: getProcessInfo(task.processName, task.processNumber),
         assignedBy: task.assignedBy || "",
         startedAt: getDateTemplate(task.startedAt),
-        endAt: getDateTemplate(task.endedAt),
-        waitingDays: diffDays.toString(),
+        endedAt: getDateTemplate(task.endedAt),
+        duration: diffDays.toString(),
         status: task.status,
         taskId: task.id,
         taskKey: task.taskKey,
@@ -115,13 +115,13 @@ export function useTaskManagement() {
 
       // Remove undefined values
       const cleanFilters = Object.fromEntries(
-        Object.entries(apiFilters).filter(([, value]) => value !== undefined)
+        Object.entries(apiFilters).filter(([, value]) => value !== undefined),
       );
 
       const response: PaginatedResponse<Task> = await getTasks(
         page,
         size,
-        cleanFilters
+        cleanFilters,
       );
 
       setState((prev) => ({
@@ -142,7 +142,7 @@ export function useTaskManagement() {
         }));
       } */
     },
-    []
+    [],
   );
 
   // Handle search functionality
@@ -152,7 +152,7 @@ export function useTaskManagement() {
       setFilters(newFilters);
       fetchTasks(0, state.pageSize, newFilters);
     },
-    [filters, fetchTasks, state.pageSize]
+    [filters, fetchTasks, state.pageSize],
   );
 
   // Handle page change
@@ -160,7 +160,7 @@ export function useTaskManagement() {
     (page: number) => {
       fetchTasks(page, state.pageSize, filters);
     },
-    [fetchTasks, state.pageSize, filters]
+    [fetchTasks, state.pageSize, filters],
   );
 
   // Handle filter application
@@ -172,7 +172,7 @@ export function useTaskManagement() {
       setFilters(updatedFilters);
       fetchTasks(0, state.pageSize, updatedFilters);
     },
-    [filters, fetchTasks, state.pageSize]
+    [filters, fetchTasks, state.pageSize],
   );
 
   // Handle filter reset
@@ -208,7 +208,7 @@ export function useTaskManagement() {
       user: string,
       priority: string,
       note?: string,
-      candidateGroups?: string
+      candidateGroups?: string,
     ) => {
       if (!assignModalState.selectedTask) return;
 
@@ -220,7 +220,7 @@ export function useTaskManagement() {
           user,
           priority,
           note,
-          candidateGroups
+          candidateGroups,
         );
 
         // Refresh tasks after successful assignment
@@ -246,7 +246,7 @@ export function useTaskManagement() {
       state.pageSize,
       filters,
       handleCloseAssignModal,
-    ]
+    ],
   );
 
   return {

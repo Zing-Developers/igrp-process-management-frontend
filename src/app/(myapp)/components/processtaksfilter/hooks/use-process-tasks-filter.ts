@@ -13,7 +13,7 @@ export function useProcessTasksFilter(
   setSelectProcesstypeOptions: (options: IGRPOptionsProps[]) => void,
   setSelectStatusOptions: (options: IGRPOptionsProps[]) => void,
   setSelectOrganicOptions: (options: IGRPOptionsProps[]) => void,
-  setSelectUserOptions: (options: IGRPOptionsProps[]) => void
+  setSelectUserOptions: (options: IGRPOptionsProps[]) => void,
 ) {
   const { filters, dropdownOptions, updateFilters } = useFilterData();
 

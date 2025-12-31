@@ -20,8 +20,7 @@ import {
 	IGRPHeadline,
 	IGRPCardContent,
 	IGRPButton,
-	IGRPSeparator,
-	IGRPCardFooter 
+	IGRPSeparator 
 } from "@igrp/igrp-framework-react-design-system";
 import {useTaskDetails} from '@/app/(myapp)/taskmanagement/hooks/use-task-details'
 
@@ -35,12 +34,17 @@ export default function PageDetalhedatarefaComponent({ params } : { params: Prom
   
 const [libertarTarefa, setLibertarTarefa] = useState<boolean>(false);
 
+const [delegateTask, setDelegateTask] = useState<boolean>(false);
+
 const { igrpToast } = useIGRPToast()
 
-const {task} = useTaskDetails(taskId);
+const { task, onUnclaimTask, onDelegateTask } = useTaskDetails(taskId);
 console.log(task)
 
 const modalSubtitle = `Libertar a tarefa "${task?.name}" do processo "${task?.processName}"`
+
+const modalSubtitleDelegate = `Indicar um utilizador ou grupo para assumir a tarefa "${task?.name}" do processo "${task?.processName}"`;
+
 
 
   return (
@@ -150,7 +154,8 @@ size={ `default` }
 showIcon={ true }
 iconName={ `UserPlus` }
   className={ cn('flex justify-start','col-span-1',) }
-  onClick={ () => {} }
+  onClick={ () => {setDelegateTask(!delegateTask)
+} }
   
 >
   Delegate
@@ -201,10 +206,6 @@ iconName={ `CircleX` }
   Cancel Task
 </IGRPButton></div>
 </IGRPCardContent>
-  <IGRPCardFooter
-  
->
-</IGRPCardFooter>
 </IGRPCard></div></div>
 <IGRPCard
   id={ `card1` }
@@ -257,6 +258,10 @@ iconName={ `TimerReset` }
 </IGRPCardContent>
 </IGRPCard>
 <CommonUserTaskModalForm  modalTitle={ `Libertar Tarefa` } open={ libertarTarefa } modalSubTitle={ modalSubtitle }  setOpen={ setLibertarTarefa
- } ></CommonUserTaskModalForm></div></div>
+ }
+onSave={ (formData)=>  onUnclaimTask(formData.note, ()=>setLibertarTarefa(!libertarTarefa)) } ></CommonUserTaskModalForm>
+<CommonUserTaskModalForm  modalTitle={ `Atribuir Tarefa` } userRequired={ true } modalSubTitle={ modalSubtitleDelegate } open={ delegateTask }  setOpen={ setDelegateTask
+ }
+onSave={ (formData)=>  onDelegateTask(formData, ()=>setDelegateTask(!delegateTask)) } ></CommonUserTaskModalForm></div></div>
   );
 }

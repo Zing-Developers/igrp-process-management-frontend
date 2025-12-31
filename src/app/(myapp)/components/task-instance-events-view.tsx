@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-import { format } from "date-fns";
 import {
   IGRPIcon,
   IGRPDataTable,
@@ -13,16 +12,9 @@ import {
   IGRPPopoverTriggerPrimitive,
   IGRPPopoverContentPrimitive,
 } from "@igrp/igrp-framework-react-design-system";
+import { TaskInstanceEvent } from "@igrp/platform-process-management-types";
+import { format } from "date-fns";
 
-export interface TaskInstanceEvent {
-  id: string;
-  eventType: string;
-  status: string;
-  performedAt: string;
-  performedBy: string;
-  obs?: string;
-  taskInstanceId: string;
-}
 
 interface TaskInstanceEventsViewProps {
   events: TaskInstanceEvent[];

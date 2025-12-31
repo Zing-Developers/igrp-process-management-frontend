@@ -66,10 +66,6 @@ export function useMyTasks() {
     }
 
     try {
-      console.log(
-        "unclaimModalState.selectedTask.taskId",
-        unclaimModalState.selectedTask.taskId,
-      );
       await unclaimTask(unclaimModalState.selectedTask.taskId, note);
 
       // Close modal and refresh data

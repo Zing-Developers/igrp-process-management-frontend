@@ -1,19 +1,30 @@
-import { useQuery } from "@tanstack/react-query";
-import { getTaskById } from "../../external/client/services/task";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  assignTask,
+  getTaskById,
+  unclaimTask,
+} from "../../external/client/services/task";
 import {
   getPriorityLabel,
   getPriorityVariant,
 } from "../../utils/status-helpers";
-import { IGRPColorRole } from "@igrp/igrp-framework-react-design-system";
-import { useMemo } from "react";
+import {
+  IGRPColorRole,
+  useIGRPToast,
+} from "@igrp/igrp-framework-react-design-system";
+import { useCallback, useMemo } from "react";
 
 export const useTaskDetails = (taskId: string) => {
+  const { igrpToast } = useIGRPToast();
+
+  const queryClient = useQueryClient();
+
   const { data, isLoading, error } = useQuery({
     queryKey: ["task-details", taskId],
     queryFn: () => getTaskById(taskId),
     enabled: !!taskId,
     retry: true,
-    retryDelay: 1000
+    retryDelay: 1000,
   });
 
   const transformTask = useMemo(() => {
@@ -25,8 +36,108 @@ export const useTaskDetails = (taskId: string) => {
     };
   }, [data]);
 
+  const refetchTask = useCallback(() => {
+    queryClient.refetchQueries({ queryKey: ["task-details", taskId] });
+  }, [queryClient, taskId]);
+
+  // Add unclaim task handler
+  const onUnclaimTask = async (
+    note?: string,
+    onSuccess?: () => void
+  ): Promise<void> => {
+    if (taskId === "") {
+      igrpToast({
+        type: "error",
+        title: "Erro",
+        description: "Nenhuma tarefa selecionada",
+      });
+      return;
+    }
+
+    try {
+      await unclaimTask(taskId, note);
+
+      igrpToast({
+        type: "success",
+        title: "Sucesso",
+        description: "Tarefa libertada com sucesso!",
+      });
+
+      onSuccess?.();
+
+      // Invalidate the task details query
+      refetchTask();
+    } catch (error) {
+      console.error("Error unclaiming task:", error);
+      igrpToast({
+        type: "error",
+        title: "Erro",
+        description: "Erro ao libertar tarefa",
+      });
+    }
+  };
+
+  // Handle assign task save
+  const onDelegateTask = async (
+    formData: {
+      user: string;
+      note?: string;
+      priority?: string;
+      candidateGroups?: string;
+      assigneTo?: string;
+    },
+    onSuccess?: () => void
+  ) => {
+    if (formData.assigneTo === "user" && formData.user === "") {
+      igrpToast({
+        type: "error",
+        title: "Erro",
+        description: "O utilizador é obrigatório",
+      });
+      return;
+    }
+    if (formData.assigneTo === "group" && formData.candidateGroups === "") {
+      igrpToast({
+        type: "error",
+        title: "Erro",
+        description: "O grupo é obrigatório",
+      });
+      return;
+    }
+
+    try {
+      await assignTask(
+        taskId,
+        formData.user,
+        formData.priority ?? "",
+        formData.note ?? "",
+        formData.candidateGroups ?? ""
+      );
+
+      igrpToast({
+        type: "success",
+        title: "Sucesso",
+        description: "Tarefa atribuída com sucesso!",
+      });
+
+      onSuccess?.();
+
+      // Refetch the task details query
+      refetchTask();
+    } catch (error) {
+      console.error("Error assigning task:", error);
+      igrpToast({
+        type: "error",
+        title: "Erro",
+        description: "Erro ao atribuir tarefa",
+      });
+    }
+  };
+
   return {
     task: transformTask,
+    onUnclaimTask,
+    onDelegateTask,
     isLoading,
     error,
   };

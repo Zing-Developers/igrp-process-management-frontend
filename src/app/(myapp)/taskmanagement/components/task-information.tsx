@@ -1,7 +1,6 @@
 import {
   IGRPBadge,
   IGRPBadgePrimitive,
-  IGRPColorRole,
   IGRPColorVariants,
   IGRPCopyTo,
   IGRPIcon,
@@ -14,7 +13,6 @@ import { format } from "date-fns";
 
 interface TaskInformationProps extends Task {
   description: string;
-  candidateGroups: string;
   dueDate: Date;
   followUpDate: Date;
   priorityLabel: string;
@@ -31,14 +29,17 @@ export function TaskInformation({ task }: { task: TaskInformationProps }) {
       {task && (
         <>
           {task.description && (
-            <div>
-              <IGRPLabelPrimitive className="text-muted-foreground">
-                Description
-              </IGRPLabelPrimitive>
-              <p className="text-sm mt-1">{task.description}</p>
-            </div>
+            <>
+              <div>
+                <IGRPLabelPrimitive className="text-muted-foreground">
+                  Description
+                </IGRPLabelPrimitive>
+                <p className="text-sm mt-1">{task.description}</p>
+              </div>
+              <IGRPSeparator />
+            </>
           )}
-          <IGRPSeparator />
+
           <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
             {/* Left column */}
             <div className="space-y-3">

@@ -192,7 +192,7 @@ export const unclaimTask = async (
   note?: string,
 ): Promise<PostResponse> => {
   const processManagementClient = await getIGRPProcessClient();
-  return (await processManagementClient.tasks.unclaimTask(taskId, note)).data;
+  return (await processManagementClient.tasks.unclaimTask(taskId, { note })).data;
 };
 
 /**

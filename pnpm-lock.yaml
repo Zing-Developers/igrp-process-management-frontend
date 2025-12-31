@@ -30,14 +30,14 @@ importers:
         specifier: 0.1.0-beta.63
         version: 0.1.0-beta.63
       '@igrp/platform-process-management-client-ts':
-        specifier: 0.0.1-beta.23.6
-        version: 0.0.1-beta.23.6
+        specifier: 0.0.1-beta.23.8
+        version: 0.0.1-beta.23.8
       '@igrp/platform-process-management-types':
-        specifier: 0.0.1-beta.23.4
-        version: 0.0.1-beta.23.4
+        specifier: 0.0.1-beta.23.5
+        version: 0.0.1-beta.23.5
       '@tanstack/react-query':
         specifier: ^5.90.12
-        version: 5.90.12(react@19.2.1)
+        version: 5.90.16(react@19.2.1)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -227,15 +227,11 @@ packages:
   '@igrp/platform-access-management-client-ts@0.1.0-beta.63':
     resolution: {integrity: sha512-RhxxTRTFZxzRMNWQaoZbaTCdKyY8k4Mv6N282qXnE2irW3n5VX4mo/wdrRisMkz0csx3lSwVN43lPW4ORyUfqA==}
 
-  '@igrp/platform-process-management-client-ts@0.0.1-beta.23.6':
-    resolution: {integrity: sha512-X2280PxpE/XXl5wAjySoejRQ24wYPcxYxsCcnhZF3ZW26n/X2Emrc2kB4hmpskFIkUZfyXtpQzOEgyufvZWpgg==}
+  '@igrp/platform-process-management-client-ts@0.0.1-beta.23.8':
+    resolution: {integrity: sha512-1KNC9/3M9ZLUGIo9D+DvbEw0UWisNZzWJkxk8NxDgo7MDZVV2DPjG8ygGOmkKFJ25zT+jo7nfzFItR1undC2uA==}
 
-  '@igrp/platform-process-management-types@0.0.1-beta.23.2':
-    resolution: {integrity: sha512-G82YM8ThkGm17NNuiMgDn7OUubyoyiagW7P/99qpPZS38oiVBKy9n0smhGdz8JYT3shEfstSNgYG46AJ9iWvmQ==}
-    engines: {node: '>=20.x.x'}
-
-  '@igrp/platform-process-management-types@0.0.1-beta.23.4':
-    resolution: {integrity: sha512-akcMrAAUQ9LDXGrTwpAAAbKMzWsTWGeSXii+p7PrNnV/mGmzy2FziTXcrbgHaSlwTBQa+AUummQCtomU3JqPPw==}
+  '@igrp/platform-process-management-types@0.0.1-beta.23.5':
+    resolution: {integrity: sha512-CoTeCZzrrRQmLxuteSWRREEguJEaSz8QpZ2WolZvv9DMfSc0s+tfWTlZAM2IDtUkmGwYNbDCS+BavuHX7dNjmQ==}
     engines: {node: '>=20.x.x'}
 
   '@img/colour@1.0.0':
@@ -1188,11 +1184,11 @@ packages:
   '@tailwindcss/postcss@4.1.18':
     resolution: {integrity: sha512-Ce0GFnzAOuPyfV5SxjXGn0CubwGcuDB0zcdaPuCSzAa/2vII24JTkH+I6jcbXLb1ctjZMZZI6OjDaLPJQL1S0g==}
 
-  '@tanstack/query-core@5.90.12':
-    resolution: {integrity: sha512-T1/8t5DhV/SisWjDnaiU2drl6ySvsHj1bHBCWNXd+/T+Hh1cf6JodyEYMd5sgwm+b/mETT4EV3H+zCVczCU5hg==}
+  '@tanstack/query-core@5.90.16':
+    resolution: {integrity: sha512-MvtWckSVufs/ja463/K4PyJeqT+HMlJWtw6PrCpywznd2NSgO3m4KwO9RqbFqGg6iDE8vVMFWMeQI4Io3eEYww==}
 
-  '@tanstack/react-query@5.90.12':
-    resolution: {integrity: sha512-graRZspg7EoEaw0a8faiUASCyJrqjKPdqJ9EwuDRUF9mEYJ1YPczI9H+/agJ0mOJkPCJDk0lsz5QTrLZ/jQ2rg==}
+  '@tanstack/react-query@5.90.16':
+    resolution: {integrity: sha512-bpMGOmV4OPmif7TNMteU/Ehf/hoC0Kf98PDc0F4BZkFrEapRMEqI/V6YS0lyzwSV6PQpY1y4xxArUIfBW5LVxQ==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -1249,8 +1245,8 @@ packages:
     resolution: {integrity: sha512-ik3ZgC9dY/lYVVM++OISsaYDeg1tb0VtP5uL3ouh1koGOaUMDPpbFIei4JkFimWUFPn90sbMNMXQAIVOlnYKJA==}
     engines: {node: '>=10'}
 
-  caniuse-lite@1.0.30001761:
-    resolution: {integrity: sha512-JF9ptu1vP2coz98+5051jZ4PwQgd2ni8A+gYSN7EA7dPKIMf0pDlSUxhdmVOaV3/fYK5uWBkgSXJaRLr4+3A6g==}
+  caniuse-lite@1.0.30001762:
+    resolution: {integrity: sha512-PxZwGNvH7Ak8WX5iXzoK1KPZttBXNPuaOvI2ZYU7NrlM+d9Ov+TUvlLOBNGzVXAntMSMMlJPd+jY6ovrVjSmUw==}
 
   class-variance-authority@0.7.1:
     resolution: {integrity: sha512-Ka+9Trutv7G8M6WT6SeiRWz792K5qEqIGEGzXKhAE6xOWAY6pPH8U+9IY3oCMv6kqTmLsv7Xh/2w2RigkePMsg==}
@@ -1592,8 +1588,8 @@ packages:
     peerDependencies:
       preact: '>=10'
 
-  preact@10.28.0:
-    resolution: {integrity: sha512-rytDAoiXr3+t6OIP3WGlDd0ouCUG1iCWzkcY3++Nreuoi17y6T5i/zRhe6uYfoVcxq6YU+sBtJouuRDsq8vvqA==}
+  preact@10.28.1:
+    resolution: {integrity: sha512-u1/ixq/lVQI0CakKNvLDEcW5zfCjUQfZdK9qqWuIJtsezuyG6pk9TWj75GMuI/EzRSZB/VAE43sNWWZfiy8psw==}
 
   pretty-format@3.8.0:
     resolution: {integrity: sha512-WuxUnVtlWL1OfZFQFuqvnvs6MiAGk9UNsBostyBOB0Is9wb5uRESevA6rnl/rkksXaGX3GzZhPup5d6Vp1nFew==}
@@ -1976,13 +1972,11 @@ snapshots:
 
   '@igrp/platform-access-management-client-ts@0.1.0-beta.63': {}
 
-  '@igrp/platform-process-management-client-ts@0.0.1-beta.23.6':
+  '@igrp/platform-process-management-client-ts@0.0.1-beta.23.8':
     dependencies:
-      '@igrp/platform-process-management-types': 0.0.1-beta.23.2
+      '@igrp/platform-process-management-types': 0.0.1-beta.23.5
 
-  '@igrp/platform-process-management-types@0.0.1-beta.23.2': {}
-
-  '@igrp/platform-process-management-types@0.0.1-beta.23.4': {}
+  '@igrp/platform-process-management-types@0.0.1-beta.23.5': {}
 
   '@img/colour@1.0.0':
     optional: true
@@ -2883,11 +2877,11 @@ snapshots:
       postcss: 8.5.6
       tailwindcss: 4.1.18
 
-  '@tanstack/query-core@5.90.12': {}
+  '@tanstack/query-core@5.90.16': {}
 
-  '@tanstack/react-query@5.90.12(react@19.2.1)':
+  '@tanstack/react-query@5.90.16(react@19.2.1)':
     dependencies:
-      '@tanstack/query-core': 5.90.12
+      '@tanstack/query-core': 5.90.16
       react: 19.2.1
 
   '@tanstack/react-table@8.21.3(react-dom@19.2.1(react@19.2.1))(react@19.2.1)':
@@ -2938,7 +2932,7 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  caniuse-lite@1.0.30001761: {}
+  caniuse-lite@1.0.30001762: {}
 
   class-variance-authority@0.7.1:
     dependencies:
@@ -3157,8 +3151,8 @@ snapshots:
       next: 15.5.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       oauth: 0.9.15
       openid-client: 5.7.1
-      preact: 10.28.0
-      preact-render-to-string: 5.2.6(preact@10.28.0)
+      preact: 10.28.1
+      preact-render-to-string: 5.2.6(preact@10.28.1)
       react: 19.2.1
       react-dom: 19.2.1(react@19.2.1)
       uuid: 8.3.2
@@ -3172,7 +3166,7 @@ snapshots:
     dependencies:
       '@next/env': 15.5.7
       '@swc/helpers': 0.5.15
-      caniuse-lite: 1.0.30001761
+      caniuse-lite: 1.0.30001762
       postcss: 8.4.31
       react: 19.2.1
       react-dom: 19.2.1(react@19.2.1)
@@ -3220,12 +3214,12 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  preact-render-to-string@5.2.6(preact@10.28.0):
+  preact-render-to-string@5.2.6(preact@10.28.1):
     dependencies:
-      preact: 10.28.0
+      preact: 10.28.1
       pretty-format: 3.8.0
 
-  preact@10.28.0: {}
+  preact@10.28.1: {}
 
   pretty-format@3.8.0: {}
 

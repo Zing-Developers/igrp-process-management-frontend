@@ -72,7 +72,7 @@ maxLines={ 3 }
   
   
 >
-  { process.name }
+  { process?.name }
 </IGRPText></>
 </IGRPModalDialogContent>
 </IGRPModalDialog></div>

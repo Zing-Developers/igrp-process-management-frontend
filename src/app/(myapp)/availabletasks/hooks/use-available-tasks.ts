@@ -92,7 +92,7 @@ export function useAvailableTasks() {
 
     // Filter values
     filters,
-
+    updateFilters,
     // Actions
     handleSearch,
     handlePageChange,

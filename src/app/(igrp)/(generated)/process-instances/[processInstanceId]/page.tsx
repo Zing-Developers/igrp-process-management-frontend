@@ -46,8 +46,8 @@ const { process, activityProgress, taskHistory,variables, isLoading } = useProce
   showBackButton={ true }
   urlBackButton={ `/process-instances` }
   variant={ `h3` }
-  description={ process?.name }
-title={ process?.number || 'Process Details' }
+  description={ process?.number  }
+title={ process?.name|| 'Process Details' }
 >
   <div className="flex items-center gap-2">
     <IGRPBadge

@@ -41,7 +41,6 @@ export default function PageAvailabletasksComponent() {
 }
 
   const [statstatsCard1Value, setStatstatsCard1Value] = useState<string | number>(0);
-  const [contentTabletasks, setContentTabletasks] = useState<Table1[]>([]);
   
   
 const [showFilter, setShowFilter] = useState<boolean>(false);
@@ -60,6 +59,7 @@ const { igrpToast } = useIGRPToast()
     currentPage,
     filters,
     handleSearch,
+    updateFilters,
     applyFilters,
     resetFilters,
     handleClaimTask,
@@ -67,9 +67,12 @@ const { igrpToast } = useIGRPToast()
 
   // Update table data when tableData changes
   useEffect(() => {
-    if (tableData) setContentTabletasks(tableData);
     setStatstatsCard1Value(stats.tasks.totalTasksAvailable);
-  }, [tableData, stats]);
+  }, [stats]);
+
+   const handleApplyFilters = (filters: any) => {
+    updateFilters(filters)
+  };
 
   // Show error toast if there's an error
   useEffect(() => {
@@ -145,7 +148,8 @@ showIconBackground={ true }
 <div className={ cn(' border rounded-sm',)}    >
 	<TaskProcessFilter   onSearch={ handleSearch }
 onApplyFilters={ applyFilters }
-onResetFilters={ resetFilters } ></TaskProcessFilter></div>
+onResetFilters={ resetFilters }
+onFiltersChange={ handleApplyFilters } ></TaskProcessFilter></div>
 { !loading && (<IGRPDataTable<Table1, Table1>
   id={ `tasks` }
   showFilter={ true }
@@ -250,7 +254,7 @@ return (
     ]
   }
   
-  data={ contentTabletasks }
+  data={ tableData }
 />)}
 <LoadingPage  isLoading={ loading }   ></LoadingPage></div>
   );

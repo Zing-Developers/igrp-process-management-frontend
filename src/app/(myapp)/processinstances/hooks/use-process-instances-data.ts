@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getProcessInstances } from "../../external/client/services/process-instances";
 import { useFilterData } from "../../components/processtaksfilter/hooks/use-filter-data";
 import { ProcessInstancesFilters, ProcessInstancesState } from "../types";
@@ -23,21 +23,49 @@ export function useProcessInstancesData() {
   // State for pagination
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(1000);
-  const [customFilters, setCustomFilters] = useState<
-    Partial<ProcessInstancesFilters> | undefined
-  >();
+  const isInitialMount = useRef(true);
+
+  // Reset page to 0 when filters change (except on initial mount)
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    setPage(0);
+  }, [
+    filters.processType,
+    filters.processNumber,
+    filters.status,
+    filters.dateFrom,
+    filters.dateTo,
+    filters.areaId,
+    filters.subareaId,
+    filters.organic,
+    filters.user,
+  ]);
 
   // Use query at the top level - hooks must be called at the top level
+  // Use individual filter values in queryKey to ensure automatic reactivity
   const { data, isLoading, error } = useQuery({
-    queryKey: ["process-instances", page, size, filters, customFilters],
+    queryKey: [
+      "process-instances",
+      page,
+      size,
+      filters.processType,
+      filters.processNumber,
+      filters.status,
+      filters.dateFrom,
+      filters.dateTo,
+      filters.areaId,
+      filters.subareaId,
+      filters.organic,
+      filters.user,
+    ],
     queryFn: () => {
-      const filtersToUse = customFilters
-        ? { ...filters, ...customFilters }
-        : filters;
       return getProcessInstances(
         page,
         size,
-        filtersToUse as Partial<ProcessInstancesFilters>,
+        filters as Partial<ProcessInstancesFilters>,
       );
     },
   });
@@ -58,28 +86,21 @@ export function useProcessInstancesData() {
     pageSize: data?.pageSize || 1000,
   };
 
-  // Fetch process instances function - now just updates state to trigger refetch
-  const fetchProcessInstances = (
-    newPage = 0,
-    newSize = 1000,
-    newCustomFilters?: Partial<ProcessInstancesFilters>,
-  ) => {
+  // Fetch process instances function - now just updates pagination state
+  const fetchProcessInstances = (newPage = 0, newSize = 1000) => {
     setPage(newPage);
     setSize(newSize);
-    setCustomFilters(newCustomFilters);
   };
 
-  // Apply filters and fetch process instances
+  // Apply filters - now just updates filters, query will auto-refetch
   const applyFilters = (
     newCustomFilters?: Partial<ProcessInstancesFilters>,
   ) => {
     // Update filters if custom filters provided
+    // The query will automatically refetch when filters change
     if (newCustomFilters) {
       updateFilters(newCustomFilters);
     }
-
-    // Fetch process instances with the filter values
-    fetchProcessInstances(0, processInstancesState.pageSize, newCustomFilters);
   };
 
   return {

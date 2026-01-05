@@ -25,7 +25,7 @@ export const getProcessInstances = async (
   size = 20,
   filters?: {
     processType?: string;
-    number?: string;
+    processNumber?: string;
     status?:
       | "CREATED"
       | "RUNNING"
@@ -42,6 +42,7 @@ export const getProcessInstances = async (
   const { variables, ...rest } = filters ?? {};
 
   const processManagementClient = await getIGRPProcessClient();
+  console.log("rest", rest);
   const response = await processManagementClient.processes.getProcessInstances(
     {
       ...rest,
@@ -49,7 +50,7 @@ export const getProcessInstances = async (
       size,
       dateFrom: rest?.dateFrom || undefined,
       dateTo: rest?.dateTo || undefined,
-      number: rest?.number,
+      number: rest?.processNumber,
       procReleaseKey: rest?.processType || undefined,
     },
     { variables },

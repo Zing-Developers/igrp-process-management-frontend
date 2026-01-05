@@ -63,8 +63,8 @@ export function useProcessInstances() {
   }, [processInstancesState.processInstances]);
 
   const handleSearch = (searchTerm: string) => {
+    // Update filters - query will automatically refetch when filters change
     updateFilters({ processType: searchTerm });
-    applyFilters();
   };
 
   const handlePageChange = (page: number) => {
@@ -88,6 +88,7 @@ export function useProcessInstances() {
     handlePageChange,
     applyFilters,
     resetFilters,
+    updateFilters,
     getStatusVariant: getProcessInstanceStatusVariant,
     fetchProcessInstances,
   };

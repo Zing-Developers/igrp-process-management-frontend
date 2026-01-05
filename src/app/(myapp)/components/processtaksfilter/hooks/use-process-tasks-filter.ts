@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useRef } from "react";
 import { useFilterData } from "./use-filter-data";
 import {
   DateRange,
@@ -14,8 +14,11 @@ export function useProcessTasksFilter(
   setSelectStatusOptions: (options: IGRPOptionsProps[]) => void,
   setSelectOrganicOptions: (options: IGRPOptionsProps[]) => void,
   setSelectUserOptions: (options: IGRPOptionsProps[]) => void,
+  onFiltersChange?: (filters: any) => void,
 ) {
   const { filters, dropdownOptions, updateFilters } = useFilterData();
+  const isInitialMount = useRef(true);
+  const prevFiltersRef = useRef(filters);
 
   // Transform dropdown options to IGRP format
   const transformedAreaOptions = useMemo((): IGRPOptionsProps[] => {
@@ -84,6 +87,43 @@ export function useProcessTasksFilter(
   useEffect(() => {
     setSelectUserOptions(transformedUserOptions);
   }, [transformedUserOptions, setSelectUserOptions]);
+
+  // Notify parent component when filters change (except on initial mount and area/subarea changes)
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      prevFiltersRef.current = filters;
+      return;
+    }
+
+    // Check if filters changed (excluding area/subarea which trigger dropdown updates)
+    const hasChanged =
+      prevFiltersRef.current.processType !== filters.processType ||
+      prevFiltersRef.current.status !== filters.status ||
+      prevFiltersRef.current.organic !== filters.organic ||
+      prevFiltersRef.current.user !== filters.user ||
+      prevFiltersRef.current.processNumber !== filters.processNumber ||
+      prevFiltersRef.current.dateFrom !== filters.dateFrom ||
+      prevFiltersRef.current.dateTo !== filters.dateTo ||
+      JSON.stringify(prevFiltersRef.current.variables) !==
+        JSON.stringify(filters.variables);
+
+    if (hasChanged && onFiltersChange) {
+      onFiltersChange(filters);
+    }
+
+    prevFiltersRef.current = filters;
+  }, [
+    filters.processType,
+    filters.status,
+    filters.organic,
+    filters.user,
+    filters.processNumber,
+    filters.dateFrom,
+    filters.dateTo,
+    filters.variables,
+    onFiltersChange,
+  ]);
 
   // Handle filter changes
   const handleAreaChange = (selected: string | string[]) => {

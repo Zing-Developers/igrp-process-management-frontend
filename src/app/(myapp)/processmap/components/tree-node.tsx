@@ -41,7 +41,7 @@ export function TreeNode({
   return (
     <div className="w-full">
       <div
-        className="flex items-center space-x-2 p-2 hover:bg-muted rounded-lg cursor-pointer group"
+        className="flex items-center space-x-2 p-3 hover:bg-muted rounded-lg cursor-pointer group"
         style={{ paddingLeft: `${node.level * 20 + 8}px` }}
         onClick={handleToggle}
       >

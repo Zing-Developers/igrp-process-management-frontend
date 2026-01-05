@@ -20,7 +20,6 @@ import {
 	IGRPDataTableRowAction,
 	IGRPDataTableButtonLink 
 } from "@igrp/igrp-framework-react-design-system";
-import {useProcessConfiguration} from '@/app/(myapp)/processconfiguration/hooks/use-process-configuration'
 import {useProcessInstances} from '@/app/(myapp)/processinstances/hooks/use-process-instances'
 import { useRouter } from "next/navigation"
 import { urlConfig } from '@/app/(myapp)/utils/url-config'
@@ -67,59 +66,58 @@ router.push(taskUrl as any);
 }
 
 //-------------------reserved area start----------------------------
-const {stats, loading: statsLoading } = useDashboard();
+const { stats, loading: statsLoading } = useDashboard();
 const router = useRouter()
-  const {
-    tableData,
-    loading,
-    error,
-    totalElements,
-    totalPages,
-    currentPage,
-    handleSearch,
-    applyFilters,
-    resetFilters,
-  } = useProcessInstances();
+const {
+  tableData,
+  loading,
+  error,
+  totalElements,
+  totalPages,
+  currentPage,
+  handleSearch,
+  applyFilters,
+  resetFilters,
+  updateFilters
+} = useProcessInstances();
 
-  // Update table data when process instances change
-  useEffect(() => {
-    setStatstatsCard1Value(stats.processInstances.totalInstances);
-    setStatstatsCard2Value(stats.processInstances.totalRunning);
-    setStatstatsCard3Value(stats.processInstances.totalCompleted);
-    setStatstatsCard4Value(stats.processInstances.totalCancelled);
-  }, [tableData, stats]);
+// Update table data when process instances change
+useEffect(() => {
+  setStatstatsCard1Value(stats.processInstances.totalInstances);
+  setStatstatsCard2Value(stats.processInstances.totalRunning);
+  setStatstatsCard3Value(stats.processInstances.totalCompleted);
+  setStatstatsCard4Value(stats.processInstances.totalCancelled);
+}, [ stats]);
 
-  // Handle filter application with process instance filters
-  const handleApplyFilters = (filters?: any) => {
-    if (filters) {
-      console.log('Applying process instance filters:', filters);
-      applyFilters(filters);
-    } else {
-      applyFilters();
-    }
-  };
+// Handle filter application with process instance filters
+const handleApplyFilters = (filters?: any) => {
+  if (filters) {
+    // Update filters directly - useQuery will auto-refetch
+    updateFilters(filters);
+  }
+};
 
-  // Handle filter reset
-  const handleResetFilters = () => {
-    resetFilters();
-  };
+// Handle filter reset
+const handleResetFilters = () => {
+  resetFilters();
+};
 
-  // Handle search
-  const handleSearchSubmit = (searchTerm: string) => {
-    handleSearch(searchTerm);
-  };
+// Handle search
+const handleSearchSubmit = (searchTerm: string) => {
+  handleSearch(searchTerm);
+};
 
-  // Show error toast if there's an error
-  useEffect(() => {
-    if (error) {
-      igrpToast({
-        title: 'Erro',
-        description: error,
-      });
-    }
-  }, [error, igrpToast]);
+// Show error toast if there's an error
+useEffect(() => {
+  if (error) {
+    igrpToast({
+      title: 'Erro',
+      description: error,
+    });
+  }
+}, [error, igrpToast]);
 
-  //-------------------reserved area end------------------------------
+//-------------------reserved area end------------------------------
 
 
   return (
@@ -229,7 +227,8 @@ showIconBorder={ false }
 <div className={ cn(' border rounded-sm',)}    >
 	<TaskProcessFilter   onSearch={ handleSearchSubmit }
 onApplyFilters={ handleApplyFilters }
-onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
+onResetFilters={ handleResetFilters }
+onFiltersChange={ handleApplyFilters } ></TaskProcessFilter></div>
 { !loading && (<IGRPDataTable<Table1, Table1>
   id={ `processes` }
   showFilter={ true }

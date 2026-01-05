@@ -29,10 +29,12 @@ export default function Taskprocessfilter({
   onSearch,
   onApplyFilters,
   onResetFilters,
+  onFiltersChange,
 }: {
   onSearch: (searchTerm: string) => void;
   onApplyFilters: (filters: any) => void;
   onResetFilters: () => void;
+  onFiltersChange: (filters: any) => void;
 }) {
   const [selectStatusOptions, setSelectStatusOptions] = useState<
     IGRPOptionsProps[]
@@ -77,6 +79,7 @@ export default function Taskprocessfilter({
     setSelectStatusOptions,
     setSelectOrganicOptions,
     setSelectUserOptions,
+    onFiltersChange,
   );
 
   // Handle search
@@ -99,69 +102,65 @@ export default function Taskprocessfilter({
 
   return (
     <div className={cn("component")}>
-      <div className={cn(" px-4 pt-2 flex-1 items-center")}>
-        <div
-          className={cn(
-            "flex flex-row flex-wrap items-center justify-start gap-2",
-            " flex-1",
-          )}
+      <div
+        className={cn(
+          "flex flex-row flex-wrap items-center justify-start gap-2",
+          " px-3 flex-1",
+        )}
+      >
+        <IGRPInputSearch
+          id={`inputSearch1`}
+          label={undefined}
+          showStartIcon={true}
+          startIcon={`Search`}
+          submitIcon={`ArrowRight`}
+          required={false}
+          submitButtonLabel={`Pesquisar`}
+          placeholder={`Pesquise por...`}
+          className={cn("py-1 flex-1 max-w-sm")}
+          setValueChange={(value) => setSearchTerm(value)}
+          onSearch={handleSearchSubmit}
+          value={searchTerm}
+        ></IGRPInputSearch>
+        <IGRPCombobox
+          id={`Status`}
+          label={undefined}
+          variant={`single`}
+          placeholder={`Selecione um estado...`}
+          selectLabel={`No option found`}
+          showSearch={true}
+          showIcon={false}
+          iconName={`CornerDownRight`}
+          className={cn()}
+          onChange={(selected) =>
+            handleStatusChange(Array.isArray(selected) ? selected[0] : selected)
+          }
+          options={selectStatusOptions}
+          value={filters.status}
+        ></IGRPCombobox>
+        <FilterData
+          onChange={(filters) => handleFiltersChange(filters)}
+        ></FilterData>
+        <IGRPDatePickerRange
+          placeholder={`Selecione uma data`}
+          id={`datePickerRange1`}
+          dateFormat={`dd/MM/yyyy`}
+          onDateChange={(date) => handleDateChange(date ?? null)}
+          className={cn()}
+        />
+        <IGRPButton
+          id={`button3`}
+          variant={`outline`}
+          size={`default`}
+          showIcon={true}
+          iconName={`Settings2`}
+          className={cn("ml-auto")}
+          onClick={() => {
+            setShowFilter(!showFilter);
+          }}
         >
-          <IGRPInputSearch
-            id={`inputSearch1`}
-            label={undefined}
-            showStartIcon={true}
-            startIcon={`Search`}
-            submitIcon={`ArrowRight`}
-            required={false}
-            submitButtonLabel={`Pesquisar`}
-            placeholder={`Pesquise por...`}
-            className={cn("py-1 flex-1 max-w-sm")}
-            setValueChange={(value) => setSearchTerm(value)}
-            onSearch={handleSearchSubmit}
-            value={searchTerm}
-          ></IGRPInputSearch>
-          <IGRPCombobox
-            id={`Status`}
-            label={undefined}
-            variant={`single`}
-            placeholder={`Selecione um estado...`}
-            selectLabel={`No option found`}
-            showSearch={true}
-            showIcon={false}
-            iconName={`CornerDownRight`}
-            className={cn()}
-            onChange={(selected) =>
-              handleStatusChange(
-                Array.isArray(selected) ? selected[0] : selected,
-              )
-            }
-            options={selectStatusOptions}
-            value={filters.status}
-          ></IGRPCombobox>
-          <FilterData
-            onChange={(filters) => handleFiltersChange(filters)}
-          ></FilterData>
-          <IGRPDatePickerRange
-            placeholder={`Selecione uma data`}
-            id={`datePickerRange1`}
-            dateFormat={`dd/MM/yyyy`}
-            onDateChange={(date) => handleDateChange(date ?? null)}
-            className={cn()}
-          />
-          <IGRPButton
-            id={`button3`}
-            variant={`outline`}
-            size={`default`}
-            showIcon={true}
-            iconName={`Settings2`}
-            className={cn("ml-auto")}
-            onClick={() => {
-              setShowFilter(!showFilter);
-            }}
-          >
-            Filtros
-          </IGRPButton>
-        </div>
+          Filtros
+        </IGRPButton>
       </div>
       {showFilter && (
         <IGRPSeparator
@@ -177,7 +176,7 @@ export default function Taskprocessfilter({
             "grid-cols-2 ",
             "md:grid-cols-2 ",
             "lg:grid-cols-4 ",
-            " gap-4 px-4 pt-2",
+            " gap-4 px-3",
           )}
         >
           <IGRPInputText
@@ -288,27 +287,16 @@ export default function Taskprocessfilter({
           className={cn(
             "flex",
             "flex flex-row flex-nowrap items-stretch justify-end gap-2",
-            " px-4 pt-2 space-y-3",
+            " pb-3 px-3",
           )}
         >
-          <IGRPButton
-            id={`button2`}
-            variant={`outline`}
-            size={`default`}
-            showIcon={true}
-            iconName={`ListFilter`}
-            className={cn()}
-            onClick={handleApplyFilters}
-          >
-            Aplicar Filtros
-          </IGRPButton>
           <IGRPButton
             id={`button1`}
             variant={`outline`}
             size={`default`}
             showIcon={true}
             iconName={`Eraser`}
-            className={cn()}
+            className={cn("")}
             onClick={handleResetFilters}
           >
             Limpar Filtros

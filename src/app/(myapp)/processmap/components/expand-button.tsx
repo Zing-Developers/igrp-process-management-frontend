@@ -17,7 +17,7 @@ export function ExpandButton({
   }
 
   return (
-    <div className="w-6 h-6 flex items-center justify-center mr-2">
+    <div className="w-6 h-6 flex items-center justify-center">
       <IGRPButton
         onClick={(e) => {
           e.stopPropagation();

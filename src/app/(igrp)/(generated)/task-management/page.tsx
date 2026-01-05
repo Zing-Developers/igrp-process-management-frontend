@@ -83,9 +83,10 @@ const {
   handlePageChange,
   applyFilters,
   resetFilters,
-  handleAssignTask,
+  updateFilters,
   handleOpenAssignModal,
   handleCloseAssignModal,
+  handleAssignTask
 } = useTaskManagement();
 
 // Transform data for the table
@@ -97,18 +98,16 @@ useEffect(() => {
     setStatstatsCard3Value(stats.tasks.totalTasksCancelled);
     setStatstatsCard4Value(stats.tasks.totalTasksCompleted);
   }
-}, [ stats]);
+}, [stats]);
 
 const handleSearchSubmit = (searchTerm: string) => {
   handleSearch(searchTerm);
 };
 
 const handleApplyFilters = (filters?: any) => {
-  if (filters) {
-    console.log('Applying task management filters:', filters);
-    applyFilters(filters);
-  } else {
-    applyFilters();
+   if (filters) {
+    // Update filters directly - useQuery will auto-refetch
+    updateFilters(filters);
   }
 };
 
@@ -128,43 +127,43 @@ useEffect(() => {
 
 // Handle assign task save
 const handleAssignTaskSave = async (formData: {
-    user: string;
-    note?: string;
-    priority?: string;
-    candidateGroups?: string;
-    assigneTo?: string;
-  }) => {
-    if (formData.assigneTo === "user" && formData.user === "") {
-      igrpToast({
-        type: "error",
-        title: "Erro",
-        description: "O utilizador é obrigatório",
-      });
-      return;
-    }
-    if (formData.assigneTo === "group" && formData.candidateGroups === "") {
-      igrpToast({
-        type: "error",
-        title: "Erro",
-        description: "O grupo é obrigatório",
-      });
-      return;
-    }
-    const result = await handleAssignTask(
-      formData.user,
-      formData.priority ?? "",
-      formData.note ?? "",
-      formData.candidateGroups ?? ""
-    );
+  user: string;
+  note?: string;
+  priority?: string;
+  candidateGroups?: string;
+  assigneTo?: string;
+}) => {
+  if (formData.assigneTo === "user" && formData.user === "") {
+    igrpToast({
+      type: "error",
+      title: "Erro",
+      description: "O utilizador é obrigatório",
+    });
+    return;
+  }
+  if (formData.assigneTo === "group" && formData.candidateGroups === "") {
+    igrpToast({
+      type: "error",
+      title: "Erro",
+      description: "O grupo é obrigatório",
+    });
+    return;
+  }
+  const result = await handleAssignTask(
+    formData.user,
+    formData.priority ?? "",
+    formData.note ?? "",
+    formData.candidateGroups ?? ""
+  );
 
-    if (igrpToast) {
-      igrpToast({
-        type: result?.success ? "success" : "error",
-        title: result?.success ? "Sucesso" : "Erro",
-        description: result?.message,
-      });
-    }
-  };
+  if (igrpToast) {
+    igrpToast({
+      type: result?.success ? "success" : "error",
+      title: result?.success ? "Sucesso" : "Erro",
+      description: result?.message,
+    });
+  }
+};
 
 // Define modal subtitle with dynamic content
 const modalSubtitle = `Indicar um utilizador para assumir a tarefa "${assignModalState.selectedTask?.currentStep}" do processo "${assignModalState.selectedTask?.processName}"`;
@@ -300,7 +299,8 @@ showIconBorder={ false }
 <div className={ cn(' border rounded-sm',)}    >
 	<TaskProcessFilter   onSearch={ handleSearchSubmit }
 onApplyFilters={ handleApplyFilters }
-onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
+onResetFilters={ handleResetFilters }
+onFiltersChange={ handleApplyFilters } ></TaskProcessFilter></div>
 { !loading && (<IGRPDataTable<Table1, Table1>
   id={ `table1` }
   showFilter={ true }

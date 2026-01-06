@@ -42,6 +42,7 @@ export function useProcessInstancesData() {
     filters.subareaId,
     filters.organic,
     filters.user,
+    filters.variables,
   ]);
 
   // Use query at the top level - hooks must be called at the top level
@@ -60,6 +61,7 @@ export function useProcessInstancesData() {
       filters.subareaId,
       filters.organic,
       filters.user,
+      filters.variables,
     ],
     queryFn: () => {
       return getProcessInstances(

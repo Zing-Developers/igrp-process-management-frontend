@@ -52,5 +52,6 @@ export const getActivityById = async (
   id: string,
 ): Promise<ActivityEvent | null> => {
   const processManagementClient = await getIGRPProcessClient();
-  return (await processManagementClient.activities.getActivityById(id)).data;
+  const response = await processManagementClient.activities.getActivityById(id);
+  return response.data;
 };

@@ -72,5 +72,6 @@ export default {
     "components/variables-view",
     "taskmanagement/components/task-information",
     "components/task-instance-events-view",
+    "components/filter-actives",
   ],
 };

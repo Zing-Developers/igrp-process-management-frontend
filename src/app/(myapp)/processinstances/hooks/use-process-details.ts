@@ -28,18 +28,55 @@ export const useProcessDetails = (processInstanceId: string) => {
     enabled: !!processInstanceId,
   });
 
+  //reorder activityProgress by startTime: "2026-01-05T10:49:36.267"
   const taskProgressTransformed = useMemo(() => {
-    return data?.activityProgress?.map((task: ActivityProgress) => {
+    if (!data?.activityProgress) return undefined;
+
+    // Map and add duration
+    const mapped = data.activityProgress.map((task: ActivityProgress) => {
       // Duration will be calculated from activityDetails if available
       const created = new Date(data?.processInstance?.startedAt || Date.now());
-      const now = new Date();
+      const now = data?.processInstance?.endedAt ? new Date(data?.processInstance?.endedAt) : new Date();
       const diff = Math.abs(now.getTime() - created.getTime());
       return {
         ...task,
         duration: diff,
       };
     });
-  }, [data?.activityProgress]);
+
+    // Sort by startTime (descending - newest first)
+    // startTime format: "2026-01-05T10:49:36.267"
+    // It can be directly on the task object or in activityDetails
+    return mapped.sort((a, b) => {
+      const taskA = a as any;
+      const taskB = b as any;
+      
+      // Try to get startTime from various possible locations
+      const startTimeA = taskA.startTime || taskA.activityDetails?.startTime || taskA.startedAt;
+      const startTimeB = taskB.startTime || taskB.activityDetails?.startTime || taskB.startedAt;
+
+      // If both have startTime, compare them
+      if (startTimeA && startTimeB) {
+        const dateA = new Date(startTimeA).getTime();
+        const dateB = new Date(startTimeB).getTime();
+        // Handle invalid dates
+        if (isNaN(dateA) || isNaN(dateB)) {
+          // If one is invalid, put valid one first
+          if (isNaN(dateA) && !isNaN(dateB)) return 1;
+          if (!isNaN(dateA) && isNaN(dateB)) return -1;
+          return 0; // Both invalid, maintain order
+        }
+        return dateB - dateA; // Descending order (newest first)
+      }
+
+      // If only one has startTime, put it first
+      if (startTimeA && !startTimeB) return -1;
+      if (!startTimeA && startTimeB) return 1;
+
+      // If neither has startTime, maintain original order
+      return 0;
+    });
+  }, [data?.activityProgress, data?.processInstance?.startedAt, data?.processInstance?.endedAt]);
 
   const taskHistoryTransformed = useMemo(() => {
     return taskProgressTransformed?.filter(
@@ -65,9 +102,9 @@ export const useProcessDetails = (processInstanceId: string) => {
 
   // Combine taskHistory with activity details
   const taskHistoryWithDetails = useMemo(() => {
-    if (!taskHistoryTransformed?.length) return [];
+    if (!taskHistory?.length) return [];
 
-    return taskHistoryTransformed?.map(
+    return taskHistory?.map(
       (activity: ActivityProgress, index: number) => {
         const activityDetails = activityDetailsQueries[index]?.data;
         return {
@@ -84,7 +121,7 @@ export const useProcessDetails = (processInstanceId: string) => {
 
   const transformedProcess = useMemo(() => {
     const created = new Date(data?.processInstance?.startedAt || Date.now());
-    const now = new Date();
+    const now = data?.processInstance?.endedAt ? new Date(data?.processInstance?.endedAt) : new Date();
     const diff = Math.abs(now.getTime() - created.getTime());
     const status = data?.processInstance?.status;
     return {

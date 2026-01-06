@@ -42,7 +42,6 @@ export const getProcessInstances = async (
   const { variables, ...rest } = filters ?? {};
 
   const processManagementClient = await getIGRPProcessClient();
-  console.log("rest", rest);
   const response = await processManagementClient.processes.getProcessInstances(
     {
       ...rest,

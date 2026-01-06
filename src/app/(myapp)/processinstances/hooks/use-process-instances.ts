@@ -32,7 +32,7 @@ export function useProcessInstances() {
     return processInstancesState.processInstances.map((instance) => {
       // Calculate days since creation
       const createdDate = new Date(instance.startedAt);
-      const now = new Date();
+      const now = instance.endedAt ? new Date(instance.endedAt) : new Date();
       const diffTime = Math.abs(now.getTime() - createdDate.getTime());
 
       return {

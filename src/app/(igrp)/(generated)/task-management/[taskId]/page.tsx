@@ -9,6 +9,7 @@
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import {TaskInformation} from '@/app/(myapp)/taskmanagement/components/task-information'
+import {Empty} from '@/app/(myapp)/components/empty'
 import {VariablesView} from '@/app/(myapp)/components/variables-view'
 import {TaskInstanceEventsView} from '@/app/(myapp)/components/task-instance-events-view'
 import CommonUserTaskModalForm from '@/components/commonusertaskmodalform'
@@ -39,7 +40,6 @@ const [delegateTask, setDelegateTask] = useState<boolean>(false);
 const { igrpToast } = useIGRPToast()
 
 const { task, onUnclaimTask, onDelegateTask } = useTaskDetails(taskId);
-console.log(task)
 
 const modalSubtitle = `Libertar a tarefa "${task?.name}" do processo "${task?.processName}"`
 
@@ -69,10 +69,10 @@ iconName={ `CircleCheck` }
 iconPlacement={ `start` }
   badgeClassName={ cn() }
   
-  
-color={ task?.priorityVariant || 'primary' }
+  color={ task?.color || 'primary' }
+
 >
-  { task?.priorityLabel }
+  { task?.statusDesc }
 </IGRPBadge>
 </div>
 </IGRPPageHeader>
@@ -134,7 +134,7 @@ showIcon={ false }
   <IGRPCardContent
   
 >
-  <div className={ cn('grid','grid-cols-1 ',' gap-4',)}    >
+  { task?.status != 'COMPLETED' && (<div className={ cn('grid','grid-cols-1 ',' gap-4',)}    >
 	<IGRPButton
   id={ `button1` }
   variant={ `default` }
@@ -204,7 +204,8 @@ iconName={ `CircleX` }
   
 >
   Cancel Task
-</IGRPButton></div>
+</IGRPButton></div>)}
+  { task?.status === 'COMPLETED' && (<Empty  title={ `Nenhuma ação` } description={ `Nenhuma ação encontrada para esta tarefa` }   ></Empty>)}
 </IGRPCardContent>
 </IGRPCard></div></div>
 <IGRPCard

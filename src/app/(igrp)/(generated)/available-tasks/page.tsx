@@ -9,6 +9,7 @@
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import TaskProcessFilter from '@/components/taskprocessfilter'
+import {FilterActives} from '@/app/(myapp)/components/filter-actives'
 import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
 import {LoadingPage} from '@/app/(myapp)/components/loading-page'
@@ -150,6 +151,7 @@ showIconBackground={ true }
 onApplyFilters={ applyFilters }
 onResetFilters={ resetFilters }
 onFiltersChange={ handleApplyFilters } ></TaskProcessFilter></div>
+<FilterActives  filters={ filters }  onFiltersChange={ handleApplyFilters } ></FilterActives>
 { !loading && (<IGRPDataTable<Table1, Table1>
   id={ `tasks` }
   showFilter={ true }

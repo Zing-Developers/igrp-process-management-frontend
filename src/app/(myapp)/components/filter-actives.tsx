@@ -3,18 +3,25 @@ import {
   IGRPBadgePrimitive,
   IGRPIcon,
 } from "@igrp/igrp-framework-react-design-system";
-import { useFilterData } from "./processtaksfilter/hooks/use-filter-data";
 
-function FilterActives({ filters }: { filters: FilterState }) {
-  const { variables, dateFrom, dateTo } = filters;
-  const { updateFilters } = useFilterData();
+function FilterActives({
+  filters,
+  onFiltersChange,
+}: {
+  filters: any;
+  onFiltersChange: (filters: any) => void;
+}) {
+  const { variables, dateFrom, dateTo } = filters as FilterState;
 
   const clearDateRange = () => {
-    updateFilters({ dateFrom: null, dateTo: null });
+    onFiltersChange({ ...filters, dateFrom: null, dateTo: null });
   };
 
   const removeVariableFilter = (id: string) => {
-    updateFilters({ variables: variables.filter((f) => f.id !== id) });
+    onFiltersChange({
+      ...filters,
+      variables: variables.filter((f) => f.id !== id),
+    });
   };
 
   const getSymbol = (operator: string) => {
@@ -46,7 +53,7 @@ function FilterActives({ filters }: { filters: FilterState }) {
 
   return (
     <>
-      {(variables.length > 0 || dateFrom) && (
+      {((variables && variables.length > 0) || dateFrom) && (
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-sm text-muted-foreground">Active filters:</span>
           {dateFrom && (

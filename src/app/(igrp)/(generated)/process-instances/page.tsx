@@ -231,7 +231,7 @@ showIconBorder={ false }
 onApplyFilters={ handleApplyFilters }
 onResetFilters={ handleResetFilters }
 onFiltersChange={ handleApplyFilters } ></TaskProcessFilter></div>
-<FilterActives  filters={ filters }   ></FilterActives>
+<FilterActives  filters={ filters }  onFiltersChange={ handleApplyFilters } ></FilterActives>
 { !loading && (<IGRPDataTable<Table1, Table1>
   id={ `processes` }
   showFilter={ true }

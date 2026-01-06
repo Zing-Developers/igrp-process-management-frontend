@@ -73,5 +73,6 @@ export default {
     "taskmanagement/components/task-information",
     "components/task-instance-events-view",
     "components/filter-actives",
+    "components/empty",
   ],
 };

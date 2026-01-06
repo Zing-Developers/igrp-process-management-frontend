@@ -7,6 +7,7 @@ import {
 import {
   getPriorityLabel,
   getPriorityVariant,
+  getTaskStatusVariant,
 } from "../../utils/status-helpers";
 import {
   IGRPColorVariants,
@@ -31,6 +32,7 @@ export const useTaskDetails = (taskId: string) => {
     if (!data) return null;
     return {
       ...data,
+      color: getTaskStatusVariant(data.status as any || "primary"),
       priorityLabel: getPriorityLabel(data.priority || 0),
       priorityVariant: getPriorityVariant(
         data.priority || 0,

@@ -15,8 +15,9 @@ export function useProcessTasksFilter(
   setSelectOrganicOptions: (options: IGRPOptionsProps[]) => void,
   setSelectUserOptions: (options: IGRPOptionsProps[]) => void,
   onFiltersChange?: (filters: any) => void,
+  isProcess?: boolean,
 ) {
-  const { filters, dropdownOptions, updateFilters } = useFilterData();
+  const { filters, dropdownOptions, updateFilters } = useFilterData(isProcess);
   const isInitialMount = useRef(true);
   const prevFiltersRef = useRef(filters);
 

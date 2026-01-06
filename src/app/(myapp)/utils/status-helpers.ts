@@ -13,7 +13,8 @@ export type TaskStatus =
   | "ASSIGNED"
   | "COMPLETED"
   | "CANCELLED"
-  | "DELETED";
+  | "DELETED"
+  | "SUSPENDED";
 
 // Priority Types - matching your priority modal values
 export type Priority = "1" | "2" | "3" | "4" | "5";
@@ -57,11 +58,13 @@ export const getTaskStatusLabel = (status: TaskStatus): string => {
     case "CREATED":
       return "Criado";
     case "ASSIGNED":
-      return "Em progresso";
+      return "Atribuído";
     case "COMPLETED":
       return "Concluído";
     case "CANCELLED":
       return "Cancelado";
+    case "SUSPENDED":
+      return "Suspenso";
     case "DELETED":
       return "Excluído";
     default:

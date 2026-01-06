@@ -170,6 +170,7 @@ export default function Commonusertaskmodalform({
                     label={`Grupo`}
                     showIcon={false}
                     required={true}
+                    placeholder={`ex: ADMIN,USER`}
                     className={cn("col-span-1")}
                   ></IGRPInputText>
                 )}

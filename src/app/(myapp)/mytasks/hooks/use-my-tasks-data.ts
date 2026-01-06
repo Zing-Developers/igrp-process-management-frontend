@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getMyTasks } from "../../external/client/services/task";
 import { MyTasksState, MyTasksFilters, TaskTableRow } from "../types";
 import { useFilterData } from "../../components/processtaksfilter/hooks/use-filter-data";
@@ -21,6 +21,8 @@ export function useMyTasksData() {
 
   const { filters, updateFilters, resetFilters } = useFilterData();
 
+  const queryClient = useQueryClient();
+
   // State for pagination
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(10000);
@@ -40,8 +42,7 @@ export function useMyTasksData() {
       // Map filter fields to match the service interface
       const mappedFilters = {
         processNumber: filtersToUse.processNumber || "",
-        processKey: filtersToUse.processType || "", // processType maps to processKey
-        user: "superadmin", //filtersToUse.user || '',
+        processKey: filtersToUse.processType || "",
         status: filtersToUse.status || "",
         dateFrom: filtersToUse.dateFrom || "",
         dateTo: filtersToUse.dateTo || "",
@@ -114,6 +115,10 @@ export function useMyTasksData() {
     });
   };
 
+  const refetchMyTasks = () => {
+    queryClient.invalidateQueries({ queryKey: ["my-tasks"] });
+  };
+
   return {
     myTasksState,
     unclaimModalState,
@@ -124,5 +129,6 @@ export function useMyTasksData() {
     resetFilters: handleResetFilters,
     handleOpenUnclaimModal,
     handleCloseUnclaimModal,
+    refetchMyTasks,
   };
 }

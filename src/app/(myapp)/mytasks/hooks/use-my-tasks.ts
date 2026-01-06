@@ -17,6 +17,7 @@ export function useMyTasks() {
     resetFilters,
     handleOpenUnclaimModal,
     handleCloseUnclaimModal,
+    refetchMyTasks,
   } = useMyTasksData();
 
   // Transform tasks data for the table
@@ -74,7 +75,7 @@ export function useMyTasks() {
 
       // Close modal and refresh data
       handleCloseUnclaimModal();
-      fetchMyTasks(myTasksState.currentPage, myTasksState.pageSize);
+      refetchMyTasks();
 
       return { success: true, message: "Tarefa libertada com sucesso!" };
     } catch (error) {

@@ -2,11 +2,7 @@ import { useMemo, useCallback } from "react";
 import { useAvailableTasksData } from "./use-available-tasks-data";
 import { claimTask } from "../../external/client/services/task";
 import { TaskTableRow } from "../types";
-import {
-  getDateTemplate,
-  getProcessInfo,
-  getUserInfo,
-} from "../../utils/columns-template";
+import { getProcessInfo, getUserInfo } from "../../utils/columns-template";
 import { format, formatDistanceToNow } from "date-fns";
 import { formatDuration } from "../../utils/shared";
 
@@ -18,6 +14,7 @@ export function useAvailableTasks() {
     applyFilters,
     resetFilters,
     fetchTasks,
+    refetchTasks,
   } = useAvailableTasksData();
 
   // Transform tasks to table format
@@ -58,10 +55,9 @@ export function useAvailableTasks() {
       try {
         await claimTask(taskId);
         // Refresh tasks after claiming
-        fetchTasks(tasksState.currentPage, tasksState.pageSize);
+        refetchTasks();
         return { success: true };
       } catch (error) {
-        console.error("Error claiming task:", error);
         return {
           success: false,
           error:

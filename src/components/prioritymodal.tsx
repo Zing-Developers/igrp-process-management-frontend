@@ -48,7 +48,7 @@ export default function Prioritymodal({
   type Form1ZodType = typeof form1;
 
   const initForm1: z.infer<Form1ZodType> = {
-    priority: ``,
+    priority: `2`,
   };
 
   const formform1Ref = useRef<IGRPFormHandle<Form1ZodType> | null>(null);

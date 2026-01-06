@@ -2,16 +2,11 @@
 
 import { VariableFilter } from "@/app/(myapp)/components/filter-data";
 import { getIGRPProcessClient } from "@/lib/api-client";
+import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
 import {
   PaginatedResponse,
   ProcessInstance,
 } from "@igrp/platform-process-management-types";
-
-// Define the StatusOption interface locally since it's not exported from the types package
-interface StatusOption {
-  value: string;
-  label: string;
-}
 
 /**
  * Fetches a paginated list of process instances with optional filters.
@@ -93,7 +88,9 @@ export const getRunningProcessInstances = async (
  * Fetches available status options for process instances.
  * @returns A promise that resolves to an array of status options.
  */
-export const getProcessInstancesStatus = async (): Promise<StatusOption[]> => {
+export const getProcessInstancesStatus = async (): Promise<
+  IGRPOptionsProps[]
+> => {
   const processManagementClient = await getIGRPProcessClient();
   return (await processManagementClient.processes.getProcessInstancesStatus())
     .data;

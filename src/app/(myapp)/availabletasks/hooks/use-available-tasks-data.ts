@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAvailableTasks } from "../../external/client/services/task";
 import { useFilterData } from "../../components/processtaksfilter/hooks/use-filter-data";
 import { AvailableTasksFilters, AvailableTasksState } from "../types";
@@ -8,6 +8,8 @@ export function useAvailableTasksData() {
   // Use the shared filter data hook
   const { filters, dropdownOptions, updateFilters, resetFilters } =
     useFilterData();
+
+  const queryClient = useQueryClient();
 
   // Add task-specific status options to the shared dropdown options
   const enhancedDropdownOptions = {
@@ -36,10 +38,7 @@ export function useAvailableTasksData() {
         : filters;
 
       return getAvailableTasks({
-        processNumber: filtersToUse.processNumber,
-        processKey: filtersToUse.processType || "", // Map processType to processKey
-        user: filtersToUse.user,
-        status: filtersToUse.status,
+        ...filtersToUse,
         dateFrom: filtersToUse.dateFrom || undefined,
         dateTo: filtersToUse.dateTo || undefined,
         page,
@@ -86,6 +85,10 @@ export function useAvailableTasksData() {
     fetchTasks(0, tasksState.pageSize, newCustomFilters);
   };
 
+  const refetchTasks = () => {
+    queryClient.invalidateQueries({ queryKey: ["available-tasks"] });
+  };
+
   return {
     tasksState,
     filters,
@@ -94,5 +97,6 @@ export function useAvailableTasksData() {
     applyFilters,
     resetFilters,
     fetchTasks,
+    refetchTasks,
   };
 }

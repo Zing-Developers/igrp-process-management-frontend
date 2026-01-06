@@ -126,7 +126,7 @@ useEffect(() => {
 <div className={ cn('page','space-y-6',)}    >
 	<IGRPPageHeader
   id={ `pageHeader1` }
-  title={ `Historico de Processo` }
+  title={ `Histórico de Processo` }
   description={ `Consultar e auditar instâncias históricas de processos` }
   iconBackButton={ `ArrowLeft` }
   urlBackButton={ `/dashboard` }
@@ -227,7 +227,7 @@ showIconBorder={ false }
 >
 </IGRPStatsCard></div>
 <div className={ cn(' border rounded-sm',)}    >
-	<TaskProcessFilter   onSearch={ handleSearchSubmit }
+	<TaskProcessFilter  isProcess={ true }  onSearch={ handleSearchSubmit }
 onApplyFilters={ handleApplyFilters }
 onResetFilters={ handleResetFilters }
 onFiltersChange={ handleApplyFilters } ></TaskProcessFilter></div>

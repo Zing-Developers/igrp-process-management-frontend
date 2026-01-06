@@ -4,6 +4,7 @@ import { getAreas } from "../../../external/client/services/area";
 import { getAreaProcesses } from "../../../external/client/services/area-process";
 import { getProcessInstancesStatus } from "../../../external/client/services/process-instances";
 import { VariableFilter } from "../../filter-data";
+import { getTaskStatus } from "@/app/(myapp)/external/client/services/task";
 
 export interface DropdownOption {
   label: string;
@@ -30,9 +31,10 @@ export interface FilterState {
   organic: string;
   user: string;
   variables: VariableFilter[];
+  isProcess?: boolean;
 }
 
-export function useDropdownData(filters: FilterState) {
+export function useDropdownData(filters: FilterState, isProcess?: boolean) {
   // Load areas and statuses
   const { data: areasData } = useQuery({
     queryKey: ["areas"],
@@ -46,8 +48,8 @@ export function useDropdownData(filters: FilterState) {
   });
 
   const { data: statusesData } = useQuery({
-    queryKey: ["process-instances-status"],
-    queryFn: () => getProcessInstancesStatus(),
+    queryKey: isProcess ? ["process-instances-status"] : ["task-status"],
+    queryFn: () => (isProcess ? getProcessInstancesStatus() : getTaskStatus()),
   });
 
   // Load subareas when area is selected

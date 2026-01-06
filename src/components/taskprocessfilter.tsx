@@ -14,6 +14,7 @@ import {
 } from "@igrp/igrp-framework-react-design-system";
 import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
 import { FilterData } from "@/app/(myapp)/components/filter-data";
+import { DateRange } from "@igrp/igrp-framework-react-design-system";
 import {
   IGRPInputSearch,
   IGRPCombobox,
@@ -29,11 +30,13 @@ export default function Taskprocessfilter({
   onApplyFilters,
   onResetFilters,
   onFiltersChange,
+  isProcess,
 }: {
   onSearch: (searchTerm: string) => void;
   onApplyFilters: (filters: any) => void;
   onResetFilters: () => void;
   onFiltersChange: (filters: any) => void;
+  isProcess?: boolean;
 }) {
   const [selectStatusOptions, setSelectStatusOptions] = useState<
     IGRPOptionsProps[]
@@ -79,6 +82,7 @@ export default function Taskprocessfilter({
     setSelectOrganicOptions,
     setSelectUserOptions,
     onFiltersChange,
+    isProcess,
   );
 
   // Handle search

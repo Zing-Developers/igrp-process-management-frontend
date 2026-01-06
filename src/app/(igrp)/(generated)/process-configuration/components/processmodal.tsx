@@ -8,6 +8,7 @@
 
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
+import {ProcessList} from '@/app/(myapp)/processconfiguration/components/process-list'
 import { 
   IGRPModalDialog,
 	IGRPModalDialogContent,
@@ -79,21 +80,7 @@ placeholder={ `Encontrar Processos...` }
   value={ searchTerm }
 >
 </IGRPInputSearch>
-<div className="relative inline-block">
-  <div
-      style={
-        {
-          background: 'repeating-linear-gradient(45deg, black, black 10px, yellow 10px, yellow 20px)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }
-      }
-      className=""
-  >
-      <span className="relative text-red-500 px-2 py-1 rounded">ProcessList</span>
-  </div>
-</div></>
+<ProcessList  availableProcesses={ availableProcesses } processes={ filteredProcesses }  onAssociate={ onAssociate } ></ProcessList></>
 </IGRPModalDialogContent>
 </IGRPModalDialog></div>
   );

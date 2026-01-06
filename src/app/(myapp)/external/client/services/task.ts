@@ -7,6 +7,8 @@ import {
 } from "@igrp/platform-process-management-types";
 import { PostResponse } from "@igrp/platform-process-management-types/dist/response";
 import { getIGRPProcessClient } from "@/lib/api-client";
+import { TaskStatus } from "@/app/(myapp)/utils/status-helpers";
+import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
 
 /**
  * Interface for task filter parameters used in multiple functions
@@ -232,5 +234,11 @@ export const getTaskStats = async (): Promise<TaskStats> => {
 export const getMyTaskStats = async (): Promise<TaskStats> => {
   const processManagementClient = await getIGRPProcessClient();
   const response = await processManagementClient.tasks.getMyTaskStats();
+  return response.data;
+};
+
+export const getTaskStatus = async (): Promise<IGRPOptionsProps[]> => {
+  const processManagementClient = await getIGRPProcessClient();
+  const response = await processManagementClient.tasks.getTaskInstancesStatus();
   return response.data;
 };

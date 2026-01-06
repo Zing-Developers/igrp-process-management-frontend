@@ -6,7 +6,10 @@ import {
   cn,
 } from "@igrp/igrp-framework-react-design-system";
 import { format } from "date-fns";
-import { ProcessInstanceStatus } from "./status-helpers";
+import {
+  getProcessInstanceStatusLabel,
+  ProcessInstanceStatus,
+} from "./status-helpers";
 
 const statusConfig = {
   completed: {
@@ -110,7 +113,7 @@ export const getProcessStatusTemplate = (status: ProcessInstanceStatus) => {
       <span
         className={`text-xs font-medium ${statusConfig[statusKey].textColor}`}
       >
-        {statusConfig[statusKey].label}
+        {getProcessInstanceStatusLabel(status)}
       </span>
     </div>
   );

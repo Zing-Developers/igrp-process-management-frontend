@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDropdownData, FilterState } from "./use-dropdown-data";
 
-export function useFilterData() {
+export function useFilterData(isProcess?: boolean) {
   const [filters, setFilters] = useState<FilterState>({
     areaId: "",
     subareaId: "",
@@ -15,7 +15,7 @@ export function useFilterData() {
     variables: [],
   });
 
-  const { dropdownOptions } = useDropdownData(filters);
+  const { dropdownOptions } = useDropdownData(filters, isProcess);
 
   const updateFilters = (newFilters: Partial<FilterState>) => {
     setFilters((prev) => ({ ...prev, ...newFilters }));

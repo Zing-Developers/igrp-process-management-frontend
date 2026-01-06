@@ -36,7 +36,9 @@ export const useProcessDetails = (processInstanceId: string) => {
     const mapped = data.activityProgress.map((task: ActivityProgress) => {
       // Duration will be calculated from activityDetails if available
       const created = new Date(data?.processInstance?.startedAt || Date.now());
-      const now = data?.processInstance?.endedAt ? new Date(data?.processInstance?.endedAt) : new Date();
+      const now = data?.processInstance?.endedAt
+        ? new Date(data?.processInstance?.endedAt)
+        : new Date();
       const diff = Math.abs(now.getTime() - created.getTime());
       return {
         ...task,
@@ -50,10 +52,12 @@ export const useProcessDetails = (processInstanceId: string) => {
     return mapped.sort((a, b) => {
       const taskA = a as any;
       const taskB = b as any;
-      
+
       // Try to get startTime from various possible locations
-      const startTimeA = taskA.startTime || taskA.activityDetails?.startTime || taskA.startedAt;
-      const startTimeB = taskB.startTime || taskB.activityDetails?.startTime || taskB.startedAt;
+      const startTimeA =
+        taskA.startTime || taskA.activityDetails?.startTime || taskA.startedAt;
+      const startTimeB =
+        taskB.startTime || taskB.activityDetails?.startTime || taskB.startedAt;
 
       // If both have startTime, compare them
       if (startTimeA && startTimeB) {
@@ -76,7 +80,11 @@ export const useProcessDetails = (processInstanceId: string) => {
       // If neither has startTime, maintain original order
       return 0;
     });
-  }, [data?.activityProgress, data?.processInstance?.startedAt, data?.processInstance?.endedAt]);
+  }, [
+    data?.activityProgress,
+    data?.processInstance?.startedAt,
+    data?.processInstance?.endedAt,
+  ]);
 
   const taskHistoryTransformed = useMemo(() => {
     return taskProgressTransformed?.filter(
@@ -104,15 +112,13 @@ export const useProcessDetails = (processInstanceId: string) => {
   const taskHistoryWithDetails = useMemo(() => {
     if (!taskHistory?.length) return [];
 
-    return taskHistory?.map(
-      (activity: ActivityProgress, index: number) => {
-        const activityDetails = activityDetailsQueries[index]?.data;
-        return {
-          ...activity,
-          activityDetails,
-        };
-      },
-    );
+    return taskHistory?.map((activity: ActivityProgress, index: number) => {
+      const activityDetails = activityDetailsQueries[index]?.data;
+      return {
+        ...activity,
+        activityDetails,
+      };
+    });
   }, [taskHistoryTransformed, activityDetailsQueries]);
 
   const isLoadingActivityDetails = activityDetailsQueries.some(
@@ -121,7 +127,9 @@ export const useProcessDetails = (processInstanceId: string) => {
 
   const transformedProcess = useMemo(() => {
     const created = new Date(data?.processInstance?.startedAt || Date.now());
-    const now = data?.processInstance?.endedAt ? new Date(data?.processInstance?.endedAt) : new Date();
+    const now = data?.processInstance?.endedAt
+      ? new Date(data?.processInstance?.endedAt)
+      : new Date();
     const diff = Math.abs(now.getTime() - created.getTime());
     const status = data?.processInstance?.status;
     return {

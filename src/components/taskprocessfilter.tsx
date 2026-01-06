@@ -78,7 +78,7 @@ export default function Taskprocessfilter({
     setSelectStatusOptions,
     setSelectOrganicOptions,
     setSelectUserOptions,
-    onFiltersChange
+    onFiltersChange,
   );
 
   // Handle search
@@ -104,7 +104,7 @@ export default function Taskprocessfilter({
       <div
         className={cn(
           "flex flex-row flex-wrap items-center justify-start gap-2",
-          " px-3 flex-1"
+          " px-3 flex-1",
         )}
       >
         <IGRPInputSearch
@@ -175,7 +175,7 @@ export default function Taskprocessfilter({
             "grid-cols-2 ",
             "md:grid-cols-2 ",
             "lg:grid-cols-4 ",
-            " gap-4 px-3"
+            " gap-4 px-3",
           )}
         >
           <IGRPInputText
@@ -216,7 +216,7 @@ export default function Taskprocessfilter({
             className={cn("col-span-1")}
             onChange={(selected) =>
               handleSubareaChange(
-                Array.isArray(selected) ? selected[0] : selected
+                Array.isArray(selected) ? selected[0] : selected,
               )
             }
             options={selectSubareaOptions}
@@ -235,7 +235,7 @@ export default function Taskprocessfilter({
             className={cn("col-span-1")}
             onChange={(selected) =>
               handleProcessTypeChange(
-                Array.isArray(selected) ? selected[0] : selected
+                Array.isArray(selected) ? selected[0] : selected,
               )
             }
             options={selectProcesstypeOptions}
@@ -286,7 +286,7 @@ export default function Taskprocessfilter({
           className={cn(
             "flex",
             "flex flex-row flex-nowrap items-stretch justify-end gap-2",
-            " pb-3 px-3"
+            " pb-3 px-3",
           )}
         >
           <IGRPButton

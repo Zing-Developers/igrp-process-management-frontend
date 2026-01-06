@@ -10,7 +10,7 @@ import {
   getTaskStatusVariant,
 } from "../../utils/status-helpers";
 import {
-  IGRPColorVariants,
+  IGRPBadgeProps,
   useIGRPToast,
 } from "@igrp/igrp-framework-react-design-system";
 import { useCallback, useMemo } from "react";
@@ -32,11 +32,11 @@ export const useTaskDetails = (taskId: string) => {
     if (!data) return null;
     return {
       ...data,
-      color: getTaskStatusVariant(data.status as any || "primary"),
+      color: getTaskStatusVariant((data.status as any) || "primary"),
       priorityLabel: getPriorityLabel(data.priority || 0),
       priorityVariant: getPriorityVariant(
         data.priority || 0,
-      ) as IGRPColorVariants,
+      ) as IGRPBadgeProps["color"],
     };
   }, [data]);
 

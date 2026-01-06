@@ -21,7 +21,6 @@ export function ActivityTimeline({
 }: {
   activities: ActivityEvent[];
 }) {
-
   const getStatusLabel = (status: string) => {
     const statusMap: Record<string, string> = {
       completed: "Concluído",

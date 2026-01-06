@@ -42,12 +42,12 @@ function FilterData({
 
   const updateVariableFilter = (
     id: string,
-    updates: Partial<VariableFilter>
+    updates: Partial<VariableFilter>,
   ) => {
     const { name, operator, value } = updates;
 
     const updatedFilters = variableFilters.map((f) =>
-      f.id === id ? { ...f, ...updates } : f
+      f.id === id ? { ...f, ...updates } : f,
     );
     setVariableFilters(updatedFilters);
     if (name && operator && value) onChange(updatedFilters);

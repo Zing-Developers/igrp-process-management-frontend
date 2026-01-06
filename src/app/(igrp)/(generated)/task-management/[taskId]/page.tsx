@@ -69,8 +69,8 @@ iconName={ `CircleCheck` }
 iconPlacement={ `start` }
   badgeClassName={ cn() }
   
-  color={ task?.color || 'primary' }
-
+  
+color={ task?.color as any  || 'primary' }
 >
   { task?.statusDesc }
 </IGRPBadge>

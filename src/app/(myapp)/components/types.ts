@@ -14,8 +14,6 @@ export interface RecentTask {
   priority: "HIGH" | "MEDIUM" | "LOW";
 }
 
-
-
 export const OperatorOptions: IGRPOptionsProps[] = [
   { label: "Igual", value: "EQUALS" },
   {

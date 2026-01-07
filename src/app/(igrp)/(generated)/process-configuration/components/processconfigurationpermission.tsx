@@ -8,6 +8,7 @@
 
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
+import {LoadingPage} from '@/app/(myapp)/components/loading-page'
 import { 
   IGRPModalDialog,
 	IGRPModalDialogContent,
@@ -111,7 +112,7 @@ maxLines={ 1 }
 >
 { (item) =>
   <>
-  <div className={ cn(' space-y-1 mb-4',)}    >
+  <div className={ cn('flex flex-row flex-nowrap items-center justify-start gap-4',' space-y-1 mb-4',)}    >
 	<IGRPHeadline
   id={ `headline1` }
   variant={ `h6` }
@@ -131,7 +132,7 @@ showIcon={ false }
 required={ false }
 disabled={ false }
 placeholder={ `admin,manager,user` }
-  className={ cn('',) }
+  className={ cn('w-full flex-1',) }
   onChange={ (e)=>onFormChange?.(item.key, e.target.value) }
   value={ item.candidateGroups }
 >
@@ -140,6 +141,7 @@ placeholder={ `admin,manager,user` }
 }
 </IGRPRepetitiveComponent>
 
+  <LoadingPage  isLoading={ processArtifacts.length === 0 }   ></LoadingPage>
   <IGRPModalDialogFooter
   className={ cn('','',) }
   

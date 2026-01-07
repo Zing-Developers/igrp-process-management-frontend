@@ -1,4 +1,4 @@
-import { Task } from "@igrp/platform-process-management-types";
+import { Task, VariableParams } from "@igrp/platform-process-management-types";
 
 export interface TaskManagementTableRow {
   process: string;
@@ -26,6 +26,9 @@ export interface TaskManagementFilters {
   processType?: string;
   organic?: string;
   searchTerm?: string;
+  variables?: VariableParams;
+  page?: number;
+  size?: number;
 }
 
 export interface TaskManagementState {
@@ -39,3 +42,24 @@ export interface TaskManagementState {
 }
 
 export type TaskManagementTab = "myTasks" | "availableTasks";
+
+export interface TaskManagementTableRow {
+  currentStep: string;
+  process: string;
+  assignedBy: string;
+  startedAt: string;
+  endedAt: string;
+  priority: string;
+  duration?: string;
+  status: string;
+  taskId: string;
+  taskKey: string;
+  processKey?: string;
+  processInstanceId?: string;
+  processName?: string;
+}
+
+export interface AssignTaskModalState {
+  isOpen: boolean;
+  selectedTask: TaskManagementTableRow | null;
+}

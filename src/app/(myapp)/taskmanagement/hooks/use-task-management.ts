@@ -1,57 +1,23 @@
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { Task } from "@igrp/platform-process-management-types";
+import { useState, useCallback, useMemo } from "react";
 import { getTasks, assignTask } from "../../external/client/services/task";
 import { getDateTemplate, getProcessInfo } from "../../utils/columns-template";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-
-export interface TaskManagementTableRow {
-  currentStep: string;
-  process: string;
-  assignedBy: string;
-  startedAt: string;
-  endedAt: string;
-  priority: string;
-  duration?: string;
-  status: string;
-  taskId: string;
-  taskKey: string;
-  processKey?: string;
-  processInstanceId?: string;
-  processName?: string;
-}
-
-interface TaskManagementState {
-  tasks: Task[];
-  loading: boolean;
-  error: string | null;
-  totalElements: number;
-  totalPages: number;
-  currentPage: number;
-  pageSize: number;
-}
-
-interface TaskFilters {
-  processNumber?: string;
-  processKey?: string;
-  user?: string;
-  status?: string;
-  dateFrom?: string;
-  dateTo?: string;
-  searchTerm?: string;
-}
-
-interface AssignTaskModalState {
-  isOpen: boolean;
-  selectedTask: TaskManagementTableRow | null;
-}
+import {
+  AssignTaskModalState,
+  TaskManagementFilters,
+  TaskManagementState,
+  TaskManagementTableRow,
+} from "../types";
 
 export function useTaskManagement() {
   const queryClient = useQueryClient();
 
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(1000);
-  const [filters, setFilters] = useState<TaskFilters>({});
-  const isInitialMount = useRef(true);
+  const [filters, setFilters] = useState<TaskManagementFilters>({
+    page: 0,
+    size: 1000,
+  });
 
   // Add modal state for assign task
   const [assignModalState, setAssignModalState] =
@@ -60,50 +26,13 @@ export function useTaskManagement() {
       selectedTask: null,
     });
 
-  // Reset page to 0 when filters change (except on initial mount)
-  useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
-    setPage(0);
-  }, [
-    filters.processNumber,
-    filters.processKey,
-    filters.user,
-    filters.status,
-    filters.dateFrom,
-    filters.dateTo,
-    filters.searchTerm,
-  ]);
-
   // Use query to fetch tasks
   const { data, isLoading, error } = useQuery({
-    queryKey: [
-      "tasks",
-      page,
-      size,
-      filters.processNumber,
-      filters.processKey,
-      filters.user,
-      filters.status,
-      filters.dateFrom,
-      filters.dateTo,
-    ],
+    queryKey: ["tasks", filters],
     queryFn: () => {
-      // Convert filters to API format
-      const apiFilters = {
-        processNumber: filters.processNumber,
-        processKey: filters.processKey,
-        user: filters.user,
-        status: filters.status,
-        dateFrom: filters.dateFrom,
-        dateTo: filters.dateTo,
-      };
-
       // Remove undefined values
       const cleanFilters = Object.fromEntries(
-        Object.entries(apiFilters).filter(([, value]) => value !== undefined),
+        Object.entries(filters).filter(([, value]) => value !== undefined)
       );
 
       return getTasks(page, size, cleanFilters);
@@ -158,14 +87,18 @@ export function useTaskManagement() {
 
   // Fetch tasks function - now just updates pagination/filter states
   const fetchTasks = useCallback(
-    (newPage: number, newSize: number, appliedFilters?: TaskFilters) => {
+    (
+      newPage: number,
+      newSize: number,
+      appliedFilters?: TaskManagementFilters
+    ) => {
       setPage(newPage);
       setSize(newSize);
       if (appliedFilters) {
         setFilters(appliedFilters);
       }
     },
-    [],
+    []
   );
 
   // Handle search functionality
@@ -174,7 +107,7 @@ export function useTaskManagement() {
       const newFilters = { ...filters, searchTerm };
       setFilters(newFilters);
     },
-    [filters],
+    [filters]
   );
 
   // Handle page change
@@ -184,13 +117,13 @@ export function useTaskManagement() {
 
   // Handle filter application
   const applyFilters = useCallback(
-    (newFilters?: TaskFilters) => {
+    (newFilters?: TaskManagementFilters) => {
       const updatedFilters = newFilters
         ? { ...filters, ...newFilters }
         : filters;
       setFilters(updatedFilters);
     },
-    [filters],
+    [filters]
   );
 
   // Handle filter reset
@@ -199,9 +132,12 @@ export function useTaskManagement() {
   }, []);
 
   // Update filters function
-  const updateFilters = useCallback((newFilters: Partial<TaskFilters>) => {
-    setFilters((prev) => ({ ...prev, ...newFilters }));
-  }, []);
+  const updateFilters = useCallback(
+    (newFilters: Partial<TaskManagementFilters>) => {
+      setFilters((prev) => ({ ...prev, ...newFilters }));
+    },
+    []
+  );
 
   // Handle opening assign task modal
   const handleOpenAssignModal = useCallback((task: TaskManagementTableRow) => {
@@ -225,7 +161,7 @@ export function useTaskManagement() {
       user: string,
       priority: string,
       note?: string,
-      candidateGroups?: string,
+      candidateGroups?: string
     ) => {
       if (!assignModalState.selectedTask) return;
 
@@ -235,7 +171,7 @@ export function useTaskManagement() {
           user,
           priority,
           note,
-          candidateGroups,
+          candidateGroups
         );
 
         // Refresh tasks after successful assignment
@@ -253,7 +189,7 @@ export function useTaskManagement() {
         };
       }
     },
-    [assignModalState.selectedTask, queryClient, handleCloseAssignModal],
+    [assignModalState.selectedTask, queryClient, handleCloseAssignModal]
   );
 
   return {

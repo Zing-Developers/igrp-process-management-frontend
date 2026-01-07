@@ -21,7 +21,7 @@ import { TaskManagementFilters } from "@/app/(myapp)/taskmanagement/types";
 export const getTasks = async (
   page = 0,
   size = 50,
-  filters?: Omit<TaskManagementFilters, "page" | "size">
+  filters?: Omit<TaskManagementFilters, "page" | "size">,
 ): Promise<PaginatedResponse<Task>> => {
   const { variables, processType, ...rest } = filters || {};
 
@@ -55,7 +55,7 @@ export const getTaskById = async (id: string): Promise<Task | undefined> => {
  * @returns A promise that resolves to a paginated response of tasks.
  */
 export const getMyTasks = async (
-  params: TaskManagementFilters
+  params: TaskManagementFilters,
 ): Promise<PaginatedResponse<Task>> => {
   const processManagementClient = await getIGRPProcessClient();
   const { page = 0, size = 50, ...filterParams } = params;
@@ -75,7 +75,7 @@ export const getMyTasks = async (
  * @returns A promise that resolves to a list of tasks.
  */
 export const getTasksByUser = async (
-  userId: string
+  userId: string,
 ): Promise<PaginatedResponse<Task>> => {
   const processManagementClient = await getIGRPProcessClient();
   const response = await processManagementClient.tasks.getTasksByUser(userId);
@@ -88,7 +88,7 @@ export const getTasksByUser = async (
  * @returns A promise that resolves to a paginated response of tasks.
  */
 export const getAvailableTasks = async (
-  params: TaskManagementFilters
+  params: TaskManagementFilters,
 ): Promise<PaginatedResponse<Task>> => {
   const processManagementClient = await getIGRPProcessClient();
   const { page = 0, size = 10, ...filterParams } = params;
@@ -108,12 +108,12 @@ export const getAvailableTasks = async (
  * @returns A promise that resolves to a list of tasks.
  */
 export const getTasksByProcessInstance = async (
-  processInstanceId: string
+  processInstanceId: string,
 ): Promise<PaginatedResponse<Task>> => {
   const processManagementClient = await getIGRPProcessClient();
   const response =
     await processManagementClient.tasks.getTasksByProcessInstance(
-      processInstanceId
+      processInstanceId,
     );
   return response.data;
 };
@@ -140,7 +140,7 @@ export const claimTask = async (taskId: string): Promise<PostResponse> => {
 export const unassignTask = async (
   taskId: string,
   user: string,
-  note?: string
+  note?: string,
 ): Promise<PostResponse> => {
   const processManagementClient = await getIGRPProcessClient();
   return (
@@ -160,7 +160,7 @@ export const assignTask = async (
   user: string,
   priority: string,
   note?: string,
-  candidateGroups?: string
+  candidateGroups?: string,
 ): Promise<PostResponse> => {
   const processManagementClient = await getIGRPProcessClient();
   const response = await processManagementClient.tasks.assignTask(taskId, {
@@ -181,7 +181,7 @@ export const assignTask = async (
  */
 export const unclaimTask = async (
   taskId: string,
-  note?: string
+  note?: string,
 ): Promise<PostResponse> => {
   const processManagementClient = await getIGRPProcessClient();
   return (await processManagementClient.tasks.unclaimTask(taskId, { note }))
@@ -199,7 +199,7 @@ export const completeTask = async (
   variables?: Array<{
     name: string;
     value: string;
-  }>
+  }>,
 ): Promise<PostResponse> => {
   const processManagementClient = await getIGRPProcessClient();
   return (

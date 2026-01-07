@@ -32,7 +32,7 @@ export function useTaskManagement() {
     queryFn: () => {
       // Remove undefined values
       const cleanFilters = Object.fromEntries(
-        Object.entries(filters).filter(([, value]) => value !== undefined)
+        Object.entries(filters).filter(([, value]) => value !== undefined),
       );
 
       return getTasks(page, size, cleanFilters);
@@ -90,7 +90,7 @@ export function useTaskManagement() {
     (
       newPage: number,
       newSize: number,
-      appliedFilters?: TaskManagementFilters
+      appliedFilters?: TaskManagementFilters,
     ) => {
       setPage(newPage);
       setSize(newSize);
@@ -98,7 +98,7 @@ export function useTaskManagement() {
         setFilters(appliedFilters);
       }
     },
-    []
+    [],
   );
 
   // Handle search functionality
@@ -107,7 +107,7 @@ export function useTaskManagement() {
       const newFilters = { ...filters, searchTerm };
       setFilters(newFilters);
     },
-    [filters]
+    [filters],
   );
 
   // Handle page change
@@ -123,7 +123,7 @@ export function useTaskManagement() {
         : filters;
       setFilters(updatedFilters);
     },
-    [filters]
+    [filters],
   );
 
   // Handle filter reset
@@ -136,7 +136,7 @@ export function useTaskManagement() {
     (newFilters: Partial<TaskManagementFilters>) => {
       setFilters((prev) => ({ ...prev, ...newFilters }));
     },
-    []
+    [],
   );
 
   // Handle opening assign task modal
@@ -161,7 +161,7 @@ export function useTaskManagement() {
       user: string,
       priority: string,
       note?: string,
-      candidateGroups?: string
+      candidateGroups?: string,
     ) => {
       if (!assignModalState.selectedTask) return;
 
@@ -171,7 +171,7 @@ export function useTaskManagement() {
           user,
           priority,
           note,
-          candidateGroups
+          candidateGroups,
         );
 
         // Refresh tasks after successful assignment
@@ -189,7 +189,7 @@ export function useTaskManagement() {
         };
       }
     },
-    [assignModalState.selectedTask, queryClient, handleCloseAssignModal]
+    [assignModalState.selectedTask, queryClient, handleCloseAssignModal],
   );
 
   return {

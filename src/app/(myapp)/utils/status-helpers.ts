@@ -60,7 +60,7 @@ export const getTaskStatusLabel = (status: TaskStatus): string => {
     case "ASSIGNED":
       return "Atribuído";
     case "COMPLETED":
-      return "Concluído";
+      return "Completo";
     case "CANCELLED":
       return "Cancelado";
     case "SUSPENDED":

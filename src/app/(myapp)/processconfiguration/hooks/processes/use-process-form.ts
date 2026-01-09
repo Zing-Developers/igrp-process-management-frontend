@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { ProcessModalState } from '../../types';
+import { useState } from "react";
+import { ProcessModalState } from "../../types";
 
 export function useProcessForm() {
   const [modalState, setModalState] = useState<ProcessModalState>({

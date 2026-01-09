@@ -1,8 +1,8 @@
-import { useAreaForm } from './areas/use-area-form';
-import { useAreaOperations } from './areas/use-area-operations';
-import { ExtendedArea, AreaProcessesMap, AreaFormData } from '../types';
-import { AreaProcessService } from '../services/area-process.service';
-import { useIGRPToast } from '@igrp/igrp-framework-react-design-system';
+import { useAreaForm } from "./areas/use-area-form";
+import { useAreaOperations } from "./areas/use-area-operations";
+import { ExtendedArea, AreaProcessesMap, AreaFormData } from "../types";
+import { AreaProcessService } from "../services/area-process.service";
+import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
 
 export function useAreaHandlers(
   areas: ExtendedArea[],
@@ -18,27 +18,27 @@ export function useAreaHandlers(
       // Use the passed formData if available, otherwise fall back to areaForm.formData
       const dataToUse = formData || areaForm.formData;
       console.log("Creating area with data:", dataToUse);
-      
+
       await areaOperations.handleCreateArea(dataToUse);
       areaForm.closeModal();
 
       // Show success toast
       if (igrpToast) {
         igrpToast({
-          type: 'success',
-          title: 'Sucesso',
-          description: 'Área criada com sucesso',
+          type: "success",
+          title: "Sucesso",
+          description: "Área criada com sucesso",
         });
       }
     } catch (error) {
-      console.error('Error creating area:', error);
+      console.error("Error creating area:", error);
 
       // Show error toast
       if (igrpToast) {
         igrpToast({
-          type: 'error',
-          title: 'Erro',
-          description: 'Erro ao criar área. Tente novamente.',
+          type: "error",
+          title: "Erro",
+          description: "Erro ao criar área. Tente novamente.",
         });
       }
 
@@ -52,33 +52,36 @@ export function useAreaHandlers(
     try {
       // Use the passed formData if available, otherwise fall back to areaForm.formData
       const dataToUse = formData || areaForm.formData;
-      await areaOperations.handleUpdateArea(areaForm.modalState.editingArea.id, dataToUse);
+      await areaOperations.handleUpdateArea(
+        areaForm.modalState.editingArea.id,
+        dataToUse,
+      );
       areaForm.closeModal();
 
       // Show success toast
       if (igrpToast) {
         igrpToast({
-          type: 'success',
-          title: 'Sucesso',
-          description: 'Área atualizada com sucesso!',
+          type: "success",
+          title: "Sucesso",
+          description: "Área atualizada com sucesso!",
         });
       }
     } catch (error) {
-      console.error('Error updating area:', error);
+      console.error("Error updating area:", error);
 
       // Show error toast
       if (igrpToast) {
         igrpToast({
-          type: 'error',
-          title: 'Erro ao atualizar área',
-          description: 'Erro ao atualizar área. Tente novamente.',
+          type: "error",
+          title: "Erro ao atualizar área",
+          description: "Erro ao atualizar área. Tente novamente.",
         });
       }
 
       throw error;
     }
   };
-/*
+  /*
   const handleDeleteArea = async (areaId: string) => {
     try {
       await areaOperations.handleDeleteArea(areaId);
@@ -109,18 +112,18 @@ export function useAreaHandlers(
 
   const handleLoadSubareas = async (parentAreaId: string) => {
     try {
-      console.log("Loading subareas for parent area:", parentAreaId);      
+      console.log("Loading subareas for parent area:", parentAreaId);
       // Load subareas using area operations
-      await areaOperations.loadSubareas(parentAreaId);      
+      await areaOperations.loadSubareas(parentAreaId);
     } catch (error) {
-      console.error('Error loading subareas:', error);
+      console.error("Error loading subareas:", error);
 
       // Show error toast
       if (igrpToast) {
         igrpToast({
-          type: 'error',
-          title: 'Erro',
-          description: 'Erro ao carregar subáreas. Tente novamente.',
+          type: "error",
+          title: "Erro",
+          description: "Erro ao carregar subáreas. Tente novamente.",
         });
       }
     }
@@ -129,31 +132,35 @@ export function useAreaHandlers(
   // Add function to load area processes on-demand
   const handleLoadAreaProcesses = async (areaId: string) => {
     console.log("handleLoadAreaProcesses called with areaId:", areaId);
-    console.log("handleLoadAreaProcesses function exists:", typeof handleLoadAreaProcesses);
-    
+    console.log(
+      "handleLoadAreaProcesses function exists:",
+      typeof handleLoadAreaProcesses,
+    );
+
     try {
       console.log("Loading processes for area:", areaId);
-      const paginatedResponse = await AreaProcessService.getAreaProcesses(areaId);
-      
+      const paginatedResponse =
+        await AreaProcessService.getAreaProcesses(areaId);
+
       // Extract the content array from the paginated response
       const processes = paginatedResponse.content || [];
-      
+
       // Update the areaProcesses state with the loaded processes
       setAreaProcesses((prev) => ({
         ...prev,
         [areaId]: processes, // Now processes is Process[]
       }));
-      
+
       console.log("Loaded processes for area:", areaId, processes);
     } catch (error) {
-      console.error('Error loading area processes:', error);
+      console.error("Error loading area processes:", error);
 
       // Show error toast
       if (igrpToast) {
         igrpToast({
-          type: 'error',
-          title: 'Erro',
-          description: 'Erro ao carregar processos da área. Tente novamente.',
+          type: "error",
+          title: "Erro",
+          description: "Erro ao carregar processos da área. Tente novamente.",
         });
       }
     }

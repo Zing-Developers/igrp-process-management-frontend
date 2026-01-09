@@ -1,7 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
-import { ExtendedArea } from '../../processconfiguration/types';
-import { AreaService } from '../../processconfiguration/services/area.service';
-import { organizeAreasHierarchy, getAllAreasFlat } from '../../processconfiguration/utils/area-hierarchy';
+import { useState, useEffect, useCallback } from "react";
+import { ExtendedArea } from "../../processconfiguration/types";
+import { AreaService } from "../../processconfiguration/services/area.service";
+import {
+  organizeAreasHierarchy,
+  getAllAreasFlat,
+} from "../../processconfiguration/utils/area-hierarchy";
+import { keepLatestByKey } from "../utils/versioning";
 
 export function useProcessMapData() {
   const [areas, setAreas] = useState<ExtendedArea[]>([]);
@@ -13,60 +17,64 @@ export function useProcessMapData() {
     try {
       setLoading(true);
       setError(undefined);
-      
-      // Load only top-level areas initially (areas without areaId)
-      const areasResponse = await AreaService.getAreas('');
-      
-      // Filter to get only top-level areas
-      const topLevelAreas = areasResponse.content?.filter(area => !area.areaId) || [];
-      
-      // Convert to ExtendedArea format
-      const extendedAreas: ExtendedArea[] = topLevelAreas.map(area => ({
+
+      const areasResponse = await AreaService.getAreas("");
+      const topLevelAreas =
+        areasResponse.content?.filter((area) => !area.areaId) || [];
+
+      const extendedAreas: ExtendedArea[] = topLevelAreas.map((area) => ({
         ...area,
-        subareas: [] // Will be loaded on-demand
+        process: area.process ? keepLatestByKey(area.process) : undefined,
+        subareas: [],
       }));
-      
+
       setAreas(extendedAreas);
     } catch (err) {
-      setError('Failed to load process map data');
-      console.error('Error loading process map data:', err);
+      setError("Failed to load process map data");
+      console.error("Error loading process map data:", err);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  const loadSubareas = useCallback(async (parentAreaId: string) => {
-    try {
-      // Check if already loaded
-      if (loadedNodes.has(parentAreaId)) {
-        return;
-      }
+  const loadSubareas = useCallback(
+    async (parentAreaId: string) => {
+      try {
+        if (loadedNodes.has(parentAreaId)) {
+          return;
+        }
 
-      const subareas = await AreaService.getSubareas(parentAreaId);
+        const subareas = await AreaService.getSubareas(parentAreaId);
+        console.log("Loaded subareas for area", parentAreaId, ":", subareas);
 
-      // Update the areas state to include the loaded subareas
-      setAreas((prev) => {
-        const flatAreas = getAllAreasFlat(prev);
+        const normalizedSubareas = subareas.map((sa) => ({
+          ...sa,
+          process: sa.process ? keepLatestByKey(sa.process) : undefined,
+        }));
 
-        // Add the new subareas to the flat list if they don't already exist
-        subareas.forEach((subarea) => {
-          const exists = flatAreas.find((area) => area.id === subarea.id);
-          if (!exists) {
-            flatAreas.push(subarea);
-          }
+        setAreas((prev) => {
+          const flatAreas = getAllAreasFlat(prev);
+
+          normalizedSubareas.forEach((subarea) => {
+            const exists = flatAreas.find((area) => area.id === subarea.id);
+            if (!exists) {
+              flatAreas.push(subarea as ExtendedArea);
+            }
+          });
+          console.log("Updated flat areas after adding subareas:", flatAreas);
+
+          return organizeAreasHierarchy(flatAreas);
         });
+        console.log("Updated areas after loading subareas:", areas);
 
-        // Reorganize the hierarchy
-        return organizeAreasHierarchy(flatAreas);
-      });
-
-      // Mark this node as loaded
-      setLoadedNodes(prev => new Set([...prev, parentAreaId]));
-    } catch (error) {
-      console.error('Error loading subareas:', error);
-      throw error;
-    }
-  }, [loadedNodes]);
+        setLoadedNodes((prev) => new Set([...prev, parentAreaId]));
+      } catch (error) {
+        console.error("Error loading subareas:", error);
+        throw error;
+      }
+    },
+    [loadedNodes],
+  );
 
   useEffect(() => {
     loadData();

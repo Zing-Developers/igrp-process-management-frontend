@@ -1,7 +1,7 @@
-import React from 'react';
-import { ProcessTreeNode } from '../types';
-import { ProcessTree } from './process-tree';
-import { Process } from '@igrp/platform-process-management-types';
+import React from "react";
+import { ProcessTreeNode } from "../types";
+import { ProcessTree } from "./process-tree";
+import { Process } from "@igrp/platform-process-management-types";
 
 export function ProcessTreeComponent({
   nodes,

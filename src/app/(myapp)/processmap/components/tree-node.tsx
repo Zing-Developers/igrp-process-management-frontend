@@ -1,9 +1,9 @@
-import React from 'react';
-import { ProcessTreeNode } from '../types';
-import { NodeIcon } from './node-icon';
-import { NodeContent } from './node-content';
-import { ExpandButton } from './expand-button';
-import { Process } from '@igrp/platform-process-management-types';
+import React from "react";
+import { ProcessTreeNode } from "../types";
+import { NodeIcon } from "./node-icon";
+import { NodeContent } from "./node-content";
+import { ExpandButton } from "./expand-button";
+import { Process } from "@igrp/platform-process-management-types";
 
 interface TreeNodeProps {
   node: ProcessTreeNode;
@@ -33,7 +33,7 @@ export function TreeNode({
   const hasChildren = node.children && node.children.length > 0;
 
   const handleToggle = () => {
-    if (hasChildren || node.type === 'area') {
+    if (hasChildren || node.type === "area") {
       onToggle(node.id);
     }
   };
@@ -41,19 +41,23 @@ export function TreeNode({
   return (
     <div className="w-full">
       <div
-        className="flex items-center space-x-2 p-2 hover:bg-muted rounded-lg cursor-pointer group"
+        className="flex items-center space-x-2 p-3 hover:bg-muted rounded-lg cursor-pointer group"
         style={{ paddingLeft: `${node.level * 20 + 8}px` }}
         onClick={handleToggle}
       >
         <ExpandButton
           isExpanded={isExpanded}
-          hasChildren={hasChildren || node.type === 'area'}
+          hasChildren={hasChildren || node.type === "area"}
           onToggle={handleToggle}
         />
 
         <NodeIcon node={node} isExpanded={isExpanded} />
 
-        <NodeContent node={node} onStartProcess={onStartProcess} onViewDetails={onViewDetails} />
+        <NodeContent
+          node={node}
+          onStartProcess={onStartProcess}
+          onViewDetails={onViewDetails}
+        />
       </div>
 
       {isExpanded && hasChildren && (

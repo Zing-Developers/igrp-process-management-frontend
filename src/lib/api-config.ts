@@ -13,8 +13,8 @@ export function setIGRPProcessClientConfig(config: IGRPClientRuntimeConfig) {
 export function getIGRPProcessClientConfig(): IGRPClientRuntimeConfig {
   if (!runtimeConfig) {
     const defaultConfig: IGRPClientRuntimeConfig = {
-      baseUrl: process.env.API_GATEWAY ?? '',
-      token: '', // Empty token - will be updated when session is available
+      baseUrl: process.env.API_GATEWAY ?? "",
+      token: "", // Empty token - will be updated when session is available
       timeout: 30000,
     };
 

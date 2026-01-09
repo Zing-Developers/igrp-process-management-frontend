@@ -1,8 +1,10 @@
-import { useMemo } from 'react';
-import { useMyTasksData } from './use-my-tasks-data';
-import { TaskTableRow } from '../types';
-import { unclaimTask } from '../../external/client/services/task.service';
-import { getDateTemplate, getProcessInfo } from '../../utils/columns-template';
+import { useMemo } from "react";
+import { useMyTasksData } from "./use-my-tasks-data";
+import { TaskTableRow } from "../types";
+import { unclaimTask } from "../../external/client/services/task";
+import { getDateTemplate, getProcessInfo } from "../../utils/columns-template";
+import { format, formatDistanceToNow } from "date-fns";
+import { formatDuration } from "../../utils/shared";
 
 export function useMyTasks() {
   const {
@@ -15,31 +17,36 @@ export function useMyTasks() {
     resetFilters,
     handleOpenUnclaimModal,
     handleCloseUnclaimModal,
+    refetchMyTasks,
   } = useMyTasksData();
 
   // Transform tasks data for the table
   const tableData = useMemo((): TaskTableRow[] => {
     /* eslint-disable @typescript-eslint/ban-ts-comment */
     // @ts-expect-error Allow JSX in table row fields without refactor
+
     return myTasksState.tasks.map((task) => {
       // Calculate waiting days
       const createdDate = new Date(task.startedAt);
       const currentDate = new Date();
       const diffTime = Math.abs(currentDate.getTime() - createdDate.getTime());
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
       return {
         currentStep: task.name,
         process: getProcessInfo(task.processName, task.processNumber),
-        startedAt: getDateTemplate(task.startedAt),
-        endAt: getDateTemplate(task.endAt),
-        waitingDays: diffDays.toString(),
-        priority: task.priority + '',
+        startedAt: format(task.startedAt, "dd MMM, HH:mm"),
+        endedAt: getDateTemplate(task.endedAt),
+        duration:
+          diffTime > 0
+            ? formatDuration(diffTime)
+            : formatDistanceToNow(task.startedAt, { addSuffix: false }),
+        priority: task.priority + "",
         processKey: task.processKey,
         processInstanceId: task.processInstanceId,
         taskKey: task.taskKey,
         taskId: task.id,
         processName: task.processName,
+        applicationBase: task.applicationBase,
       };
     });
   }, [myTasksState.tasks]);
@@ -56,24 +63,27 @@ export function useMyTasks() {
 
   // Add unclaim task handler
   const handleUnclaimTask = async (note?: string) => {
-    if (!unclaimModalState.selectedTask || !unclaimModalState.selectedTask.taskId) {
-      return { success: false, message: 'Nenhuma tarefa selecionada' };
+    if (
+      !unclaimModalState.selectedTask ||
+      !unclaimModalState.selectedTask.taskId
+    ) {
+      return { success: false, message: "Nenhuma tarefa selecionada" };
     }
 
     try {
-      console.log('unclaimModalState.selectedTask.taskId', unclaimModalState.selectedTask.taskId);
       await unclaimTask(unclaimModalState.selectedTask.taskId, note);
 
       // Close modal and refresh data
       handleCloseUnclaimModal();
-      await fetchMyTasks(myTasksState.currentPage, myTasksState.pageSize);
+      refetchMyTasks();
 
-      return { success: true, message: 'Tarefa libertada com sucesso!' };
+      return { success: true, message: "Tarefa libertada com sucesso!" };
     } catch (error) {
-      console.error('Error unclaiming task:', error);
+      console.error("Error unclaiming task:", error);
       return {
         success: false,
-        message: error instanceof Error ? error.message : 'Erro ao libertar tarefa',
+        message:
+          error instanceof Error ? error.message : "Erro ao libertar tarefa",
       };
     }
   };

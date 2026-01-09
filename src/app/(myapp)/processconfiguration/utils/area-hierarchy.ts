@@ -1,5 +1,5 @@
-import { Area } from '@igrp/platform-process-management-types';
-import { ExtendedArea } from '../types';
+import { Area } from "@igrp/platform-process-management-types";
+import { ExtendedArea } from "../types";
 
 /**
  * Organizes flat areas into hierarchical structure
@@ -28,7 +28,6 @@ export const organizeAreasHierarchy = (flatAreas: Area[]): ExtendedArea[] => {
       topLevelAreas.push(extendedArea);
     }
   });
-  console.log('organizeAreasHierarchy topLevelAreas', topLevelAreas);
   return topLevelAreas;
 };
 
@@ -69,7 +68,10 @@ export const getAllAreasFlat = (hierarchicalAreas: ExtendedArea[]): Area[] => {
 /**
  * Finds area by ID in hierarchical structure
  */
-export const findAreaById = (areas: ExtendedArea[], areaId: string): ExtendedArea | null => {
+export const findAreaById = (
+  areas: ExtendedArea[],
+  areaId: string,
+): ExtendedArea | null => {
   for (const area of areas) {
     if (area.id === areaId) {
       return area;
@@ -98,7 +100,9 @@ export const filterAreasRecursively = (
       area.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       area.description?.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const filteredSubareas = area.subareas ? filterAreasRecursively(area.subareas, searchTerm) : [];
+    const filteredSubareas = area.subareas
+      ? filterAreasRecursively(area.subareas, searchTerm)
+      : [];
 
     if (matchesSearch || filteredSubareas.length > 0) {
       filtered.push({

@@ -1,12 +1,12 @@
-import { Process } from '@igrp/platform-process-management-types';
-import { ExtendedArea } from '../../processconfiguration/types';
+import { Process } from "@igrp/platform-process-management-types";
+import { ExtendedArea } from "../../processconfiguration/types";
 
 // Use the same structure as process configuration - no need for ProcessMapArea
 
 export interface ProcessTreeNode {
   id: string;
   name: string;
-  type: 'area' | 'subarea' | 'process';
+  type: "area" | "subarea" | "process";
   data: ExtendedArea | Process;
   children?: ProcessTreeNode[];
   level: number;
@@ -41,7 +41,9 @@ export interface ProcessMapActions {
   refreshData: () => Promise<void>;
 }
 
-export interface ProcessMapHookReturn extends ProcessMapState, ProcessMapActions {
+export interface ProcessMapHookReturn
+  extends ProcessMapState,
+    ProcessMapActions {
   // Computed values
   treeNodes: ProcessTreeNode[];
   flatNodes: ProcessTreeNode[];

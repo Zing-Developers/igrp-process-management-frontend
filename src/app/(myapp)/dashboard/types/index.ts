@@ -1,5 +1,5 @@
-import { ProcessInstance } from '@igrp/platform-process-management-types';
-import { BadgeVariant } from '../../utils/status-helpers';
+import { ProcessInstance } from "@igrp/platform-process-management-types";
+import { BadgeVariant } from "../../utils/status-helpers";
 
 // Process Instance Statistics
 export interface ProcessInstanceStats {
@@ -12,11 +12,11 @@ export interface ProcessInstanceStats {
 // Task Statistics
 export interface TaskStats {
   // My Tasks (user-specific)
-  totalMyTasks: number;  
+  totalMyTasks: number;
   totalMyTasksCompleted: number;
   totalMyTasksSuspended: number;
   totalMyTasksCancelled: number;
-  
+
   // General Tasks (system-wide)
   totalTasks: number;
   totalTasksAssigned: number;

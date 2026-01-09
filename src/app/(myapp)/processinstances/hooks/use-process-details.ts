@@ -1,12 +1,9 @@
 "use client";
 
 import { useMemo } from "react";
-import { useQuery, useQueries } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getProcessInstanceById } from "../../external/client/services/process-instances";
-import {
-  getActivityProgress,
-  getActivityById,
-} from "../../external/client/services/activity";
+import { getActivityProgress } from "../../external/client/services/activity";
 import { ActivityProgress } from "@igrp/platform-process-management-types";
 import { formatDuration } from "../../utils/columns-template";
 import { IGRPColorVariants } from "@igrp/igrp-framework-react-design-system";
@@ -28,7 +25,29 @@ export const useProcessDetails = (processInstanceId: string) => {
     enabled: !!processInstanceId,
   });
 
-  //reorder activityProgress by startTime: "2026-01-05T10:49:36.267"
+  // Helper function to compare tree numbers hierarchically (e.g., "1", "1.1", "1.1.1", "1.1.1.1.2")
+  const compareTreeNumbers = (a: string, b: string): number => {
+    if (!a && !b) return 0;
+    if (!a) return 1;
+    if (!b) return -1;
+
+    const partsA = a.split(".").map((part) => parseInt(part, 10) || 0);
+    const partsB = b.split(".").map((part) => parseInt(part, 10) || 0);
+
+    const maxLength = Math.max(partsA.length, partsB.length);
+
+    for (let i = 0; i < maxLength; i++) {
+      const partA = partsA[i] || 0;
+      const partB = partsB[i] || 0;
+
+      if (partA < partB) return -1;
+      if (partA > partB) return 1;
+    }
+
+    return 0;
+  };
+
+  //reorder activityProgress by treeNumber (e.g., "1", "1.1", "1.1.1", "1.1.1.1.2")
   const taskProgressTransformed = useMemo(() => {
     if (!data?.activityProgress) return undefined;
 
@@ -46,85 +65,17 @@ export const useProcessDetails = (processInstanceId: string) => {
       };
     });
 
-    // Sort by startTime (descending - newest first)
-    // startTime format: "2026-01-05T10:49:36.267"
-    // It can be directly on the task object or in activityDetails
+    // Sort by treeNumber hierarchically
     return mapped.sort((a, b) => {
-      const taskA = a as any;
-      const taskB = b as any;
-
-      // Try to get startTime from various possible locations
-      const startTimeA =
-        taskA.startTime || taskA.activityDetails?.startTime || taskA.startedAt;
-      const startTimeB =
-        taskB.startTime || taskB.activityDetails?.startTime || taskB.startedAt;
-
-      // If both have startTime, compare them
-      if (startTimeA && startTimeB) {
-        const dateA = new Date(startTimeA).getTime();
-        const dateB = new Date(startTimeB).getTime();
-        // Handle invalid dates
-        if (isNaN(dateA) || isNaN(dateB)) {
-          // If one is invalid, put valid one first
-          if (isNaN(dateA) && !isNaN(dateB)) return 1;
-          if (!isNaN(dateA) && isNaN(dateB)) return -1;
-          return 0; // Both invalid, maintain order
-        }
-        return dateB - dateA; // Descending order (newest first)
-      }
-
-      // If only one has startTime, put it first
-      if (startTimeA && !startTimeB) return -1;
-      if (!startTimeA && startTimeB) return 1;
-
-      // If neither has startTime, maintain original order
-      return 0;
+      const treeNumberA = a.treeNumber || "";
+      const treeNumberB = b.treeNumber || "";
+      return compareTreeNumbers(treeNumberA, treeNumberB);
     });
   }, [
     data?.activityProgress,
     data?.processInstance?.startedAt,
     data?.processInstance?.endedAt,
   ]);
-
-  const taskHistoryTransformed = useMemo(() => {
-    return taskProgressTransformed?.filter(
-      (activity: ActivityProgress) => activity.type === "USER_TASK"
-    );
-  }, [taskProgressTransformed]);
-
-  // Fetch activity details for each task in taskHistory
-  const taskHistory = taskHistoryTransformed || [];
-  const activityDetailsQueries = useQueries({
-    queries: taskHistory.map((activity: ActivityProgress) => {
-      // Try to get activity ID from various possible fields
-      const activityId = (activity as any).activityId;
-
-      return {
-        queryKey: ["activity-details", activityId],
-        queryFn: () => getActivityById(activityId),
-        enabled: !!activityId && !!taskHistoryTransformed,
-        staleTime: 5 * 60 * 1000, // 5 minutes
-      };
-    }),
-  });
-
-  // Combine taskHistory with activity details
-  const taskHistoryWithDetails = useMemo(() => {
-    if (!taskHistory?.length) return [];
-
-    return taskHistory?.map((activity: ActivityProgress, index: number) => {
-      const activityDetails = activityDetailsQueries[index]?.data;
-      return {
-        ...activity,
-        activityDetails,
-        // variables:  [...(activity?.variables || []), ...(activity.forms || [])]
-      };
-    });
-  }, [taskHistoryTransformed, activityDetailsQueries]);
-
-  const isLoadingActivityDetails = activityDetailsQueries.some(
-    (query) => query.isLoading
-  );
 
   const transformedProcess = useMemo(() => {
     const created = new Date(data?.processInstance?.startedAt || Date.now());
@@ -141,19 +92,20 @@ export const useProcessDetails = (processInstanceId: string) => {
     };
   }, [data?.processInstance]);
 
-  const variables = [
-    ...taskHistoryWithDetails.flatMap(
-      (task) => task.activityDetails?.variables || []
-    ),
-    ...(transformedProcess?.variables || []),
-  ];
+  const taskHistoryTransformed = useMemo(() => {
+    return taskProgressTransformed?.filter(
+      (activity: ActivityProgress) => activity.type === "USER_TASK",
+    );
+  }, [taskProgressTransformed]);
+
+  console.log(taskProgressTransformed);
 
   return {
     process: transformedProcess,
     activityProgress: taskProgressTransformed || [],
-    taskHistory: taskHistoryWithDetails,
-    variables: variables,
-    isLoading: isLoading || isLoadingActivityDetails,
-    error: error || activityDetailsQueries.find((q) => q.error)?.error,
+    taskHistory: taskHistoryTransformed || [],
+    variables: transformedProcess?.variables || [],
+    isLoading: isLoading,
+    error: error,
   };
 };

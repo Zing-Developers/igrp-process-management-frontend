@@ -35,12 +35,9 @@ export const useTaskDetails = (taskId: string) => {
       color: getTaskStatusVariant((data.status as any) || "primary"),
       priorityLabel: getPriorityLabel(data.priority || 0),
       priorityVariant: getPriorityVariant(
-        data.priority || 0
+        data.priority || 0,
       ) as IGRPBadgeProps["color"],
-      variables: [
-        ...(data?.variables || []),
-        ...(data?.forms || []),
-      ],
+      variables: [...(data?.variables || []), ...(data?.forms || [])],
     };
   }, [data]);
 
@@ -51,7 +48,7 @@ export const useTaskDetails = (taskId: string) => {
   // Add unclaim task handler
   const onUnclaimTask = async (
     note?: string,
-    onSuccess?: () => void
+    onSuccess?: () => void,
   ): Promise<void> => {
     if (taskId === "") {
       igrpToast({
@@ -94,7 +91,7 @@ export const useTaskDetails = (taskId: string) => {
       candidateGroups?: string;
       assigneTo?: string;
     },
-    onSuccess?: () => void
+    onSuccess?: () => void,
   ) => {
     if (formData.assigneTo === "user" && formData.user === "") {
       igrpToast({
@@ -119,7 +116,7 @@ export const useTaskDetails = (taskId: string) => {
         formData.user,
         formData.priority ?? "",
         formData.note ?? "",
-        formData.candidateGroups ?? ""
+        formData.candidateGroups ?? "",
       );
 
       igrpToast({

@@ -3,23 +3,12 @@
 import { IGRPIcon } from "@igrp/igrp-framework-react-design-system";
 import { format } from "date-fns";
 import { formatDuration } from "../utils/shared";
-
-interface ActivityEvent {
-  activityId: string;
-  type: string;
-  activityName: string;
-  activityKey: string;
-  startTime: Date;
-  endTime: Date;
-  duration: number;
-  assignee: string;
-  status: string;
-}
+import { ActivityProgress } from "@igrp/platform-process-management-types";
 
 export function ActivityTimeline({
   activities = [],
 }: {
-  activities: ActivityEvent[];
+  activities: ActivityProgress[];
 }) {
   const getStatusLabel = (status: string) => {
     const statusMap: Record<string, string> = {
@@ -95,7 +84,7 @@ export function ActivityTimeline({
                       {activity.activityName}
                     </h4>
                     <p className="text-sm text-muted-foreground">
-                      {activity.activityKey}
+                      {activity.activityId}
                     </p>
                   </div>
                   <div className="text-right">

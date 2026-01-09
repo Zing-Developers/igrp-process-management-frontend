@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@hookform/resolvers':
         specifier: ^5.2.2
-        version: 5.2.2(react-hook-form@7.69.0(react@19.2.1))
+        version: 5.2.2(react-hook-form@7.70.0(react@19.2.1))
       '@igrp/framework-next':
         specifier: 0.1.0-beta.85
         version: 0.1.0-beta.85(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(next-auth@4.24.13(next@15.5.9(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(next@15.5.9(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -30,11 +30,11 @@ importers:
         specifier: 0.1.0-beta.63
         version: 0.1.0-beta.63
       '@igrp/platform-process-management-client-ts':
-        specifier: 0.0.1-beta.24.1
-        version: 0.0.1-beta.24.1
+        specifier: 0.0.1-beta.24.2
+        version: 0.0.1-beta.24.2
       '@igrp/platform-process-management-types':
-        specifier: 0.0.1-beta.24.1
-        version: 0.0.1-beta.24.1
+        specifier: 0.0.1-beta.24.2
+        version: 0.0.1-beta.24.2
       '@tanstack/react-query':
         specifier: ^5.90.12
         version: 5.90.16(react@19.2.1)
@@ -64,7 +64,7 @@ importers:
         version: 19.2.1(react@19.2.1)
       react-hook-form:
         specifier: ^7.66.0
-        version: 7.69.0(react@19.2.1)
+        version: 7.70.0(react@19.2.1)
       tailwind-merge:
         specifier: 3.4.0
         version: 3.4.0
@@ -73,7 +73,7 @@ importers:
         version: 1.4.0
       zod:
         specifier: ^4.1.13
-        version: 4.3.2
+        version: 4.3.5
     devDependencies:
       '@biomejs/biome':
         specifier: 2.2.6
@@ -163,8 +163,8 @@ packages:
   '@date-fns/tz@1.4.1':
     resolution: {integrity: sha512-P5LUNhtbj6YfI3iJjw5EL9eUAG6OitD0W3fWQcpQjDRc/QIsL0tRNuO1PcDvPccWL1fSTXXdE1ds+l95DV/OFA==}
 
-  '@emnapi/runtime@1.7.1':
-    resolution: {integrity: sha512-PVtJr5CmLwYAU9PZDMITZoR5iAOShYREoR45EyyLrbntV50mdePTgUn4AmOw90Ifcj+x2kRjdzr1HP3RrNiHGA==}
+  '@emnapi/runtime@1.8.1':
+    resolution: {integrity: sha512-mehfKSMWjjNol8659Z8KxEMrdSJDDot5SXMq00dM8BN4o+CLNXQ0xH2V7EchNHV4RmbZLmmPdEaXZc5H2FXmDg==}
 
   '@floating-ui/core@1.7.3':
     resolution: {integrity: sha512-sGnvb5dmrJaKEZ+LDIpguvdX3bDlEllmv4/ClQ9awcmCZrlx5jQyyMWFM5kBI+EyNOCDDiKk8il0zeuX3Zlg/w==}
@@ -227,11 +227,11 @@ packages:
   '@igrp/platform-access-management-client-ts@0.1.0-beta.63':
     resolution: {integrity: sha512-RhxxTRTFZxzRMNWQaoZbaTCdKyY8k4Mv6N282qXnE2irW3n5VX4mo/wdrRisMkz0csx3lSwVN43lPW4ORyUfqA==}
 
-  '@igrp/platform-process-management-client-ts@0.0.1-beta.24.1':
-    resolution: {integrity: sha512-94SDAaMy/03hiKDN5w/RU66pl7MzjMTvT+5lTM2VVKYEJbYcTBjiHh1Pk5PgV+qlCJoS/R6d36CjmOOPVxn3hA==}
+  '@igrp/platform-process-management-client-ts@0.0.1-beta.24.2':
+    resolution: {integrity: sha512-x4esP9LOFtAM9ij41BgermB9CqqXI1284PQsj/WFq2dAKqDmjCR5/J/Kiwq/nNrP0NJ2NZpgZizxsowQ94o8CA==}
 
-  '@igrp/platform-process-management-types@0.0.1-beta.24.1':
-    resolution: {integrity: sha512-85r02roPOmAWg6CBXwuaakbOAPProJYeRryiYXnI5PiRVvNNdh5dn8fjBLumq5ckuRwAi6054pbmIElAZh5r8Q==}
+  '@igrp/platform-process-management-types@0.0.1-beta.24.2':
+    resolution: {integrity: sha512-H/oc5B3Oei28S6ag9UoXc2DdBajnK5kazvRD1pBNfOsTexetJ2xVI8mM0aWIYBW6gfkkz6OXXQD/iEmT59hUjw==}
     engines: {node: '>=20.x.x'}
 
   '@img/colour@1.0.0':
@@ -1245,8 +1245,8 @@ packages:
     resolution: {integrity: sha512-ik3ZgC9dY/lYVVM++OISsaYDeg1tb0VtP5uL3ouh1koGOaUMDPpbFIei4JkFimWUFPn90sbMNMXQAIVOlnYKJA==}
     engines: {node: '>=10'}
 
-  caniuse-lite@1.0.30001762:
-    resolution: {integrity: sha512-PxZwGNvH7Ak8WX5iXzoK1KPZttBXNPuaOvI2ZYU7NrlM+d9Ov+TUvlLOBNGzVXAntMSMMlJPd+jY6ovrVjSmUw==}
+  caniuse-lite@1.0.30001763:
+    resolution: {integrity: sha512-mh/dGtq56uN98LlNX9qdbKnzINhX0QzhiWBFEkFfsFO4QyCvL8YegrJAazCwXIeqkIob8BlZPGM3xdnY+sgmvQ==}
 
   class-variance-authority@0.7.1:
     resolution: {integrity: sha512-Ka+9Trutv7G8M6WT6SeiRWz792K5qEqIGEGzXKhAE6xOWAY6pPH8U+9IY3oCMv6kqTmLsv7Xh/2w2RigkePMsg==}
@@ -1587,8 +1587,8 @@ packages:
     peerDependencies:
       preact: '>=10'
 
-  preact@10.28.1:
-    resolution: {integrity: sha512-u1/ixq/lVQI0CakKNvLDEcW5zfCjUQfZdK9qqWuIJtsezuyG6pk9TWj75GMuI/EzRSZB/VAE43sNWWZfiy8psw==}
+  preact@10.28.2:
+    resolution: {integrity: sha512-lbteaWGzGHdlIuiJ0l2Jq454m6kcpI1zNje6d8MlGAFlYvP2GO4ibnat7P74Esfz4sPTdM6UxtTwh/d3pwM9JA==}
 
   pretty-format@3.8.0:
     resolution: {integrity: sha512-WuxUnVtlWL1OfZFQFuqvnvs6MiAGk9UNsBostyBOB0Is9wb5uRESevA6rnl/rkksXaGX3GzZhPup5d6Vp1nFew==}
@@ -1607,8 +1607,8 @@ packages:
     peerDependencies:
       react: ^19.2.1
 
-  react-hook-form@7.69.0:
-    resolution: {integrity: sha512-yt6ZGME9f4F6WHwevrvpAjh42HMvocuSnSIHUGycBqXIJdhqGSPQzTpGF+1NLREk/58IdPxEMfPcFCjlMhclGw==}
+  react-hook-form@7.70.0:
+    resolution: {integrity: sha512-COOMajS4FI3Wuwrs3GPpi/Jeef/5W1DRR84Yl5/ShlT3dKVFUfoGiEZ/QE6Uw8P4T2/CLJdcTVYKvWBMQTEpvw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
@@ -1794,8 +1794,8 @@ packages:
   yallist@4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
 
-  zod@4.3.2:
-    resolution: {integrity: sha512-b8L8yn4rIVfiXyHAmnr52/ZEpDumlT0bmxiq3Ws1ybrinhflGpt12Hvv54kYnEsGPRs6o/Ka3/ppA2OWY21IVg==}
+  zod@4.3.5:
+    resolution: {integrity: sha512-k7Nwx6vuWx1IJ9Bjuf4Zt1PEllcwe7cls3VNzm4CQ1/hgtFUK2bRNG3rvnpPUhFjmqJKAKtjV576KnUkHocg/g==}
 
 snapshots:
 
@@ -1840,7 +1840,7 @@ snapshots:
 
   '@date-fns/tz@1.4.1': {}
 
-  '@emnapi/runtime@1.7.1':
+  '@emnapi/runtime@1.8.1':
     dependencies:
       tslib: 2.8.1
     optional: true
@@ -1862,10 +1862,10 @@ snapshots:
 
   '@floating-ui/utils@0.2.10': {}
 
-  '@hookform/resolvers@5.2.2(react-hook-form@7.69.0(react@19.2.1))':
+  '@hookform/resolvers@5.2.2(react-hook-form@7.70.0(react@19.2.1))':
     dependencies:
       '@standard-schema/utils': 0.3.0
-      react-hook-form: 7.69.0(react@19.2.1)
+      react-hook-form: 7.70.0(react@19.2.1)
 
   '@igrp/framework-next-auth@0.1.0-beta.85(next-auth@4.24.13(next@15.5.9(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(next@15.5.9(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1)':
     dependencies:
@@ -1894,7 +1894,7 @@ snapshots:
       react: 19.2.1
       react-dom: 19.2.1(react@19.2.1)
       tailwind-merge: 3.4.0
-      zod: 4.3.2
+      zod: 4.3.5
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
@@ -1915,7 +1915,7 @@ snapshots:
 
   '@igrp/igrp-framework-react-design-system@0.1.0-beta.85(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(next@15.5.9(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)':
     dependencies:
-      '@hookform/resolvers': 5.2.2(react-hook-form@7.69.0(react@19.2.1))
+      '@hookform/resolvers': 5.2.2(react-hook-form@7.70.0(react@19.2.1))
       '@origin-space/image-cropper': 0.1.9(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       '@radix-ui/react-accordion': 1.2.12(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       '@radix-ui/react-alert-dialog': 1.1.15(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -1956,7 +1956,7 @@ snapshots:
       react: 19.2.1
       react-day-picker: 9.13.0(react@19.2.1)
       react-dom: 19.2.1(react@19.2.1)
-      react-hook-form: 7.69.0(react@19.2.1)
+      react-hook-form: 7.70.0(react@19.2.1)
       react-phone-number-input: 3.4.14(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       react-resizable-panels: 3.0.6(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       recharts: 2.15.4(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -1964,18 +1964,18 @@ snapshots:
       tailwind-merge: 3.4.0
       tailwindcss: 4.1.18
       vaul: 1.1.2(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
-      zod: 4.3.2
+      zod: 4.3.5
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
 
   '@igrp/platform-access-management-client-ts@0.1.0-beta.63': {}
 
-  '@igrp/platform-process-management-client-ts@0.0.1-beta.24.1':
+  '@igrp/platform-process-management-client-ts@0.0.1-beta.24.2':
     dependencies:
-      '@igrp/platform-process-management-types': 0.0.1-beta.24.1
+      '@igrp/platform-process-management-types': 0.0.1-beta.24.2
 
-  '@igrp/platform-process-management-types@0.0.1-beta.24.1': {}
+  '@igrp/platform-process-management-types@0.0.1-beta.24.2': {}
 
   '@img/colour@1.0.0':
     optional: true
@@ -2062,7 +2062,7 @@ snapshots:
 
   '@img/sharp-wasm32@0.34.5':
     dependencies:
-      '@emnapi/runtime': 1.7.1
+      '@emnapi/runtime': 1.8.1
     optional: true
 
   '@img/sharp-win32-arm64@0.34.5':
@@ -2931,7 +2931,7 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  caniuse-lite@1.0.30001762: {}
+  caniuse-lite@1.0.30001763: {}
 
   class-variance-authority@0.7.1:
     dependencies:
@@ -3150,8 +3150,8 @@ snapshots:
       next: 15.5.9(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       oauth: 0.9.15
       openid-client: 5.7.1
-      preact: 10.28.1
-      preact-render-to-string: 5.2.6(preact@10.28.1)
+      preact: 10.28.2
+      preact-render-to-string: 5.2.6(preact@10.28.2)
       react: 19.2.1
       react-dom: 19.2.1(react@19.2.1)
       uuid: 8.3.2
@@ -3165,7 +3165,7 @@ snapshots:
     dependencies:
       '@next/env': 15.5.9
       '@swc/helpers': 0.5.15
-      caniuse-lite: 1.0.30001762
+      caniuse-lite: 1.0.30001763
       postcss: 8.4.31
       react: 19.2.1
       react-dom: 19.2.1(react@19.2.1)
@@ -3213,12 +3213,12 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  preact-render-to-string@5.2.6(preact@10.28.1):
+  preact-render-to-string@5.2.6(preact@10.28.2):
     dependencies:
-      preact: 10.28.1
+      preact: 10.28.2
       pretty-format: 3.8.0
 
-  preact@10.28.1: {}
+  preact@10.28.2: {}
 
   pretty-format@3.8.0: {}
 
@@ -3240,7 +3240,7 @@ snapshots:
       react: 19.2.1
       scheduler: 0.27.0
 
-  react-hook-form@7.69.0(react@19.2.1):
+  react-hook-form@7.70.0(react@19.2.1):
     dependencies:
       react: 19.2.1
 
@@ -3442,4 +3442,4 @@ snapshots:
 
   yallist@4.0.0: {}
 
-  zod@4.3.2: {}
+  zod@4.3.5: {}

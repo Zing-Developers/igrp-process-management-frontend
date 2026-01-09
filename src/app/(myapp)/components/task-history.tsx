@@ -3,7 +3,6 @@
 import {
   IGRPIcon,
   IGRPButton,
-  IGRPBadge,
   IGRPDataTable,
   IGRPDataTableFacetedFilterFn,
   IGRPCopyTo,
@@ -18,10 +17,7 @@ import {
 } from "../utils/columns-template";
 import { getPriorityLabel } from "../utils/status-helpers";
 import { getPriorityColor } from "../utils/status-badge";
-import {
-  ActivityProgress,
-  ActivityEvent,
-} from "@igrp/platform-process-management-types";
+import { ActivityProgress } from "@igrp/platform-process-management-types";
 
 export interface TaskVariable {
   name: string;
@@ -29,27 +25,12 @@ export interface TaskVariable {
   value: unknown;
 }
 
-export interface HistoricTask
-  extends Omit<ActivityProgress, "activityDetails"> {
-  activityId: string;
-  activityName: string;
-  activityKey: string;
-  name?: string;
-  assignee: string;
-  owner?: string;
-  claimTime?: string;
-  dueDate?: string;
+interface TaskHistory extends ActivityProgress {
   priority?: number;
-  formKey?: string;
-  outcome?: string;
-  duration?: number;
-  status: string;
-  variables?: TaskVariable[];
-  activityDetails?: ActivityEvent | null;
 }
 
 interface TaskHistoryProps {
-  tasks: HistoricTask[];
+  tasks: TaskHistory[];
 }
 
 function TaskHistory({ tasks }: TaskHistoryProps) {
@@ -95,7 +76,7 @@ function TaskHistory({ tasks }: TaskHistoryProps) {
 
   return (
     <>
-      <IGRPDataTable<HistoricTask, HistoricTask>
+      <IGRPDataTable<TaskHistory, TaskHistory>
         id="taskHistory"
         showFilter={true}
         showPagination={true}
@@ -106,9 +87,7 @@ function TaskHistory({ tasks }: TaskHistoryProps) {
             size: 24,
             cell: ({ row }) => {
               const task = row.original;
-              const hasVariables =
-                task.activityDetails?.variables &&
-                task.activityDetails?.variables.length > 0;
+              const hasVariables = task.variables && task.variables.length > 0;
               const isExpanded = row.getIsExpanded();
 
               if (!hasVariables) return null;
@@ -142,7 +121,7 @@ function TaskHistory({ tasks }: TaskHistoryProps) {
                     {task.activityName}
                   </div>
                   <div className="text-xs text-muted-foreground font-mono">
-                    {task.activityKey}
+                    {task.activityId}
                   </div>
                 </div>
               );
@@ -234,16 +213,11 @@ function TaskHistory({ tasks }: TaskHistoryProps) {
         data={tasks}
         getRowCanExpand={(row) => {
           const task = row.original;
-          return !!(
-            task.activityDetails?.variables &&
-            task.activityDetails?.variables.length > 0
-          );
+          return !!(task.variables && task.variables.length > 0);
         }}
         renderSubComponent={(row) => {
           const task = row.original;
-          const hasVariables =
-            task.activityDetails?.variables &&
-            task.activityDetails?.variables.length > 0;
+          const hasVariables = task.variables && task.variables.length > 0;
 
           if (!hasVariables) return undefined;
 
@@ -251,11 +225,10 @@ function TaskHistory({ tasks }: TaskHistoryProps) {
             <div className="px-4 py-3 bg-muted/20 rounded-b-md">
               <div className="ml-10">
                 <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-3">
-                  Variáveis da Tarefa ({task.activityDetails?.variables!.length}
-                  )
+                  Variáveis da Tarefa ({task.variables!.length})
                 </h4>
                 <div className="space-y-2">
-                  {task.activityDetails?.variables!.map((variable, idx) => (
+                  {task.variables!.map((variable, idx) => (
                     <div
                       key={idx}
                       className="flex items-center gap-3 p-2 rounded-md bg-background border border-border"

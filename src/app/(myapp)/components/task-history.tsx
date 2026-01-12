@@ -17,13 +17,10 @@ import {
 } from "../utils/columns-template";
 import { getPriorityLabel } from "../utils/status-helpers";
 import { getPriorityColor } from "../utils/status-badge";
-import { ActivityProgress } from "@igrp/platform-process-management-types";
-
-export interface TaskVariable {
-  name: string;
-  type?: string;
-  value: unknown;
-}
+import {
+  ActivityProgress,
+  TaskVariables,
+} from "@igrp/platform-process-management-types";
 
 interface TaskHistory extends ActivityProgress {
   priority?: number;
@@ -47,7 +44,7 @@ function TaskHistory({ tasks }: TaskHistoryProps) {
     );
   };
 
-  const renderVariableValue = (variable: TaskVariable) => {
+  const renderVariableValue = (variable: TaskVariables) => {
     const isJson = typeof variable.value === "object";
     const variableValue = variable.value;
 
@@ -65,8 +62,8 @@ function TaskHistory({ tasks }: TaskHistoryProps) {
     }
 
     return (
-      <div className="flex items-center gap-2 flex-1 min-w-0">
-        <span className="text-sm text-foreground truncate">
+      <div className="flex items-center gap-2 flex-1 min-w-0 ">
+        <span className="text-sm text-foreground truncate max-w-[270px]">
           {String(variableValue)}
         </span>
         <IGRPCopyTo value={String(variableValue)} />

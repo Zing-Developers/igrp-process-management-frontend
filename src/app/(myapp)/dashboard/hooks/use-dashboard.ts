@@ -1,8 +1,12 @@
-import { useMemo } from 'react';
-import { useDashboardData } from './use-dashboard-data';
-import { RecentItemsCardItem } from '../types';
-import { ProcessInstance } from '@igrp/platform-process-management-types';
-import { getProcessInstanceStatusLabel, getProcessInstanceStatusVariant, ProcessInstanceStatus } from '../../utils/status-helpers';
+import { useMemo } from "react";
+import { useDashboardData } from "./use-dashboard-data";
+import { RecentItemsCardItem } from "../types";
+import { ProcessInstance } from "@igrp/platform-process-management-types";
+import {
+  getProcessInstanceStatusLabel,
+  getProcessInstanceStatusVariant,
+  ProcessInstanceStatus,
+} from "../../utils/status-helpers";
 
 export function useDashboard() {
   const { data, loading, error, refreshData } = useDashboardData();
@@ -11,11 +15,15 @@ export function useDashboard() {
   const processInstancesItems = useMemo((): RecentItemsCardItem[] => {
     return data.recentProcessInstances.map((instance: ProcessInstance) => ({
       id: instance.id,
-      title: instance.name || 'Processo',
+      title: instance.name || "Processo",
       subtitle: `Iniciado por: ${instance.startedBy}`,
       badge: {
-        text: getProcessInstanceStatusLabel(instance.status as ProcessInstanceStatus),
-        variant: getProcessInstanceStatusVariant(instance.status as ProcessInstanceStatus),
+        text: getProcessInstanceStatusLabel(
+          instance.status as ProcessInstanceStatus,
+        ),
+        variant: getProcessInstanceStatusVariant(
+          instance.status as ProcessInstanceStatus,
+        ),
       },
     }));
   }, [data.recentProcessInstances]);
@@ -33,15 +41,15 @@ export function useDashboard() {
   return {
     // Stats
     stats: data.stats,
-    
+
     // Items for cards
     processInstancesItems,
     taskItems,
-    
+
     // State
     loading,
     error,
-    
+
     // Actions
     refreshData,
   };

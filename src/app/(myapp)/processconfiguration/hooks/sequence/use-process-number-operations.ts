@@ -1,32 +1,31 @@
 import {
   getProcessNumberConfigs,
   saveProcessNumberConfig,
-} from '@/app/(myapp)/external/client/services/process.service';
+} from "@/app/(myapp)/external/client/services/process";
 import {
   CreateProcessSequenceRequest,
   ProcessSequence,
-} from '@igrp/platform-process-management-types';
-import { useIGRPToast } from '@igrp/igrp-framework-react-design-system';
+} from "@igrp/platform-process-management-types";
+import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
 
 export function useProcessNumberOperations() {
   const { igrpToast } = useIGRPToast();
   const loadProcessNumberConfigs = async (
-    processId: string,
+    processKey: string,
     setProcessNumberConfigs: (configs: ProcessSequence) => void,
     setLoading: (loading: boolean) => void,
     populateFormDataFromConfig?: (config: ProcessSequence) => void,
   ) => {
     setLoading(true);
     try {
-      const configs = await getProcessNumberConfigs(processId);
+      const configs = await getProcessNumberConfigs(processKey);
       setProcessNumberConfigs(configs);
-
       // If there's an existing config, populate the form
       if (populateFormDataFromConfig) {
         populateFormDataFromConfig(configs);
       }
     } catch (error) {
-      console.error('Error loading process number configurations:', error);
+      console.error("Error loading process number configurations:", error);
     } finally {
       setLoading(false);
     }
@@ -43,19 +42,19 @@ export function useProcessNumberOperations() {
       );
 
       igrpToast({
-        type: 'success',
-        title: 'Sucesso',
-        description: 'Configuração de número de processo salva com sucesso!',
+        type: "success",
+        title: "Sucesso",
+        description: "Configuração de número de processo salva com sucesso!",
       });
 
       return savedConfig;
     } catch (error) {
-      console.error('Error saving process number configuration:', error);
+      console.error("Error saving process number configuration:", error);
 
       igrpToast({
-        type: 'error',
-        title: 'Erro',
-        description: 'Erro ao salvar configuração. Tente novamente.',
+        type: "error",
+        title: "Erro",
+        description: "Erro ao salvar configuração. Tente novamente.",
       });
 
       return null;

@@ -1,6 +1,6 @@
-import { Area, Process } from '@igrp/platform-process-management-types';
-import { InfoCard } from '../../components/info-card';
-import { AreaCard } from './area-card';
+import { Area, Process } from "@igrp/platform-process-management-types";
+import { InfoCard } from "../../components/info-card";
+import { AreaCard } from "./area-card";
 
 interface ExtendedArea extends Area {
   subareas?: ExtendedArea[];

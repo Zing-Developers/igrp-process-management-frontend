@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { AreaFormData, AreaModalState } from '../../types';
-import { Area } from '@igrp/platform-process-management-types';
+import { useState } from "react";
+import { AreaFormData, AreaModalState } from "../../types";
+import { Area } from "@igrp/platform-process-management-types";
 
 export function useAreaForm() {
   const [modalState, setModalState] = useState<AreaModalState>({
@@ -9,10 +9,10 @@ export function useAreaForm() {
   });
 
   const [formData, setFormData] = useState<AreaFormData>({
-    code: '',
-    name: '',
-    description: '',
-    applicationBase: '',
+    code: "",
+    name: "",
+    description: "",
+    applicationBase: "",
     parentId: undefined, // Changed from area_fk to area_id
   });
 
@@ -26,8 +26,8 @@ export function useAreaForm() {
       setFormData({
         code: area.code,
         name: area.name,
-        description: area.description || '',
-        applicationBase: area.applicationBase || '',
+        description: area.description || "",
+        applicationBase: area.applicationBase || "",
         parentId: area.areaId, // Changed from area_fk to area_id
       });
     } else {
@@ -37,10 +37,10 @@ export function useAreaForm() {
         parentAreaId,
       });
       setFormData({
-        code: '',
-        name: '',
-        description: '',
-        applicationBase: '',
+        code: "",
+        name: "",
+        description: "",
+        applicationBase: "",
         parentId: parentAreaId, // Changed from area_fk to area_id
       });
     }
@@ -56,10 +56,10 @@ export function useAreaForm() {
 
   const resetForm = () => {
     setFormData({
-      code: '',
-      name: '',
-      description: '',
-      applicationBase: '',
+      code: "",
+      name: "",
+      description: "",
+      applicationBase: "",
       parentId: undefined, // Changed from area_fk to area_id
     });
   };

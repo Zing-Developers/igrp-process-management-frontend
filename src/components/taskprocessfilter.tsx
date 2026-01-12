@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY iGRP STUDIO. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -6,40 +6,62 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { use, useState, useEffect, useRef } from 'react';
-import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
-import { IGRPOptionsProps } from '@igrp/igrp-framework-react-design-system';
+import { use, useState, useEffect, useRef } from "react";
+import {
+  cn,
+  useIGRPMenuNavigation,
+  useIGRPToast,
+} from "@igrp/igrp-framework-react-design-system";
+import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
+import { FilterData } from "@/app/(myapp)/components/filter-data";
+import { DateRange } from "@igrp/igrp-framework-react-design-system";
 import {
   IGRPInputSearch,
+  IGRPCombobox,
+  IGRPDatePickerRange,
   IGRPButton,
   IGRPSeparator,
-  IGRPCombobox,
   IGRPInputText,
-  IGRPDatePicker,
-} from '@igrp/igrp-framework-react-design-system';
-import { useProcessTasksFilter } from '@/app/(myapp)/components/processtaksfilter/hooks/use-process-tasks-filter';
+} from "@igrp/igrp-framework-react-design-system";
+import { useProcessTasksFilter } from "@/app/(myapp)/components/processtaksfilter/hooks/use-process-tasks-filter";
 
 export default function Taskprocessfilter({
   onSearch,
   onApplyFilters,
   onResetFilters,
+  onFiltersChange,
+  isProcess,
 }: {
   onSearch: (searchTerm: string) => void;
-  onApplyFilters: (filters?: any) => void;
+  onApplyFilters: (filters: any) => void;
   onResetFilters: () => void;
+  onFiltersChange: (filters: any) => void;
+  isProcess?: boolean;
 }) {
-  const [selectAreaOptions, setSelectAreaOptions] = useState<IGRPOptionsProps[]>([]);
-  const [selectSubareaOptions, setSelectSubareaOptions] = useState<IGRPOptionsProps[]>([]);
-  const [selectProcesstypeOptions, setSelectProcesstypeOptions] = useState<IGRPOptionsProps[]>([]);
-  const [selectStatusOptions, setSelectStatusOptions] = useState<IGRPOptionsProps[]>([]);
-  const [selectOrganicOptions, setSelectOrganicOptions] = useState<IGRPOptionsProps[]>([]);
-  const [selectUserOptions, setSelectUserOptions] = useState<IGRPOptionsProps[]>([]);
+  const [selectStatusOptions, setSelectStatusOptions] = useState<
+    IGRPOptionsProps[]
+  >([]);
+  const [selectAreaOptions, setSelectAreaOptions] = useState<
+    IGRPOptionsProps[]
+  >([]);
+  const [selectSubareaOptions, setSelectSubareaOptions] = useState<
+    IGRPOptionsProps[]
+  >([]);
+  const [selectProcesstypeOptions, setSelectProcesstypeOptions] = useState<
+    IGRPOptionsProps[]
+  >([]);
+  const [selectOrganicOptions, setSelectOrganicOptions] = useState<
+    IGRPOptionsProps[]
+  >([]);
+  const [selectUserOptions, setSelectUserOptions] = useState<
+    IGRPOptionsProps[]
+  >([]);
 
   const { igrpToast } = useIGRPToast();
 
   //---------------------Reserved Area begin-----------------------------------
   const [showFilter, setShowFilter] = useState<boolean>(false);
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const {
     filters,
@@ -51,6 +73,7 @@ export default function Taskprocessfilter({
     handleUserChange,
     handleProcessNumberChange,
     handleDateChange,
+    handleFiltersChange,
   } = useProcessTasksFilter(
     setSelectAreaOptions,
     setSelectSubareaOptions,
@@ -58,6 +81,8 @@ export default function Taskprocessfilter({
     setSelectStatusOptions,
     setSelectOrganicOptions,
     setSelectUserOptions,
+    onFiltersChange,
+    isProcess,
   );
 
   // Handle search
@@ -73,67 +98,102 @@ export default function Taskprocessfilter({
   // Handle filter reset
   const handleResetFilters = () => {
     onResetFilters();
-    setSearchTerm('');
+    setSearchTerm("");
   };
 
   //---------------------Reserved Area end-----------------------------------
 
   return (
-    <div className={cn('component')}>
+    <div className={cn("component")}>
       <div
-        className={cn('flex flex-row flex-wrap items-center justify-between gap-2', ' px-4 pt-2')}
+        className={cn(
+          "flex flex-row flex-wrap items-center justify-start gap-2",
+          " px-3 flex-1",
+        )}
       >
-        <div className={cn(' flex-1 min-w-[240px]')}>
-          <IGRPInputSearch
-            name={`inputSearch1`}
-            label={undefined}
-            showStartIcon={true}
-            startIcon={`Search`}
-            submitIcon={`ArrowRight`}
-            required={false}
-            submitButtonLabel={`Pesquisar`}
-            placeholder={`Pesquise por...`}
-            className={cn('py-1')}
-            setValueChange={(value) => setSearchTerm(value)}
-            onSearch={handleSearchSubmit}
-            value={searchTerm}
-          ></IGRPInputSearch>
-        </div>
-        <div className={cn('flex', 'block')}>
-          <IGRPButton
-            name={`button3`}
-            variant={`outline`}
-            size={`default`}
-            showIcon={true}
-            iconName={`Settings2`}
-            className={cn()}
-            onClick={() => {
-              setShowFilter(!showFilter);
-            }}
-          >
-            Filtros
-          </IGRPButton>
-        </div>
+        <IGRPInputSearch
+          id={`inputSearch1`}
+          label={undefined}
+          showStartIcon={true}
+          startIcon={`Search`}
+          submitIcon={`ArrowRight`}
+          required={false}
+          submitButtonLabel={`Pesquisar`}
+          placeholder={`Pesquise por...`}
+          className={cn("py-1 flex-1 max-w-sm")}
+          setValueChange={(value) => setSearchTerm(value)}
+          onSearch={handleSearchSubmit}
+          value={searchTerm}
+        ></IGRPInputSearch>
+        <IGRPCombobox
+          id={`Status`}
+          label={undefined}
+          variant={`single`}
+          placeholder={`Selecione um estado...`}
+          selectLabel={`No option found`}
+          showSearch={true}
+          showIcon={false}
+          iconName={`CornerDownRight`}
+          className={cn()}
+          onChange={(selected) =>
+            handleStatusChange(Array.isArray(selected) ? selected[0] : selected)
+          }
+          options={selectStatusOptions}
+          value={filters.status}
+        ></IGRPCombobox>
+        <FilterData
+          onChange={(filters) => handleFiltersChange(filters)}
+        ></FilterData>
+        <IGRPDatePickerRange
+          placeholder={`Selecione uma data`}
+          id={`datePickerRange1`}
+          dateFormat={`dd/MM/yyyy`}
+          onDateChange={(date) => handleDateChange(date ?? null)}
+          className={cn()}
+        />
+        <IGRPButton
+          id={`button3`}
+          variant={`outline`}
+          size={`default`}
+          showIcon={true}
+          iconName={`Settings2`}
+          className={cn("ml-auto")}
+          onClick={() => {
+            setShowFilter(!showFilter);
+          }}
+        >
+          Filtros Avançados
+        </IGRPButton>
       </div>
       {showFilter && (
         <IGRPSeparator
-          name={`separator1`}
+          id={`separator1`}
           orientation={`horizontal`}
-          className={cn('my-3')}
+          className={cn("my-3")}
         ></IGRPSeparator>
       )}
       {showFilter && (
         <div
           className={cn(
-            'grid',
-            'grid-cols-1 ',
-            'md:grid-cols-2 ',
-            'lg:grid-cols-4 ',
-            ' gap-4 px-4 pt-2',
+            "grid",
+            "grid-cols-2 ",
+            "md:grid-cols-2 ",
+            "lg:grid-cols-4 ",
+            " gap-4 px-3",
           )}
         >
+          <IGRPInputText
+            id={`Processnumber`}
+            label={`Número do processo`}
+            showIcon={false}
+            required={false}
+            placeholder={`ex: CV-24509202511`}
+            className={cn("col-span-1")}
+            onChange={(e) => handleProcessNumberChange(e.target.value)}
+            value={filters.processNumber}
+          ></IGRPInputText>
           <IGRPCombobox
-            name={`Area`}
+            id={`Area`}
             label={`Área`}
             variant={`single`}
             placeholder={`Selecione uma área...`}
@@ -141,7 +201,7 @@ export default function Taskprocessfilter({
             showSearch={true}
             showIcon={false}
             iconName={`CornerDownRight`}
-            className={cn('col-span-1')}
+            className={cn("col-span-1")}
             onChange={(selected) =>
               handleAreaChange(Array.isArray(selected) ? selected[0] : selected)
             }
@@ -149,7 +209,7 @@ export default function Taskprocessfilter({
             value={filters.areaId}
           ></IGRPCombobox>
           <IGRPCombobox
-            name={`Subarea`}
+            id={`Subarea`}
             label={`Sub-área`}
             variant={`single`}
             placeholder={`Select an option...`}
@@ -157,16 +217,18 @@ export default function Taskprocessfilter({
             showSearch={true}
             showIcon={false}
             iconName={`CornerDownRight`}
-            className={cn('col-span-1')}
+            className={cn("col-span-1")}
             onChange={(selected) =>
-              handleSubareaChange(Array.isArray(selected) ? selected[0] : selected)
+              handleSubareaChange(
+                Array.isArray(selected) ? selected[0] : selected,
+              )
             }
             options={selectSubareaOptions}
             value={filters.subareaId}
             disabled={!filters.areaId}
           ></IGRPCombobox>
           <IGRPCombobox
-            name={`Processtype`}
+            id={`Processtype`}
             label={`Tipo Processo`}
             variant={`single`}
             placeholder={`Select an option...`}
@@ -174,73 +236,32 @@ export default function Taskprocessfilter({
             showSearch={true}
             showIcon={false}
             iconName={`CornerDownRight`}
-            className={cn('col-span-1')}
+            className={cn("col-span-1")}
             onChange={(selected) =>
-              handleProcessTypeChange(Array.isArray(selected) ? selected[0] : selected)
+              handleProcessTypeChange(
+                Array.isArray(selected) ? selected[0] : selected,
+              )
             }
             options={selectProcesstypeOptions}
             value={filters.processType}
             disabled={!filters.areaId && !filters.subareaId}
           ></IGRPCombobox>
-          <IGRPInputText
-            name={`Processnumber`}
-            label={`Número do processo`}
-            showIcon={false}
-            required={false}
-            className={cn('col-span-1')}
-            onChange={(e) => handleProcessNumberChange(e.target.value)}
-            value={filters.processNumber}
-          ></IGRPInputText>
           <IGRPCombobox
-            name={`Status`}
-            label={`Estado`}
+            id={`Organic`}
+            label={`Departamento`}
             variant={`single`}
-            placeholder={`Selecione um estado...`}
+            placeholder={`Selecione uma departamento...`}
             selectLabel={`No option found`}
             showSearch={true}
             showIcon={false}
             iconName={`CornerDownRight`}
-            className={cn('col-span-1')}
-            onChange={(selected) =>
-              handleStatusChange(Array.isArray(selected) ? selected[0] : selected)
-            }
-            options={selectStatusOptions}
-            value={filters.status}
-          ></IGRPCombobox>
-          <IGRPDatePicker
-            placeholder={`Please select a date...`}
-            name={`ProcessDate`}
-            id={`ProcessDate`}
-            label={`Data`}
-            startDate={new Date(`1900-01-01`)}
-            endDate={new Date(`2099-12-31`)}
-            gridSize={`full`}
-            dateFormat={`dd/MM/yyyy`}
-            today={new Date(`2025-01-01`)}
-            defaultMonth={new Date(`2025-01-01`)}
-            startMonth={new Date(`2025-01-01`)}
-            month={new Date(`2025-01-01`)}
-            endMonth={new Date(`2025-12-31`)}
-            numberOfMonths={1}
-            captionLayout={`label`}
-            className={cn('col-span-1')}
-          />
-          <IGRPCombobox
-            name={`Organic`}
-            label={`Orgânica`}
-            variant={`single`}
-            placeholder={`Selecione uma organica...`}
-            selectLabel={`No option found`}
-            showSearch={true}
-            showIcon={false}
-            iconName={`CornerDownRight`}
-            className={cn('col-span-1')}
+            className={cn("col-span-1")}
             onChange={handleOrganicChange}
             options={selectOrganicOptions}
             value={filters.organic}
           ></IGRPCombobox>
           <IGRPCombobox
-            name={`User`}
+            id={`User`}
             label={`Utilizador`}
             variant={`single`}
             placeholder={`Selecione um utilizador...`}
@@ -248,7 +269,7 @@ export default function Taskprocessfilter({
             showSearch={true}
             showIcon={false}
             iconName={`CornerDownRight`}
-            className={cn('col-span-1')}
+            className={cn("col-span-1")}
             onChange={(selected) =>
               handleUserChange(Array.isArray(selected) ? selected[0] : selected)
             }
@@ -259,37 +280,26 @@ export default function Taskprocessfilter({
       )}
       {showFilter && (
         <IGRPSeparator
-          name={`separator2`}
+          id={`separator2`}
           orientation={`horizontal`}
-          className={cn('my-3')}
+          className={cn("my-3")}
         ></IGRPSeparator>
       )}
       {showFilter && (
         <div
           className={cn(
-            'flex',
-            'flex flex-row flex-nowrap items-stretch justify-end gap-2',
-            ' px-4 pt-2 space-y-3',
+            "flex",
+            "flex flex-row flex-nowrap items-stretch justify-end gap-2",
+            " pb-3 px-3",
           )}
         >
           <IGRPButton
-            name={`button2`}
-            variant={`outline`}
-            size={`default`}
-            showIcon={true}
-            iconName={`ListFilter`}
-            className={cn()}
-            onClick={handleApplyFilters}
-          >
-            Aplicar Filtros
-          </IGRPButton>
-          <IGRPButton
-            name={`button1`}
+            id={`button1`}
             variant={`outline`}
             size={`default`}
             showIcon={true}
             iconName={`Eraser`}
-            className={cn()}
+            className={cn("")}
             onClick={handleResetFilters}
           >
             Limpar Filtros

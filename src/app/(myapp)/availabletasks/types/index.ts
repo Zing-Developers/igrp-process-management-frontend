@@ -1,4 +1,4 @@
-import { Task } from '@igrp/platform-process-management-types';
+import { Task } from "@igrp/platform-process-management-types";
 
 export interface AvailableTasksFilters {
   processNumber: string;
@@ -43,11 +43,11 @@ export interface TaskTableRow {
   processInfo: string;
   processNumber: string;
   startedAt: string;
-  endAt: string;
-  createBy:  string;
+  endedAt?: string;
+  createBy: string;
   taskName: string;
   status: string;
-  daysWaiting: string;
+  duration: string;
   // Additional fields for internal use
   taskId: string;
   processInstanceId: string;

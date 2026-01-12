@@ -1,6 +1,6 @@
-import { Process } from '@igrp/platform-process-management-types';
-import { ExtendedArea } from '../../processconfiguration/types';
-import { ProcessTreeNode } from '../types';
+import { Process } from "@igrp/platform-process-management-types";
+import { ExtendedArea } from "../../processconfiguration/types";
+import { ProcessTreeNode } from "../types";
 
 /**
  * Converts flat areas with processes into a hierarchical tree structure
@@ -18,7 +18,7 @@ export function buildProcessTree(areas: ExtendedArea[]): ProcessTreeNode[] {
     const areaNode: ProcessTreeNode = {
       id: area.id,
       name: area.name,
-      type: level === 0 ? 'area' : 'subarea',
+      type: level === 0 ? "area" : "subarea",
       level,
       parentId,
       data: area,
@@ -33,26 +33,30 @@ export function buildProcessTree(areas: ExtendedArea[]): ProcessTreeNode[] {
     if (areaProcesses && areaProcesses.length > 0) {
       // Filter only active processes
       const activeProcesses = areaProcesses.filter(
-        (process: Process) => process.status === 'ACTIVE',
+        (process: Process) => process.status === "ACTIVE",
       );
 
-      const processNodes: ProcessTreeNode[] = activeProcesses.map((process: Process) => ({
-        id: `process-${process.id}`,
-        name: process.name || process.processKey || 'Unnamed Process',
-        type: 'process',
-        level: level + 1,
-        parentId: area.id,
-        data: process,
-        hasChildren: false,
-        isLoaded: true,
-        applicationBase: applicationBase,
-      }));
+      const processNodes: ProcessTreeNode[] = activeProcesses.map(
+        (process: Process) => ({
+          id: `process-${process.id}`,
+          name: process.name || process.processKey || "Unnamed Process",
+          type: "process",
+          level: level + 1,
+          parentId: area.id,
+          data: process,
+          hasChildren: false,
+          isLoaded: true,
+          applicationBase: applicationBase,
+        }),
+      );
       areaNode.children = [...processNodes];
     }
 
     // Add subareas as children (if they exist in the hierarchy)
     if (area.subareas && area.subareas.length > 0) {
-      const subareaNodes = area.subareas.map((subarea) => processArea(subarea, subarea.applicationBase, level + 1, area.id));
+      const subareaNodes = area.subareas.map((subarea) =>
+        processArea(subarea, subarea.applicationBase, level + 1, area.id),
+      );
       areaNode.children = [...(areaNode.children || []), ...subareaNodes];
       areaNode.isLoaded = true; // Mark as loaded if subareas are present
     }
@@ -91,7 +95,10 @@ export function flattenTreeNodes(
 /**
  * Finds a node by ID in the tree
  */
-export function findNodeById(nodes: ProcessTreeNode[], id: string): ProcessTreeNode | undefined {
+export function findNodeById(
+  nodes: ProcessTreeNode[],
+  id: string,
+): ProcessTreeNode | undefined {
   for (const node of nodes) {
     if (node.id === id) {
       return node;
@@ -107,11 +114,13 @@ export function findNodeById(nodes: ProcessTreeNode[], id: string): ProcessTreeN
 /**
  * Gets all process nodes from the tree
  */
-export function getAllProcessNodes(nodes: ProcessTreeNode[]): ProcessTreeNode[] {
+export function getAllProcessNodes(
+  nodes: ProcessTreeNode[],
+): ProcessTreeNode[] {
   const processes: ProcessTreeNode[] = [];
 
   function traverse(node: ProcessTreeNode) {
-    if (node.type === 'process') {
+    if (node.type === "process") {
       processes.push(node);
     }
     if (node.children) {
@@ -126,7 +135,10 @@ export function getAllProcessNodes(nodes: ProcessTreeNode[]): ProcessTreeNode[] 
 /**
  * Searches nodes by name (case-insensitive)
  */
-export function searchNodes(nodes: ProcessTreeNode[], searchTerm: string): ProcessTreeNode[] {
+export function searchNodes(
+  nodes: ProcessTreeNode[],
+  searchTerm: string,
+): ProcessTreeNode[] {
   if (!searchTerm.trim()) return nodes;
 
   const results: ProcessTreeNode[] = [];

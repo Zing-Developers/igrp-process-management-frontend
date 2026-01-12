@@ -217,7 +217,7 @@ export const getTypeIcon = (value: unknown) => {
       return <IGRPIcon iconName="Type" />;
     case "integer":
     case "double":
-      return <IGRPIcon iconName="Hask" />;
+      return <IGRPIcon iconName="Hash" />;
     case "boolean":
       return <IGRPIcon iconName="ToggleLeft" />;
     case "json":

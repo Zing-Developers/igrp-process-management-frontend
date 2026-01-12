@@ -93,12 +93,20 @@ export const useProcessDetails = (processInstanceId: string) => {
   }, [data?.processInstance]);
 
   const taskHistoryTransformed = useMemo(() => {
-    return taskProgressTransformed?.filter(
-      (activity: ActivityProgress) => activity.type === "USER_TASK",
-    );
+    return taskProgressTransformed
+      ?.filter((activity: ActivityProgress) => activity.type === "USER_TASK")
+      .map((activity: ActivityProgress) => {
+        return {
+          ...activity,
+          variables: [
+            ...(activity.variables || []),
+            ...(activity?.forms && activity?.forms.length > 0
+              ? [{ name: "Form", value: activity?.forms }]
+              : []),
+          ],
+        };
+      });
   }, [taskProgressTransformed]);
-
-  console.log(taskProgressTransformed);
 
   return {
     process: transformedProcess,

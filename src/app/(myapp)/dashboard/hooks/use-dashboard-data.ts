@@ -1,16 +1,25 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   DashboardData,
   DashboardStats,
   RecentItemsCardItem,
   ProcessInstanceStats,
   TaskStats,
-} from '../types';
-import { getProcessInstances } from '../../external/client/services/process-instances.service';
-import { getMyTasks, getTasks, getTaskStats, getMyTaskStats } from '../../external/client/services/task.service';
-import { Task } from '@igrp/platform-process-management-types';
-import { getTaskStatusLabel, getTaskStatusVariant, TaskStatus } from '../../utils/status-helpers';
-import { getProcessStats } from '../../external/client/services/process.service';
+} from "../types";
+import { getProcessInstances } from "../../external/client/services/process-instances";
+import {
+  getMyTasks,
+  getTasks,
+  getTaskStats,
+  getMyTaskStats,
+} from "../../external/client/services/task";
+import { Task } from "@igrp/platform-process-management-types";
+import {
+  getTaskStatusLabel,
+  getTaskStatusVariant,
+  TaskStatus,
+} from "../../utils/status-helpers";
+import { getProcessStats } from "../../external/client/services/process";
 
 export function useDashboardData() {
   const [data, setData] = useState<DashboardData>({
@@ -73,19 +82,19 @@ export function useDashboardData() {
       totalRunning: 0,
       totalCancelled: 0,
     };
-  
+
     try {
       // Use the getProcessStats service to get all stats in a single call
       const processStats = await getProcessStats();
-      
+
       stats.totalInstances = processStats.totalProcessInstances || 0;
       stats.totalCompleted = processStats.totalCompletedProcess || 0;
       stats.totalRunning = processStats.totalRunningProcess || 0;
       stats.totalCancelled = processStats.totalCanceledProcess || 0;
     } catch (error) {
-      console.warn('Could not load process instance statistics:', error);
+      console.warn("Could not load process instance statistics:", error);
     }
-  
+
     return stats;
   };
 
@@ -109,7 +118,7 @@ export function useDashboardData() {
     try {
       // Use dedicated service to get general task statistics
       const generalTaskStats = await getTaskStats();
-      
+
       // Map from platform TaskStats to our TaskStats interface
       stats.totalTasks = generalTaskStats.totalTaskInstances;
       stats.totalTasksAvailable = generalTaskStats.totalAvailableTasks;
@@ -121,18 +130,21 @@ export function useDashboardData() {
       // Use dedicated service to get user-specific task statistics
       try {
         const myTaskStats = await getMyTaskStats();
-        
+
         // Map from platform TaskStats to our TaskStats interface for user tasks
         stats.totalMyTasks = myTaskStats.totalAssignedTasks; // My assigned tasks
         stats.totalMyTasksCompleted = myTaskStats.totalCompletedTasks;
         stats.totalMyTasksSuspended = myTaskStats.totalSuspendedTasks;
         stats.totalMyTasksCancelled = myTaskStats.totalCanceledTasks;
       } catch (myTasksError) {
-        console.warn('Could not load user-specific task statistics:', myTasksError);
+        console.warn(
+          "Could not load user-specific task statistics:",
+          myTasksError,
+        );
         // Keep user task stats as 0 when user tasks can't be loaded
       }
     } catch (error) {
-      console.warn('Could not load task statistics:', error);
+      console.warn("Could not load task statistics:", error);
     }
 
     return stats;
@@ -152,13 +164,20 @@ export function useDashboardData() {
         const myTasksResponse = await getMyTasks({ page: 0, size: 5 });
         recentTasks = myTasksResponse.content?.map(mapTaskToRecentItem) || [];
       } catch (taskError) {
-        console.warn('Could not load user tasks, trying general tasks:', taskError);
+        console.warn(
+          "Could not load user tasks, trying general tasks:",
+          taskError,
+        );
         // Fallback to general tasks if user-specific tasks fail
         try {
           const generalTasksResponse = await getTasks(0, 5);
-          recentTasks = generalTasksResponse.content?.map(mapTaskToRecentItem) || [];
+          recentTasks =
+            generalTasksResponse.content?.map(mapTaskToRecentItem) || [];
         } catch (generalTaskError) {
-          console.warn('Could not load general tasks either:', generalTaskError);
+          console.warn(
+            "Could not load general tasks either:",
+            generalTaskError,
+          );
           // Keep recentTasks as empty array
         }
       }
@@ -180,8 +199,8 @@ export function useDashboardData() {
         recentTasks,
       });
     } catch (err) {
-      console.error('Error loading dashboard data:', err);
-      setError('Erro ao carregar dados do dashboard');
+      console.error("Error loading dashboard data:", err);
+      setError("Erro ao carregar dados do dashboard");
     } finally {
       setLoading(false);
     }

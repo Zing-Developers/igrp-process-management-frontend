@@ -1,5 +1,5 @@
-import { ProcessService } from '../../services/process.service';
-import { ProcessArtifact } from '@igrp/platform-process-management-types';
+import { ProcessService } from "../../services/process.service";
+import { ProcessArtifact } from "@igrp/platform-process-management-types";
 
 export function useArtifactOperations() {
   const loadProcessArtifacts = async (
@@ -9,34 +9,44 @@ export function useArtifactOperations() {
     populateFormData?: (artifacts: ProcessArtifact[]) => void, // Add this parameter
   ) => {
     try {
-      console.log('Loading process artifacts for processDefinitionId:', processDefinitionId);
       setLoading(true);
-      
+
       // First, load the deployed artifacts (base artifacts)
-      const deployedArtifacts = await ProcessService.getProcessDeployedArtifacts(processDefinitionId);
-      console.log('Deployed artifacts:', deployedArtifacts);
-      
+      const deployedArtifacts =
+        await ProcessService.getProcessDeployedArtifacts(processDefinitionId);
+
       // Then, load the saved artifacts (with FormKey associations)
-      const savedArtifacts = await ProcessService.getProcessArtifacts(processDefinitionId);
-      console.log('Saved artifacts with FormKey:', savedArtifacts);
-      
+      const savedArtifacts =
+        await ProcessService.getProcessArtifacts(processDefinitionId);
+
       // Merge the data: use deployed artifacts as base, but override with saved FormKey data
-      const mergedArtifacts = deployedArtifacts.map(deployedArtifact => {
-        const savedArtifact = savedArtifacts.find(saved => saved.key === deployedArtifact.key);
+      const mergedArtifacts = deployedArtifacts.map((deployedArtifact) => {
+        const savedArtifact = savedArtifacts.find(
+          (saved) => saved.key === deployedArtifact.key,
+        );
+        const candidateGroupsValue =
+          (savedArtifact as any)?.candidateGroups ||
+          (deployedArtifact as any).candidateGroups;
+        const candidateGroupsString = candidateGroupsValue
+          ? Array.isArray(candidateGroupsValue)
+            ? candidateGroupsValue.join(",")
+            : String(candidateGroupsValue)
+          : "";
         return {
           ...deployedArtifact,
-          formKey: savedArtifact?.formKey || deployedArtifact.formKey || ''
+          formKey: savedArtifact?.formKey || deployedArtifact.formKey || "",
+          candidateGroups: candidateGroupsString,
         };
       });
-      
+
       setProcessArtifacts(mergedArtifacts || []);
-      
+
       // Populate form data with saved FormKey values
       if (populateFormData) {
         populateFormData(mergedArtifacts || []);
       }
     } catch (error) {
-      console.error('Error loading process artifacts:', error);
+      console.error("Error loading process artifacts:", error);
       setProcessArtifacts([]);
     } finally {
       setLoading(false);

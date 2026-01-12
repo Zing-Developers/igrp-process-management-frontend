@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
 export interface AlertDialogState {
   isOpen: boolean;
@@ -10,29 +10,32 @@ export interface AlertDialogState {
 export function useAlertDialog() {
   const [alertState, setAlertState] = useState<AlertDialogState>({
     isOpen: false,
-    title: '',
-    description: '',
+    title: "",
+    description: "",
     onConfirm: undefined,
   });
 
-  const showAlert = useCallback((
-    title: string,
-    description: string,
-    onConfirm: () => void | Promise<void>
-  ) => {
-    setAlertState({
-      isOpen: true,
-      title,
-      description,
-      onConfirm,
-    });
-  }, []);
+  const showAlert = useCallback(
+    (
+      title: string,
+      description: string,
+      onConfirm: () => void | Promise<void>,
+    ) => {
+      setAlertState({
+        isOpen: true,
+        title,
+        description,
+        onConfirm,
+      });
+    },
+    [],
+  );
 
   const hideAlert = useCallback(() => {
     setAlertState({
       isOpen: false,
-      title: '',
-      description: '',
+      title: "",
+      description: "",
       onConfirm: undefined,
     });
   }, []);

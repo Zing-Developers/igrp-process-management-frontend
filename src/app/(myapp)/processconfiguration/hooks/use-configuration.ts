@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { AreaProcessesMap, ExtendedArea } from '../types';
-import { organizeAreasHierarchy } from '../utils/area-hierarchy';
-import { AreaService } from '../services/area.service';
-import { Area, Process } from '@igrp/platform-process-management-types';
+import { useState, useEffect } from "react";
+import { AreaProcessesMap, ExtendedArea } from "../types";
+import { organizeAreasHierarchy } from "../utils/area-hierarchy";
+import { AreaService } from "../services/area.service";
+import { Area, Process } from "@igrp/platform-process-management-types";
 
 export function useConfiguration() {
   const [areas, setAreas] = useState<ExtendedArea[]>([]);
@@ -17,10 +17,12 @@ export function useConfiguration() {
         setLoading(true);
 
         // Load only top-level areas (no parentId)
-        const areasResponse = await AreaService.getAreas('');
+        const areasResponse = await AreaService.getAreas("");
 
         // Organize flat areas into hierarchical structure
-        const hierarchicalAreas = organizeAreasHierarchy(areasResponse.content || []);
+        const hierarchicalAreas = organizeAreasHierarchy(
+          areasResponse.content || [],
+        );
         setAreas(hierarchicalAreas);
 
         // Extract all processes from areas for the global processes list (for process selection)
@@ -39,7 +41,7 @@ export function useConfiguration() {
         const activeProcesses = getActiveProcesses(areasResponse.content || []);
         setAllActiveProcesses(activeProcesses);
       } catch (error) {
-        console.error('Error loading configuration data:', error);
+        console.error("Error loading configuration data:", error);
       } finally {
         setLoading(false);
       }
@@ -57,9 +59,11 @@ export function useConfiguration() {
           id: process.releaseId,
         })),
       )
-      .filter((process) => process.status === 'ACTIVE');
+      .filter((process) => process.status === "ACTIVE");
 
-    const processList = Array.from(new Map(activeProcesses.map((p) => [p.releaseId, p])).values());
+    const processList = Array.from(
+      new Map(activeProcesses.map((p) => [p.releaseId, p])).values(),
+    );
     return processList;
   }
 

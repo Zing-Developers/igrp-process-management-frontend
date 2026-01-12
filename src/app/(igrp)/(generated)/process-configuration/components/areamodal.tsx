@@ -32,6 +32,7 @@ export default function Areamodal({ open, setOpen, isEditing, formData, areas, o
   
   const form1 = z.object({
     applicationBase: z.string().nonempty(),
+    applicationBaseText: z.string().nonempty(),
     code: z.string().nonempty(),
     name: z.string().nonempty(),
     description: z.string().optional(),
@@ -42,10 +43,11 @@ type Form1ZodType = typeof form1;
 
 const initForm1: z.infer<Form1ZodType> = {
     applicationBase: ``,
+    applicationBaseText: ``,
     code: ``,
     name: ``,
-    description: undefined,
-    parentId: undefined
+    description: ``,
+    parentId: ``
 }
 
 
@@ -63,16 +65,28 @@ onSave(data)
 
 }
 
-  useEffect(() => {
-    if (formData) setForm1Data(formData);
-  }, [formData]);
+useEffect(() => {
+  if (formData)
+    setForm1Data({
+      ...formData,
+      applicationBaseText: (formData as any).applicationBase,
+    });
+}, [formData]);
 
-  useEffect(() => {    
-    setSelectapplicationBaseOptions(applications||[]);
-    setSelectparentIdOptions(areas.map((area) => ({ label: area.name, value: area.id })));
-  }, [applications,areas]);
+useEffect(() => {
+  setSelectapplicationBaseOptions(applications || []);
+  setSelectparentIdOptions(areas.map((area) => ({ label: area.name, value: area.id })));
+}, [applications, areas]);
 
-  const title = isEditing ? 'Editar Área' : 'Nova Área';
+const title = isEditing ? 'Editar Área' : 'Nova Área';
+
+useEffect(() => {
+  if (formform1Ref.current) {
+    formform1Ref.current.watch('applicationBaseText').then((value: string) => {
+      formform1Ref.current?.setValue('applicationBase', value);
+    });
+  }
+}, [formform1Ref]);
 
 
   return (
@@ -110,7 +124,7 @@ formRef={ formform1Ref }
   defaultValues={ form1Data }
 >
   <>
-  <IGRPCombobox
+  { selectapplicationBaseOptions.length > 0  && (<IGRPCombobox
   id={ `applicationBase` }
   label={ `Aplicação` }
 variant={ `single` }
@@ -124,7 +138,17 @@ iconName={ `CornerDownRight` }
   onChange={ () => {} }
   options={ selectapplicationBaseOptions }
 >
-</IGRPCombobox>
+</IGRPCombobox>)}
+  { selectapplicationBaseOptions.length === 0  && (<IGRPInputText
+  id={ `applicationBaseText` }
+  label={ `Aplicação` }
+showIcon={ false }
+required={ true }
+  className={ cn() }
+  
+  
+>
+</IGRPInputText>)}
   <IGRPInputText
   id={ `code` }
   label={ `Código` }

@@ -6,7 +6,7 @@ export function useArtifactOperations() {
     processDefinitionId: string,
     setProcessArtifacts: (artifacts: ProcessArtifact[]) => void,
     setLoading: (loading: boolean) => void,
-    populateFormData?: (artifacts: ProcessArtifact[]) => void, // Add this parameter
+    populateFormData?: (artifacts: ProcessArtifact[]) => void // Add this parameter
   ) => {
     try {
       setLoading(true);
@@ -22,7 +22,7 @@ export function useArtifactOperations() {
       // Merge the data: use deployed artifacts as base, but override with saved FormKey data
       const mergedArtifacts = deployedArtifacts.map((deployedArtifact) => {
         const savedArtifact = savedArtifacts.find(
-          (saved) => saved.key === deployedArtifact.key,
+          (saved) => saved.key === deployedArtifact.key
         );
         const candidateGroupsValue =
           (savedArtifact as any)?.candidateGroups ||
@@ -42,9 +42,7 @@ export function useArtifactOperations() {
       setProcessArtifacts(mergedArtifacts || []);
 
       // Populate form data with saved FormKey values
-      if (populateFormData) {
-        populateFormData(mergedArtifacts || []);
-      }
+      populateFormData?.(mergedArtifacts || []);
     } catch (error) {
       console.error("Error loading process artifacts:", error);
       setProcessArtifacts([]);

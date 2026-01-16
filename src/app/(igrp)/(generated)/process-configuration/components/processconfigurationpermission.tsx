@@ -33,14 +33,16 @@ export default function Processconfigurationpermission({ open, setOpen, processA
   
 const { igrpToast } = useIGRPToast()
 
-// Load processArtifacts into repetitive list when modal opens or artifacts change
-  useEffect(() => {
-    if (open && processArtifacts && Array.isArray(processArtifacts)) {
-      setRepetitiveListrepetitiveList1(processArtifacts);
-    } else {
-      setRepetitiveListrepetitiveList1([]);
-    }
-  }, [open, processArtifacts]);
+useEffect(() => {
+  if (open && processArtifacts && Array.isArray(processArtifacts)) {
+    setRepetitiveListrepetitiveList1(processArtifacts.map((artifact) => ({
+      ...artifact,
+      candidateGroups: formData[artifact.key]?.candidateGroups || "",
+    })));
+  } else {
+    setRepetitiveListrepetitiveList1([]);
+  }
+}, [open, processArtifacts, formData]);
 
 
   return (

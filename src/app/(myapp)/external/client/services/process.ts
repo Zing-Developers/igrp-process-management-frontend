@@ -251,7 +251,6 @@ export const saveProcessNumberConfig = async (
   const response =
     await processManagementClient.processes.createProcessSequence(
       processDefinitionKey,
-      "",
       config,
     );
   return response.data;

@@ -28,9 +28,11 @@ import {
 
 export default function Areamodal({ open, setOpen, isEditing, formData, areas, onFormChange, onSave, onClose, applications } : { open: boolean, setOpen: (prompt: boolean) => void, isEditing: boolean, formData: object, areas: any[], onFormChange: (data: any) => void, onSave: (data: any) => void, onClose: () => void, applications: any }) {
 
+
   
   const form1 = z.object({
     applicationBase: z.string().nonempty(),
+    applicationBaseText: z.string().nonempty(),
     code: z.string().nonempty(),
     name: z.string().nonempty(),
     description: z.string().optional(),
@@ -41,10 +43,11 @@ type Form1ZodType = typeof form1;
 
 const initForm1: z.infer<Form1ZodType> = {
     applicationBase: ``,
+    applicationBaseText: ``,
     code: ``,
     name: ``,
-    description: undefined,
-    parentId: undefined
+    description: ``,
+    parentId: ``
 }
 
 
@@ -62,16 +65,28 @@ onSave(data)
 
 }
 
-  useEffect(() => {
-    if (formData) setForm1Data(formData);
-  }, [formData]);
+useEffect(() => {
+  if (formData)
+    setForm1Data({
+      ...formData,
+      applicationBaseText: (formData as any).applicationBase,
+    });
+}, [formData]);
 
-  useEffect(() => {    
-    setSelectapplicationBaseOptions(applications||[]);
-    setSelectparentIdOptions(areas.map((area) => ({ label: area.name, value: area.id })));
-  }, [applications,areas]);
+useEffect(() => {
+  setSelectapplicationBaseOptions(applications || []);
+  setSelectparentIdOptions(areas.map((area) => ({ label: area.name, value: area.id })));
+}, [applications, areas]);
 
-  const title = isEditing ? 'Editar Área' : 'Nova Área';
+const title = isEditing ? 'Editar Área' : 'Nova Área';
+
+useEffect(() => {
+  if (formform1Ref.current) {
+    formform1Ref.current.watch('applicationBaseText').then((value: string) => {
+      formform1Ref.current?.setValue('applicationBase', value);
+    });
+  }
+}, [formform1Ref]);
 
 
   return (
@@ -92,7 +107,7 @@ onSave(data)
   
 >
   <IGRPModalDialogTitle
-  name={ `modalDialogTitle1` }
+  id={ `modalDialogTitle1` }
   
   
   
@@ -109,8 +124,8 @@ formRef={ formform1Ref }
   defaultValues={ form1Data }
 >
   <>
-  <IGRPCombobox
-  name={ `applicationBase` }
+  { selectapplicationBaseOptions.length > 0  && (<IGRPCombobox
+  id={ `applicationBase` }
   label={ `Aplicação` }
 variant={ `single` }
 placeholder={ `Select an option...` }
@@ -123,9 +138,19 @@ iconName={ `CornerDownRight` }
   onChange={ () => {} }
   options={ selectapplicationBaseOptions }
 >
-</IGRPCombobox>
+</IGRPCombobox>)}
+  { selectapplicationBaseOptions.length === 0  && (<IGRPInputText
+  id={ `applicationBaseText` }
+  label={ `Aplicação` }
+showIcon={ false }
+required={ true }
+  className={ cn() }
+  
+  
+>
+</IGRPInputText>)}
   <IGRPInputText
-  name={ `code` }
+  id={ `code` }
   label={ `Código` }
 showIcon={ false }
 required={ true }
@@ -135,7 +160,7 @@ required={ true }
 >
 </IGRPInputText>
   <IGRPInputText
-  name={ `name` }
+  id={ `name` }
   label={ `Nome` }
 showIcon={ false }
 required={ true }
@@ -145,7 +170,7 @@ required={ true }
 >
 </IGRPInputText>
   <IGRPTextarea
-  name={ `description` }
+  id={ `description` }
   label={ `Descrição` }
 rows={ 3 }
 required={ false }
@@ -155,9 +180,10 @@ required={ false }
 >
 </IGRPTextarea>
   <IGRPSelect
-  name={ `parentId` }
+  id={ `parentId` }
   label={ `Área Pai` }
 placeholder={ `Select an option...` }
+gridSize={ `full` }
   className={ cn() }
   
   options={ selectparentIdOptions }
@@ -171,7 +197,7 @@ placeholder={ `Select an option...` }
   
 >
   <IGRPButton
-  name={ `button1` }
+  id={ `button1` }
   variant={ `default` }
 size={ `default` }
 showIcon={ false }
@@ -182,7 +208,7 @@ showIcon={ false }
   Gravar
 </IGRPButton>
   <IGRPModalDialogClose
-  name={ `modalDialogClose1` }
+  id={ `modalDialogClose1` }
   
   className={ cn() }
   onClick={ () => {} }

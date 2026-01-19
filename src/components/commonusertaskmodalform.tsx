@@ -22,7 +22,9 @@ import {
   IGRPModalDialogTitle,
   IGRPModalDialogDescription,
   IGRPForm,
+  IGRPRadioGroup,
   IGRPCombobox,
+  IGRPInputText,
   IGRPTextarea,
   IGRPModalDialogFooter,
   IGRPButton,
@@ -47,8 +49,9 @@ export default function Commonusertaskmodalform({
   showPriority?: boolean;
 }) {
   const form1 = z.object({
-    user: z.string().nonempty(),
-    priority: z.string().nonempty(),
+    user: z.string().optional(),
+    candidateGroups: z.string().optional(),
+    priority: z.string().optional(),
     note: z.string().optional(),
   });
 
@@ -56,18 +59,24 @@ export default function Commonusertaskmodalform({
 
   const initForm1: z.infer<Form1ZodType> = {
     user: ``,
+    candidateGroups: ``,
     priority: ``,
-    note: undefined,
+    note: ``,
   };
 
   const formform1Ref = useRef<IGRPFormHandle<Form1ZodType> | null>(null);
   const [form1Data, setForm1Data] = useState<any>(initForm1);
+  const [radioatribuirTaskOptions, setRadioatribuirTaskOptions] = useState<
+    IGRPOptionsProps[]
+  >([]);
   const [selectuserOptions, setSelectuserOptions] = useState<
     IGRPOptionsProps[]
   >([]);
   const [selectpriorityOptions, setSelectpriorityOptions] = useState<
     IGRPOptionsProps[]
   >([]);
+
+  const [atribuirTask, setAtribuirTask] = useState<string>("user");
 
   const { igrpToast } = useIGRPToast();
 
@@ -80,6 +89,13 @@ export default function Commonusertaskmodalform({
     ];
     setSelectpriorityOptions(PRIORITY_OPTIONS);
     setSelectuserOptions(dummyUsers);
+
+    setRadioatribuirTaskOptions([
+      { value: "user", label: "Utilizador" },
+      { value: "group", label: "Grupo" },
+    ]);
+
+    setAtribuirTask("user");
   }, []);
 
   return (
@@ -87,8 +103,10 @@ export default function Commonusertaskmodalform({
       <IGRPModalDialog onOpenChange={setOpen} open={open}>
         <IGRPModalDialogContent size={`xl`} className={cn()}>
           <IGRPModalDialogHeader className={cn("")}>
-            <IGRPModalDialogTitle>{modalTitle}</IGRPModalDialogTitle>
-            <IGRPModalDialogDescription>
+            <IGRPModalDialogTitle id={`modalDialogTitle1`}>
+              {modalTitle}
+            </IGRPModalDialogTitle>
+            <IGRPModalDialogDescription id={`modalDialogDescription1`}>
               {modalSubTitle}
             </IGRPModalDialogDescription>
           </IGRPModalDialogHeader>
@@ -98,7 +116,7 @@ export default function Commonusertaskmodalform({
             formRef={formform1Ref}
             className={cn("")}
             onSubmit={async (data) => {
-              await onSave(data);
+              onSave({ ...data, assigneTo: atribuirTask });
             }}
             defaultValues={form1Data}
           >
@@ -113,8 +131,26 @@ export default function Commonusertaskmodalform({
                 )}
               >
                 {userRequired && (
+                  <IGRPRadioGroup
+                    id={`atribuirTask`}
+                    dir={`ltr`}
+                    orientation={`horizontal`}
+                    variant={`default`}
+                    size={`md`}
+                    gridSize={`default`}
+                    label={`Atruibuir tarefa a:`}
+                    required={true}
+                    className={cn("col-span-1")}
+                    onValueChange={(e) => {
+                      setAtribuirTask(e);
+                    }}
+                    options={radioatribuirTaskOptions}
+                    value={atribuirTask}
+                  ></IGRPRadioGroup>
+                )}
+                {userRequired && atribuirTask === "user" && (
                   <IGRPCombobox
-                    name={`user`}
+                    id={`user`}
                     label={`Utilizador`}
                     variant={`single`}
                     placeholder={`Select an option...`}
@@ -128,13 +164,23 @@ export default function Commonusertaskmodalform({
                     options={selectuserOptions}
                   ></IGRPCombobox>
                 )}
+                {atribuirTask === "group" && (
+                  <IGRPInputText
+                    id={`candidateGroups`}
+                    label={`Grupo`}
+                    showIcon={false}
+                    required={true}
+                    placeholder={`ex: ADMIN,USER`}
+                    className={cn("col-span-1")}
+                  ></IGRPInputText>
+                )}
                 {showPriority && (
                   <IGRPCombobox
-                    name={`priority`}
+                    id={`priority`}
                     label={`Prioridade`}
                     variant={`single`}
                     placeholder={`Select an option...`}
-                    required={true}
+                    required={false}
                     selectLabel={`No option found`}
                     showSearch={true}
                     showIcon={false}
@@ -145,7 +191,7 @@ export default function Commonusertaskmodalform({
                   ></IGRPCombobox>
                 )}
                 <IGRPTextarea
-                  name={`note`}
+                  id={`note`}
                   label={`Nota`}
                   rows={3}
                   required={false}
@@ -155,15 +201,24 @@ export default function Commonusertaskmodalform({
             </>
           </IGRPForm>
           <IGRPModalDialogFooter className={cn("")}>
-            <IGRPButton
-              name={`button1`}
-              variant={`default`}
-              size={`default`}
-              showIcon={false}
-              onClick={() => formform1Ref.current?.submit()}
+            <div
+              className={cn(
+                "flex",
+                "flex-1",
+                "flex flex-row flex-nowrap items-stretch justify-end gap-2",
+              )}
             >
-              Submeter
-            </IGRPButton>
+              <IGRPButton
+                id={`button1`}
+                variant={`default`}
+                size={`default`}
+                showIcon={false}
+                className={cn()}
+                onClick={() => formform1Ref.current?.submit()}
+              >
+                Submeter
+              </IGRPButton>
+            </div>
           </IGRPModalDialogFooter>
         </IGRPModalDialogContent>
       </IGRPModalDialog>

@@ -81,6 +81,15 @@ export function useProcessConfiguration() {
     handleOpenArtifactModal: processHandlers.handleOpenArtifactModal,
     handleSaveArtifacts: () => processHandlers.artifactForm.saveArtifacts(),
 
+    // Artifact management permission
+    artifactPermissionForm: processHandlers.artifactPermissionForm,
+    processArtifactsPermission:
+      processHandlers.artifactPermissionForm.processArtifactsPermission,
+    handleOpenArtifactPermissionModal:
+      processHandlers.handleOpenArtifactPermissionModal,
+    handleSaveArtifactPermission: () =>
+      processHandlers.artifactPermissionForm.saveArtifactPermission(),
+
     // Process Number management
     processNumberForm: processHandlers.processNumberForm,
     processNumberConfigs:

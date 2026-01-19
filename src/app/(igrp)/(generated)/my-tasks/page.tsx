@@ -9,8 +9,10 @@
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import TaskProcessFilter from '@/components/taskprocessfilter'
+import {FilterActives} from '@/app/(myapp)/components/filter-actives'
 import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
+import {LoadingPage} from '@/app/(myapp)/components/loading-page'
 import CommonUserTaskModalForm from '@/components/commonusertaskmodalform'
 import { 
   IGRPPageHeader,
@@ -36,8 +38,7 @@ export default function PageMytasksComponent() {
     currentStep: string;
     process: string;
     startedAt: string;
-    endAt: string;
-    waitingDays: string;
+    duration: string;
     priority: string;
     processKey: string;
     processInstanceId: string;
@@ -50,7 +51,6 @@ export default function PageMytasksComponent() {
   const [statstatsCard5Value, setStatstatsCard5Value] = useState<string | number>(0);
   const [statstatsCard4Value, setStatstatsCard4Value] = useState<string | number>(0);
   const [statstatsCard3Value, setStatstatsCard3Value] = useState<string | number>(0);
-  const [contentTabletable1, setContentTabletable1] = useState<Table1[]>([]);
   
   
 const { igrpToast } = useIGRPToast()
@@ -68,17 +68,21 @@ const taskUrl = await urlConfig.buildTaskExecutionUrl(
 router.push(taskUrl as any);
 
 }
+
 //-------------------reserved area start----------------------------
   const router = useRouter();
 
   const { stats, loading: statsLoading } = useDashboard();
   const {
     tableData,
+    loading,
+    filters,
     unclaimModalState,
     fetchMyTasks,
     applyFilters,
     resetFilters,
     handleSearch,
+    updateFilters,
     handleUnclaimTask,
     handleOpenUnclaimModal,
     handleCloseUnclaimModal
@@ -86,26 +90,19 @@ router.push(taskUrl as any);
 
   // Transform data for the table
   useEffect(() => {
-    if (tableData) 
-      setContentTabletable1(tableData);
     setStatstatsCard1Value(stats.tasks.totalMyTasks);    
     setStatstatsCard2Value(stats.tasks.totalTasksAvailable);
     setStatstatsCard5Value(stats.tasks.totalMyTasksSuspended);
     setStatstatsCard4Value(stats.tasks.totalMyTasksCancelled);
     setStatstatsCard3Value(stats.tasks.totalMyTasksCompleted);
-  }, [tableData, stats]);
-
-  // Load initial data
-  useEffect(() => {
-    fetchMyTasks(0, 50);
-  }, []);
+  }, [stats]);
 
   const handleSearchSubmit = (searchTerm: string) => {
     handleSearch(searchTerm);
   };
 
-  const handleApplyFilters = () => {
-    applyFilters();
+  const handleApplyFilters = (filters: any) => {
+    updateFilters(filters)
   };
 
   const handleResetFilters = () => {
@@ -258,8 +255,10 @@ showIconBorder={ false }
 <div className={ cn(' border rounded-lg',)}    >
 	<TaskProcessFilter   onSearch={ handleSearchSubmit }
 onApplyFilters={ handleApplyFilters }
-onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
-<IGRPDataTable<Table1, Table1>
+onResetFilters={ handleResetFilters }
+onFiltersChange={ handleApplyFilters } ></TaskProcessFilter></div>
+<FilterActives  filters={ filters }  onFiltersChange={ handleApplyFilters } ></FilterActives>
+{ !loading && (<IGRPDataTable<Table1, Table1>
   id={ `table1` }
   showFilter={ true }
   showPagination={ true }
@@ -268,7 +267,7 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
   columns={
     [
         {
-          header: 'Tarefa'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Tarefa` } />)
 ,accessorKey: 'currentStep',
           cell: ({ row }) => {
           return row.getValue("currentStep")
@@ -276,7 +275,7 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Processo'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Processo` } />)
 ,accessorKey: 'process',
           cell: ({ row }) => {
           return row.getValue("process")
@@ -284,7 +283,7 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Data Início'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Data Início` } />)
 ,accessorKey: 'startedAt',
           cell: ({ row }) => {
           return row.getValue("startedAt")
@@ -292,23 +291,15 @@ onResetFilters={ handleResetFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Data Fim'
-,accessorKey: 'endAt',
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Duraçāo` } />)
+,accessorKey: 'duration',
           cell: ({ row }) => {
-          return row.getValue("endAt")
+          return row.getValue("duration")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Dias em espera'
-,accessorKey: 'waitingDays',
-          cell: ({ row }) => {
-          return row.getValue("waitingDays")
-          },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: 'Prioridade'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Prioridade` } />)
 ,accessorKey: 'priority',
           cell: ({ row }) => {
           const rowData = row.original;
@@ -360,8 +351,9 @@ return (
     ]
   }
   
-  data={ contentTabletable1 }
-/>
+  data={ tableData }
+/>)}
+<LoadingPage  isLoading={ loading }   ></LoadingPage>
 <CommonUserTaskModalForm  modalTitle={ `Libertar Tarefa` } modalSubTitle={ modalSubtitle } open={ unclaimModalState.isOpen }  setOpen={ (open) => (open ? {} : handleCloseUnclaimModal()) }
 onSave={ handleUnclaimTaskSave } ></CommonUserTaskModalForm></div>
   );

@@ -5,6 +5,9 @@ import { InfoCard } from "../../components/info-card";
 import {
   IGRPCard,
   IGRPCardContent,
+  IGRPCardDescription,
+  IGRPCardHeader,
+  IGRPCardTitle,
 } from "@igrp/igrp-framework-react-design-system";
 import { cn } from "@/lib/utils";
 import { Process } from "@igrp/platform-process-management-types";
@@ -45,17 +48,30 @@ export function ProcessTree({
 
   return (
     <IGRPCard name={`card1`} className={cn("w-full ")}>
-      <IGRPCardContent className={cn("px-3 py-3")}>
+      <IGRPCardHeader>
+        <IGRPCardTitle>
+          <h3>Mapa de Processos</h3>
+        </IGRPCardTitle>
+        <IGRPCardDescription>
+          <p>Visualize processos organizados por área e subárea</p>
+        </IGRPCardDescription>
+      </IGRPCardHeader>
+      <IGRPCardContent className="space-y-3">
         {nodes.map((node) => (
-          <TreeNode
+          <div
             key={node.id}
-            node={node}
-            expandedNodes={expandedNodes}
-            onToggle={onToggle}
-            onStartProcess={onStartProcess}
-            onViewDetails={onViewDetails}
-            searchTerm={searchTerm}
-          />
+            className="border rounded-lg space-y-3 p-1 gap-3 pb-2"
+          >
+            <TreeNode
+              key={node.id}
+              node={node}
+              expandedNodes={expandedNodes}
+              onToggle={onToggle}
+              onStartProcess={onStartProcess}
+              onViewDetails={onViewDetails}
+              searchTerm={searchTerm}
+            />
+          </div>
         ))}
       </IGRPCardContent>
     </IGRPCard>

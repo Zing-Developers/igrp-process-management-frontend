@@ -27,9 +27,9 @@ export interface TaskTableRow {
   currentStep: string;
   process: string;
   startedAt: string;
-  endAt: string;
+  endedAt?: string;
   priority: string;
-  waitingDays: string;
+  duration: string;
   processKey: string;
   processInstanceId: string;
   taskKey: string;

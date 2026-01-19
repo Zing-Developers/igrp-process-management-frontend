@@ -9,8 +9,10 @@
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import TaskProcessFilter from '@/components/taskprocessfilter'
+import {FilterActives} from '@/app/(myapp)/components/filter-actives'
 import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
+import {LoadingPage} from '@/app/(myapp)/components/loading-page'
 import { 
   IGRPPageHeader,
 	IGRPStatsCard,
@@ -33,15 +35,13 @@ export default function PageAvailabletasksComponent() {
     taskName: string;
     processInfo: string;
     startedAt: string;
-    endAt: string;
     priority: string;
-    daysWaiting: string;
+    duration: string;
     status: string;
     taskId: string;
 }
 
   const [statstatsCard1Value, setStatstatsCard1Value] = useState<string | number>(0);
-  const [contentTabletasks, setContentTabletasks] = useState<Table1[]>([]);
   
   
 const [showFilter, setShowFilter] = useState<boolean>(false);
@@ -53,12 +53,14 @@ const { igrpToast } = useIGRPToast()
 
   const {
     tableData,
+    loading,
     error,
     totalElements,
     totalPages,
     currentPage,
     filters,
     handleSearch,
+    updateFilters,
     applyFilters,
     resetFilters,
     handleClaimTask,
@@ -66,9 +68,12 @@ const { igrpToast } = useIGRPToast()
 
   // Update table data when tableData changes
   useEffect(() => {
-    if (tableData) setContentTabletasks(tableData);
     setStatstatsCard1Value(stats.tasks.totalTasksAvailable);
-  }, [tableData, stats]);
+  }, [stats]);
+
+   const handleApplyFilters = (filters: any) => {
+    updateFilters(filters)
+  };
 
   // Show error toast if there's an error
   useEffect(() => {
@@ -82,8 +87,7 @@ const { igrpToast } = useIGRPToast()
 
   // Handle claim task action
   const onClaimTask = async (taskId: string) => {
-    // const result = await handleClaimTask(taskId, 'current-user');
-    const result = await handleClaimTask(taskId); 
+    const result = await handleClaimTask(taskId); // You might want to get the actual user from context/session
 
     if (result.success) {
       igrpToast({
@@ -145,8 +149,10 @@ showIconBackground={ true }
 <div className={ cn(' border rounded-sm',)}    >
 	<TaskProcessFilter   onSearch={ handleSearch }
 onApplyFilters={ applyFilters }
-onResetFilters={ resetFilters } ></TaskProcessFilter></div>
-<IGRPDataTable<Table1, Table1>
+onResetFilters={ resetFilters }
+onFiltersChange={ handleApplyFilters } ></TaskProcessFilter></div>
+<FilterActives  filters={ filters }  onFiltersChange={ handleApplyFilters } ></FilterActives>
+{ !loading && (<IGRPDataTable<Table1, Table1>
   id={ `tasks` }
   showFilter={ true }
   showPagination={ true }
@@ -155,7 +161,7 @@ onResetFilters={ resetFilters } ></TaskProcessFilter></div>
   columns={
     [
         {
-          header: 'Tarefa'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Tarefa` } />)
 ,accessorKey: 'taskName',
           cell: ({ row }) => {
           return row.getValue("taskName")
@@ -163,7 +169,7 @@ onResetFilters={ resetFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Processo'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Processo` } />)
 ,accessorKey: 'processInfo',
           cell: ({ row }) => {
           return row.getValue("processInfo")
@@ -171,7 +177,7 @@ onResetFilters={ resetFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Data Inicio'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Data Inicio` } />)
 ,accessorKey: 'startedAt',
           cell: ({ row }) => {
           return row.getValue("startedAt")
@@ -179,15 +185,7 @@ onResetFilters={ resetFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Data Fim'
-,accessorKey: 'endAt',
-          cell: ({ row }) => {
-          return row.getValue("endAt")
-          },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: 'Prioridade'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Prioridade` } />)
 ,accessorKey: 'priority',
           cell: ({ row }) => {
           const rowData = row.original;
@@ -205,15 +203,15 @@ badgeClassName={ `${bgClass} ${textClass} ${className}` }
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Dias em espera'
-,accessorKey: 'daysWaiting',
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Duraçāo` } />)
+,accessorKey: 'duration',
           cell: ({ row }) => {
-          return row.getValue("daysWaiting")
+          return row.getValue("duration")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Estado'
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Estado` } />)
 ,accessorKey: 'status',
           cell: ({ row }) => {
           const rowData = row.original;
@@ -258,7 +256,8 @@ return (
     ]
   }
   
-  data={ contentTabletasks }
-/></div>
+  data={ tableData }
+/>)}
+<LoadingPage  isLoading={ loading }   ></LoadingPage></div>
   );
 }

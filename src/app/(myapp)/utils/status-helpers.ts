@@ -13,7 +13,8 @@ export type TaskStatus =
   | "ASSIGNED"
   | "COMPLETED"
   | "CANCELLED"
-  | "DELETED";
+  | "DELETED"
+  | "SUSPENDED";
 
 // Priority Types - matching your priority modal values
 export type Priority = "1" | "2" | "3" | "4" | "5";
@@ -57,11 +58,13 @@ export const getTaskStatusLabel = (status: TaskStatus): string => {
     case "CREATED":
       return "Criado";
     case "ASSIGNED":
-      return "Em progresso";
+      return "Atribuído";
     case "COMPLETED":
-      return "Concluído";
+      return "Completo";
     case "CANCELLED":
       return "Cancelado";
+    case "SUSPENDED":
+      return "Suspenso";
     case "DELETED":
       return "Excluído";
     default:
@@ -149,9 +152,8 @@ export const getPriorityVariant = (
     case 5: // Muito Alta
       return "destructive";
     case 4: // Alta
-      return "warning";
     case 3: // Média
-      return "info";
+      return "warning";
     case 2: // Baixa
       return "secondary";
     case 1: // Muito Baixa
@@ -159,4 +161,35 @@ export const getPriorityVariant = (
     default:
       return "secondary";
   }
+};
+
+export const priorityConfig = {
+  low: {
+    label: "Low",
+    color:
+      "bg-slate-500/15 text-slate-600 dark:text-slate-400 border-slate-500/20",
+  },
+  medium: {
+    label: "Medium",
+    color: "bg-blue-500/15 text-blue-600 dark:text-blue-400 border-blue-500/20",
+  },
+  high: {
+    label: "High",
+    color:
+      "bg-orange-500/15 text-orange-600 dark:text-orange-400 border-orange-500/20",
+  },
+  critical: {
+    label: "Critical",
+    color: "bg-red-500/15 text-red-600 dark:text-red-400 border-red-500/20",
+  },
+};
+
+// Map priority numbers (1-5) to config keys
+export const mapPriorityToConfig = (
+  num: number,
+): keyof typeof priorityConfig => {
+  if (num <= 2) return "low"; // 1-2: Muito Baixa, Baixa
+  if (num === 3) return "medium"; // 3: Média
+  if (num === 4) return "high"; // 4: Alta
+  return "critical"; // 5: Muito Alta
 };

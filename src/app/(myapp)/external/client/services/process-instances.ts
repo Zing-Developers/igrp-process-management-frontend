@@ -1,16 +1,12 @@
 "use server";
 
+import { VariableFilter } from "@/app/(myapp)/components/filter-data";
 import { getIGRPProcessClient } from "@/lib/api-client";
+import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
 import {
   PaginatedResponse,
   ProcessInstance,
 } from "@igrp/platform-process-management-types";
-
-// Define the StatusOption interface locally since it's not exported from the types package
-interface StatusOption {
-  value: string;
-  label: string;
-}
 
 /**
  * Fetches a paginated list of process instances with optional filters.
@@ -23,42 +19,36 @@ export const getProcessInstances = async (
   page = 0,
   size = 20,
   filters?: {
-    processKey?: string;
-    number?: string;
-    status?: string;
+    processType?: string;
+    processNumber?: string;
+    status?:
+      | "CREATED"
+      | "RUNNING"
+      | "SUSPENDED"
+      | "CANCELED"
+      | "COMPLETED"
+      | "TERMINATED";
     businessKey?: string;
-    startDateFrom?: string;
-    startDateTo?: string;
-    endDateFrom?: string;
-    endDateTo?: string;
+    dateFrom?: string | null;
+    dateTo?: string | null;
+    variables?: VariableFilter[];
   },
 ): Promise<PaginatedResponse<ProcessInstance>> => {
-  const allowedStatuses = [
-    "CREATED",
-    "RUNNING",
-    "SUSPENDED",
-    "COMPLETED",
-    "TERMINATED",
-    "CANCELED",
-  ] as const;
-  type ClientStatus = (typeof allowedStatuses)[number];
-
-  const mappedStatus = ((): ClientStatus | undefined => {
-    const raw = filters?.status?.toUpperCase();
-    return allowedStatuses.includes(raw as ClientStatus)
-      ? (raw as ClientStatus)
-      : undefined;
-  })();
+  const { variables, ...rest } = filters ?? {};
 
   const processManagementClient = await getIGRPProcessClient();
-  const response = await processManagementClient.processes.getProcessInstances({
-    page,
-    size,
-    number: filters?.number,
-    procReleaseKey: filters?.processKey,
-    status: mappedStatus,
-    // searchTerms, applicationBase, procReleaseId not mapped here
-  });
+  const response = await processManagementClient.processes.getProcessInstances(
+    {
+      ...rest,
+      page,
+      size,
+      dateFrom: rest?.dateFrom || undefined,
+      dateTo: rest?.dateTo || undefined,
+      number: rest?.processNumber,
+      procReleaseKey: rest?.processType || undefined,
+    },
+    { variables },
+  );
   return response.data;
 };
 
@@ -71,7 +61,8 @@ export const getProcessInstanceById = async (
   id: string,
 ): Promise<ProcessInstance | null> => {
   const processManagementClient = await getIGRPProcessClient();
-  return (await processManagementClient.processes.getProcessInstanceById(id)).data;
+  return (await processManagementClient.processes.getProcessInstanceById(id))
+    .data;
 };
 
 /**
@@ -90,14 +81,17 @@ export const getRunningProcessInstances = async (
     page: 0,
     size: 1000,
   });
-  return (response.data?.content ?? []);
+  return response.data?.content ?? [];
 };
 
 /**
  * Fetches available status options for process instances.
  * @returns A promise that resolves to an array of status options.
  */
-export const getProcessInstancesStatus = async (): Promise<StatusOption[]> => {
+export const getProcessInstancesStatus = async (): Promise<
+  IGRPOptionsProps[]
+> => {
   const processManagementClient = await getIGRPProcessClient();
-  return (await processManagementClient.processes.getProcessInstancesStatus()).data;
+  return (await processManagementClient.processes.getProcessInstancesStatus())
+    .data;
 };

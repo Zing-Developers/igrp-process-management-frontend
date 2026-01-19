@@ -1,38 +1,16 @@
 import { useCallback, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getMyTasks } from "../../external/client/services/task";
-import { MyTasksState, MyTasksFilters } from "../types";
+import { MyTasksState, MyTasksFilters, TaskTableRow } from "../types";
 import { useFilterData } from "../../components/processtaksfilter/hooks/use-filter-data";
-
-export interface MyTasksTableRow {
-  currentStep: string;
-  process: string;
-  startedAt: string;
-  endAt: string;
-  waitingDays: string;
-  processKey: string;
-  processInstanceId: string;
-  taskKey: string;
-  taskId: string;
-  processName: string;
-}
 
 // Export unclaim modal state interface
 export interface UnclaimModalState {
   isOpen: boolean;
-  selectedTask: MyTasksTableRow | null;
+  selectedTask: TaskTableRow | null;
 }
 
 export function useMyTasksData() {
-  const [myTasksState, setMyTasksState] = useState<MyTasksState>({
-    tasks: [],
-    loading: false,
-    error: null,
-    totalElements: 0,
-    totalPages: 0,
-    currentPage: 0,
-    pageSize: 10000,
-  });
-
   // Add unclaim modal state
   const [unclaimModalState, setUnclaimModalState] = useState<UnclaimModalState>(
     {
@@ -43,25 +21,28 @@ export function useMyTasksData() {
 
   const { filters, updateFilters, resetFilters } = useFilterData();
 
-  // Fetch my tasks function
-  const fetchMyTasks = async (
-    page: number,
-    size: number,
-    customFilters?: Partial<MyTasksFilters>,
-  ) => {
-    setMyTasksState((prev) => ({ ...prev, loading: true, error: null }));
+  const queryClient = useQueryClient();
 
-    // Use custom filters if provided, otherwise use current filters state
-    const filtersToUse = customFilters
-      ? { ...filters, ...customFilters }
-      : filters;
+  // State for pagination
+  const [page, setPage] = useState(0);
+  const [size, setSize] = useState(10000);
+  const [customFilters, setCustomFilters] = useState<
+    Partial<MyTasksFilters> | undefined
+  >();
 
-    try {
+  // Use query at the top level - hooks must be called at the top level
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["my-tasks", page, size, filters, customFilters],
+    queryFn: () => {
+      // Use custom filters if provided, otherwise use current filters state
+      const filtersToUse = customFilters
+        ? { ...filters, ...customFilters }
+        : filters;
+
       // Map filter fields to match the service interface
       const mappedFilters = {
         processNumber: filtersToUse.processNumber || "",
-        processKey: filtersToUse.processType || "", // processType maps to processKey
-        user: "superadmin", //filtersToUse.user || '',
+        processKey: filtersToUse.processType || "",
         status: filtersToUse.status || "",
         dateFrom: filtersToUse.dateFrom || "",
         dateTo: filtersToUse.dateTo || "",
@@ -69,26 +50,35 @@ export function useMyTasksData() {
         size,
       };
 
-      const response = await getMyTasks(mappedFilters);
+      return getMyTasks(mappedFilters);
+    },
+  });
 
-      setMyTasksState((prev) => ({
-        ...prev,
-        tasks: response.content,
-        totalElements: response.totalElements,
-        totalPages: response.totalPages,
-        currentPage: response.pageNumber,
-        pageSize: response.pageSize,
-        loading: false,
-      }));
-    } catch (error) {
-      console.error("Error fetching my tasks:", error);
-      setMyTasksState((prev) => ({
-        ...prev,
-        loading: false,
-        error:
-          error instanceof Error ? error.message : "Failed to fetch my tasks",
-      }));
-    }
+  // Transform query result to state format
+  const myTasksState: MyTasksState = {
+    tasks: data?.content || [],
+    loading: isLoading,
+    error:
+      error instanceof Error
+        ? error.message
+        : error
+          ? "Failed to fetch my tasks"
+          : null,
+    totalElements: data?.totalElements || 0,
+    totalPages: data?.totalPages || 0,
+    currentPage: data?.pageNumber || 0,
+    pageSize: data?.pageSize || 10000,
+  };
+
+  // Fetch my tasks function - now just updates state to trigger refetch
+  const fetchMyTasks = (
+    newPage = 0,
+    newSize = 10000,
+    newCustomFilters?: Partial<MyTasksFilters>,
+  ) => {
+    setPage(newPage);
+    setSize(newSize);
+    setCustomFilters(newCustomFilters);
   };
 
   // Apply current filters
@@ -111,8 +101,7 @@ export function useMyTasksData() {
 
   // Add unclaim modal handlers
 
-  const handleOpenUnclaimModal = useCallback((task: MyTasksTableRow) => {
-    console.log("Opening unclaim modal for task:", task);
+  const handleOpenUnclaimModal = useCallback((task: TaskTableRow) => {
     setUnclaimModalState({
       isOpen: true,
       selectedTask: task,
@@ -126,6 +115,10 @@ export function useMyTasksData() {
     });
   };
 
+  const refetchMyTasks = () => {
+    queryClient.invalidateQueries({ queryKey: ["my-tasks"] });
+  };
+
   return {
     myTasksState,
     unclaimModalState,
@@ -136,5 +129,6 @@ export function useMyTasksData() {
     resetFilters: handleResetFilters,
     handleOpenUnclaimModal,
     handleCloseUnclaimModal,
+    refetchMyTasks,
   };
 }

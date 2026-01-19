@@ -41,11 +41,7 @@ export function RecentItemsCard({
     <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-foreground">{title}</h2>
-        <IGRPIcon
-          iconName={iconName}
-          size={20}
-          className="text-gray-400"
-        />
+        <IGRPIcon iconName={iconName} size={20} className="text-gray-400" />
       </div>
 
       <div className="space-y-3">
@@ -55,7 +51,8 @@ export function RecentItemsCard({
               key={item.id}
               className={cn(
                 "flex items-center justify-between p-3 bg-muted rounded-lg",
-                onItemClick && "cursor-pointer hover:bg-accent transition-colors"
+                onItemClick &&
+                  "cursor-pointer hover:bg-accent transition-colors",
               )}
               onClick={() => onItemClick?.(item)}
             >
@@ -72,7 +69,7 @@ export function RecentItemsCard({
                 <span
                   className={cn(
                     "px-2 py-1 text-xs font-medium rounded-full ml-3 shrink-0",
-                    getBadgeClasses(item.badge.variant)
+                    getBadgeClasses(item.badge.variant),
                   )}
                 >
                   {item.badge.text}

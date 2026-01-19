@@ -1,24 +1,23 @@
 import { useState } from "react";
 import { useDropdownData, FilterState } from "./use-dropdown-data";
 
-export function useFilterData() {
+export function useFilterData(isProcess?: boolean) {
   const [filters, setFilters] = useState<FilterState>({
     areaId: "",
     subareaId: "",
     processType: "",
     processNumber: "",
     status: "",
-    dateFrom: "",
-    dateTo: "",
+    dateFrom: null,
+    dateTo: null,
     organic: "",
     user: "",
+    variables: [],
   });
 
-  const { dropdownOptions } = useDropdownData(filters);
+  const { dropdownOptions } = useDropdownData(filters, isProcess);
 
   const updateFilters = (newFilters: Partial<FilterState>) => {
-    console.log("newFilters", newFilters);
-
     setFilters((prev) => ({ ...prev, ...newFilters }));
   };
 
@@ -29,10 +28,11 @@ export function useFilterData() {
       processType: "",
       processNumber: "",
       status: "",
-      dateFrom: "",
-      dateTo: "",
+      dateFrom: null,
+      dateTo: null,
       organic: "",
       user: "",
+      variables: [],
     });
   };
 

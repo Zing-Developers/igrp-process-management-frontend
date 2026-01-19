@@ -4,9 +4,10 @@ import {
   getProcessInstanceStatusLabel,
   getProcessInstanceStatusVariant,
   getPriorityLabel,
-  getPriorityVariant,
   TaskStatus,
   ProcessInstanceStatus,
+  mapPriorityToConfig,
+  priorityConfig,
 } from "./status-helpers";
 
 // Shared utility function to map badge variants to CSS classes
@@ -65,12 +66,18 @@ export const getProcessInstanceStatusColor = (processInstance: {
 export const getPriorityColor = (item: { priority: string | number }) => {
   // Handle your priority system (1-5 scale)
   const priority = item.priority;
+  const priorityNum =
+    typeof priority === "number"
+      ? priority
+      : parseInt(priority.toString(), 10) || 1;
+
   const label = getPriorityLabel(priority);
-  const variant = getPriorityVariant(priority);
+  const configKey = mapPriorityToConfig(priorityNum);
+  const bgClass = priorityConfig[configKey]?.color || priorityConfig.low.color;
 
   return {
     label,
-    bgClass: getBgClass(variant),
+    bgClass: bgClass,
     textClass: "",
     className: "",
     iconName: "",

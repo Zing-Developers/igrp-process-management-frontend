@@ -1,6 +1,10 @@
 import { useMemo, useEffect } from "react";
 import { useFilterData } from "../../components/processtaksfilter/hooks/use-filter-data";
-import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
+import {
+  DateRange,
+  IGRPOptionsProps,
+} from "@igrp/igrp-framework-react-design-system";
+import { format } from "date-fns";
 
 export function useProcessInstancesFilter(
   setSelectAreaOptions: (options: IGRPOptionsProps[]) => void,
@@ -116,9 +120,10 @@ export function useProcessInstancesFilter(
     updateFilters(newFilters);
   };
 
-  const handleDateChange = (dateFrom: string, dateTo?: string) => {
-    const newFilters = { dateFrom, dateTo: dateTo || "" };
-    updateFilters(newFilters);
+  const handleDateChange = (date: DateRange | null) => {
+    const dateFrom = date?.from ? format(date.from, "dd-MM-yyyy") : null;
+    const dateTo = date?.to ? format(date.to, "dd-MM-yyyy") : null;
+    updateFilters({ dateFrom, dateTo });
   };
 
   return {

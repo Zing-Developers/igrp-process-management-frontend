@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /* THIS FILE WAS GENERATED AUTOMATICALLY BY iGRP STUDIO. */
 /* DO NOT MODIFY IT BECAUSE IT COULD BE REWRITTEN AT ANY TIME. */
@@ -6,14 +6,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { use, useState, useEffect, useRef } from 'react';
-import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
-import { AreasList } from '@/app/(myapp)/processconfiguration/components/areas-list';
-import { ArtifactProcessesList } from '@/app/(myapp)/processconfiguration/components/artifact-processes-list';
-import AreaModal from '@/app/(igrp)/(generated)/processconfiguration/components/areamodal';
-import ProcessModal from '@/app/(igrp)/(generated)/processconfiguration/components/processmodal';
-import ArtifactModal from '@/app/(igrp)/(generated)/processconfiguration/components/artifactmodal';
-import ProcessNumberModal from '@/app/(igrp)/(generated)/processconfiguration/components/processnumbermodal';
+import { use, useState, useEffect, useRef } from "react";
+import {
+  cn,
+  useIGRPMenuNavigation,
+  useIGRPToast,
+} from "@igrp/igrp-framework-react-design-system";
+import { AreasList } from "@/app/(myapp)/processconfiguration/components/areas-list";
+import { ArtifactProcessesList } from "@/app/(myapp)/processconfiguration/components/artifact-processes-list";
+import AreaModal from "@/app/(igrp)/(generated)/process-configuration/components/areamodal";
+import ProcessModal from "@/app/(igrp)/(generated)/process-configuration/components/processmodal";
+import ArtifactModal from "@/app/(igrp)/(generated)/process-configuration/components/artifactmodal";
+import ProcessConfigurationPermission from "@/app/(igrp)/(generated)/process-configuration/components/processconfigurationpermission";
+import ProcessNumberModal from "@/app/(igrp)/(generated)/process-configuration/components/processnumbermodal";
 import {
   IGRPPageHeader,
   IGRPTabs,
@@ -21,12 +26,10 @@ import {
   IGRPInputSearch,
   IGRPButton,
   IGRPAlertDialog,
-} from '@igrp/igrp-framework-react-design-system';
-import { useProcessConfiguration } from '@/app/(myapp)/processconfiguration/hooks/use-process-configuration';
+} from "@igrp/igrp-framework-react-design-system";
+import { useProcessConfiguration } from "@/app/(myapp)/processconfiguration/hooks/use-process-configuration";
 
 export default function PageProcessconfigurationComponent() {
-  const [tabstabs1Items, setTabstabs1Items] = useState<IGRPTabItem[]>([]);
-
   const { igrpToast } = useIGRPToast();
 
   /*---------------------------------Reserved area begin------------------------------*/
@@ -34,14 +37,14 @@ export default function PageProcessconfigurationComponent() {
   /*---------------------------------Reserved area end------------------------------*/
 
   return (
-    <div className={cn('page', 'space-y-6')}>
+    <div className={cn("page", "space-y-6")}>
       <IGRPPageHeader
-        name={`pageHeader1`}
+        id={`pageHeader1`}
         title={`Configuração do Processo`}
         description={`Gerencie áreas, subáreas e processos do sistema`}
         iconBackButton={`Search`}
         variant={`h3`}
-        className={cn('')}
+        className={cn("")}
       >
         <div className="flex items-center gap-2"></div>
       </IGRPPageHeader>
@@ -50,7 +53,9 @@ export default function PageProcessconfigurationComponent() {
         variant={`default`}
         tabContentClassName={`border rounded-lg border-transparent-none`}
         iconPlacement={`start`}
-        tabListClassName={cn('')}
+        badgePlacement={`end`}
+        orientation={`horizontal`}
+        tabListClassName={cn("")}
         items={[
           {
             value: `tab_area`,
@@ -58,10 +63,14 @@ export default function PageProcessconfigurationComponent() {
             icon: `AlarmClockOff`,
             content: (
               <>
-                <div className={cn('flex flex-row flex-wrap items-center justify-between gap-2')}>
-                  <div className={cn(' flex-1 min-w-[240px]')}>
+                <div
+                  className={cn(
+                    "flex flex-row flex-wrap items-center justify-between gap-2"
+                  )}
+                >
+                  <div className={cn(" flex-1 min-w-[240px]")}>
                     <IGRPInputSearch
-                      name={`inputSearch1`}
+                      id={`inputSearch1`}
                       label={undefined}
                       showStartIcon={true}
                       startIcon={`Search`}
@@ -72,9 +81,9 @@ export default function PageProcessconfigurationComponent() {
                       value={pc.searchTerm}
                     ></IGRPInputSearch>
                   </div>
-                  <div className={cn('flex', 'block')}>
+                  <div className={cn("flex", "block")}>
                     <IGRPButton
-                      name={`button1`}
+                      id={`button1`}
                       variant={`default`}
                       size={`default`}
                       showIcon={true}
@@ -97,11 +106,14 @@ export default function PageProcessconfigurationComponent() {
                   onAddProcess={pc.handleOpenProcessModal}
                   onRemoveProcess={pc.processOperations.handleRemoveProcess}
                   onToggleExpansion={pc.expansion.handleToggleExpansion}
-                  onAddSubarea={(parentAreaId) => pc.areaForm.openModal(undefined, parentAreaId)}
+                  onAddSubarea={(parentAreaId) =>
+                    pc.areaForm.openModal(undefined, parentAreaId)
+                  }
                 ></AreasList>
               </>
             ),
           },
+
           {
             value: `tab_artifato`,
             label: `Artifatos`,
@@ -110,9 +122,14 @@ export default function PageProcessconfigurationComponent() {
               <>
                 <ArtifactProcessesList
                   processes={pc.allProcesses}
-                  onArtifactEdit={(processId) => pc.handleOpenArtifactModal(processId)}
+                  onArtifactEdit={(processId) =>
+                    pc.handleOpenArtifactModal(processId)
+                  }
                   onProcessNumberEdit={(processId, processKey) =>
-                    pc.handleOpenProcessNumberModal(processId, processKey, '')
+                    pc.handleOpenProcessNumberModal(processId, processKey, "")
+                  }
+                  onArtifactPermissions={(processId) =>
+                    pc.handleOpenArtifactPermissionModal(processId)
                   }
                 ></ArtifactProcessesList>
               </>
@@ -126,21 +143,29 @@ export default function PageProcessconfigurationComponent() {
         areas={pc.allAreasFlat}
         open={pc.areaForm.modalState.isOpen}
         applications={pc.applications}
-        setOpen={(open) => (open ? pc.areaForm.openModal() : pc.areaForm.closeModal())}
+        setOpen={(open) =>
+          open ? pc.areaForm.openModal() : pc.areaForm.closeModal()
+        }
         onFormChange={pc.areaForm.setFormData}
-        onSave={pc.areaForm.modalState.editingArea ? pc.handleUpdateArea : pc.handleCreateArea}
+        onSave={
+          pc.areaForm.modalState.editingArea
+            ? pc.handleUpdateArea
+            : pc.handleCreateArea
+        }
         onClose={pc.areaForm.closeModal}
       ></AreaModal>
       <ProcessModal
         availableProcesses={pc.getAvailableProcesses(
-          pc.processForm.modalState.selectedAreaId || '',
+          pc.processForm.modalState.selectedAreaId || ""
         )}
         open={pc.processForm.modalState.isOpen}
         onAssociate={pc.handleAssociateProcess}
         onClose={pc.processForm.closeModal}
         setOpen={(open) =>
           open
-            ? pc.processForm.openModal(pc.processForm.modalState.selectedAreaId || '')
+            ? pc.processForm.openModal(
+                pc.processForm.modalState.selectedAreaId || ""
+              )
             : pc.processForm.closeModal()
         }
       ></ProcessModal>
@@ -150,21 +175,39 @@ export default function PageProcessconfigurationComponent() {
         formData={pc.artifactForm.formData}
         setOpen={(open) =>
           open
-            ? pc.handleOpenArtifactModal(pc.artifactForm.modalState.selectedProcessId || '')
+            ? pc.handleOpenArtifactModal(
+                pc.artifactForm.modalState.selectedProcessId || ""
+              )
             : pc.artifactForm.closeModal()
         }
         onFormChange={pc.artifactForm.updateFormData}
         onSave={pc.handleSaveArtifacts}
       ></ArtifactModal>
+      <ProcessConfigurationPermission
+        formData={pc.artifactPermissionForm.formData}
+        open={pc.artifactPermissionForm.modalState.isOpen}
+        processArtifacts={pc.processArtifactsPermission}
+        isSubmiting={pc.artifactPermissionForm.loading}
+        onSave={pc.handleSaveArtifactPermission}
+        onFormChange={pc.artifactPermissionForm.updateFormData}
+        setOpen={(open) =>
+          open
+            ? pc.handleOpenArtifactPermissionModal(
+                pc.artifactPermissionForm.modalState.selectedProcessId || ""
+              )
+            : pc.artifactPermissionForm.closeModal()
+        }
+      ></ProcessConfigurationPermission>
       <ProcessNumberModal
         open={pc.processNumberForm.modalState.isOpen}
         formData={pc.processNumberForm.formData}
         setOpen={(open) =>
           open
             ? pc.handleOpenProcessNumberModal(
-                pc.processNumberForm.modalState.selectedProcessId || '',
-                pc.processNumberForm.modalState.selectedProcessKey || '',
-                pc.processNumberForm.modalState.selectedProcessApplicationBase || '',
+                pc.processNumberForm.modalState.selectedProcessId || "",
+                pc.processNumberForm.modalState.selectedProcessKey || "",
+                pc.processNumberForm.modalState
+                  .selectedProcessApplicationBase || ""
               )
             : pc.processNumberForm.closeModal()
         }

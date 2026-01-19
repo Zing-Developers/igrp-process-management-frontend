@@ -3,6 +3,8 @@ import { useMyTasksData } from "./use-my-tasks-data";
 import { TaskTableRow } from "../types";
 import { unclaimTask } from "../../external/client/services/task";
 import { getDateTemplate, getProcessInfo } from "../../utils/columns-template";
+import { format, formatDistanceToNow } from "date-fns";
+import { formatDuration } from "../../utils/shared";
 
 export function useMyTasks() {
   const {
@@ -15,6 +17,7 @@ export function useMyTasks() {
     resetFilters,
     handleOpenUnclaimModal,
     handleCloseUnclaimModal,
+    refetchMyTasks,
   } = useMyTasksData();
 
   // Transform tasks data for the table
@@ -27,14 +30,16 @@ export function useMyTasks() {
       const createdDate = new Date(task.startedAt);
       const currentDate = new Date();
       const diffTime = Math.abs(currentDate.getTime() - createdDate.getTime());
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
       return {
         currentStep: task.name,
         process: getProcessInfo(task.processName, task.processNumber),
-        startedAt: getDateTemplate(task.startedAt),
-        endAt: getDateTemplate(task.endAt),
-        waitingDays: diffDays.toString(),
+        startedAt: format(task.startedAt, "dd MMM, HH:mm"),
+        endedAt: getDateTemplate(task.endedAt),
+        duration:
+          diffTime > 0
+            ? formatDuration(diffTime)
+            : formatDistanceToNow(task.startedAt, { addSuffix: false }),
         priority: task.priority + "",
         processKey: task.processKey,
         processInstanceId: task.processInstanceId,
@@ -66,15 +71,11 @@ export function useMyTasks() {
     }
 
     try {
-      console.log(
-        "unclaimModalState.selectedTask.taskId",
-        unclaimModalState.selectedTask.taskId,
-      );
       await unclaimTask(unclaimModalState.selectedTask.taskId, note);
 
       // Close modal and refresh data
       handleCloseUnclaimModal();
-      await fetchMyTasks(myTasksState.currentPage, myTasksState.pageSize);
+      refetchMyTasks();
 
       return { success: true, message: "Tarefa libertada com sucesso!" };
     } catch (error) {

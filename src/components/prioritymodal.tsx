@@ -48,7 +48,7 @@ export default function Prioritymodal({
   type Form1ZodType = typeof form1;
 
   const initForm1: z.infer<Form1ZodType> = {
-    priority: ``,
+    priority: `2`,
   };
 
   const formform1Ref = useRef<IGRPFormHandle<Form1ZodType> | null>(null);
@@ -68,8 +68,10 @@ export default function Prioritymodal({
       <IGRPModalDialog onOpenChange={setOpen} open={open}>
         <IGRPModalDialogContent size={`lg`} className={cn()}>
           <IGRPModalDialogHeader className={cn("")}>
-            <IGRPModalDialogTitle>{modalTitle}</IGRPModalDialogTitle>
-            <IGRPModalDialogDescription>
+            <IGRPModalDialogTitle id={`modalDialogTitle1`}>
+              {modalTitle}
+            </IGRPModalDialogTitle>
+            <IGRPModalDialogDescription id={`modalDialogDescription1`}>
               {modalSubTitle}
             </IGRPModalDialogDescription>
           </IGRPModalDialogHeader>
@@ -94,7 +96,7 @@ export default function Prioritymodal({
                 )}
               >
                 <IGRPCombobox
-                  name={`priority`}
+                  id={`priority`}
                   label={`Prioridade`}
                   variant={`single`}
                   placeholder={`Select an option...`}
@@ -110,16 +112,31 @@ export default function Prioritymodal({
               </div>
             </>
           </IGRPForm>
-          <IGRPModalDialogFooter className={cn("")}>
-            <IGRPButton
-              name={`button1`}
-              variant={`default`}
-              size={`default`}
-              showIcon={false}
-              onClick={() => formform1Ref.current?.submit()}
+          <IGRPModalDialogFooter
+            className={cn(
+              "flex-1",
+              "",
+              "flex flex-row flex-nowrap items-stretch justify-end gap-2",
+            )}
+          >
+            <div
+              className={cn(
+                "flex",
+                "flex-1",
+                "flex flex-row flex-nowrap items-stretch justify-end gap-2",
+              )}
             >
-              Confirmar
-            </IGRPButton>
+              <IGRPButton
+                id={`button1`}
+                variant={`default`}
+                size={`default`}
+                showIcon={false}
+                className={cn()}
+                onClick={() => formform1Ref.current?.submit()}
+              >
+                Confirmar
+              </IGRPButton>
+            </div>
           </IGRPModalDialogFooter>
         </IGRPModalDialogContent>
       </IGRPModalDialog>

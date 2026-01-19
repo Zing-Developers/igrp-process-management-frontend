@@ -4,11 +4,12 @@ import { Process } from "@igrp/platform-process-management-types";
 
 export function ArtifactProcessesList({
   processes,
-  onArtifactEdit,
   onProcessNumberEdit,
+  onArtifactPermissions,
 }: {
   processes: Process[];
   onArtifactEdit: (processId: string) => void;
+  onArtifactPermissions: (processId: string) => void;
   onProcessNumberEdit: (
     processId: string,
     processKey: string,
@@ -42,8 +43,6 @@ export function ArtifactProcessesList({
               </span>
               <div className="text-xs text-muted-foreground">
                 <span>v{process.version}</span>
-                <span className="mx-1">•</span>
-                <span>{process.statusDesc}</span>
               </div>
             </div>
           </div>
@@ -63,14 +62,23 @@ export function ArtifactProcessesList({
               iconClassName="w-4 h-4"
               title="Configurar Número do Processo"
             />
-            <IGRPButton
+            {/*  <IGRPButton
               onClick={() => onArtifactEdit(process.id)}
               variant="ghost"
               size="icon"
-              iconName="ArrowRightLeft"
+              iconName="Sec"
               className="p-2 text-muted-foreground hover:text-primary hover:bg-accent rounded"
               iconClassName="w-4 h-4"
               title="Configurar Artifatos"
+            /> */}
+            <IGRPButton
+              onClick={() => onArtifactPermissions(process.id)}
+              variant="ghost"
+              size="icon"
+              iconName="Shield"
+              className="p-2 text-muted-foreground hover:text-primary hover:bg-accent rounded"
+              iconClassName="w-4 h-4"
+              title="Configurar Permissões"
             />
           </div>
         </div>

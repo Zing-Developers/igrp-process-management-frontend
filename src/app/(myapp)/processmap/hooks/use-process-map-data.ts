@@ -45,7 +45,6 @@ export function useProcessMapData() {
         }
 
         const subareas = await AreaService.getSubareas(parentAreaId);
-        console.log("Loaded subareas for area", parentAreaId, ":", subareas);
 
         const normalizedSubareas = subareas.map((sa) => ({
           ...sa,
@@ -61,11 +60,9 @@ export function useProcessMapData() {
               flatAreas.push(subarea as ExtendedArea);
             }
           });
-          console.log("Updated flat areas after adding subareas:", flatAreas);
 
           return organizeAreasHierarchy(flatAreas);
         });
-        console.log("Updated areas after loading subareas:", areas);
 
         setLoadedNodes((prev) => new Set([...prev, parentAreaId]));
       } catch (error) {

@@ -84,31 +84,19 @@ export function useProcessOperations(router?: AppRouterInstance) {
             if (tasksResponse.content && tasksResponse.content.length > 0) {
               const firstTask = tasksResponse.content[0];
 
-              try {
-                // Claim the task before redirecting
-                //await claimTask(firstTask.id); // You may want to get the actual user from context/session
+              // Claim the task before redirecting
+              //await claimTask(firstTask.id); // You may want to get the actual user from context/session
 
-                // Build task execution URL using the first available task
-                const taskUrl = await urlConfig.buildTaskExecutionUrl(
-                  instance.procReleaseKey,
-                  firstTask.processInstanceId,
-                  firstTask.taskKey,
-                  firstTask.id,
-                  firstTask.applicationBase ?? ""
-                );
-                router.push(taskUrl);
-              } catch (claimError) {
-                console.warn("Error claiming task:", claimError);
-
-                igrpToast({
-                  type: "warning",
-                  title: "Aviso",
-                  description:
-                    "Não foi possível assumir a tarefa automaticamente.",
-                });
-
-              }
-            } 
+              // Build task execution URL using the first available task
+              const taskUrl = await urlConfig.buildTaskExecutionUrl(
+                instance.procReleaseKey,
+                firstTask.processInstanceId,
+                firstTask.taskKey,
+                firstTask.id,
+                firstTask.applicationBase ?? ""
+              );
+              router.push(taskUrl);
+            }
           } catch (taskError) {
             console.warn(
               "Error fetching tasks for process instance:",

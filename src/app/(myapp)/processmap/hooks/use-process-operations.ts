@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import {
+  claimTask,
   getTasksByProcessInstance,
 } from "../../external/client/services/task";
 import {
@@ -85,7 +86,7 @@ export function useProcessOperations(router?: AppRouterInstance) {
               const firstTask = tasksResponse.content[0];
 
               // Claim the task before redirecting
-              //await claimTask(firstTask.id); // You may want to get the actual user from context/session
+              await claimTask(firstTask.id); // You may want to get the actual user from context/session
 
               // Build task execution URL using the first available task
               const taskUrl = await urlConfig.buildTaskExecutionUrl(

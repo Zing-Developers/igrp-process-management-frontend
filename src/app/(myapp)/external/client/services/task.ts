@@ -31,6 +31,7 @@ export const getTasks = async (
     page,
     size,
     processReleaseKey: processType || undefined,
+    //filterByCurrentUser: true,
   };
   const response = await processManagementClient.tasks.getTasks(params, {
     variables,
@@ -98,6 +99,7 @@ export const getAvailableTasks = async (
     status: "CREATED",
     page,
     size,
+    filterByCurrentUser: true,
   });
   return response.data;
 };

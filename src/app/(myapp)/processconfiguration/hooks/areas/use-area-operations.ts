@@ -38,8 +38,6 @@ export function useAreaOperations(
 
   const handleUpdateArea = async (areaId: string, formData: AreaFormData) => {
     try {
-      console.log("handleUpdateArea areaId", areaId);
-      console.log("handleUpdateArea formData", formData);
       const updatedArea = await AreaService.updateArea(
         areaId,
         formData as UpdateAreaRequest,
@@ -76,13 +74,11 @@ export function useAreaOperations(
           );
           const organizedAreas = organizeAreasHierarchy(filteredAreas);
           setAreas(organizedAreas);
-          if (igrpToast) {
-            igrpToast({
-              type: "success",
-              title: "Sucesso",
-              description: "Área excluída com sucesso!",
-            });
-          }
+          igrpToast({
+            type: "success",
+            title: "Sucesso",
+            description: "Área excluída com sucesso!",
+          });
         } catch (error) {
           console.error("Error deleting area:", error);
           igrpToast({
@@ -99,11 +95,9 @@ export function useAreaOperations(
   const loadSubareas = async (parentAreaId: string) => {
     try {
       const subareas = await AreaService.getSubareas(parentAreaId);
-      console.log("loadSubareas subareas", subareas);
       // Update the areas state to include the loaded subareas
       setAreas((prev) => {
         const flatAreas = getAllAreasFlat(prev);
-        console.log("loadSubareas flatAreas", flatAreas);
 
         // Add the new subareas to the flat list if they don't already exist
         subareas.forEach((subarea) => {
@@ -113,7 +107,6 @@ export function useAreaOperations(
           }
         });
 
-        console.log("loadSubareas flatAreas", flatAreas);
         // Reorganize the hierarchy
         return organizeAreasHierarchy(flatAreas);
       });

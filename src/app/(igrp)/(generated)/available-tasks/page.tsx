@@ -154,9 +154,10 @@ onFiltersChange={ handleApplyFilters } ></TaskProcessFilter></div>
 <FilterActives  filters={ filters }  onFiltersChange={ handleApplyFilters } ></FilterActives>
 { !loading && (<IGRPDataTable<Table1, Table1>
   id={ `tasks` }
-  showFilter={ true }
   showPagination={ true }
+  isNumericPagination={ true }
   paginationClassName={ `px-3 pb-3` }
+  pageSizePagination={ [] }
   className={ cn('','border-0 border-solid border-[#000000]',) }
   columns={
     [

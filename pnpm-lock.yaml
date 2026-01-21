@@ -21,8 +21,8 @@ importers:
         specifier: 0.1.0-beta.88
         version: 0.1.0-beta.88(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
       '@igrp/framework-next-ui':
-        specifier: 0.1.0-beta.88-7
-        version: 0.1.0-beta.88-7(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+        specifier: 0.1.0-beta.88-8
+        version: 0.1.0-beta.88-8(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@igrp/igrp-framework-react-design-system':
         specifier: 0.1.0-beta.88
         version: 0.1.0-beta.88(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -208,8 +208,8 @@ packages:
       react: ^19.2.3
       react-dom: ^19.2.3
 
-  '@igrp/framework-next-ui@0.1.0-beta.88-7':
-    resolution: {integrity: sha512-04Wya1GTe1Z/dDKw6h7ss3zYzMYvpP7EeVrBIDilTHidZhFX9kdy8xa2K1F4NHFlIrRTfeLhtRlG3V3cj/BKVA==}
+  '@igrp/framework-next-ui@0.1.0-beta.88-8':
+    resolution: {integrity: sha512-mrPz3MgQAxXY0rSKR0nW9+aJTuRW7+zZ5kd5UM9UFEnaCoNBJRVp5UqXiz9jDr2unrWLjYL+ykMdd3/BHT85tg==}
     engines: {node: '>=20.x.x'}
     peerDependencies:
       next: ^15.5.9
@@ -1497,8 +1497,8 @@ packages:
     resolution: {integrity: sha512-utfs7Pr5uJyyvDETitgsaqSyjCb2qNRAtuqUeWIAKztsOYdcACf2KtARYXg2pSvhkt+9NfoaNY7fxjl6nuMjIQ==}
     engines: {node: '>= 12.0.0'}
 
-  lodash@4.17.21:
-    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+  lodash@4.17.23:
+    resolution: {integrity: sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==}
 
   loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
@@ -1908,7 +1908,7 @@ snapshots:
       - '@types/react'
       - '@types/react-dom'
 
-  '@igrp/framework-next-ui@0.1.0-beta.88-7(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+  '@igrp/framework-next-ui@0.1.0-beta.88-8(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
       '@igrp/framework-next-auth': 0.1.0-beta.88(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
       '@igrp/framework-next-types': 0.1.0-beta.88(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
@@ -3148,7 +3148,7 @@ snapshots:
       lightningcss-win32-arm64-msvc: 1.30.2
       lightningcss-win32-x64-msvc: 1.30.2
 
-  lodash@4.17.21: {}
+  lodash@4.17.23: {}
 
   loose-envify@1.4.0:
     dependencies:
@@ -3344,7 +3344,7 @@ snapshots:
     dependencies:
       clsx: 2.1.1
       eventemitter3: 4.0.7
-      lodash: 4.17.21
+      lodash: 4.17.23
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
       react-is: 18.3.1

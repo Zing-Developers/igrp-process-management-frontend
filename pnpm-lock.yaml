@@ -12,8 +12,8 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.71.1(react@19.2.3))
       '@igrp/framework-next':
-        specifier: 0.1.0-beta.88
-        version: 0.1.0-beta.88(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+        specifier: 0.1.0-beta.88-8
+        version: 0.1.0-beta.88-8(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@igrp/framework-next-auth':
         specifier: 0.1.0-beta.88
         version: 0.1.0-beta.88(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
@@ -199,15 +199,6 @@ packages:
     peerDependencies:
       next-auth: ^4.24.13
 
-  '@igrp/framework-next-ui@0.1.0-beta.88':
-    resolution: {integrity: sha512-zGB2w5P8mYCmX97FUXm7mThQw+976xJ3Cq8MCkBd+yramNcpRiKlbzIPrFmuFAyxIHhpJX5CESubjMA7xrZs8Q==}
-    engines: {node: '>=20.x.x'}
-    peerDependencies:
-      next: ^15.5.9
-      next-auth: ^4.24.13
-      react: ^19.2.3
-      react-dom: ^19.2.3
-
   '@igrp/framework-next-ui@0.1.0-beta.88-8':
     resolution: {integrity: sha512-mrPz3MgQAxXY0rSKR0nW9+aJTuRW7+zZ5kd5UM9UFEnaCoNBJRVp5UqXiz9jDr2unrWLjYL+ykMdd3/BHT85tg==}
     engines: {node: '>=20.x.x'}
@@ -217,8 +208,8 @@ packages:
       react: ^19.2.3
       react-dom: ^19.2.3
 
-  '@igrp/framework-next@0.1.0-beta.88':
-    resolution: {integrity: sha512-3hXjpjpHVrq2tIOwWYNdhhJdeJ5vH2Y7Dmkmw2WBH1NAKBLi2hXIgzJ39h9ZARUGwKW4QWYBrQc0Ct9EohDgCg==}
+  '@igrp/framework-next@0.1.0-beta.88-8':
+    resolution: {integrity: sha512-mHx+tM1o9NKcSSg+PcGYzeH8q+3iSxUBBH7XiHUB4WP8Gj8QXkOzHPwnr2F7xPs5/JMM3LSf34uNVlZFIS8RGA==}
     engines: {node: '>=20.x.x'}
     peerDependencies:
       next: 15.5.9
@@ -1890,24 +1881,6 @@ snapshots:
       - next
       - react
 
-  '@igrp/framework-next-ui@0.1.0-beta.88(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
-    dependencies:
-      '@igrp/framework-next-auth': 0.1.0-beta.88(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
-      '@igrp/framework-next-types': 0.1.0-beta.88(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
-      '@igrp/igrp-framework-react-design-system': 0.1.0-beta.88(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      class-variance-authority: 0.7.1
-      clsx: 2.1.1
-      next: 15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      next-auth: 4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      next-themes: 0.4.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      react: 19.2.3
-      react-dom: 19.2.3(react@19.2.3)
-      tailwind-merge: 3.4.0
-      zod: 4.3.5
-    transitivePeerDependencies:
-      - '@types/react'
-      - '@types/react-dom'
-
   '@igrp/framework-next-ui@0.1.0-beta.88-8(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
       '@igrp/framework-next-auth': 0.1.0-beta.88(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
@@ -1926,11 +1899,11 @@ snapshots:
       - '@types/react'
       - '@types/react-dom'
 
-  '@igrp/framework-next@0.1.0-beta.88(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+  '@igrp/framework-next@0.1.0-beta.88-8(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
       '@igrp/framework-next-auth': 0.1.0-beta.88(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
       '@igrp/framework-next-types': 0.1.0-beta.88(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
-      '@igrp/framework-next-ui': 0.1.0-beta.88(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@igrp/framework-next-ui': 0.1.0-beta.88-8(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@igrp/platform-access-management-client-ts': 0.1.0-beta.63
       next: 15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       react: 19.2.3

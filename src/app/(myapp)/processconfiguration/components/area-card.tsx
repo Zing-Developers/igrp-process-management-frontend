@@ -43,7 +43,6 @@ export function AreaCard({
   const hasContent = hasSubareas || hasProcesses || !isExpanded;
 
   const handleToggleExpansion = async () => {
-    console.log("Toggling expansion for area:", area.id);
     await onToggleExpansion(area.id);
   };
 

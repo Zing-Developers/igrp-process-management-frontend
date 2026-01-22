@@ -30,7 +30,9 @@ export default function Areamodal({ open, setOpen, isEditing, formData, areas, o
 
 
   
-  const form1 = z.object({
+  z.config(z.locales.en());
+
+const form1 = z.object({
     applicationBase: z.string().nonempty(),
     applicationBaseText: z.string().nonempty(),
     code: z.string().nonempty(),
@@ -65,6 +67,7 @@ onSave(data)
 
 }
 
+const isUpdatingRef = useRef<boolean>(false);
 useEffect(() => {
   if (formData)
     setForm1Data({
@@ -80,22 +83,59 @@ useEffect(() => {
 
 const title = isEditing ? 'Editar Área' : 'Nova Área';
 
-useEffect(() => {
-  if (formform1Ref.current) {
+  useEffect(() => {
+    let cleanup: (() => void) | undefined;
+    let rafId = 0;
 
+    const trySubscribe = () => {
+      const handle = formform1Ref.current;
+      if (handle && typeof (handle as any).watch === "function") {
+        const subscription = (handle as any).watch((value: any) => {
+          if (isUpdatingRef.current) return;
 
-    if (applications.length > 0)
-      formform1Ref.current.watch('applicationBase').then((value: string) => {
-        formform1Ref.current?.setValue('applicationBaseText', value);
-        console.log(value)
-      });
-    else
-      formform1Ref.current.watch('applicationBaseText').then((value: string) => {
-        formform1Ref.current?.setValue('applicationBase', value);
-        console.log(value)
-      });
-  }
-}, [formform1Ref]);
+          if (applications.length > 0) {
+            const currentValue = (value as any)?.applicationBase;
+            const currentText = (value as any)?.applicationBaseText;
+            if (currentValue && currentValue !== currentText) {
+              isUpdatingRef.current = true;
+              formform1Ref.current?.setValue(
+                "applicationBaseText",
+                currentValue
+              );
+              setTimeout(() => {
+                isUpdatingRef.current = false;
+              }, 0);
+            }
+          } else {
+            const currentText = (value as any)?.applicationBaseText;
+            const currentValue = (value as any)?.applicationBase;
+            if (currentText && currentText !== currentValue) {
+              isUpdatingRef.current = true;
+              formform1Ref.current?.setValue("applicationBase", currentText);
+              setTimeout(() => {
+                isUpdatingRef.current = false;
+              }, 0);
+            }
+          }
+        });
+
+        cleanup = () => {
+          if (subscription && typeof subscription.unsubscribe === "function") {
+            subscription.unsubscribe();
+          }
+        };
+      } else {
+        rafId = window.requestAnimationFrame(trySubscribe);
+      }
+    };
+
+    trySubscribe();
+
+    return () => {
+      if (rafId) window.cancelAnimationFrame(rafId);
+      if (cleanup) cleanup();
+    };
+  }, [applications]);
 
 
   return (

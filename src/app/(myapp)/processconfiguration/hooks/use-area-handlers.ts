@@ -117,7 +117,6 @@ export function useAreaHandlers(
 
   // Add function to load area processes on-demand
   const handleLoadAreaProcesses = async (areaId: string) => {
-
     try {
       const paginatedResponse =
         await AreaProcessService.getAreaProcesses(areaId);
@@ -130,7 +129,6 @@ export function useAreaHandlers(
         ...prev,
         [areaId]: processes, // Now processes is Process[]
       }));
-
     } catch (error) {
       console.error("Error loading area processes:", error);
 

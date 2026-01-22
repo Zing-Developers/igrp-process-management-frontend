@@ -35,7 +35,7 @@ export function useProcessOperations(router?: AppRouterInstance) {
       processKey: string,
       applicationBase: string,
       businessKey?: string,
-      variables?: Array<{ name: string; value: string }>
+      variables?: Array<{ name: string; value: string }>,
     ) => {
       setPendingProcessStart({
         processDefinitionId,
@@ -45,7 +45,7 @@ export function useProcessOperations(router?: AppRouterInstance) {
         variables,
       });
     },
-    []
+    [],
   );
 
   const startProcessWithPriority = useCallback(
@@ -62,7 +62,7 @@ export function useProcessOperations(router?: AppRouterInstance) {
           pendingProcessStart.applicationBase,
           priority, // Add priority parameter
           pendingProcessStart.businessKey,
-          pendingProcessStart.variables
+          pendingProcessStart.variables,
         );
 
         // Clear pending process start
@@ -94,14 +94,14 @@ export function useProcessOperations(router?: AppRouterInstance) {
                 firstTask.processInstanceId,
                 firstTask.taskKey,
                 firstTask.id,
-                firstTask.applicationBase ?? ""
+                firstTask.applicationBase ?? "",
               );
               router.push(taskUrl);
             }
           } catch (taskError) {
             console.warn(
               "Error fetching tasks for process instance:",
-              taskError
+              taskError,
             );
           }
         }
@@ -122,7 +122,7 @@ export function useProcessOperations(router?: AppRouterInstance) {
         return null;
       }
     },
-    [pendingProcessStart, igrpToast, router]
+    [pendingProcessStart, igrpToast, router],
   );
 
   return {

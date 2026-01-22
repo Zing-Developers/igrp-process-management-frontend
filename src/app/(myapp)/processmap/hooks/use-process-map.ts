@@ -12,7 +12,7 @@ import { Process } from "@igrp/platform-process-management-types";
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
 
 export function useProcessMap(
-  router?: AppRouterInstance
+  router?: AppRouterInstance,
 ): ProcessMapHookReturn {
   // Data management
   const { areas, loadedNodes, loading, error, loadSubareas, refreshData } =
@@ -38,7 +38,7 @@ export function useProcessMap(
   // Computed tree values
   const { treeNodes, flatNodes, totalProcesses, totalAreas } = useTreeComputed(
     areas,
-    expandedNodes
+    expandedNodes,
   );
 
   // Search functionality
@@ -67,7 +67,7 @@ export function useProcessMap(
         }
       }
     },
-    [expandedNodes, originalToggleNode, loadedNodes, loadSubareas, igrpToast]
+    [expandedNodes, originalToggleNode, loadedNodes, loadSubareas, igrpToast],
   );
 
   // New startProcess function that opens priority modal first
@@ -78,7 +78,7 @@ export function useProcessMap(
       processKey: string,
       applicationBase: string,
       businessKey?: string,
-      variables?: Array<{ name: string; value: string }>
+      variables?: Array<{ name: string; value: string }>,
     ) => {
       // Prepare the process start parameters
       prepareProcessStart(
@@ -86,13 +86,13 @@ export function useProcessMap(
         processKey,
         applicationBase,
         businessKey,
-        variables
+        variables,
       );
 
       // Open priority modal
       priorityModal.open(process);
     },
-    [prepareProcessStart, priorityModal]
+    [prepareProcessStart, priorityModal],
   );
 
   // Handle priority modal save
@@ -110,7 +110,7 @@ export function useProcessMap(
         });
       }
     },
-    [startProcessWithPriority, priorityModal, igrpToast]
+    [startProcessWithPriority, priorityModal, igrpToast],
   );
 
   return {

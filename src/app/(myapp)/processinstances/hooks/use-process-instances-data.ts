@@ -6,19 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export function useProcessInstancesData() {
   // Use the shared filter data hook
-  const { filters, dropdownOptions, updateFilters, resetFilters } =
-    useFilterData();
-
-  // Add process instance-specific status options to the shared dropdown options
-  const enhancedDropdownOptions = {
-    ...dropdownOptions,
-    statuses: [
-      { label: "Ativo", value: "ACTIVE" },
-      { label: "Pendente", value: "PENDING" },
-      { label: "Concluído", value: "COMPLETED" },
-      { label: "Cancelado", value: "CANCELLED" },
-    ],
-  };
+  const { filters, updateFilters, resetFilters } = useFilterData();
 
   // State for pagination
   const [page, setPage] = useState(0);
@@ -61,31 +49,20 @@ export function useProcessInstancesData() {
       filters.subareaId,
       filters.organic,
       filters.user,
-      filters.variables,
     ],
     queryFn: () => {
-      return getProcessInstances(
-        page,
-        size,
-        filters as Partial<ProcessInstancesFilters>,
-      );
+      return getProcessInstances(filters as Partial<ProcessInstancesFilters>);
     },
   });
 
+  const { content, ...rest } = data ?? {};
+
   // Transform query result to state format
   const processInstancesState: ProcessInstancesState = {
-    processInstances: data?.content || [],
+    ...rest,
+    processInstances: content || [],
     loading: isLoading,
-    error:
-      error instanceof Error
-        ? error.message
-        : error
-          ? "Failed to fetch process instances"
-          : null,
-    totalElements: data?.totalElements || 0,
-    totalPages: data?.totalPages || 0,
-    currentPage: data?.pageNumber || 0,
-    pageSize: data?.pageSize || 1000,
+    error: error instanceof Error ? error.message : error ? error : undefined,
   };
 
   // Fetch process instances function - now just updates pagination state
@@ -108,7 +85,6 @@ export function useProcessInstancesData() {
   return {
     processInstancesState,
     filters,
-    dropdownOptions: enhancedDropdownOptions,
     updateFilters,
     applyFilters,
     resetFilters,

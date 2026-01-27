@@ -65,7 +65,7 @@ export function useAvailableTasks() {
         };
       }
     },
-    [fetchTasks, tasksState.currentPage, tasksState.pageSize],
+    [fetchTasks],
   );
 
   const handleSearch = (searchTerm: string) => {
@@ -73,8 +73,8 @@ export function useAvailableTasks() {
     applyFilters();
   };
 
-  const handlePageChange = (page: number) => {
-    fetchTasks(page, tasksState.pageSize);
+  const handlePageChange = () => {
+    fetchTasks();
   };
 
   return {

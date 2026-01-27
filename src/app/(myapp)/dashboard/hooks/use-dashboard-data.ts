@@ -156,12 +156,12 @@ export function useDashboardData() {
       setError(undefined);
 
       // Load recent process instances (first 5)
-      const processInstancesResponse = await getProcessInstances(0, 5);
+      const processInstancesResponse = await getProcessInstances();
 
       // Load recent tasks assigned to current user (first 5)
       let recentTasks: RecentItemsCardItem[] = [];
       try {
-        const myTasksResponse = await getMyTasks({ page: 0, size: 5 });
+        const myTasksResponse = await getMyTasks();
         recentTasks = myTasksResponse.content?.map(mapTaskToRecentItem) || [];
       } catch (taskError) {
         console.warn(
@@ -170,7 +170,7 @@ export function useDashboardData() {
         );
         // Fallback to general tasks if user-specific tasks fail
         try {
-          const generalTasksResponse = await getTasks(0, 5);
+          const generalTasksResponse = await getTasks();
           recentTasks =
             generalTasksResponse.content?.map(mapTaskToRecentItem) || [];
         } catch (generalTaskError) {

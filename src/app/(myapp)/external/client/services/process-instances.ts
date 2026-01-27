@@ -1,6 +1,7 @@
 "use server";
 
 import { VariableFilter } from "@/app/(myapp)/components/filter-data";
+import { DEFAULT_PAGE_SIZE } from "@/app/(myapp)/utils/shared";
 import { getIGRPProcessClient } from "@/lib/api-client";
 import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
 import {
@@ -15,33 +16,29 @@ import {
  * @param filters Optional filters to apply to the search.
  * @returns A promise that resolves to a paginated response of process instances.
  */
-export const getProcessInstances = async (
-  page = 0,
-  size = 20,
-  filters?: {
-    processType?: string;
-    processNumber?: string;
-    status?:
-      | "CREATED"
-      | "RUNNING"
-      | "SUSPENDED"
-      | "CANCELED"
-      | "COMPLETED"
-      | "TERMINATED";
-    businessKey?: string;
-    dateFrom?: string | null;
-    dateTo?: string | null;
-    variables?: VariableFilter[];
-  },
-): Promise<PaginatedResponse<ProcessInstance>> => {
+export const getProcessInstances = async (filters?: {
+  processType?: string;
+  processNumber?: string;
+  status?:
+    | "CREATED"
+    | "RUNNING"
+    | "SUSPENDED"
+    | "CANCELED"
+    | "COMPLETED"
+    | "TERMINATED";
+  businessKey?: string;
+  dateFrom?: string | null;
+  dateTo?: string | null;
+  variables?: VariableFilter[];
+}): Promise<PaginatedResponse<ProcessInstance>> => {
   const { variables, ...rest } = filters ?? {};
 
   const processManagementClient = await getIGRPProcessClient();
   const response = await processManagementClient.processes.getProcessInstances(
     {
       ...rest,
-      page,
-      size,
+      page: 0,
+      size: DEFAULT_PAGE_SIZE,
       dateFrom: rest?.dateFrom || undefined,
       dateTo: rest?.dateTo || undefined,
       number: rest?.processNumber,

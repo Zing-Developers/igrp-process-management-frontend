@@ -40,7 +40,7 @@ export function useProcessHandlers(
 
     setLoading(true);
     try {
-      const response = await ProcessService.getProcesses(0, 100);
+      const response = await ProcessService.getProcesses();
       setAllProcesses(response.content || []);
     } catch (error) {
       console.error("Error loading processes:", error);

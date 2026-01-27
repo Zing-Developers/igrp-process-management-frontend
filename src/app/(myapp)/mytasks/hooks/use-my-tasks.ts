@@ -57,8 +57,8 @@ export function useMyTasks() {
     applyFilters();
   };
 
-  const handlePageChange = (page: number) => {
-    fetchMyTasks(page, myTasksState.pageSize);
+  const handlePageChange = () => {
+    fetchMyTasks();
   };
 
   // Add unclaim task handler
@@ -109,9 +109,5 @@ export function useMyTasks() {
     // State
     loading: myTasksState.loading,
     error: myTasksState.error,
-    totalElements: myTasksState.totalElements,
-    totalPages: myTasksState.totalPages,
-    currentPage: myTasksState.currentPage,
-    pageSize: myTasksState.pageSize,
   };
 }

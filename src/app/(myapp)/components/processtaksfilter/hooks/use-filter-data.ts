@@ -22,7 +22,8 @@ export function useFilterData(isProcess?: boolean) {
   };
 
   const resetFilters = () => {
-    setFilters({
+    console.log("resetFilters");
+    updateFilters({
       areaId: "",
       subareaId: "",
       processType: "",
@@ -30,10 +31,8 @@ export function useFilterData(isProcess?: boolean) {
       status: "",
       dateFrom: null,
       dateTo: null,
-      organic: "",
-      user: "",
-      variables: [],
     });
+    console.log("filters", filters);
   };
 
   return {

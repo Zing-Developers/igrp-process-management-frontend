@@ -31,7 +31,7 @@ export const getTasks = async (
     page,
     size,
     processReleaseKey: processType || undefined,
-    //filterByCurrentUser: true,
+    filterByCurrentUser: true,
   };
   const response = await processManagementClient.tasks.getTasks(params, {
     variables,

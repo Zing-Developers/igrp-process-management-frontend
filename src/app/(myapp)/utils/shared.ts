@@ -1,3 +1,5 @@
+export const DEFAULT_PAGE_SIZE = 100;
+
 export function formatDuration(ms: number): string {
   const seconds = Math.floor(ms / 1000);
   const minutes = Math.floor(seconds / 60);

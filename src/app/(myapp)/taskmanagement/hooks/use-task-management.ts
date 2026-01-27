@@ -12,12 +12,7 @@ import {
 export function useTaskManagement() {
   const queryClient = useQueryClient();
 
-  const [page, setPage] = useState(0);
-  const [size, setSize] = useState(1000);
-  const [filters, setFilters] = useState<TaskManagementFilters>({
-    page: 0,
-    size: 1000,
-  });
+  const [filters, setFilters] = useState<TaskManagementFilters>({});
 
   // Add modal state for assign task
   const [assignModalState, setAssignModalState] =
@@ -35,24 +30,17 @@ export function useTaskManagement() {
         Object.entries(filters).filter(([, value]) => value !== undefined),
       );
 
-      return getTasks(page, size, cleanFilters);
+      return getTasks(cleanFilters);
     },
   });
 
+  const { content, ...rest } = data ?? {};
   // Transform state from query result
   const state: TaskManagementState = {
-    tasks: data?.content || [],
+    ...rest,
+    tasks: content || [],
     loading: isLoading,
-    error:
-      error instanceof Error
-        ? error.message
-        : error
-          ? "Failed to fetch tasks"
-          : null,
-    totalElements: data?.totalElements || 0,
-    totalPages: data?.totalPages || 0,
-    currentPage: data?.pageNumber || 0,
-    pageSize: data?.pageSize || 1000,
+    error: error instanceof Error ? error.message : error ? error : null,
   };
 
   // Transform tasks data for table display
@@ -86,20 +74,11 @@ export function useTaskManagement() {
   }, [state.tasks]);
 
   // Fetch tasks function - now just updates pagination/filter states
-  const fetchTasks = useCallback(
-    (
-      newPage: number,
-      newSize: number,
-      appliedFilters?: TaskManagementFilters,
-    ) => {
-      setPage(newPage);
-      setSize(newSize);
-      if (appliedFilters) {
-        setFilters(appliedFilters);
-      }
-    },
-    [],
-  );
+  const fetchTasks = useCallback((appliedFilters?: TaskManagementFilters) => {
+    if (appliedFilters) {
+      setFilters(appliedFilters);
+    }
+  }, []);
 
   // Handle search functionality
   const handleSearch = useCallback(
@@ -109,11 +88,6 @@ export function useTaskManagement() {
     },
     [filters],
   );
-
-  // Handle page change
-  const handlePageChange = useCallback((newPage: number) => {
-    setPage(newPage);
-  }, []);
 
   // Handle filter application
   const applyFilters = useCallback(
@@ -198,17 +172,12 @@ export function useTaskManagement() {
     // State
     loading: state.loading,
     error: state.error,
-    totalElements: state.totalElements,
-    totalPages: state.totalPages,
-    currentPage: state.currentPage,
-    pageSize: state.pageSize,
     // Filters
     filters,
     // Assign Task Modal
     assignModalState,
     // Actions
     handleSearch,
-    handlePageChange,
     applyFilters,
     resetFilters,
     updateFilters,

@@ -16,11 +16,11 @@ export interface MyTasksFilters {
 export interface MyTasksState {
   tasks: Task[];
   loading: boolean;
-  error: string | null;
-  totalElements: number;
-  totalPages: number;
-  currentPage: number;
-  pageSize: number;
+  totalElements?: number;
+  totalPages?: number;
+  pageNumber?: number;
+  pageSize?: number;
+  error?: string | null | undefined;
 }
 
 export interface TaskTableRow {

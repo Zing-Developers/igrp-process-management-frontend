@@ -67,25 +67,17 @@ export function useProcessInstances() {
     updateFilters({ processType: searchTerm });
   };
 
-  const handlePageChange = (page: number) => {
-    fetchProcessInstances(page, processInstancesState.pageSize);
-  };
-
   return {
     // Data
     tableData,
     loading: processInstancesState.loading,
     error: processInstancesState.error,
-    totalElements: processInstancesState.totalElements,
-    totalPages: processInstancesState.totalPages,
-    currentPage: processInstancesState.currentPage,
 
     // Filter values
     filters,
 
     // Actions
     handleSearch,
-    handlePageChange,
     applyFilters,
     resetFilters,
     updateFilters,

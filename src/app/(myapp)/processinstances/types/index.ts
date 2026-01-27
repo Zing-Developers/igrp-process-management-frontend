@@ -29,11 +29,11 @@ export interface ProcessInstancesFilters {
 export interface ProcessInstancesState {
   processInstances: ProcessInstance[];
   loading: boolean;
-  error: string | null;
-  totalElements: number;
-  totalPages: number;
-  currentPage: number;
-  pageSize: number;
+  error: string | null | undefined;
+  totalElements?: number;
+  totalPages?: number;
+  pageNumber?: number;
+  pageSize?: number;
 }
 
 export interface DropdownOptions {

@@ -14,11 +14,8 @@ import {
 } from "../../external/client/services/process";
 
 export class ProcessService {
-  static async getProcesses(
-    page: number = 0,
-    size: number = 20,
-  ): Promise<PaginatedResponse<Process>> {
-    return await getProcesses(page, size);
+  static async getProcesses(): Promise<PaginatedResponse<Process>> {
+    return await getProcesses();
   }
 
   static async getProcessById(id: string): Promise<Process | null> {

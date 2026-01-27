@@ -1,4 +1,5 @@
 "use server";
+import { DEFAULT_PAGE_SIZE } from "@/app/(myapp)/utils/shared";
 import { getIGRPProcessClient } from "@/lib/api-client";
 import {
   CreateProcessArtifactRequest,
@@ -19,14 +20,11 @@ import {
  * @param size The number of items per page.
  * @returns A promise that resolves to a paginated response of processes.
  */
-export const getProcesses = async (
-  page = 0,
-  size = 20,
-): Promise<PaginatedResponse<Process>> => {
+export const getProcesses = async (): Promise<PaginatedResponse<Process>> => {
   const processManagementClient = await getIGRPProcessClient();
   const response = await processManagementClient.processes.getProcesses({
-    page,
-    size,
+    page: 0,
+    size: DEFAULT_PAGE_SIZE,
   });
   return response.data;
 };

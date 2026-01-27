@@ -50,12 +50,6 @@ export default function Taskprocessfilter({
   const [selectProcesstypeOptions, setSelectProcesstypeOptions] = useState<
     IGRPOptionsProps[]
   >([]);
-  const [selectOrganicOptions, setSelectOrganicOptions] = useState<
-    IGRPOptionsProps[]
-  >([]);
-  const [selectUserOptions, setSelectUserOptions] = useState<
-    IGRPOptionsProps[]
-  >([]);
 
   const { igrpToast } = useIGRPToast();
 
@@ -79,8 +73,10 @@ export default function Taskprocessfilter({
     setSelectSubareaOptions,
     setSelectProcesstypeOptions,
     setSelectStatusOptions,
-    setSelectOrganicOptions,
-    setSelectUserOptions,
+    //setSelectOrganicOptions,
+    //setSelectUserOptions,
+    () => {},
+    () => {},
     onFiltersChange,
     isProcess,
   );
@@ -90,13 +86,9 @@ export default function Taskprocessfilter({
     onSearch(searchTerm);
   };
 
-  // Handle filter application
-  const handleApplyFilters = () => {
-    onApplyFilters(filters);
-  };
-
   // Handle filter reset
   const handleResetFilters = () => {
+    console.log("handleResetFilters", filters);
     onResetFilters();
     setSearchTerm("");
   };
@@ -131,7 +123,6 @@ export default function Taskprocessfilter({
             label={undefined}
             variant={`single`}
             placeholder={`Selecione um estado...`}
-            required={undefined}
             selectLabel={`No option found`}
             showSearch={true}
             showIcon={false}
@@ -250,36 +241,6 @@ export default function Taskprocessfilter({
             options={selectProcesstypeOptions}
             value={filters.processType}
             disabled={!filters.areaId && !filters.subareaId}
-          ></IGRPCombobox>
-          <IGRPCombobox
-            id={`Organic`}
-            label={`Departamento`}
-            variant={`single`}
-            placeholder={`Selecione uma departamento...`}
-            selectLabel={`No option found`}
-            showSearch={true}
-            showIcon={false}
-            iconName={`CornerDownRight`}
-            className={cn("col-span-1")}
-            onChange={handleOrganicChange}
-            options={selectOrganicOptions}
-            value={filters.organic}
-          ></IGRPCombobox>
-          <IGRPCombobox
-            id={`User`}
-            label={`Utilizador`}
-            variant={`single`}
-            placeholder={`Selecione um utilizador...`}
-            selectLabel={`No option found`}
-            showSearch={true}
-            showIcon={false}
-            iconName={`CornerDownRight`}
-            className={cn("col-span-1")}
-            onChange={(selected) =>
-              handleUserChange(Array.isArray(selected) ? selected[0] : selected)
-            }
-            options={selectUserOptions}
-            value={filters.user}
           ></IGRPCombobox>
         </div>
       )}

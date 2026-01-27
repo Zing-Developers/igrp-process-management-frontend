@@ -73,11 +73,7 @@ const {
   tableData,
   loading,
   error,
-  totalElements,
-  totalPages,
-  currentPage,
   handleSearch,
-  applyFilters,
   resetFilters,
   updateFilters,
   filters

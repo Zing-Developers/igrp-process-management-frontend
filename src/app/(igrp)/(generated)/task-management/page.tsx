@@ -88,14 +88,14 @@ const {
 
 // Transform data for the table
 useEffect(() => {
-  if (stats) {
+  if (stats && !statsLoading) {
     setStatstatsCard1Value(stats.tasks.totalTasks);
     setStatstatsCard5Value(stats.tasks.totalTasksAvailable);
     setStatstatsCard2Value(stats.tasks.totalTasksAssigned);
     setStatstatsCard3Value(stats.tasks.totalTasksCancelled);
     setStatstatsCard4Value(stats.tasks.totalTasksCompleted);
   }
-}, [stats]);
+}, [stats, statsLoading]);
 
 const handleSearchSubmit = (searchTerm: string) => {
   handleSearch(searchTerm);

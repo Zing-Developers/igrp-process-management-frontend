@@ -22,7 +22,6 @@ export function useProcessInstances() {
     updateFilters,
     applyFilters,
     resetFilters,
-    fetchProcessInstances,
   } = useProcessInstancesData();
 
   // Transform process instances to table format
@@ -37,7 +36,7 @@ export function useProcessInstances() {
 
       return {
         processInfo: getProcessInfo(instance.name, instance.number),
-        createBy: undefined, //getUserInfo(instance.startedBy),
+        createBy: undefined,
         daysWaiting:
           diffTime > 0
             ? formatDuration(diffTime)
@@ -82,6 +81,5 @@ export function useProcessInstances() {
     resetFilters,
     updateFilters,
     getStatusVariant: getProcessInstanceStatusVariant,
-    fetchProcessInstances,
   };
 }

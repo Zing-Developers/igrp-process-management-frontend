@@ -53,6 +53,23 @@ export default function Taskprocessfilter({
 
   const { igrpToast } = useIGRPToast();
 
+  function getDateRange(): any | undefined {
+    //convert dateFrom and dateTo to date format dd-MM-yyyy and return the date range
+
+    const { dateFrom, dateTo } = filters;
+
+    if (!dateFrom || !dateTo) {
+      return undefined;
+    }
+
+    const [year, month, day] = dateFrom?.split("-") || [];
+    const dateFromFormatted = `${day}/${month}/${year}`;
+    const [yearTo, monthTo, dayTo] = dateTo?.split("-") || [];
+    const dateToFormatted = `${dayTo}/${monthTo}/${yearTo}`;
+
+    return { from: new Date(dateFromFormatted), to: new Date(dateToFormatted) };
+  }
+
   //---------------------Reserved Area begin-----------------------------------
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -68,6 +85,7 @@ export default function Taskprocessfilter({
     handleProcessNumberChange,
     handleDateChange,
     handleFiltersChange,
+    resetFilters,
   } = useProcessTasksFilter(
     setSelectAreaOptions,
     setSelectSubareaOptions,
@@ -88,8 +106,7 @@ export default function Taskprocessfilter({
 
   // Handle filter reset
   const handleResetFilters = () => {
-    console.log("handleResetFilters", filters);
-    onResetFilters();
+    resetFilters();
     setSearchTerm("");
   };
 
@@ -141,6 +158,7 @@ export default function Taskprocessfilter({
             id={`datePickerRange1`}
             dateFormat={`dd/MM/yyyy`}
             onDateChange={(date) => handleDateChange(date ?? null)}
+            date={getDateRange()}
             className={cn("col-span-1")}
           />
           <FilterData

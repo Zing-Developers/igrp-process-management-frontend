@@ -6,20 +6,20 @@ import {
   ProcessInstanceStats,
   TaskStats,
 } from "../types";
-import { getProcessInstances } from "../../external/client/services/process-instances";
+import { getProcessInstances } from "../../client/process-instances";
 import {
   getMyTasks,
   getTasks,
   getTaskStats,
   getMyTaskStats,
-} from "../../external/client/services/task";
+} from "../../client/task";
 import { Task } from "@igrp/platform-process-management-types";
 import {
   getTaskStatusLabel,
   getTaskStatusVariant,
   TaskStatus,
 } from "../../utils/status-helpers";
-import { getProcessStats } from "../../external/client/services/process";
+import { getProcessStats } from "../../client/process";
 
 export function useDashboardData() {
   const [data, setData] = useState<DashboardData>({

@@ -21,7 +21,7 @@ import {
 	IGRPDataTableRowAction,
 	IGRPDataTableButtonLink 
 } from "@igrp/igrp-framework-react-design-system";
-import {useAvailableTasks} from '@/app/(myapp)/availabletasks/hooks/use-available-tasks'
+import {useAvailableTasks} from '@/app/(myapp)/available-tasks/hooks/use-available-tasks'
 import {useDashboard} from '@/app/(myapp)/dashboard/hooks/use-dashboard'
 import {getPriorityColor} from '@/app/(myapp)/utils/status-badge'
 import {getTaskStatusColor} from '@/app/(myapp)/utils/status-badge'

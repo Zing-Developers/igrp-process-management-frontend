@@ -74,5 +74,8 @@ export default {
     "components/task-instance-events-view",
     "components/filter-actives",
     "components/empty",
+    "config/components/process-item",
+    "config/components/add-item",
+    "config/components/add-checklist-item",
   ],
 };

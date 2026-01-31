@@ -21,7 +21,7 @@ import {
   IGRPDataTableRowAction,
   IGRPDataTableButtonLink
 } from "@igrp/igrp-framework-react-design-system";
-import { useProcessInstances } from '@/app/(myapp)/processinstances/hooks/use-process-instances'
+import { useProcessInstances } from '@/app/(myapp)/process-instances/hooks/use-process-instances'
 import { useRouter } from "next/navigation"
 import { urlConfig } from '@/app/(myapp)/utils/url-config'
 import { useDashboard } from '@/app/(myapp)/dashboard/hooks/use-dashboard'

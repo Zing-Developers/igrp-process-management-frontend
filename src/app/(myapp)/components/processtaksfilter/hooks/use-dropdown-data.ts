@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getAreas } from "../../../external/client/services/area";
-import { getAreaProcesses } from "../../../external/client/services/area-process";
-import { getProcessInstancesStatus } from "../../../external/client/services/process-instances";
+import { getAreas } from "../../../client/area";
+import { getAreaProcesses } from "../../../client/area-process";
+import { getProcessInstancesStatus } from "../../../client/process-instances";
 import { VariableFilter } from "../../filter-data";
-import { getTaskStatus } from "@/app/(myapp)/external/client/services/task";
+import { getTaskStatus } from "@/app/(myapp)/client/task";
 
 export interface DropdownOption {
   label: string;

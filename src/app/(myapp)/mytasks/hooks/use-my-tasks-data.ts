@@ -24,15 +24,13 @@ export function useMyTasksData() {
   const queryClient = useQueryClient();
 
   // State for pagination
-  const [page, setPage] = useState(0);
-  const [size, setSize] = useState(10000);
   const [customFilters, setCustomFilters] = useState<
     Partial<MyTasksFilters> | undefined
   >();
 
   // Use query at the top level - hooks must be called at the top level
   const { data, isLoading, error } = useQuery({
-    queryKey: ["my-tasks", page, size, filters, customFilters],
+    queryKey: ["my-tasks", filters, customFilters],
     queryFn: () => {
       // Use custom filters if provided, otherwise use current filters state
       const filtersToUse = customFilters
@@ -46,50 +44,36 @@ export function useMyTasksData() {
         status: filtersToUse.status || "",
         dateFrom: filtersToUse.dateFrom || "",
         dateTo: filtersToUse.dateTo || "",
-        page,
-        size,
       };
 
       return getMyTasks(mappedFilters);
     },
   });
 
+  const { content, ...rest } = data ?? {};
+
   // Transform query result to state format
   const myTasksState: MyTasksState = {
-    tasks: data?.content || [],
+    ...rest,
+    tasks: content || [],
     loading: isLoading,
-    error:
-      error instanceof Error
-        ? error.message
-        : error
-          ? "Failed to fetch my tasks"
-          : null,
-    totalElements: data?.totalElements || 0,
-    totalPages: data?.totalPages || 0,
-    currentPage: data?.pageNumber || 0,
-    pageSize: data?.pageSize || 10000,
+    error: error instanceof Error ? error.message : error ? error : undefined,
   };
 
   // Fetch my tasks function - now just updates state to trigger refetch
-  const fetchMyTasks = (
-    newPage = 0,
-    newSize = 10000,
-    newCustomFilters?: Partial<MyTasksFilters>,
-  ) => {
-    setPage(newPage);
-    setSize(newSize);
+  const fetchMyTasks = (newCustomFilters?: Partial<MyTasksFilters>) => {
     setCustomFilters(newCustomFilters);
   };
 
   // Apply current filters
   const applyFilters = () => {
-    fetchMyTasks(0, myTasksState.pageSize);
+    fetchMyTasks();
   };
 
   // Reset filters and fetch data
   const handleResetFilters = () => {
     resetFilters();
-    fetchMyTasks(0, myTasksState.pageSize, {
+    fetchMyTasks({
       processNumber: "",
       processKey: "",
       user: "",

@@ -1,4 +1,3 @@
-import { useState, useEffect, useRef } from "react";
 import { getProcessInstances } from "../../external/client/services/process-instances";
 import { useFilterData } from "../../components/processtaksfilter/hooks/use-filter-data";
 import { ProcessInstancesFilters, ProcessInstancesState } from "../types";
@@ -6,52 +5,13 @@ import { useQuery } from "@tanstack/react-query";
 
 export function useProcessInstancesData() {
   // Use the shared filter data hook
-  const { filters, dropdownOptions, updateFilters, resetFilters } =
-    useFilterData();
-
-  // Add process instance-specific status options to the shared dropdown options
-  const enhancedDropdownOptions = {
-    ...dropdownOptions,
-    statuses: [
-      { label: "Ativo", value: "ACTIVE" },
-      { label: "Pendente", value: "PENDING" },
-      { label: "Concluído", value: "COMPLETED" },
-      { label: "Cancelado", value: "CANCELLED" },
-    ],
-  };
-
-  // State for pagination
-  const [page, setPage] = useState(0);
-  const [size, setSize] = useState(1000);
-  const isInitialMount = useRef(true);
-
-  // Reset page to 0 when filters change (except on initial mount)
-  useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
-    setPage(0);
-  }, [
-    filters.processType,
-    filters.processNumber,
-    filters.status,
-    filters.dateFrom,
-    filters.dateTo,
-    filters.areaId,
-    filters.subareaId,
-    filters.organic,
-    filters.user,
-    filters.variables,
-  ]);
+  const { filters, updateFilters, resetFilters } = useFilterData();
 
   // Use query at the top level - hooks must be called at the top level
   // Use individual filter values in queryKey to ensure automatic reactivity
   const { data, isLoading, error } = useQuery({
     queryKey: [
       "process-instances",
-      page,
-      size,
       filters.processType,
       filters.processNumber,
       filters.status,
@@ -61,37 +21,20 @@ export function useProcessInstancesData() {
       filters.subareaId,
       filters.organic,
       filters.user,
-      filters.variables,
     ],
     queryFn: () => {
-      return getProcessInstances(
-        page,
-        size,
-        filters as Partial<ProcessInstancesFilters>,
-      );
+      return getProcessInstances(filters as Partial<ProcessInstancesFilters>);
     },
   });
 
+  const { content, ...rest } = data ?? {};
+
   // Transform query result to state format
   const processInstancesState: ProcessInstancesState = {
-    processInstances: data?.content || [],
+    ...rest,
+    processInstances: content || [],
     loading: isLoading,
-    error:
-      error instanceof Error
-        ? error.message
-        : error
-          ? "Failed to fetch process instances"
-          : null,
-    totalElements: data?.totalElements || 0,
-    totalPages: data?.totalPages || 0,
-    currentPage: data?.pageNumber || 0,
-    pageSize: data?.pageSize || 1000,
-  };
-
-  // Fetch process instances function - now just updates pagination state
-  const fetchProcessInstances = (newPage = 0, newSize = 1000) => {
-    setPage(newPage);
-    setSize(newSize);
+    error: error instanceof Error ? error.message : error ? error : undefined,
   };
 
   // Apply filters - now just updates filters, query will auto-refetch
@@ -108,10 +51,8 @@ export function useProcessInstancesData() {
   return {
     processInstancesState,
     filters,
-    dropdownOptions: enhancedDropdownOptions,
     updateFilters,
     applyFilters,
     resetFilters,
-    fetchProcessInstances,
   };
 }

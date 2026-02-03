@@ -6,31 +6,18 @@ import { AvailableTasksFilters, AvailableTasksState } from "../types";
 
 export function useAvailableTasksData() {
   // Use the shared filter data hook
-  const { filters, dropdownOptions, updateFilters, resetFilters } =
-    useFilterData();
+  const { filters, updateFilters, resetFilters } = useFilterData();
 
   const queryClient = useQueryClient();
 
-  // Add task-specific status options to the shared dropdown options
-  const enhancedDropdownOptions = {
-    ...dropdownOptions,
-    statuses: [
-      { label: "Criado", value: "CREATED" },
-      { label: "Atribuído", value: "ASSIGNED" },
-      { label: "Concluído", value: "COMPLETED" },
-    ],
-  };
-
   // State for pagination
-  const [page, setPage] = useState(0);
-  const [size, setSize] = useState(10);
   const [customFilters, setCustomFilters] = useState<
     Partial<AvailableTasksFilters> | undefined
   >();
 
   // Use query at the top level - hooks must be called at the top level
   const { data, isLoading, error } = useQuery({
-    queryKey: ["available-tasks", page, size, filters, customFilters],
+    queryKey: ["available-tasks", filters, customFilters],
     queryFn: () => {
       // Use custom filters if provided, otherwise use current filters state
       const filtersToUse = customFilters
@@ -41,8 +28,6 @@ export function useAvailableTasksData() {
         ...filtersToUse,
         dateFrom: filtersToUse.dateFrom || undefined,
         dateTo: filtersToUse.dateTo || undefined,
-        page,
-        size,
       });
     },
   });
@@ -64,13 +49,7 @@ export function useAvailableTasksData() {
   };
 
   // Fetch tasks function - now just updates state to trigger refetch
-  const fetchTasks = (
-    newPage = 0,
-    newSize = 10,
-    newCustomFilters?: Partial<AvailableTasksFilters>,
-  ) => {
-    setPage(newPage);
-    setSize(newSize);
+  const fetchTasks = (newCustomFilters?: Partial<AvailableTasksFilters>) => {
     setCustomFilters(newCustomFilters);
   };
 
@@ -82,7 +61,7 @@ export function useAvailableTasksData() {
     }
 
     // Fetch tasks with the filter values
-    fetchTasks(0, tasksState.pageSize, newCustomFilters);
+    fetchTasks(newCustomFilters);
   };
 
   const refetchTasks = () => {
@@ -92,7 +71,6 @@ export function useAvailableTasksData() {
   return {
     tasksState,
     filters,
-    dropdownOptions: enhancedDropdownOptions,
     updateFilters,
     applyFilters,
     resetFilters,

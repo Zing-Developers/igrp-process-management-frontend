@@ -20,11 +20,11 @@ export interface TaskManagementFilters {
 export interface TaskManagementState {
   tasks: Task[];
   loading: boolean;
-  error: string | null;
-  totalElements: number;
-  totalPages: number;
-  currentPage: number;
-  pageSize: number;
+  error: string | null | undefined;
+  totalElements?: number;
+  totalPages?: number;
+  pageNumber?: number;
+  pageSize?: number;
 }
 
 export type TaskManagementTab = "myTasks" | "availableTasks";

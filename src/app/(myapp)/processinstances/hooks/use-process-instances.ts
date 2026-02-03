@@ -22,7 +22,6 @@ export function useProcessInstances() {
     updateFilters,
     applyFilters,
     resetFilters,
-    fetchProcessInstances,
   } = useProcessInstancesData();
 
   // Transform process instances to table format
@@ -37,7 +36,7 @@ export function useProcessInstances() {
 
       return {
         processInfo: getProcessInfo(instance.name, instance.number),
-        createBy: undefined, //getUserInfo(instance.startedBy),
+        createBy: undefined,
         daysWaiting:
           diffTime > 0
             ? formatDuration(diffTime)
@@ -67,29 +66,20 @@ export function useProcessInstances() {
     updateFilters({ processType: searchTerm });
   };
 
-  const handlePageChange = (page: number) => {
-    fetchProcessInstances(page, processInstancesState.pageSize);
-  };
-
   return {
     // Data
     tableData,
     loading: processInstancesState.loading,
     error: processInstancesState.error,
-    totalElements: processInstancesState.totalElements,
-    totalPages: processInstancesState.totalPages,
-    currentPage: processInstancesState.currentPage,
 
     // Filter values
     filters,
 
     // Actions
     handleSearch,
-    handlePageChange,
     applyFilters,
     resetFilters,
     updateFilters,
     getStatusVariant: getProcessInstanceStatusVariant,
-    fetchProcessInstances,
   };
 }

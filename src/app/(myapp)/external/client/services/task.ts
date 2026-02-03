@@ -4,12 +4,12 @@ import {
   PaginatedResponse,
   Task,
   TaskStats,
-  VariableParams,
 } from "@igrp/platform-process-management-types";
 import { PostResponse } from "@igrp/platform-process-management-types/dist/response";
 import { getIGRPProcessClient } from "@/lib/api-client";
 import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
 import { TaskManagementFilters } from "@/app/(myapp)/taskmanagement/types";
+import { DEFAULT_PAGE_SIZE } from "@/app/(myapp)/utils/shared";
 
 /**
  * Fetches a paginated list of tasks with optional filters.
@@ -19,8 +19,6 @@ import { TaskManagementFilters } from "@/app/(myapp)/taskmanagement/types";
  * @returns A promise that resolves to a paginated response of tasks.
  */
 export const getTasks = async (
-  page = 0,
-  size = 50,
   filters?: Omit<TaskManagementFilters, "page" | "size">,
 ): Promise<PaginatedResponse<Task>> => {
   const { variables, processType, ...rest } = filters || {};
@@ -28,10 +26,10 @@ export const getTasks = async (
   const processManagementClient = await getIGRPProcessClient();
   const params = {
     ...rest,
-    page,
-    size,
+    page: 0,
+    size: DEFAULT_PAGE_SIZE,
     processReleaseKey: processType || undefined,
-    //filterByCurrentUser: true,
+    filterByCurrentUser: true,
   };
   const response = await processManagementClient.tasks.getTasks(params, {
     variables,
@@ -56,16 +54,14 @@ export const getTaskById = async (id: string): Promise<Task | undefined> => {
  * @returns A promise that resolves to a paginated response of tasks.
  */
 export const getMyTasks = async (
-  params: TaskManagementFilters,
+  params?: TaskManagementFilters,
 ): Promise<PaginatedResponse<Task>> => {
   const processManagementClient = await getIGRPProcessClient();
-  const { page = 0, size = 50, ...filterParams } = params;
-
   const response = await processManagementClient.tasks.getMyTasks({
-    ...filterParams,
+    ...params,
     status: "ASSIGNED",
-    page,
-    size,
+    page: 0,
+    size: DEFAULT_PAGE_SIZE,
   });
   return response.data;
 };
@@ -92,13 +88,11 @@ export const getAvailableTasks = async (
   params: TaskManagementFilters,
 ): Promise<PaginatedResponse<Task>> => {
   const processManagementClient = await getIGRPProcessClient();
-  const { page = 0, size = 10, ...filterParams } = params;
-
   const response = await processManagementClient.tasks.getAvailableTasks({
-    ...filterParams,
+    ...params,
     status: "CREATED",
-    page,
-    size,
+    page: 0,
+    size: DEFAULT_PAGE_SIZE,
     filterByCurrentUser: true,
   });
   return response.data;

@@ -12,6 +12,9 @@ import {ProcessItem} from '@/app/(myapp)/config/components/process-item'
 import {SelectedItems} from '@/app/(myapp)/config/components/selected-items'
 import {AddChecklistItem} from '@/app/(myapp)/config/components/add-checklist-item'
 import {AddItem} from '@/app/(myapp)/config/components/add-item'
+import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
+import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
+import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
 import { 
   IGRPPageHeader,
 	IGRPCard,
@@ -23,17 +26,23 @@ import {
 	IGRPTabItem,
 	IGRPSeparator,
 	IGRPCardFooter,
+	IGRPInputText,
+	IGRPCombobox,
+	IGRPInputNumber,
+	IGRPDataTable,
+	IGRPDataTableRowAction,
 	IGRPButton 
 } from "@igrp/igrp-framework-react-design-system";
 import { form1 } from "@/app/(myapp)/process-configuration/types/index";
 import {useConfigPage} from '@/app/(myapp)/config/hooks/use-config-page'
+import { DATE_FORMAT_OPTIONS } from '@/app/(myapp)/config/constants'
 
 
 export default function PageConfigComponent() {
 
 
   
-  
+  const [contentTabletable1, setContentTabletable1] = useState<any[]>([]);
   
   
 const [selectedProcess, setSelectedProcess] = useState<any | undefined>(undefined);
@@ -60,13 +69,72 @@ async function handleSaveConfiguration (): Promise<void> {
   return;
 }
 await assignGroups.handleAssignGroupsToProcess(
-  selectedProcess.id,
   assignGroups.form.getValues('groups') ?? '',
 );
+if (selectedProcess?.processKey) {
+  await numberingConfig.handleSave();
+}
 
 }
 
-const {allProcesses, assignGroups} = useConfigPage();
+function generateSampleNumber (): string {
+
+  const { prefix, dateFormat, separator, sequenceLength } = numberingValues;
+const parts: string[] = [prefix || ''];
+
+if (dateFormat && dateFormat !== 'none') {
+  const now = new Date();
+  const year = now.getFullYear().toString();
+  const month = (now.getMonth() + 1).toString().padStart(2, '0');
+  const day = now.getDate().toString().padStart(2, '0');
+  switch (dateFormat) {
+    case 'yyyy':
+      parts.push(year);
+      break;
+    case 'yyyyMM':
+      parts.push(year + month);
+      break;
+    case 'yyyyMMdd':
+      parts.push(year + month + day);
+      break;
+  }
+}
+
+const sequence = '1'.padStart(sequenceLength || 3, '0');
+parts.push(sequence);
+return parts.join(separator || '-');
+
+}
+
+function handleRemoveGroup (item: string): void {
+
+  const trimmed = item.trim();
+if (!trimmed) return;
+const current = assignGroups.form.getValues('groups') ?? '';
+const parts = current.split(',').map((s) => s.trim()).filter(Boolean);
+const next = parts.filter((p) => p !== trimmed).join(', ');
+assignGroups.form.setValue('groups', next);
+
+}
+
+const { allProcesses, assignGroups, numberingConfig } = useConfigPage({ processSelected: selectedProcess });
+
+useEffect(() => {
+  if (selectedProcess?.processKey) {
+    numberingConfig.loadConfig();
+    assignGroups.loadConfig()
+  } else {
+    numberingConfig.form.reset({
+      prefix: '',
+      dateFormat: 'yyyy',
+      separator: '-',
+      sequenceLength: 3,
+    });
+  }
+}, [selectedProcess?.processKey]);
+
+  const numberingValues = numberingConfig.form.watch();
+  const groupsValue = assignGroups.form.watch('groups') ?? '';
 
 
   return (
@@ -191,7 +259,7 @@ showIcon={ false }
   className={ cn('space-y-4','space-x-3','space-y-3',) }
   
 >
-  <SelectedItems  items={ assignGroups.form.getValues('groups') ?? '' }  removeItem={ ()=>{} } ></SelectedItems>
+  <SelectedItems  items={ groupsValue }  removeItem={ handleRemoveGroup } ></SelectedItems>
   <IGRPSeparator
   id={ `separator2` }
   orientation={ `horizontal` }
@@ -199,7 +267,7 @@ showIcon={ false }
   
 >
 </IGRPSeparator>
-  <AddChecklistItem  label={ `Available Groups` } availableItems={ [] }  removeItem={ ()=>{} }
+  <AddChecklistItem  label={ `Available Groups` } availableItems={ [] }  removeItem={ handleRemoveGroup }
 addItem={ handleAddGroup } ></AddChecklistItem>
   <IGRPSeparator
   id={ `separator1` }
@@ -282,11 +350,62 @@ showIcon={ false }
   className={ cn('space-y-4','space-x-3','space-y-3',) }
   
 >
-</IGRPCardContent>
-  <IGRPCardFooter
-  
+  <div className={ cn('grid','lg:grid-cols-2 ',' gap-4',)}    >
+	<IGRPInputText
+  id={ `inputText1` }
+  label={ `Prefix` }
+showIcon={ false }
+required={ false }
+placeholder={ `e.g., LOAN` }
+  className={ cn('col-span-1',) }
+  onChange={ (e)=>numberingConfig.addFieldValue('prefix', e.target.value) }
+  value={ numberingValues.prefix }
 >
-</IGRPCardFooter>
+</IGRPInputText>
+<IGRPCombobox
+  id={ `combobox1` }
+  label={ `Date Format` }
+variant={ `single` }
+placeholder={ `Select an option...` }
+selectLabel={ `No option found` }
+showSearch={ true }
+showIcon={ false }
+iconName={ `CornerDownRight` }
+  className={ cn('col-span-1',) }
+  onChange={ (v: string | string[]) => numberingConfig.addFieldValue('dateFormat', Array.isArray(v) ? v[0] ?? '' : v) }
+  options={ DATE_FORMAT_OPTIONS }
+value={  numberingValues.dateFormat }
+>
+</IGRPCombobox>
+<IGRPInputText
+  id={ `inputText2` }
+  label={ `Separator` }
+showIcon={ false }
+required={ false }
+placeholder={ `-` }
+  className={ cn('col-span-1',) }
+  onChange={ (e)=>numberingConfig.addFieldValue('separator', e.target.value) }
+  value={ numberingValues.separator }
+>
+</IGRPInputText>
+<IGRPInputNumber
+  id={ `inputNumber1` }
+  label={ `Sequence Length` }
+max={ 10 }
+step={ 1 }
+required={ false }
+min={ 1 }
+  className={ cn('col-span-1',) }
+  onChange={ (value: number) => numberingConfig.addFieldValue('sequenceLength', value.toString()) }
+  value={ numberingValues.sequenceLength }
+>
+</IGRPInputNumber></div>
+  <div className={ cn(' rounded-lg bg-muted p-4',)}    >
+	<p className={ cn(' text-sm font-medium mb-2',)}    >
+	Sample Generated Number</p>
+<p className={ cn(' text-2xl font-mono',)}    >
+	{generateSampleNumber()}</p></div>
+</IGRPCardContent>
 </IGRPCard>
 </>),
         },
@@ -325,11 +444,73 @@ showIcon={ false }
   className={ cn('space-y-4','space-x-3','space-y-3',) }
   
 >
-</IGRPCardContent>
-  <IGRPCardFooter
+  <IGRPDataTable<any, any>
+  id={ `table1` }
+  pageSizePagination={ [] }
+  columns={
+    [
+        {
+          header: 'Task Name'
+,accessorKey: 'tableTextCell1',
+          cell: ({ row }) => {
+          return row.getValue("tableTextCell1")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Task Key'
+,accessorKey: 'tableTextCell2',
+          cell: ({ row }) => {
+          return row.getValue("tableTextCell2")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Candidate Groups'
+,accessorKey: 'tableTextCell3',
+          cell: ({ row }) => {
+          return row.getValue("tableTextCell3")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Priority'
+,accessorKey: 'tableTextCell5',
+          cell: ({ row }) => {
+          return row.getValue("tableTextCell5")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Due Date'
+,accessorKey: 'tableTextCell4',
+          cell: ({ row }) => {
+          return row.getValue("tableTextCell4")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          id: 'tableActionListCell1',
+          enableHiding: false,cell: ({ row }) => {
+          const rowData = row.original;
+
+return (
+<IGRPDataTableRowAction>
+</IGRPDataTableRowAction>
+);
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+]
+  }
+  clientFilters={
+    [
+    ]
+  }
   
->
-</IGRPCardFooter>
+  data={ contentTabletable1 }
+/>
+</IGRPCardContent>
 </IGRPCard>
 </>),
         },

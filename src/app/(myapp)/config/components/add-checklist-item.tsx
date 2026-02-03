@@ -26,6 +26,9 @@ function AddChecklistItem(
                             />
                         </div>
                     ))}
+                    {availableItems.length === 0 && (
+                        <IGRPLabel label="Nenhum item disponível usar o custom group" />
+                    )}
                 </div>
             </ScrollArea>
         </div>

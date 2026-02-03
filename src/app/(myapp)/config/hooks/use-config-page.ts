@@ -2,15 +2,15 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { getProcesses } from "@/app/(myapp)/client/process";
-import type { Process } from "@igrp/platform-process-management-types";
+import type { Process, ProcessDefinition } from "@igrp/platform-process-management-types";
 import { useProcessConfig } from "../use-process-config";
 
 /**
  * Hook for the config page. Self-contained: allProcesses + assignGroups.
  * Uses config folder hooks only (no process-configuration dependency).
  */
-export function useConfigPage() {
-  const processConfig = useProcessConfig();
+export function useConfigPage({ processSelected }: { processSelected?: ProcessDefinition } = {}) {
+  const processConfig = useProcessConfig({ processSelected });
 
   const {
     data: processesData,
@@ -34,5 +34,6 @@ export function useConfigPage() {
     loading,
     loadAllProcesses,
     assignGroups: processConfig.assignGroups,
+    numberingConfig: processConfig.numberingConfig,
   };
 }

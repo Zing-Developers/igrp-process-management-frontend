@@ -18,6 +18,12 @@ export const assignGroupsSchema = z.object({
 
 export type AssignGroupsValues = z.infer<typeof assignGroupsSchema>;
 
-// Future config sections can be added here, e.g.:
-// export const processNumberingSchema = z.object({ ... });
-// export const taskConfigSchema = z.object({ ... });
+/** Process numbering configuration (prefix, date format, sequence length). */
+export const processNumberingSchema = z.object({
+  prefix: z.string(),
+  dateFormat: z.string(),
+  separator: z.string(),
+  sequenceLength: z.number().min(1).max(10),
+});
+
+export type ProcessNumberingValues = z.infer<typeof processNumberingSchema>;

@@ -225,12 +225,12 @@ export interface ProcessNumberConfig {
  * @returns A promise that resolves to process number configurations
  */
 export const getProcessNumberConfigs = async (
-  processDefinitionId: string,
+  processDefinitionKey: string,
 ): Promise<ProcessSequence> => {
   const processManagementClient = await getIGRPProcessClient();
   const response =
     await processManagementClient.processes.getProcessSequence(
-      processDefinitionId,
+      processDefinitionKey,
     );
   return response.data;
 };
@@ -254,6 +254,22 @@ export const saveProcessNumberConfig = async (
   return response.data;
 };
 
+
+/**
+ * Fetches process export (includes candidate groups for process definition).
+ * @param processDefinitionId The process definition ID
+ * @returns The candidate groups string (comma-separated) or empty string
+ */
+export const getProcessExport = async (
+  processDefinitionId: string,
+): Promise<{ candidateGroups: string }> => {
+  const processManagementClient = await getIGRPProcessClient();
+  const response = await (
+    processManagementClient.processes as unknown as { get: (url: string) => Promise<{ data: { candidateGroups?: string } }> }
+  ).get(`/process-definitions/${processDefinitionId}/export`);
+  const data = response.data ?? {};
+  return { candidateGroups: data.candidateGroups ?? "" };
+};
 
 /**
  * Assigns groups to a process definition

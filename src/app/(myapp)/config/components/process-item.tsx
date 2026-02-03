@@ -2,7 +2,6 @@
 function ProcessItem(
     {  setSelectedProcess, selectedProcess,process }:
         {  setSelectedProcess: (process: any) => void,selectedProcess: any, process: any, }) {
-            console.log('process', selectedProcess);
     return (
         <button
             key={process.id}

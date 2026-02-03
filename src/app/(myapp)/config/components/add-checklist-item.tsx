@@ -2,8 +2,8 @@ import { IGRPCheckbox, IGRPLabel } from "@igrp/igrp-framework-react-design-syste
 import { ScrollArea } from "@igrp/igrp-framework-react-design-system/dist/components/primitives/scroll-area";
 
 function AddChecklistItem(
-    { addItem, removeItem, label, availableItems, config }:
-        { addItem: (value: string) => void, removeItem: (value: string) => void, value: string, label: string, placeholder: string, availableItems: string[], config: any }) {
+    { addItem, removeItem, label, availableItems, items }:
+        { addItem: (value: string) => void, removeItem: (value: string) => void, label: string, availableItems: string[], items?: any }) {
 
     return (
         <div className="space-y-2">
@@ -15,7 +15,7 @@ function AddChecklistItem(
                             <IGRPLabel htmlFor={`process-group-${group}`} label={group} className="flex-1 cursor-pointer" />
                             <IGRPCheckbox
                                 id={`process-group-${group}`}
-                                checked={config.candidateGroups.includes(group)}
+                                checked={items.includes(group)}
                                 onCheckedChange={(checked) => {
                                     if (checked) {
                                         addItem(group)

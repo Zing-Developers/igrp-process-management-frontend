@@ -2,8 +2,13 @@ import { IGRPButton, IGRPInputText, IGRPLabel } from "@igrp/igrp-framework-react
 import { useId } from "react";
 
 function AddItem(
-    { setValue, addItem, value, label, placeholder }:
-        { setValue: (value: string) => void, addItem: (value: string) => void, value: string, label: string, placeholder: string }) {
+    { value,
+        label,
+        placeholder,
+        setValue,
+        addItem
+    }:
+        { value: string, label: string, placeholder: string, setValue: (value: string) => void, addItem: (value: string) => void }) {
     const id = useId()
 
     return (

@@ -15,6 +15,7 @@ import {
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
 import { useArtifactPermissionForm } from "./artifacts/use-artifact-permission-form";
 import { getAreaProcesses } from "@/app/(myapp)/client/area-process";
+import { useProcessConfig } from "../../config/use-process-config";
 
 export function useProcessHandlers(
   areaProcesses: AreaProcessesMap,
@@ -22,6 +23,9 @@ export function useProcessHandlers(
   processes: Process[],
 ) {
   const { igrpToast } = useIGRPToast();
+  const processConfig = useProcessConfig();
+  const { handleAssignGroupsToProcess } = processConfig.assignGroups;
+  const { assignGroups } = processConfig;
 
   const {
     data: processesData,
@@ -238,6 +242,7 @@ export function useProcessHandlers(
     // Then open the modal
     processForm.openModal(areaId);
   };
+
   return {
     processForm,
     processOperations,
@@ -253,6 +258,8 @@ export function useProcessHandlers(
     handleOpenProcessModal,
     handleOpenProcessNumberModal,
     handleSaveProcessNumber,
+    handleAssignGroupsToProcess,
+    assignGroups,
     getAvailableProcesses,
     loadAllProcesses,
     allProcesses,

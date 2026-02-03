@@ -9,6 +9,7 @@
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import {ProcessItem} from '@/app/(myapp)/config/components/process-item'
+import {SelectedItems} from '@/app/(myapp)/config/components/selected-items'
 import {AddChecklistItem} from '@/app/(myapp)/config/components/add-checklist-item'
 import {AddItem} from '@/app/(myapp)/config/components/add-item'
 import { 
@@ -24,7 +25,8 @@ import {
 	IGRPCardFooter,
 	IGRPButton 
 } from "@igrp/igrp-framework-react-design-system";
-import {useProcessConfiguration} from '@/app/(myapp)/process-configuration/hooks/use-process-configuration'
+import { form1 } from "@/app/(myapp)/process-configuration/types/index";
+import {useConfigPage} from '@/app/(myapp)/config/hooks/use-config-page'
 
 
 export default function PageConfigComponent() {
@@ -33,11 +35,38 @@ export default function PageConfigComponent() {
   
   
   
+  
 const [selectedProcess, setSelectedProcess] = useState<any | undefined>(undefined);
+
+const [newGroupInput, setNewGroupInput] = useState<string>('');
 
 const { igrpToast } = useIGRPToast()
 
- const {allProcesses} = useProcessConfiguration();
+function handleAddGroup (value: string): void {
+
+  const trimmed = value?.trim();
+if (!trimmed) return;
+const current = assignGroups.form.getValues('groups') || '';
+const next = current ? `${current}, ${trimmed}` : trimmed;
+assignGroups.form.setValue('groups', next);
+setNewGroupInput('');
+
+}
+
+async function handleSaveConfiguration (): Promise<void> {
+
+  if (!selectedProcess?.id) {
+  igrpToast({ type: 'error', title: 'Erro', description: 'Selecione um processo.' });
+  return;
+}
+await assignGroups.handleAssignGroupsToProcess(
+  selectedProcess.id,
+  assignGroups.form.getValues('groups') ?? '',
+);
+
+}
+
+const {allProcesses, assignGroups} = useConfigPage();
 
 
   return (
@@ -162,7 +191,16 @@ showIcon={ false }
   className={ cn('space-y-4','space-x-3','space-y-3',) }
   
 >
-  <AddChecklistItem  label={ `Available Groups` }   ></AddChecklistItem>
+  <SelectedItems  items={ assignGroups.form.getValues('groups') ?? '' }  removeItem={ ()=>{} } ></SelectedItems>
+  <IGRPSeparator
+  id={ `separator2` }
+  orientation={ `horizontal` }
+  
+  
+>
+</IGRPSeparator>
+  <AddChecklistItem  label={ `Available Groups` } availableItems={ [] }  removeItem={ ()=>{} }
+addItem={ handleAddGroup } ></AddChecklistItem>
   <IGRPSeparator
   id={ `separator1` }
   orientation={ `horizontal` }
@@ -170,7 +208,8 @@ showIcon={ false }
   
 >
 </IGRPSeparator>
-  <AddItem  label={ `Add Custom Group` } placeholder={ `Enter group name...` }   ></AddItem>
+  <AddItem  label={ `Add Custom Group` } placeholder={ `Enter group name...` } value={ newGroupInput }  setValue={ setNewGroupInput }
+addItem={ handleAddGroup } ></AddItem>
 </IGRPCardContent>
 </IGRPCard>
             <IGRPCard
@@ -315,7 +354,7 @@ showIcon={ false }
 size={ `default` }
 showIcon={ false }
   className={ cn() }
-  onClick={ () => {} }
+  onClick={ handleSaveConfiguration }
   
 >
   Save Configuration

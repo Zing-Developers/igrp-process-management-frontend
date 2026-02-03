@@ -23,7 +23,7 @@ import {
   IGRPButton,
   IGRPAlertDialog
 } from "@igrp/igrp-framework-react-design-system";
-import { useProcessConfiguration } from '@/app/(myapp)/process-configuration/hooks/use-process-configuration'
+import { useProcessConfiguration } from '@/app/(myapp)/process-configuration/hooks/use-process-configuration';
 
 
 export default function PageProcessconfigurationComponent() {

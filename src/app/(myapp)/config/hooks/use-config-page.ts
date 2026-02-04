@@ -1,0 +1,111 @@
+"use client";
+
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  getProcesses,
+  updateProcessArtifact,
+} from "@/app/(myapp)/client/process";
+import type {
+  CreateProcessArtifactRequest,
+  Process,
+  ProcessDefinition,
+} from "@igrp/platform-process-management-types";
+import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
+import { useProcessConfig } from "../use-process-config";
+
+const SAVE_SUCCESS = {
+  type: "success" as const,
+  title: "Sucesso",
+  description: "Configuração salva com sucesso!",
+};
+const SAVE_ERROR = {
+  type: "error" as const,
+  title: "Erro",
+  description: "Erro ao salvar configuração. Tente novamente.",
+};
+
+/**
+ * Hook for the config page. Self-contained: allProcesses + assignGroups + numberingConfig + userTasks.
+ */
+export function useConfigPage({
+  processSelected,
+}: {
+  processSelected?: ProcessDefinition;
+} = {}) {
+  const processConfig = useProcessConfig({ processSelected });
+  const { igrpToast } = useIGRPToast();
+  const {
+    assignGroups,
+    numberingConfig,
+    priorityConfig,
+    userTasks: userTasksConfig,
+  } = processConfig;
+
+  const {
+    data: processesData,
+    isLoading: loading,
+    refetch: loadAllProcesses,
+  } = useQuery({
+    queryKey: ["all-processes"],
+    queryFn: async () => {
+      const response = await getProcesses();
+      return (response.content || []).map((process) => ({
+        ...process,
+        version: `v${process.version}`,
+      })) as Process[];
+    },
+  });
+
+  const allProcesses = processesData ?? [];
+
+  const saveConfigurationMutation = useMutation({
+    mutationFn: async () => {
+      const groups = assignGroups.form.getValues("groups") ?? "";
+      await assignGroups.handleAssignGroupsToProcess(groups, { silent: true });
+      await numberingConfig.handleSave(undefined, { silent: true });
+      await priorityConfig.handleSave({ silent: true });
+
+      const dataList = userTasksConfig.getSaveAllUserTasksData();
+      for (const { processDefinitionId, request } of dataList) {
+        await updateProcessArtifact(processDefinitionId, request);
+      }
+      userTasksConfig.loadConfig();
+    },
+    onSuccess: () => {
+      igrpToast(SAVE_SUCCESS);
+    },
+    onError: () => {
+      igrpToast(SAVE_ERROR);
+    },
+  });
+
+  const handleSaveUserTask = async (request: CreateProcessArtifactRequest) => {
+    const processDefinitionId = processSelected?.id;
+    if (!processDefinitionId) return;
+    userTasksConfig.patchEditedTask(request.key, request);
+  };
+
+  const handleSaveAllUserTasks = async () => {
+    const dataList = userTasksConfig.getSaveAllUserTasksData();
+    if (dataList.length === 0) return;
+    for (const { processDefinitionId, request } of dataList) {
+      await updateProcessArtifact(processDefinitionId, request);
+    }
+    userTasksConfig.loadConfig();
+  };
+
+  return {
+    allProcesses,
+    loading,
+    loadAllProcesses,
+    assignGroups: processConfig.assignGroups,
+    numberingConfig: processConfig.numberingConfig,
+    priorityConfig: processConfig.priorityConfig,
+    saveConfigurationMutation,
+    userTasks: {
+      ...userTasksConfig,
+      handleSave: handleSaveUserTask,
+      handleSaveAll: handleSaveAllUserTasks,
+    },
+  };
+}

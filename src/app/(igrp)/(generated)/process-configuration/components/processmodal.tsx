@@ -8,7 +8,7 @@
 
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
-import {ProcessList} from '@/app/(myapp)/processconfiguration/components/process-list'
+import {ProcessList} from '@/app/(myapp)/process-configuration/components/process-list'
 import { 
   IGRPModalDialog,
 	IGRPModalDialogContent,

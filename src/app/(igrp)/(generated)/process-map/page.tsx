@@ -12,7 +12,7 @@ import {
   useIGRPMenuNavigation,
   useIGRPToast,
 } from "@igrp/igrp-framework-react-design-system";
-import { ProcessTreeComponent } from "@/app/(myapp)/processmap/components/process-tree-node";
+import { ProcessTreeComponent } from "@/app/(myapp)/process-map/components/process-tree-node";
 import { LoadingPage } from "@/app/(myapp)/components/loading-page";
 import ProcessDetail from "@/app/(igrp)/(generated)/process-map/components/processdetail";
 import PriorityModal from "@/components/prioritymodal";
@@ -20,7 +20,7 @@ import {
   IGRPPageHeader,
   IGRPInputSearch,
 } from "@igrp/igrp-framework-react-design-system";
-import { useProcessMap } from "@/app/(myapp)/processmap/hooks/use-process-map";
+import { useProcessMap } from "@/app/(myapp)/process-map/hooks/use-process-map";
 import { useRouter } from "next/navigation";
 
 export default function PageProcessmapComponent() {

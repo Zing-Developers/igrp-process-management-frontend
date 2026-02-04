@@ -23,7 +23,6 @@ function PriorityForm({ priorityOptions,
             {(priorityOptions || []).length > 0 ? (<IGRPTablePrimitive>
                 <IGRPTableHeaderPrimitive>
                     <IGRPTableRowPrimitive>
-                        <IGRPTableHeadPrimitive className="w-12"></IGRPTableHeadPrimitive>
                         <IGRPTableHeadPrimitive>Label</IGRPTableHeadPrimitive>
                         <IGRPTableHeadPrimitive className="w-32">Value</IGRPTableHeadPrimitive>
                         <IGRPTableHeadPrimitive className="w-16"></IGRPTableHeadPrimitive>
@@ -32,9 +31,6 @@ function PriorityForm({ priorityOptions,
                 <IGRPTableBodyPrimitive>
                     {(priorityOptions || []).map((option: any, index: number) => (
                         <IGRPTableRowPrimitive key={index}>
-                            <IGRPTableCellPrimitive>
-                                <IGRPIcon iconName="grip-vertical" className="h-4 w-4 text-muted-foreground" />
-                            </IGRPTableCellPrimitive>
                             <IGRPTableCellPrimitive>
                                 <IGRPInputText
                                     value={option.label}
@@ -55,9 +51,9 @@ function PriorityForm({ priorityOptions,
                                     variant="ghost"
                                     size="icon"
                                     onClick={() => removePriorityOption(index)}
-                                    className="h-8 w-8"
+                                    className="h-8 w-8 text-destructive"
+                                    iconName="Trash" 
                                 >
-                                    <IGRPIcon iconName="trash" className="h-4 w-4 text-destructive" />
                                 </IGRPButton>
                             </IGRPTableCellPrimitive>
                         </IGRPTableRowPrimitive>

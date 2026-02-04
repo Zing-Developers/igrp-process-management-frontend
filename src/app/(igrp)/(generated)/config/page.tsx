@@ -146,12 +146,13 @@ setTaskNewGroup("")
 
 }
 
-const { allProcesses, assignGroups, numberingConfig, userTasks, saveConfigurationMutation } = useConfigPage({ processSelected: selectedProcess });
+const { allProcesses, assignGroups, numberingConfig, priorityConfig, userTasks, saveConfigurationMutation } = useConfigPage({ processSelected: selectedProcess });
 
 useEffect(() => {
   if (selectedProcess?.processKey) {
     numberingConfig.loadConfig();
-    assignGroups.loadConfig()
+    assignGroups.loadConfig();
+    priorityConfig.loadConfig();
   } else {
     numberingConfig.form.reset({
       prefix: '',
@@ -336,7 +337,16 @@ showIcon={ false }
   className={ cn('space-y-4','space-x-3','space-y-3',) }
   
 >
-  <PriorityForm    ></PriorityForm>
+  <PriorityForm
+    priorityOptions={priorityConfig.priorityOptions}
+    updatePriorityOption={priorityConfig.updatePriorityOption}
+    removePriorityOption={priorityConfig.removePriorityOption}
+    addPriorityOption={priorityConfig.addPriorityOption}
+    newPriorityLabel={priorityConfig.newPriorityLabel}
+    setNewPriorityLabel={priorityConfig.setNewPriorityLabel}
+    newPriorityValue={priorityConfig.newPriorityValue}
+    setNewPriorityValue={priorityConfig.setNewPriorityValue}
+  />
 </IGRPCardContent>
 </IGRPCard>
 </>),
@@ -545,7 +555,7 @@ return (
   data={ userTasks.list }
 />
   { editingTask !== undefined && (<TaskEditor  open={ editingTask !== undefined } editingTask={ editingTask }  setOpen={ (open) => !open && closeTaskEditor() }
-onSave={ (req) => selectedProcess?.id && userTasks.handleSave(selectedProcess.id, req) } ></TaskEditor>)}
+onSave={(req) => selectedProcess?.id && userTasks.handleSave(req)} ></TaskEditor>)}
 </IGRPCardContent>
 </IGRPCard>
 </>),

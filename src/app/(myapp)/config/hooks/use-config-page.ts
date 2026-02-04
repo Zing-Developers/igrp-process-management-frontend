@@ -15,7 +15,7 @@ const SAVE_ERROR = { type: "error" as const, title: "Erro", description: "Erro a
 export function useConfigPage({ processSelected }: { processSelected?: ProcessDefinition } = {}) {
   const processConfig = useProcessConfig({ processSelected });
   const { igrpToast } = useIGRPToast();
-  const { assignGroups, numberingConfig, userTasks: userTasksConfig } = processConfig;
+  const { assignGroups, numberingConfig, priorityConfig, userTasks: userTasksConfig } = processConfig;
 
   const {
     data: processesData,
@@ -39,6 +39,7 @@ export function useConfigPage({ processSelected }: { processSelected?: ProcessDe
       const groups = assignGroups.form.getValues("groups") ?? "";
       await assignGroups.handleAssignGroupsToProcess(groups, { silent: true });
       await numberingConfig.handleSave(undefined, { silent: true });
+      await priorityConfig.handleSave({ silent: true });
 
       const dataList = userTasksConfig.getSaveAllUserTasksData();
       for (const { processDefinitionId, request } of dataList) {
@@ -75,6 +76,7 @@ export function useConfigPage({ processSelected }: { processSelected?: ProcessDe
     loadAllProcesses,
     assignGroups: processConfig.assignGroups,
     numberingConfig: processConfig.numberingConfig,
+    priorityConfig: processConfig.priorityConfig,
     saveConfigurationMutation,
     userTasks: {
       ...userTasksConfig,

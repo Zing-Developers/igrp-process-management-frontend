@@ -27,3 +27,13 @@ export const processNumberingSchema = z.object({
 });
 
 export type ProcessNumberingValues = z.infer<typeof processNumberingSchema>;
+
+/** Single priority option (label + value). */
+export const priorityOptionSchema = z.object({
+  label: z.string(),
+  value: z.string(),
+});
+
+export const priorityOptionsSchema = z.array(priorityOptionSchema);
+
+export type PriorityOption = z.infer<typeof priorityOptionSchema>;

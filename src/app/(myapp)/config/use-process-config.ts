@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -15,10 +15,12 @@ import {
   processNumberingSchema,
   type AssignGroupsValues,
   type ProcessNumberingValues,
+  type PriorityOption,
 } from "./schemas";
 import { CreateProcessArtifactRequest, ProcessArtifact, ProcessDefinition } from "@igrp/platform-process-management-types";
 import { getCandidateGroupsTemplate } from "../utils/columns-template";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { PRIORITY_OPTIONS } from "./constants";
 
 const numberingDefaultValues: ProcessNumberingValues = {
   prefix: "",
@@ -164,6 +166,47 @@ export function useProcessConfig({ processSelected }: { processSelected?: Proces
     }
   };
 
+  // --- priorityOptions ---
+  const defaultPriorityOptions: PriorityOption[] = PRIORITY_OPTIONS.map((o) => ({
+    label: o.label,
+    value: String(o.value),
+  }));
+
+  const [priorityOptions, setPriorityOptions] = useState<PriorityOption[]>(defaultPriorityOptions);
+  const [newPriorityLabel, setNewPriorityLabel] = useState("");
+  const [newPriorityValue, setNewPriorityValue] = useState("");
+
+  const loadPriorityConfig = () => {
+    setPriorityOptions(defaultPriorityOptions);
+    setNewPriorityLabel("");
+    setNewPriorityValue("");
+  };
+
+  const updatePriorityOption = (index: number, field: string, value: string) => {
+    setPriorityOptions((prev) =>
+      prev.map((opt, i) =>
+        i === index ? { ...opt, [field as "label" | "value"]: value } : opt,
+      ),
+    );
+  };
+
+  const removePriorityOption = (index: number) => {
+    setPriorityOptions((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const addPriorityOption = () => {
+    const label = newPriorityLabel.trim();
+    const value = newPriorityValue.trim();
+    if (!label || !value) return;
+    setPriorityOptions((prev) => [...prev, { label, value }]);
+    setNewPriorityLabel("");
+    setNewPriorityValue("");
+  };
+
+  const handleSavePriorityConfig = async (_opts?: SaveOptions) => {
+    // TODO: wire to API when endpoint exists for process priority options
+  };
+
   // --- userTasks ---
   const editedTasksPatch = useRef<Record<string, CreateProcessArtifactRequest>>({});
 
@@ -235,6 +278,18 @@ export function useProcessConfig({ processSelected }: { processSelected?: Proces
       loadConfig: loadNumberingConfig,
       handleSave: handleSaveNumberingConfig,
       addFieldValue: addFieldValueToForm,
+    },
+    priorityConfig: {
+      priorityOptions,
+      newPriorityLabel,
+      setNewPriorityLabel,
+      newPriorityValue,
+      setNewPriorityValue,
+      updatePriorityOption,
+      removePriorityOption,
+      addPriorityOption,
+      loadConfig: loadPriorityConfig,
+      handleSave: handleSavePriorityConfig,
     },
     userTasks: {
       list: userTasksList,

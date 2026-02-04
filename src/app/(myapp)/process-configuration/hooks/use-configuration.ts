@@ -17,7 +17,7 @@ export function useConfiguration() {
         setLoading(true);
 
         // Load only top-level areas (no parentId)
-        const areasResponse = await getAreas();
+        const areasResponse = await getAreas({});
 
         // Organize flat areas into hierarchical structure
         const hierarchicalAreas = organizeAreasHierarchy(

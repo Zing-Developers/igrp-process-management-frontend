@@ -33,10 +33,13 @@ export const deleteArea = async (id: string): Promise<void> => {
   await httpClient.areas.deleteArea(id);
 };
 
-export const getAreas = async (
-  name?: string,
-  parentId?: string,
-): Promise<PaginatedResponse<Area>> => {
+export const getAreas = async ({
+  name,
+  parentId,
+}: {
+  name?: string;
+  parentId?: string;
+}): Promise<PaginatedResponse<Area>> => {
   const httpClient = await getIGRPProcessClient();
   const response = await httpClient.areas
     .getAreas({
@@ -59,6 +62,6 @@ export const getAreaById = async (id: string): Promise<Area | null> => {
 
 export const getSubareas = async (parentAreaId: string): Promise<Area[]> => {
   // Use the same getAreas API with parentId parameter
-  const response = await getAreas(parentAreaId);
+  const response = await getAreas({ parentId: parentAreaId });
   return response.content || [];
 };

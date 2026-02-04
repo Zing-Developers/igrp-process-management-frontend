@@ -1,9 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  assignTask,
-  getTaskById,
-  unclaimTask,
-} from "../../client/task";
+import { assignTask, getTaskById, unclaimTask } from "../../client/task";
 import {
   getPriorityLabel,
   getPriorityVariant,

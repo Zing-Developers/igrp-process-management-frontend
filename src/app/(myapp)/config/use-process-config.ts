@@ -17,7 +17,11 @@ import {
   type ProcessNumberingValues,
   type PriorityOption,
 } from "./schemas";
-import { CreateProcessArtifactRequest, ProcessArtifact, ProcessDefinition } from "@igrp/platform-process-management-types";
+import {
+  CreateProcessArtifactRequest,
+  ProcessArtifact,
+  ProcessDefinition,
+} from "@igrp/platform-process-management-types";
 import { getCandidateGroupsTemplate } from "../utils/columns-template";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { PRIORITY_OPTIONS } from "./constants";
@@ -33,7 +37,11 @@ const numberingDefaultValues: ProcessNumberingValues = {
  * Single hook for all process configuration: assign groups, numbering, task config, etc.
  * Each config section is one object with schema, form and handler.
  */
-export function useProcessConfig({ processSelected }: { processSelected?: ProcessDefinition } = {}) {
+export function useProcessConfig({
+  processSelected,
+}: {
+  processSelected?: ProcessDefinition;
+} = {}) {
   const { igrpToast } = useIGRPToast();
   const queryClient = useQueryClient();
 
@@ -51,7 +59,10 @@ export function useProcessConfig({ processSelected }: { processSelected?: Proces
     defaultValues: numberingDefaultValues,
   });
 
-  const addFieldValueToForm = (field: 'prefix' | 'dateFormat' | 'separator' | 'sequenceLength', value: string) => {
+  const addFieldValueToForm = (
+    field: "prefix" | "dateFormat" | "separator" | "sequenceLength",
+    value: string,
+  ) => {
     numberingForm.setValue(field, value);
   };
 
@@ -121,7 +132,10 @@ export function useProcessConfig({ processSelected }: { processSelected?: Proces
     }
   };
 
-  const handleAssignGroupsToProcess = async (groups: string, opts?: SaveOptions) => {
+  const handleAssignGroupsToProcess = async (
+    groups: string,
+    opts?: SaveOptions,
+  ) => {
     if (!id) {
       if (!opts?.silent) {
         igrpToast({
@@ -167,12 +181,16 @@ export function useProcessConfig({ processSelected }: { processSelected?: Proces
   };
 
   // --- priorityOptions ---
-  const defaultPriorityOptions: PriorityOption[] = PRIORITY_OPTIONS.map((o) => ({
-    label: o.label,
-    value: String(o.value),
-  }));
+  const defaultPriorityOptions: PriorityOption[] = PRIORITY_OPTIONS.map(
+    (o) => ({
+      label: o.label,
+      value: String(o.value),
+    }),
+  );
 
-  const [priorityOptions, setPriorityOptions] = useState<PriorityOption[]>(defaultPriorityOptions);
+  const [priorityOptions, setPriorityOptions] = useState<PriorityOption[]>(
+    defaultPriorityOptions,
+  );
   const [newPriorityLabel, setNewPriorityLabel] = useState("");
   const [newPriorityValue, setNewPriorityValue] = useState("");
 
@@ -182,7 +200,11 @@ export function useProcessConfig({ processSelected }: { processSelected?: Proces
     setNewPriorityValue("");
   };
 
-  const updatePriorityOption = (index: number, field: string, value: string) => {
+  const updatePriorityOption = (
+    index: number,
+    field: string,
+    value: string,
+  ) => {
     setPriorityOptions((prev) =>
       prev.map((opt, i) =>
         i === index ? { ...opt, [field as "label" | "value"]: value } : opt,
@@ -208,12 +230,11 @@ export function useProcessConfig({ processSelected }: { processSelected?: Proces
   };
 
   // --- userTasks ---
-  const editedTasksPatch = useRef<Record<string, CreateProcessArtifactRequest>>({});
+  const editedTasksPatch = useRef<Record<string, CreateProcessArtifactRequest>>(
+    {},
+  );
 
-  const {
-    data: artifactsData,
-    isLoading: loadingUserTasks,
-  } = useQuery({
+  const { data: artifactsData, isLoading: loadingUserTasks } = useQuery({
     queryKey: ["process-artifacts", id],
     queryFn: () => getProcessArtifacts(id!),
     enabled: !!id,
@@ -221,28 +242,41 @@ export function useProcessConfig({ processSelected }: { processSelected?: Proces
 
   const toCandidateGroupsString = (val: unknown): string =>
     Array.isArray(val)
-      ? val.map((s) => String(s).trim()).filter(Boolean).join(",")
+      ? val
+          .map((s) => String(s).trim())
+          .filter(Boolean)
+          .join(",")
       : String(val ?? "");
 
-  const userTasksList = (artifactsData ?? []).map((artifact: ProcessArtifact, index: number) => {
-    const raw = toCandidateGroupsString(artifact.candidateGroups);
-    const groupsArray = raw ? raw.split(",").map((s) => s.trim()).filter(Boolean) : [];
-    return {
-      ...artifact,
-      index,
-      defaultPriority: "",
-      defaultDueDate: "-",
-      candidateGroups: getCandidateGroupsTemplate(groupsArray),
-      candidateGroupsRaw: raw,
-    };
-  });
+  const userTasksList: any = (artifactsData ?? []).map(
+    (artifact: ProcessArtifact, index: number) => {
+      const raw = toCandidateGroupsString(artifact.candidateGroups);
+      const groupsArray = raw
+        ? raw
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean)
+        : [];
+      return {
+        ...artifact,
+        index,
+        defaultPriority: "",
+        defaultDueDate: "-",
+        candidateGroups: getCandidateGroupsTemplate(groupsArray),
+        candidateGroupsRaw: raw,
+      };
+    },
+  );
 
   const loadUserTasksConfig = () => {
     editedTasksPatch.current = {};
     queryClient.invalidateQueries({ queryKey: ["process-artifacts", id] });
   };
 
-  const patchEditedTask = (taskKey: string, request: CreateProcessArtifactRequest) => {
+  const patchEditedTask = (
+    taskKey: string,
+    request: CreateProcessArtifactRequest,
+  ) => {
     editedTasksPatch.current[taskKey] = request;
   };
 
@@ -252,10 +286,13 @@ export function useProcessConfig({ processSelected }: { processSelected?: Proces
   ) => ({ processDefinitionId, request });
 
   const getSaveAllUserTasksData = () =>
-    userTasksList.map((task) => {
+    userTasksList.map((task: any) => {
       const patched = editedTasksPatch.current[task.key];
       const req: CreateProcessArtifactRequest = patched
-        ? { ...patched, candidateGroups: toCandidateGroupsString(patched.candidateGroups) }
+        ? {
+            ...patched,
+            candidateGroups: toCandidateGroupsString(patched.candidateGroups),
+          }
         : {
             key: task.key,
             formKey: task.formKey ?? "",

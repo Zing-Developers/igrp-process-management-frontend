@@ -1,21 +1,45 @@
 "use client";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getProcesses, updateProcessArtifact } from "@/app/(myapp)/client/process";
-import type { CreateProcessArtifactRequest, Process, ProcessDefinition } from "@igrp/platform-process-management-types";
+import {
+  getProcesses,
+  updateProcessArtifact,
+} from "@/app/(myapp)/client/process";
+import type {
+  CreateProcessArtifactRequest,
+  Process,
+  ProcessDefinition,
+} from "@igrp/platform-process-management-types";
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
 import { useProcessConfig } from "../use-process-config";
 
-const SAVE_SUCCESS = { type: "success" as const, title: "Sucesso", description: "Configuração salva com sucesso!" };
-const SAVE_ERROR = { type: "error" as const, title: "Erro", description: "Erro ao salvar configuração. Tente novamente." };
+const SAVE_SUCCESS = {
+  type: "success" as const,
+  title: "Sucesso",
+  description: "Configuração salva com sucesso!",
+};
+const SAVE_ERROR = {
+  type: "error" as const,
+  title: "Erro",
+  description: "Erro ao salvar configuração. Tente novamente.",
+};
 
 /**
  * Hook for the config page. Self-contained: allProcesses + assignGroups + numberingConfig + userTasks.
  */
-export function useConfigPage({ processSelected }: { processSelected?: ProcessDefinition } = {}) {
+export function useConfigPage({
+  processSelected,
+}: {
+  processSelected?: ProcessDefinition;
+} = {}) {
   const processConfig = useProcessConfig({ processSelected });
   const { igrpToast } = useIGRPToast();
-  const { assignGroups, numberingConfig, priorityConfig, userTasks: userTasksConfig } = processConfig;
+  const {
+    assignGroups,
+    numberingConfig,
+    priorityConfig,
+    userTasks: userTasksConfig,
+  } = processConfig;
 
   const {
     data: processesData,

@@ -254,7 +254,6 @@ export const saveProcessNumberConfig = async (
   return response.data;
 };
 
-
 /**
  * Fetches process export (includes candidate groups for process definition).
  * @param processDefinitionId The process definition ID
@@ -265,7 +264,9 @@ export const getProcessExport = async (
 ): Promise<{ candidateGroups: string }> => {
   const processManagementClient = await getIGRPProcessClient();
   const response = await (
-    processManagementClient.processes as unknown as { get: (url: string) => Promise<{ data: { candidateGroups?: string } }> }
+    processManagementClient.processes as unknown as {
+      get: (url: string) => Promise<{ data: { candidateGroups?: string } }>;
+    }
   ).get(`/process-definitions/${processDefinitionId}/export`);
   const data = response.data ?? {};
   return { candidateGroups: data.candidateGroups ?? "" };

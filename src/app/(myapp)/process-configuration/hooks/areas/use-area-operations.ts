@@ -10,7 +10,12 @@ import {
 } from "../../utils/area-hierarchy";
 import { useAlertDialog } from "../shared/use-alert-dialog";
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
-import { createArea, deleteArea, getSubareas, updateArea } from "@/app/(myapp)/client/area";
+import {
+  createArea,
+  deleteArea,
+  getSubareas,
+  updateArea,
+} from "@/app/(myapp)/client/area";
 
 export function useAreaOperations(
   areas: ExtendedArea[],
@@ -21,9 +26,7 @@ export function useAreaOperations(
 
   const handleCreateArea = async (formData: AreaFormData) => {
     try {
-      const newArea = await createArea(
-        formData as CreateAreaRequest,
-      );
+      const newArea = await createArea(formData as CreateAreaRequest);
       // Add the new area to the flat list and reorganize
       const flatAreas = getAllAreasFlat(areas);
       flatAreas.push(newArea);

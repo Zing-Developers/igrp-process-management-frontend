@@ -3,7 +3,10 @@ import { useProcessOperations } from "./processes/use-process-operations";
 import { useArtifactForm } from "./artifacts/use-artifact-form";
 import { useArtifactOperations } from "./artifacts/use-artifact-operations";
 import { useProcessNumberForm } from "./sequence/use-process-number-form";
-import { getProcesses, type ProcessNumberConfig } from "@/app/(myapp)/client/process";
+import {
+  getProcesses,
+  type ProcessNumberConfig,
+} from "@/app/(myapp)/client/process";
 import { useProcessNumberOperations } from "./sequence/use-process-number-operations";
 import { AreaProcessesMap } from "../types";
 import { useQuery } from "@tanstack/react-query";
@@ -230,8 +233,7 @@ export function useProcessHandlers(
     // Preload area processes if not already loaded
     if (!Array.isArray(areaProcesses[areaId])) {
       try {
-        const updatedProcessesResponse =
-          await getAreaProcesses(areaId);
+        const updatedProcessesResponse = await getAreaProcesses(areaId);
         const updatedProcesses = updatedProcessesResponse.content || [];
         setAreaProcesses((prev) => ({ ...prev, [areaId]: updatedProcesses }));
       } catch (error) {

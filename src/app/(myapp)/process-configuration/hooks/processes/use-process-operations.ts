@@ -2,7 +2,11 @@ import { ProcessData } from "@igrp/platform-process-management-types";
 import { AreaProcessesMap } from "../../types";
 import { useAlertDialog } from "../shared/use-alert-dialog";
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
-import { associateProcessToArea, getAreaProcesses, removeProcessFromArea } from "@/app/(myapp)/client/area-process";
+import {
+  associateProcessToArea,
+  getAreaProcesses,
+  removeProcessFromArea,
+} from "@/app/(myapp)/client/area-process";
 
 export function useProcessOperations(
   setAreaProcesses: React.Dispatch<React.SetStateAction<AreaProcessesMap>>,
@@ -12,8 +16,7 @@ export function useProcessOperations(
 
   // Extract common logic for reloading area processes
   const reloadAreaProcesses = async (areaId: string) => {
-    const updatedProcessesResponse =
-      await getAreaProcesses(areaId);
+    const updatedProcessesResponse = await getAreaProcesses(areaId);
 
     // Extract the content array from the paginated response
     const updatedProcesses = updatedProcessesResponse.content;
@@ -44,10 +47,7 @@ export function useProcessOperations(
       "Tem certeza que deseja remover este processo da área?",
       async () => {
         try {
-          await removeProcessFromArea(
-            areaId,
-            processDefinitionId,
-          );
+          await removeProcessFromArea(areaId, processDefinitionId);
 
           // Reload area processes for this area
           await reloadAreaProcesses(areaId);

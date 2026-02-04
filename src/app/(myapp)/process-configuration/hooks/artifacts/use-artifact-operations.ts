@@ -1,4 +1,7 @@
-import { getProcessArtifacts, getProcessDeployedArtifacts } from "@/app/(myapp)/client/process";
+import {
+  getProcessArtifacts,
+  getProcessDeployedArtifacts,
+} from "@/app/(myapp)/client/process";
 import { ProcessArtifact } from "@igrp/platform-process-management-types";
 
 export function useArtifactOperations() {
@@ -16,8 +19,7 @@ export function useArtifactOperations() {
         await getProcessDeployedArtifacts(processDefinitionId);
 
       // Then, load the saved artifacts (with FormKey associations)
-      const savedArtifacts =
-        await getProcessArtifacts(processDefinitionId);
+      const savedArtifacts = await getProcessArtifacts(processDefinitionId);
 
       // Merge the data: use deployed artifacts as base, but override with saved FormKey data
       const mergedArtifacts = deployedArtifacts.map((deployedArtifact) => {

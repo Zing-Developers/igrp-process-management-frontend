@@ -193,5 +193,3 @@ export const mapPriorityToConfig = (
   if (num === 4) return "high"; // 4: Alta
   return "critical"; // 5: Muito Alta
 };
-
-

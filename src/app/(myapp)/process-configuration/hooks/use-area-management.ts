@@ -1,9 +1,5 @@
 import { useState } from "react";
-import {
-  createArea,
-  deleteArea,
-  updateArea,
-} from "../../client/area";
+import { createArea, deleteArea, updateArea } from "../../client/area";
 import {
   Area,
   CreateAreaRequest,

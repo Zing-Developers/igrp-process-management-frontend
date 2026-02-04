@@ -36,7 +36,6 @@ import {
 	IGRPDataTableButtonLink,
 	IGRPButton 
 } from "@igrp/igrp-framework-react-design-system";
-import { form1 } from "@/app/(myapp)/process-configuration/types/index";
 import {useConfigPage} from '@/app/(myapp)/config/hooks/use-config-page'
 import { DATE_FORMAT_OPTIONS } from '@/app/(myapp)/config/constants'
 
@@ -549,7 +548,7 @@ return (
   data={ userTasks.list }
 />
   { editingTask !== undefined && (<TaskEditor  open={ editingTask !== undefined } editingTask={ editingTask }  setOpen={ (open) => !open && closeTaskEditor() }
-onSave={ (req) => selectedProcess?.id && userTasks.handleSave(selectedProcess.id, req) } ></TaskEditor>)}
+onSave={ (req) => selectedProcess?.id && userTasks.handleSave(req) } ></TaskEditor>)}
 </IGRPCardContent>
 </IGRPCard>
 </>),

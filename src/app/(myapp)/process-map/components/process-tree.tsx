@@ -47,33 +47,23 @@ export function ProcessTree({
   }
 
   return (
-    <IGRPCard name={`card1`} className={cn("w-full ")}>
-      <IGRPCardHeader>
-        <IGRPCardTitle>
-          <h3>Mapa de Processos</h3>
-        </IGRPCardTitle>
-        <IGRPCardDescription>
-          <p>Visualize processos organizados por área e subárea</p>
-        </IGRPCardDescription>
-      </IGRPCardHeader>
-      <IGRPCardContent className="space-y-3">
-        {nodes.map((node) => (
-          <div
+    <div className="space-y-3">
+      {nodes.map((node) => (
+        <div
+          key={node.id}
+          className="border rounded-lg space-y-3 p-1 gap-3 pb-2"
+        >
+          <TreeNode
             key={node.id}
-            className="border rounded-lg space-y-3 p-1 gap-3 pb-2"
-          >
-            <TreeNode
-              key={node.id}
-              node={node}
-              expandedNodes={expandedNodes}
-              onToggle={onToggle}
-              onStartProcess={onStartProcess}
-              onViewDetails={onViewDetails}
-              searchTerm={searchTerm}
-            />
-          </div>
-        ))}
-      </IGRPCardContent>
-    </IGRPCard>
+            node={node}
+            expandedNodes={expandedNodes}
+            onToggle={onToggle}
+            onStartProcess={onStartProcess}
+            onViewDetails={onViewDetails}
+            searchTerm={searchTerm}
+          />
+        </div>
+      ))}
+    </div>
   );
 }

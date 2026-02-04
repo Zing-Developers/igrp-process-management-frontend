@@ -1,10 +1,13 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getProcesses, updateProcessArtifact } from "@/app/(myapp)/client/process";
 import type { CreateProcessArtifactRequest, Process, ProcessDefinition } from "@igrp/platform-process-management-types";
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
 import { useProcessConfig } from "../use-process-config";
+
+const SAVE_SUCCESS = { type: "success" as const, title: "Sucesso", description: "Configuração salva com sucesso!" };
+const SAVE_ERROR = { type: "error" as const, title: "Erro", description: "Erro ao salvar configuração. Tente novamente." };
 
 /**
  * Hook for the config page. Self-contained: allProcesses + assignGroups + numberingConfig + userTasks.
@@ -12,6 +15,7 @@ import { useProcessConfig } from "../use-process-config";
 export function useConfigPage({ processSelected }: { processSelected?: ProcessDefinition } = {}) {
   const processConfig = useProcessConfig({ processSelected });
   const { igrpToast } = useIGRPToast();
+  const { assignGroups, numberingConfig, userTasks: userTasksConfig } = processConfig;
 
   const {
     data: processesData,
@@ -29,7 +33,26 @@ export function useConfigPage({ processSelected }: { processSelected?: ProcessDe
   });
 
   const allProcesses = processesData ?? [];
-  const { userTasks: userTasksConfig } = processConfig;
+
+  const saveConfigurationMutation = useMutation({
+    mutationFn: async () => {
+      const groups = assignGroups.form.getValues("groups") ?? "";
+      await assignGroups.handleAssignGroupsToProcess(groups, { silent: true });
+      await numberingConfig.handleSave(undefined, { silent: true });
+
+      const dataList = userTasksConfig.getSaveAllUserTasksData();
+      for (const { processDefinitionId, request } of dataList) {
+        await updateProcessArtifact(processDefinitionId, request);
+      }
+      userTasksConfig.loadConfig();
+    },
+    onSuccess: () => {
+      igrpToast(SAVE_SUCCESS);
+    },
+    onError: () => {
+      igrpToast(SAVE_ERROR);
+    },
+  });
 
   const handleSaveUserTask = async (request: CreateProcessArtifactRequest) => {
     const processDefinitionId = processSelected?.id;
@@ -43,11 +66,6 @@ export function useConfigPage({ processSelected }: { processSelected?: ProcessDe
     for (const { processDefinitionId, request } of dataList) {
       await updateProcessArtifact(processDefinitionId, request);
     }
-    igrpToast({
-      type: "success",
-      title: "Sucesso",
-      description: "Configurações das tarefas salvas com sucesso!",
-    });
     userTasksConfig.loadConfig();
   };
 
@@ -57,6 +75,7 @@ export function useConfigPage({ processSelected }: { processSelected?: ProcessDe
     loadAllProcesses,
     assignGroups: processConfig.assignGroups,
     numberingConfig: processConfig.numberingConfig,
+    saveConfigurationMutation,
     userTasks: {
       ...userTasksConfig,
       handleSave: handleSaveUserTask,

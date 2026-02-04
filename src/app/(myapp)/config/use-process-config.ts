@@ -71,19 +71,23 @@ export function useProcessConfig({ processSelected }: { processSelected?: Proces
     }
   };
 
+  type SaveOptions = { silent?: boolean };
+
   const handleSaveNumberingConfig = async (
     values?: ProcessNumberingValues,
+    opts?: SaveOptions,
   ) => {
     const data = values ?? numberingForm.getValues();
     const parsed = processNumberingSchema.safeParse(data);
     if (!parsed.success) {
-      igrpToast({
-        type: "error",
-        title: "Erro de validação",
-        description:
-          parsed.error.issues[0]?.message ?? "Dados inválidos.",
-      });
-      return;
+      if (!opts?.silent) {
+        igrpToast({
+          type: "error",
+          title: "Erro de validação",
+          description: parsed.error.issues[0]?.message ?? "Dados inválidos.",
+        });
+      }
+      throw new Error(parsed.error.issues[0]?.message ?? "Dados inválidos.");
     }
 
     try {
@@ -95,61 +99,67 @@ export function useProcessConfig({ processSelected }: { processSelected?: Proces
         padding: 0,
         numberIncrement: 1,
       });
-      igrpToast({
-        type: "success",
-        title: "Sucesso",
-        description: "Configuração de número de processo salva com sucesso!",
-      });
+      if (!opts?.silent) {
+        igrpToast({
+          type: "success",
+          title: "Sucesso",
+          description: "Configuração de número de processo salva com sucesso!",
+        });
+      }
     } catch (error) {
       console.error("Error saving process number configuration:", error);
-      igrpToast({
-        type: "error",
-        title: "Erro",
-        description: "Erro ao salvar configuração. Tente novamente.",
-      });
+      if (!opts?.silent) {
+        igrpToast({
+          type: "error",
+          title: "Erro",
+          description: "Erro ao salvar configuração. Tente novamente.",
+        });
+      }
       throw error;
     }
   };
 
-  const handleAssignGroupsToProcess = async (
-    groups: string,
-  ) => {
+  const handleAssignGroupsToProcess = async (groups: string, opts?: SaveOptions) => {
     if (!id) {
-      igrpToast({
-        type: "error",
-        title: "Erro",
-        description: "Processo não selecionado.",
-      });
-      return;
+      if (!opts?.silent) {
+        igrpToast({
+          type: "error",
+          title: "Erro",
+          description: "Processo não selecionado.",
+        });
+      }
+      throw new Error("Processo não selecionado.");
     }
     const parsed = assignGroupsSchema.safeParse({ groups });
     if (!parsed.success) {
-      igrpToast({
-        type: "error",
-        title: "Erro de validação",
-        description:
-          parsed.error.issues[0]?.message ?? "Dados inválidos.",
-      });
-      return;
+      if (!opts?.silent) {
+        igrpToast({
+          type: "error",
+          title: "Erro de validação",
+          description: parsed.error.issues[0]?.message ?? "Dados inválidos.",
+        });
+      }
+      throw new Error(parsed.error.issues[0]?.message ?? "Dados inválidos.");
     }
 
     try {
-      await assignGroupsToProcessDefinition(
-        id,
-        parsed.data.groups.trim(),
-      );
-      igrpToast({
-        type: "success",
-        title: "Sucesso",
-        description: "Grupos atribuídos com sucesso!",
-      });
+      await assignGroupsToProcessDefinition(id, parsed.data.groups.trim());
+      if (!opts?.silent) {
+        igrpToast({
+          type: "success",
+          title: "Sucesso",
+          description: "Grupos atribuídos com sucesso!",
+        });
+      }
     } catch (error) {
       console.error("Error assigning groups to process:", error);
-      igrpToast({
-        type: "error",
-        title: "Erro",
-        description: "Erro ao atribuir grupos ao processo. Tente novamente.",
-      });
+      if (!opts?.silent) {
+        igrpToast({
+          type: "error",
+          title: "Erro",
+          description: "Erro ao atribuir grupos ao processo. Tente novamente.",
+        });
+      }
       throw error;
     }
   };

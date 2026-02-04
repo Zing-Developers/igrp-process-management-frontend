@@ -43,7 +43,7 @@ export interface ProcessMapActions {
 
 export interface ProcessMapHookReturn
   extends ProcessMapState,
-    ProcessMapActions {
+  ProcessMapActions {
   // Computed values
   treeNodes: ProcessTreeNode[];
   flatNodes: ProcessTreeNode[];
@@ -57,13 +57,6 @@ export interface ProcessMapHookReturn
   clearSearch: () => void;
 
   // Modals
-  detailModal: {
-    isOpen: boolean;
-    process?: Process;
-    open: (process: Process) => void;
-    close: () => void;
-    setOpen: (open: boolean) => void;
-  };
   priorityModal: {
     isOpen: boolean;
     process: Process | null;

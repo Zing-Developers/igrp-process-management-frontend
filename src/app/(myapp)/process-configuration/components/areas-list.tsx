@@ -10,7 +10,7 @@ interface ExpandedAreas {
   [key: string]: boolean;
 }
 
-export function AreasList({
+function AreasList({
   areas,
   expandedAreas,
   onToggleExpansion,
@@ -23,16 +23,16 @@ export function AreasList({
 }: {
   areas: ExtendedArea[];
   expandedAreas: ExpandedAreas;
+  areaProcesses: { [key: string]: Process[] }; // Add areaProcesses type
   onToggleExpansion: (areaId: string) => Promise<void>;
   onEdit: (area: Area) => void;
   onDelete: (areaId: string) => void;
   onAddSubarea: (parentAreaId: string) => void;
   onAddProcess: (areaId: string) => void;
   onRemoveProcess: (areaId: string, processId: string) => void;
-  areaProcesses: { [key: string]: Process[] }; // Add areaProcesses type
 }) {
   // Filter to show only top-level areas (areas without parent)
-  const topLevelAreas = areas.filter((area) => !area.areaId);
+  const topLevelAreas = (areas || []).filter((area) => !area.areaId);
 
   if (topLevelAreas.length === 0) {
     return (
@@ -64,3 +64,5 @@ export function AreasList({
     </div>
   );
 }
+
+export { AreasList };

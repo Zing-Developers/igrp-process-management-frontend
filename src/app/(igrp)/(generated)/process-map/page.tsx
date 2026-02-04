@@ -10,12 +10,18 @@ import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import {ProcessTreeComponent} from '@/app/(myapp)/process-map/components/process-tree-node'
 import {LoadingPage} from '@/app/(myapp)/components/loading-page'
+import {AreaTreeNodeComponent} from '@/app/(myapp)/process-map/components/area/area-tree-node'
 import { 
   IGRPPageHeader,
 	IGRPTabs,
 	IGRPTabItem,
 	IGRPHeadline,
-	IGRPInputSearch 
+	IGRPInputSearch,
+	IGRPCard,
+	IGRPCardHeader,
+	IGRPButton,
+	IGRPCardContent,
+	IGRPCardFooter 
 } from "@igrp/igrp-framework-react-design-system";
 import { useRouter } from 'next/navigation'
 import {useProcessMap} from '@/app/(myapp)/process-map/hooks/use-process-map'
@@ -102,8 +108,7 @@ placeholder={ `Procurar por processos...` }
   value={ pm.searchTerm }
 >
 </IGRPInputSearch>
-            { !pm.loading && (<ProcessTreeComponent  nodes={ pm.filteredNodes } expandedNodes={ pm.expandedNodes } searchTerm={ pm.searchTerm } onStartProcess={ pm.startProcess }  onToggle={ pm.toggleNode }
-onViewDetails={ pm.detailModal.open } ></ProcessTreeComponent>)}
+            { !pm.loading && (<ProcessTreeComponent  onViewDetails={ undefined } nodes={ pm.filteredNodes } expandedNodes={ pm.expandedNodes } searchTerm={ pm.searchTerm } onStartProcess={ pm.startProcess }  onToggle={ pm.toggleNode } ></ProcessTreeComponent>)}
             <LoadingPage  isLoading={ pm.loading }   ></LoadingPage>
 </>),
         },
@@ -115,6 +120,89 @@ onViewDetails={ pm.detailModal.open } ></ProcessTreeComponent>)}
           badgeVariant: `solid`,
           badgeColor: `primary`,
 content: (<>
+            <div className={ cn('grid','lg:grid-cols-2 ',' gap-4',)}    >
+	<div className={ cn('col-span-1 flex flex-col gap-6 ',)}    >
+	<IGRPCard
+  id={ `card1` }
+  
+  className={ cn() }
+  
+  
+>
+  <IGRPCardHeader
+  
+>
+  <div className={ cn('flex','flex flex-row flex-nowrap items-center justify-between gap-2',)}    >
+	<IGRPHeadline
+  id={ `headline2` }
+  title={ ` Estrutura do Mapa de Processos` }
+description={ `Hierarquia de áreas e subáreas` }
+variant={ `h6` }
+roleColor={ `solid` }
+color={ `primary` }
+showIcon={ false }
+  className={ cn() }
+  
+  
+>
+</IGRPHeadline>
+<IGRPButton
+  id={ `button1` }
+  variant={ `default` }
+size={ `default` }
+showIcon={ true }
+iconName={ `Plus` }
+  className={ cn() }
+  onClick={ () => {} }
+  
+>
+  Adicionar Àrea
+</IGRPButton></div>
+</IGRPCardHeader>
+  <IGRPCardContent
+  className={ cn('space-y-4','space-x-3','space-y-3',) }
+  
+>
+  <AreaTreeNodeComponent  nodes={ pm.manageAreas.areas } expandedNodes={ pm.manageAreas.expandedNodes }  onToggle={ pm.toggleNode } ></AreaTreeNodeComponent>
+</IGRPCardContent>
+  <IGRPCardFooter
+  
+>
+</IGRPCardFooter>
+</IGRPCard></div>
+<div className={ cn('col-span-1 flex flex-col gap-6 ',)}    >
+	<IGRPCard
+  id={ `card2` }
+  
+  
+  
+>
+  <IGRPCardHeader
+  
+>
+  <IGRPHeadline
+  id={ `headline3` }
+  title={ `Detalhes da área` }
+description={ `Visualizar processos e configurações atribuídos` }
+variant={ `h6` }
+roleColor={ `solid` }
+color={ `primary` }
+showIcon={ false }
+  
+  
+>
+</IGRPHeadline>
+</IGRPCardHeader>
+  <IGRPCardContent
+  className={ cn('space-y-4','space-x-3','space-y-3',) }
+  
+>
+</IGRPCardContent>
+  <IGRPCardFooter
+  
+>
+</IGRPCardFooter>
+</IGRPCard></div></div>
 </>),
         },
       ]

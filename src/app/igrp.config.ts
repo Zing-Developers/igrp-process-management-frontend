@@ -81,5 +81,6 @@ export default {
     "config/components/selected-items",
     "config/components/actions-item",
     "config/components/priority-form",
+    "process-map/components/area/area-tree-node",
   ],
 };

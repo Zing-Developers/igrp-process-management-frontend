@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { ProcessMapHookReturn } from "../types";
 import { useProcessMapData } from "./use-process-map-data";
 import { useTreeExpansion } from "./use-tree-expansion";
@@ -10,6 +10,7 @@ import { useTreeComputed } from "./use-tree-computed";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { Process } from "@igrp/platform-process-management-types";
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
+import { filterAreasRecursively } from "../../process-configuration/utils/area-hierarchy";
 
 export function useProcessMap(
   router?: AppRouterInstance,
@@ -17,6 +18,8 @@ export function useProcessMap(
   // Data management
   const { areas, loadedNodes, loading, error, loadSubareas, refreshData } =
     useProcessMapData();
+
+
 
   // Tree expansion state
   const { expandedNodes, toggleNode: originalToggleNode } = useTreeExpansion();
@@ -32,14 +35,15 @@ export function useProcessMap(
   const { igrpToast } = useIGRPToast();
 
   // Modal management
-  const { detailModal } = useProcessModal();
   const { priorityModal } = usePriorityModal();
+
 
   // Computed tree values
   const { treeNodes, flatNodes, totalProcesses, totalAreas } = useTreeComputed(
     areas,
     expandedNodes,
   );
+
 
   // Search functionality
   const { searchTerm, setSearchTerm, filteredNodes, clearSearch } =
@@ -142,10 +146,14 @@ export function useProcessMap(
     refreshData,
 
     // Modals
-    detailModal,
     priorityModal: {
       ...priorityModal,
       onSave: handlePrioritySave,
     },
-  };
-}
+
+    manageAreas: {
+      areas: filteredNodes,
+      expandedNodes
+    },
+  }
+};

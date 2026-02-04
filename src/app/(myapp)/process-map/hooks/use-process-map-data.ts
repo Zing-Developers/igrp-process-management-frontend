@@ -18,7 +18,7 @@ export function useProcessMapData() {
       setLoading(true);
       setError(undefined);
 
-      const areasResponse = await getAreas();
+      const areasResponse = await getAreas({});
       const topLevelAreas =
         areasResponse.content?.filter((area) => !area.areaId) || [];
 

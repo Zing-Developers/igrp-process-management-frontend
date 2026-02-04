@@ -39,7 +39,7 @@ export function useDropdownData(filters: FilterState, isProcess?: boolean) {
   const { data: areasData } = useQuery({
     queryKey: ["areas"],
     queryFn: async () => {
-      const areasResponse = await getAreas();
+      const areasResponse = await getAreas({});
       return areasResponse.content.map((area) => ({
         label: area.name,
         value: area.id,
@@ -57,7 +57,7 @@ export function useDropdownData(filters: FilterState, isProcess?: boolean) {
     queryKey: ["subareas", filters.areaId],
     queryFn: async () => {
       if (!filters.areaId) return [];
-      const subareasResponse = await getAreas(filters.areaId);
+      const subareasResponse = await getAreas({ parentId: filters.areaId });
       return subareasResponse.content.map((subarea) => ({
         label: subarea.name,
         value: subarea.id,

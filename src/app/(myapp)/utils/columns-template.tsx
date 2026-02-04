@@ -228,3 +228,21 @@ export const getTypeIcon = (value: unknown) => {
       return <IGRPIcon iconName="Type" />;
   }
 };
+
+export const getCandidateGroupsTemplate = (candidateGroups: string[]) => {
+  const groups = candidateGroups ?? [];
+  return (
+    <div className="flex flex-wrap gap-1">
+      {groups.slice(0, 2).map((group) => (
+        <IGRPBadgePrimitive key={group} variant="secondary" className="text-xs">
+          {group}
+        </IGRPBadgePrimitive>
+      ))}
+      {candidateGroups.length > 2 && (
+        <IGRPBadgePrimitive variant="outline" className="text-xs">
+          +{candidateGroups.length - 2}
+        </IGRPBadgePrimitive>
+      )}
+    </div>
+  );
+};

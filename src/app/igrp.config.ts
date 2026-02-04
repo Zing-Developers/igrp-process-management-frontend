@@ -79,5 +79,7 @@ export default {
     "config/components/add-item",
     "config/components/add-checklist-item",
     "config/components/selected-items",
+    "config/components/actions-item",
+    "config/components/priority-form",
   ],
 };

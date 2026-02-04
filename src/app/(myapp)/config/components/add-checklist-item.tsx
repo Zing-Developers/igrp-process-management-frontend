@@ -3,7 +3,7 @@ import { ScrollArea } from "@igrp/igrp-framework-react-design-system/dist/compon
 
 function AddChecklistItem(
     { addItem, removeItem, label, availableItems, items }:
-        { addItem: (value: string) => void, removeItem: (value: string) => void, label: string, availableItems: string[], items?: any }) {
+        { addItem: (value: string) => void, removeItem: (value: string) => void, label: string, availableItems?: string[], items?: any }) {
 
     return (
         <div className="space-y-2">
@@ -26,8 +26,10 @@ function AddChecklistItem(
                             />
                         </div>
                     ))}
-                    {availableItems.length === 0 && (
-                        <IGRPLabel label="Nenhum item disponível usar o custom group" />
+                    {availableItems?.length === 0 && (
+                        <div className="flex items-center justify-center h-full w-full text-center text-muted-foreground">
+                            <IGRPLabel label="Any group available, use the custom group" />
+                        </div>
                     )}
                 </div>
             </ScrollArea>

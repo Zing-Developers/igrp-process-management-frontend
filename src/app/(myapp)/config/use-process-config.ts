@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   assignGroupsToProcessDefinition,
+  getProcessArtifacts,
   getProcessNumberConfigs,
   saveProcessNumberConfig,
 } from "@/app/(myapp)/client/process";
@@ -14,7 +15,9 @@ import {
   type AssignGroupsValues,
   type ProcessNumberingValues,
 } from "./schemas";
-import { ProcessDefinition } from "@igrp/platform-process-management-types";
+import { CreateProcessArtifactRequest, ProcessArtifact, ProcessDefinition } from "@igrp/platform-process-management-types";
+import { getCandidateGroupsTemplate } from "../utils/columns-template";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const numberingDefaultValues: ProcessNumberingValues = {
   prefix: "",
@@ -29,6 +32,7 @@ const numberingDefaultValues: ProcessNumberingValues = {
  */
 export function useProcessConfig({ processSelected }: { processSelected?: ProcessDefinition } = {}) {
   const { igrpToast } = useIGRPToast();
+  const queryClient = useQueryClient();
 
   const { processKey, candidateGroups, id } = processSelected || {};
 
@@ -149,6 +153,44 @@ export function useProcessConfig({ processSelected }: { processSelected?: Proces
     }
   };
 
+  // --- userTasks ---
+  const {
+    data: artifactsData,
+    isLoading: loadingUserTasks,
+  } = useQuery({
+    queryKey: ["process-artifacts", id],
+    queryFn: () => getProcessArtifacts(id!),
+    enabled: !!id,
+  });
+
+  const userTasksList = (artifactsData ?? []).map((artifact: ProcessArtifact, index: number) => ({
+    ...artifact,
+    index,
+    defaultPriority: "",
+    defaultDueDate: "-",
+    candidateGroups: getCandidateGroupsTemplate(artifact.candidateGroups ?? ""),
+    candidateGroupsRaw: artifact.candidateGroups ?? "",
+  }));
+
+  const loadUserTasksConfig = () => {
+    queryClient.invalidateQueries({ queryKey: ["process-artifacts", id] });
+  };
+
+  const getSaveUserTaskData = (
+    request: CreateProcessArtifactRequest,
+  ) => ({ request });
+
+  const getSaveAllUserTasksData = () =>
+    userTasksList.map((task) => ({
+      processDefinitionId: id!,
+      request: {
+        key: task.key,
+        formKey: task.formKey ?? "",
+        name: task.name ?? "",
+        candidateGroups: task.candidateGroupsRaw ?? "",
+      } as CreateProcessArtifactRequest,
+    }));
+
   return {
     assignGroups: {
       schema: assignGroupsSchema,
@@ -162,6 +204,13 @@ export function useProcessConfig({ processSelected }: { processSelected?: Proces
       loadConfig: loadNumberingConfig,
       handleSave: handleSaveNumberingConfig,
       addFieldValue: addFieldValueToForm,
+    },
+    userTasks: {
+      list: userTasksList,
+      loading: loadingUserTasks,
+      loadConfig: loadUserTasksConfig,
+      getSaveUserTaskData,
+      getSaveAllUserTasksData,
     },
   };
 }

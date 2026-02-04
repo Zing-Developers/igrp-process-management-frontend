@@ -31,14 +31,10 @@ export function useConfigPage({ processSelected }: { processSelected?: ProcessDe
   const allProcesses = processesData ?? [];
   const { userTasks: userTasksConfig } = processConfig;
 
-  const handleSaveUserTask = async (
-    request: CreateProcessArtifactRequest,
-  ) => {
-    console.log(request);
-    userTasksConfig.getSaveUserTaskData(
-      request,
-    );
-    userTasksConfig.loadConfig();
+  const handleSaveUserTask = async (request: CreateProcessArtifactRequest) => {
+    const processDefinitionId = processSelected?.id;
+    if (!processDefinitionId) return;
+    userTasksConfig.patchEditedTask(request.key, request);
   };
 
   const handleSaveAllUserTasks = async () => {

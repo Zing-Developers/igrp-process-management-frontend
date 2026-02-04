@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -154,6 +155,8 @@ export function useProcessConfig({ processSelected }: { processSelected?: Proces
   };
 
   // --- userTasks ---
+  const editedTasksPatch = useRef<Record<string, CreateProcessArtifactRequest>>({});
+
   const {
     data: artifactsData,
     isLoading: loadingUserTasks,
@@ -163,33 +166,51 @@ export function useProcessConfig({ processSelected }: { processSelected?: Proces
     enabled: !!id,
   });
 
-  const userTasksList = (artifactsData ?? []).map((artifact: ProcessArtifact, index: number) => ({
-    ...artifact,
-    index,
-    defaultPriority: "",
-    defaultDueDate: "-",
-    candidateGroups: getCandidateGroupsTemplate(artifact.candidateGroups ?? ""),
-    candidateGroupsRaw: artifact.candidateGroups ?? "",
-  }));
+  const toCandidateGroupsString = (val: unknown): string =>
+    Array.isArray(val)
+      ? val.map((s) => String(s).trim()).filter(Boolean).join(",")
+      : String(val ?? "");
+
+  const userTasksList = (artifactsData ?? []).map((artifact: ProcessArtifact, index: number) => {
+    const raw = toCandidateGroupsString(artifact.candidateGroups);
+    const groupsArray = raw ? raw.split(",").map((s) => s.trim()).filter(Boolean) : [];
+    return {
+      ...artifact,
+      index,
+      defaultPriority: "",
+      defaultDueDate: "-",
+      candidateGroups: getCandidateGroupsTemplate(groupsArray),
+      candidateGroupsRaw: raw,
+    };
+  });
 
   const loadUserTasksConfig = () => {
+    editedTasksPatch.current = {};
     queryClient.invalidateQueries({ queryKey: ["process-artifacts", id] });
   };
 
+  const patchEditedTask = (taskKey: string, request: CreateProcessArtifactRequest) => {
+    editedTasksPatch.current[taskKey] = request;
+  };
+
   const getSaveUserTaskData = (
+    processDefinitionId: string,
     request: CreateProcessArtifactRequest,
-  ) => ({ request });
+  ) => ({ processDefinitionId, request });
 
   const getSaveAllUserTasksData = () =>
-    userTasksList.map((task) => ({
-      processDefinitionId: id!,
-      request: {
-        key: task.key,
-        formKey: task.formKey ?? "",
-        name: task.name ?? "",
-        candidateGroups: task.candidateGroupsRaw ?? "",
-      } as CreateProcessArtifactRequest,
-    }));
+    userTasksList.map((task) => {
+      const patched = editedTasksPatch.current[task.key];
+      const req: CreateProcessArtifactRequest = patched
+        ? { ...patched, candidateGroups: toCandidateGroupsString(patched.candidateGroups) }
+        : {
+            key: task.key,
+            formKey: task.formKey ?? "",
+            name: task.name ?? "",
+            candidateGroups: task.candidateGroupsRaw ?? "",
+          };
+      return { processDefinitionId: id!, request: req };
+    });
 
   return {
     assignGroups: {
@@ -209,6 +230,7 @@ export function useProcessConfig({ processSelected }: { processSelected?: Proces
       list: userTasksList,
       loading: loadingUserTasks,
       loadConfig: loadUserTasksConfig,
+      patchEditedTask,
       getSaveUserTaskData,
       getSaveAllUserTasksData,
     },

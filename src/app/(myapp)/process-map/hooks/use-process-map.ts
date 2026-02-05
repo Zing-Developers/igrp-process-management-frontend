@@ -8,9 +8,10 @@ import { usePriorityModal } from "./use-priority-modal";
 import { useTreeSearch } from "./use-tree-search";
 import { useTreeComputed } from "./use-tree-computed";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { Process } from "@igrp/platform-process-management-types";
+import { Area, Process } from "@igrp/platform-process-management-types";
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
-import { filterAreasRecursively } from "../../process-configuration/utils/area-hierarchy";
+import { filterAreasRecursively, getAllAreasFlat } from "../../process-configuration/utils/area-hierarchy";
+import { useAccessManagement } from "../../access-management/hooks";
 
 export function useProcessMap(
   router?: AppRouterInstance,
@@ -117,6 +118,14 @@ export function useProcessMap(
     [startProcessWithPriority, priorityModal, igrpToast],
   );
 
+  const { applicationsOptions } = useAccessManagement();
+
+  const flatAreas = getAllAreasFlat(areas);
+
+  const mapOptions = useMemo(() => {
+    return flatAreas.map((area: Area) => ({ label: area.name, value: area.id }));
+  }, [flatAreas]);
+
   return {
     // State
     areas,
@@ -153,7 +162,11 @@ export function useProcessMap(
 
     manageAreas: {
       areas: filteredNodes,
-      expandedNodes
+      expandedNodes,
+      options: {
+        applications: applicationsOptions,
+        areas: mapOptions,
+      },
     },
   }
 };

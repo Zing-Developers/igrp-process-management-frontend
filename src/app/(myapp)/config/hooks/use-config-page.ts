@@ -74,7 +74,8 @@ export function useConfigPage({
     onSuccess: () => {
       igrpToast(SAVE_SUCCESS);
     },
-    onError: () => {
+    onError: (error) => {
+      console.error(error);
       igrpToast(SAVE_ERROR);
     },
   });

@@ -9,6 +9,7 @@
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import {ProcessItem} from '@/app/(myapp)/config/components/process-item'
+import {ActionsItem} from '@/app/(myapp)/config/components/actions-item'
 import {SelectedItems} from '@/app/(myapp)/config/components/selected-items'
 import {AddChecklistItem} from '@/app/(myapp)/config/components/add-checklist-item'
 import {AddItem} from '@/app/(myapp)/config/components/add-item'
@@ -17,7 +18,6 @@ import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
 import TaskEditor from '@/app/(igrp)/(generated)/config/components/taskeditor'
-import {ActionsItem} from '@/app/(myapp)/config/components/actions-item'
 import { 
   IGRPPageHeader,
 	IGRPCard,
@@ -25,6 +25,7 @@ import {
 	IGRPHeadline,
 	IGRPCardContent,
 	IGRPRepetitiveComponent,
+	IGRPButton,
 	IGRPTabs,
 	IGRPTabItem,
 	IGRPSeparator,
@@ -33,8 +34,7 @@ import {
 	IGRPInputNumber,
 	IGRPDataTable,
 	IGRPDataTableRowAction,
-	IGRPDataTableButtonLink,
-	IGRPButton 
+	IGRPDataTableButtonLink 
 } from "@igrp/igrp-framework-react-design-system";
 import {useConfigPage} from '@/app/(myapp)/config/hooks/use-config-page'
 import { DATE_FORMAT_OPTIONS } from '@/app/(myapp)/config/constants'
@@ -227,18 +227,45 @@ showIcon={ false }
 </IGRPCardContent>
 </IGRPCard></div>
 <div className={ cn('col-span-1 flex flex-col gap-6 ','md:col-span-3 flex flex-col gap-6 ','lg:col-span-3 flex flex-col gap-6 ','xl:col-span-3 flex flex-col gap-6 ',)}    >
+	<div className={ cn('flex flex-row flex-wrap items-center justify-between gap-2',)}    >
+	<div className={ cn('flex',)}    >
 	{ selectedProcess?.name  && (<IGRPHeadline
   id={ `headline1` }
   variant={ `h6` }
 roleColor={ `solid` }
 color={ `primary` }
 showIcon={ false }
-  className={ cn() }
   
   title={ selectedProcess?.name }
 description={ selectedProcess?.processKey + ' - ' + selectedProcess?.version  }
 >
 </IGRPHeadline>)}
+{ !selectedProcess?.name  && (<p className={ cn(' text-muted-foreground',)}    >
+	Select a process to configure</p>)}</div>
+<div className={ cn('flex',' flex justify-end gap-2',)}    >
+	{ selectedProcess?.id && (<ActionsItem  processDefinitionId={ selectedProcess?.name }   ></ActionsItem>)}
+<IGRPButton
+  id={ `button2` }
+  variant={ `secondary` }
+size={ `default` }
+showIcon={ false }
+  className={ cn() }
+  onClick={ () => {} }
+  
+>
+  Cancel
+</IGRPButton>
+<IGRPButton
+  id={ `button1` }
+  variant={ `default` }
+size={ `default` }
+showIcon={ false }
+  className={ cn() }
+  onClick={ handleSaveConfiguration }
+  
+>
+  Save Configuration
+</IGRPButton></div></div>
 <IGRPTabs
   variant={ `default` }
   tabContentClassName={ `space-y-4` }
@@ -555,30 +582,6 @@ onSave={ (req) => selectedProcess?.id && userTasks.handleSave(req) } ></TaskEdit
         },
       ]
   }
-/>
-<div className={ cn('flex',' flex justify-end gap-2',)}    >
-	<ActionsItem    ></ActionsItem>
-<IGRPButton
-  id={ `button2` }
-  variant={ `secondary` }
-size={ `default` }
-showIcon={ false }
-  className={ cn() }
-  onClick={ () => {} }
-  
->
-  Cancel
-</IGRPButton>
-<IGRPButton
-  id={ `button1` }
-  variant={ `default` }
-size={ `default` }
-showIcon={ false }
-  className={ cn() }
-  onClick={ handleSaveConfiguration }
-  
->
-  Save Configuration
-</IGRPButton></div></div></div></div></div>
+/></div></div></div></div>
   );
 }

@@ -5,6 +5,8 @@ import { useAreaHandlers } from "./use-area-handlers";
 import { useProcessHandlers } from "./use-process-handlers";
 import { useComputedValues } from "./use-computed-values";
 import { useAccessManagement } from "../../access-management/hooks";
+import { getAllAreasFlat } from "../utils/area-hierarchy";
+import { useMemo } from "react";
 
 export function useProcessConfiguration() {
   // Configuration data
@@ -47,6 +49,9 @@ export function useProcessConfiguration() {
   };
 
   const { applicationsOptions } = useAccessManagement();
+
+
+ 
 
   return {
     // Data

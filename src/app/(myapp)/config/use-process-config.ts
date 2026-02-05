@@ -91,7 +91,8 @@ export function useProcessConfig({
     opts?: SaveOptions,
   ) => {
     const data = values ?? numberingForm.getValues();
-    const parsed = processNumberingSchema.safeParse(data);
+    const parsed = processNumberingSchema.safeParse({ ...data, sequenceLength: Number(data.sequenceLength) });
+
     if (!parsed.success) {
       if (!opts?.silent) {
         igrpToast({
@@ -243,9 +244,9 @@ export function useProcessConfig({
   const toCandidateGroupsString = (val: unknown): string =>
     Array.isArray(val)
       ? val
-          .map((s) => String(s).trim())
-          .filter(Boolean)
-          .join(",")
+        .map((s) => String(s).trim())
+        .filter(Boolean)
+        .join(",")
       : String(val ?? "");
 
   const userTasksList: any = (artifactsData ?? []).map(
@@ -253,15 +254,15 @@ export function useProcessConfig({
       const raw = toCandidateGroupsString(artifact.candidateGroups);
       const groupsArray = raw
         ? raw
-            .split(",")
-            .map((s) => s.trim())
-            .filter(Boolean)
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
         : [];
       return {
         ...artifact,
         index,
-        defaultPriority: "",
-        defaultDueDate: "-",
+        defaultPriority: artifact.priority ?? "",
+        defaultDueDate: artifact.dueDate ?? "-",
         candidateGroups: getCandidateGroupsTemplate(groupsArray),
         candidateGroupsRaw: raw,
       };
@@ -290,15 +291,15 @@ export function useProcessConfig({
       const patched = editedTasksPatch.current[task.key];
       const req: CreateProcessArtifactRequest = patched
         ? {
-            ...patched,
-            candidateGroups: toCandidateGroupsString(patched.candidateGroups),
-          }
+          ...patched,
+          candidateGroups: toCandidateGroupsString(patched.candidateGroups),
+        }
         : {
-            key: task.key,
-            formKey: task.formKey ?? "",
-            name: task.name ?? "",
-            candidateGroups: task.candidateGroupsRaw ?? "",
-          };
+          key: task.key,
+          formKey: task.formKey ?? "",
+          name: task.name ?? "",
+          candidateGroups: task.candidateGroupsRaw ?? "",
+        };
       return { processDefinitionId: id!, request: req };
     });
 

@@ -11,11 +11,16 @@ import {
 import { useState } from "react";
 import { archiveProcessDefinition, exportProcessDefinition } from "../../client/process";
 
-export function ActionsItem({ processDefinitionId }: { processDefinitionId: string }) {
-
+export function ActionsItem({
+  processDefinitionId,
+  onArchiveSuccess,
+}: {
+  processDefinitionId: string;
+  onArchiveSuccess?: () => void;
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { igrpToast } = useIGRPToast()
+  const { igrpToast } = useIGRPToast();
 
   const handleArchive = async () => {
     try {
@@ -25,6 +30,7 @@ export function ActionsItem({ processDefinitionId }: { processDefinitionId: stri
         description: "The process definition has been archived successfully",
         type: "success",
       });
+      onArchiveSuccess?.();
     } catch (error) {
       console.error(error);
       igrpToast({

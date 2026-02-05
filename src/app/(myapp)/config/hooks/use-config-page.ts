@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getProcesses,
   updateProcessArtifact,
@@ -36,6 +36,7 @@ export function useConfigPage({
 } = {}) {
   const processConfig = useProcessConfig({ processSelected });
   const { igrpToast } = useIGRPToast();
+  const queryClient = useQueryClient();
   const {
     assignGroups,
     numberingConfig,
@@ -43,11 +44,7 @@ export function useConfigPage({
     userTasks: userTasksConfig,
   } = processConfig;
 
-  const {
-    data: processesData,
-    isLoading: loading,
-    refetch: loadAllProcesses,
-  } = useQuery({
+  const { data, isLoading: loading } = useQuery({
     queryKey: ["all-processes", filterProcess],
     queryFn: async () => {
       const response = await getProcesses(filterProcess);
@@ -56,10 +53,11 @@ export function useConfigPage({
         version: `v${process.version}`,
       })) as Process[];
     },
-
   });
 
-  const allProcesses = processesData ?? [];
+  const loadAllProcesses = () => {
+    queryClient.invalidateQueries({ queryKey: ["all-processes", filterProcess] });
+  };
 
   const saveConfigurationMutation = useMutation({
     mutationFn: async () => {
@@ -98,8 +96,9 @@ export function useConfigPage({
     userTasksConfig.loadConfig();
   };
 
+
   return {
-    allProcesses,
+    allProcesses: data ?? [],
     loading,
     loadAllProcesses,
     assignGroups: processConfig.assignGroups,

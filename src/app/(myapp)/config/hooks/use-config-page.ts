@@ -29,8 +29,10 @@ const SAVE_ERROR = {
  */
 export function useConfigPage({
   processSelected,
+  filterProcess,
 }: {
   processSelected?: ProcessDefinition;
+  filterProcess?: string;
 } = {}) {
   const processConfig = useProcessConfig({ processSelected });
   const { igrpToast } = useIGRPToast();
@@ -46,14 +48,15 @@ export function useConfigPage({
     isLoading: loading,
     refetch: loadAllProcesses,
   } = useQuery({
-    queryKey: ["all-processes"],
+    queryKey: ["all-processes", filterProcess],
     queryFn: async () => {
-      const response = await getProcesses();
+      const response = await getProcesses(filterProcess);
       return (response.content || []).map((process) => ({
         ...process,
         version: `v${process.version}`,
       })) as Process[];
     },
+
   });
 
   const allProcesses = processesData ?? [];

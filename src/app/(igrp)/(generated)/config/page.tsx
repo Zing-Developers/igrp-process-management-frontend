@@ -24,6 +24,7 @@ import {
 	IGRPCardHeader,
 	IGRPHeadline,
 	IGRPCardContent,
+	IGRPInputSearch,
 	IGRPRepetitiveComponent,
 	IGRPButton,
 	IGRPTabs,
@@ -64,6 +65,8 @@ const [editingTask, setEditingTask] = useState<any | undefined>(undefined);
 const [editingTaskIndex, setEditingTaskIndex] = useState<number>(-1);
 
 const [taskNewGroup, setTaskNewGroup] = useState<string>("");
+
+const [filterProcess, setFilterProcess] = useState<string | undefined>(undefined);
 
 const { igrpToast } = useIGRPToast()
 
@@ -145,7 +148,7 @@ setTaskNewGroup("")
 
 }
 
-const { allProcesses, assignGroups, numberingConfig, priorityConfig,userTasks, saveConfigurationMutation } = useConfigPage({ processSelected: selectedProcess });
+const { allProcesses, assignGroups, numberingConfig, priorityConfig, userTasks, saveConfigurationMutation } = useConfigPage({ processSelected:selectedProcess, filterProcess });
 
 useEffect(() => {
   if (selectedProcess?.processKey) {
@@ -161,8 +164,8 @@ useEffect(() => {
   }
 }, [selectedProcess?.processKey]);
 
-  const numberingValues = numberingConfig.form.watch();
-  const groupsValue = assignGroups.form.watch('groups') ?? '';
+const numberingValues = numberingConfig.form.watch();
+const groupsValue = assignGroups.form.watch('groups') ?? '';
 
 
   return (
@@ -211,6 +214,21 @@ showIcon={ false }
   className={ cn('space-y-4 px-0','space-x-3','space-y-3',) }
   
 >
+  <IGRPInputSearch
+  id={ `inputSearch1` }
+  label={ undefined }
+showStartIcon={ true }
+startIcon={ `Search` }
+submitIcon={ `ArrowRight` }
+required={ false }
+submitButtonLabel={ undefined }
+placeholder={ `Search...` }
+  className={ cn('pl-3','',) }
+  setValueChange={ (value) => setFilterProcess(value)
+ }
+  value={ filterProcess }
+>
+</IGRPInputSearch>
   <IGRPRepetitiveComponent<any>
   id={ `repetitiveList1` }
   keyExtractor={ (item) => item.id }

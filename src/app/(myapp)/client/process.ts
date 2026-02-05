@@ -21,11 +21,12 @@ import {
  * @param size The number of items per page.
  * @returns A promise that resolves to a paginated response of processes.
  */
-export const getProcesses = async (): Promise<PaginatedResponse<Process>> => {
+export const getProcesses = async (filter?: string): Promise<PaginatedResponse<Process>> => {
   const processManagementClient = await getIGRPProcessClient();
   const response = await processManagementClient.processes.getProcesses({
     page: 0,
     size: DEFAULT_PAGE_SIZE,
+    processName: filter,
   });
   return response.data;
 };
@@ -49,6 +50,7 @@ export const getProcessArtifacts = async (
   processDefinitionId: string,
 ): Promise<ProcessArtifact[]> => {
   const processManagementClient = await getIGRPProcessClient();
+  console.log("processDefinitionId", processDefinitionId);
   const response =
     await processManagementClient.processes.getProcessArtifacts(
       processDefinitionId,

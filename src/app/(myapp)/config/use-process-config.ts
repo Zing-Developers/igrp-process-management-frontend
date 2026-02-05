@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -70,18 +70,27 @@ export function useProcessConfig({
     assignGroupsForm.reset({ groups: candidateGroups?.trim() ?? "" });
   };
 
-  const loadNumberingConfig = async () => {
-    try {
-      const config = await getProcessNumberConfigs(processKey ?? "");
+  const { data: numberingConfigData, isError: numberingConfigError } = useQuery({
+    queryKey: ["process-number-config", processKey],
+    queryFn: () => getProcessNumberConfigs(processKey ?? ""),
+    enabled: !!processKey,
+  });
+
+  useEffect(() => {
+    if (numberingConfigData) {
       numberingForm.reset({
-        prefix: config.prefix ?? "",
-        dateFormat: config.dateFormat ?? "yyyy",
+        prefix: numberingConfigData.prefix ?? "",
+        dateFormat: numberingConfigData.dateFormat ?? "yyyy",
         separator: "-",
-        sequenceLength: config.checkDigitSize ?? 3,
+        sequenceLength: numberingConfigData.checkDigitSize ?? 3,
       });
-    } catch {
+    } else if (!processKey || numberingConfigError) {
       numberingForm.reset(numberingDefaultValues);
     }
+  }, [numberingConfigData, processKey, numberingConfigError]);
+
+  const loadNumberingConfig = () => {
+    queryClient.invalidateQueries({ queryKey: ["process-number-config", processKey] });
   };
 
   type SaveOptions = { silent?: boolean };
@@ -298,6 +307,8 @@ export function useProcessConfig({
           key: task.key,
           formKey: task.formKey ?? "",
           name: task.name ?? "",
+          dueDate: task.dueDate ?? "",
+          priority: task.priority ?? "",
           candidateGroups: task.candidateGroupsRaw ?? "",
         };
       return { processDefinitionId: id!, request: req };

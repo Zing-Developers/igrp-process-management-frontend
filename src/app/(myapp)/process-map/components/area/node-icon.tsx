@@ -1,5 +1,5 @@
 import React from "react";
-import { ExtendedArea } from "../types";
+import { ExtendedArea, ProcessTreeNode } from "../../types";
 import { cn, IGRPIcon } from "@igrp/igrp-framework-react-design-system";
 
 interface NodeIconProps {

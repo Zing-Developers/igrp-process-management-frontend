@@ -30,11 +30,11 @@ importers:
         specifier: 0.1.0-beta.63
         version: 0.1.0-beta.63
       '@igrp/platform-process-management-client-ts':
-        specifier: 0.1.0-beta.3
-        version: 0.1.0-beta.3
+        specifier: 0.1.0-beta.4
+        version: 0.1.0-beta.4
       '@igrp/platform-process-management-types':
-        specifier: 0.1.0-beta.3
-        version: 0.1.0-beta.3
+        specifier: 0.1.0-beta.6
+        version: 0.1.0-beta.6
       '@tanstack/react-query':
         specifier: ^5.90.20
         version: 5.90.20(react@19.2.3)
@@ -227,15 +227,11 @@ packages:
   '@igrp/platform-access-management-client-ts@0.1.0-beta.63':
     resolution: {integrity: sha512-RhxxTRTFZxzRMNWQaoZbaTCdKyY8k4Mv6N282qXnE2irW3n5VX4mo/wdrRisMkz0csx3lSwVN43lPW4ORyUfqA==}
 
-  '@igrp/platform-process-management-client-ts@0.1.0-beta.3':
-    resolution: {integrity: sha512-Gf8QLK7yj3stayE2bYzL5thyZI2mdx/ToP18UAUFLwZE7sCKCyw7o32eQTEOsAXjQcUZ8gDdXctUMly6bHvcpA==}
+  '@igrp/platform-process-management-client-ts@0.1.0-beta.4':
+    resolution: {integrity: sha512-thCbgVPXXGi8NpIKMFSkdTNT1IH46tG6CpjAGhyUlDj6I5O/vJ/Nsb8u0YgINZklZogyk2FLOIfml0GKxZ5HmA==}
 
-  '@igrp/platform-process-management-types@0.1.0-beta.2':
-    resolution: {integrity: sha512-GjJfRz7jWlhAMNHqSo4SRmbdWQez0qUOEtrsKmL+EDNnKpKrTNuwrI1CLM7apTOoc67tX0G/fEBlT/d/Aya/sg==}
-    engines: {node: '>=20.x.x'}
-
-  '@igrp/platform-process-management-types@0.1.0-beta.3':
-    resolution: {integrity: sha512-cycGdKByT4UTFBINcBUCTO6EzcVXOhlflgMEK7QcCvhpUNUUeybEACHTUb/X+fVq+SHhotb4wVHKgpQ3s9MuUQ==}
+  '@igrp/platform-process-management-types@0.1.0-beta.6':
+    resolution: {integrity: sha512-kZcr338bXEGEYJNdKkibrMIP5cV+ikbyWJAFOtvEyON07ZkU4fRMB8GZrYl8buaRLg9chhTdGGXsQ8mIuoODbQ==}
     engines: {node: '>=20.x.x'}
 
   '@img/colour@1.0.0':
@@ -1974,13 +1970,11 @@ snapshots:
 
   '@igrp/platform-access-management-client-ts@0.1.0-beta.63': {}
 
-  '@igrp/platform-process-management-client-ts@0.1.0-beta.3':
+  '@igrp/platform-process-management-client-ts@0.1.0-beta.4':
     dependencies:
-      '@igrp/platform-process-management-types': 0.1.0-beta.2
+      '@igrp/platform-process-management-types': 0.1.0-beta.6
 
-  '@igrp/platform-process-management-types@0.1.0-beta.2': {}
-
-  '@igrp/platform-process-management-types@0.1.0-beta.3': {}
+  '@igrp/platform-process-management-types@0.1.0-beta.6': {}
 
   '@img/colour@1.0.0':
     optional: true

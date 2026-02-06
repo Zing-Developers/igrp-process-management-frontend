@@ -12,6 +12,7 @@ import {
   ProcessInstance,
   ProcessSequence,
   ProcessStats,
+  ProcessDefinitionSchema,
 } from "@igrp/platform-process-management-types";
 
 /**
@@ -20,11 +21,14 @@ import {
  * @param size The number of items per page.
  * @returns A promise that resolves to a paginated response of processes.
  */
-export const getProcesses = async (): Promise<PaginatedResponse<Process>> => {
+export const getProcesses = async (
+  filter?: string,
+): Promise<PaginatedResponse<Process>> => {
   const processManagementClient = await getIGRPProcessClient();
   const response = await processManagementClient.processes.getProcesses({
     page: 0,
     size: DEFAULT_PAGE_SIZE,
+    processName: filter,
   });
   return response.data;
 };
@@ -85,6 +89,7 @@ export const updateProcessArtifact = async (
   artifact: CreateProcessArtifactRequest,
 ): Promise<ProcessArtifact> => {
   const processManagementClient = await getIGRPProcessClient();
+  console.log("artifact", artifact);
   const response =
     await processManagementClient.processes.updateProcessArtifact(
       processDefinitionId,
@@ -255,24 +260,6 @@ export const saveProcessNumberConfig = async (
 };
 
 /**
- * Fetches process export (includes candidate groups for process definition).
- * @param processDefinitionId The process definition ID
- * @returns The candidate groups string (comma-separated) or empty string
- */
-export const getProcessExport = async (
-  processDefinitionId: string,
-): Promise<{ candidateGroups: string }> => {
-  const processManagementClient = await getIGRPProcessClient();
-  const response = await (
-    processManagementClient.processes as unknown as {
-      get: (url: string) => Promise<{ data: { candidateGroups?: string } }>;
-    }
-  ).get(`/process-definitions/${processDefinitionId}/export`);
-  const data = response.data ?? {};
-  return { candidateGroups: data.candidateGroups ?? "" };
-};
-
-/**
  * Assigns groups to a process definition
  * @param processDefinitionId The process definition ID
  * @param groups The groups to assign
@@ -287,6 +274,89 @@ export const assignGroupsToProcessDefinition = async (
     await processManagementClient.processes.assignGroupsToProcessDefinition(
       processDefinitionId,
       groups,
+    );
+  return response.data;
+};
+
+/**
+ * Unassigns groups from a process definition
+ * @param processDefinitionId The process definition ID
+ * @param groups The groups to unassign
+ * @returns A promise that resolves to the unassigned groups
+ */
+export const unassignGroupsToProcessDefinition = async (
+  processDefinitionId: string,
+  groups: string,
+): Promise<void> => {
+  const processManagementClient = await getIGRPProcessClient();
+  const response =
+    await processManagementClient.processes.unassignGroupsToProcessDefinition(
+      processDefinitionId,
+      groups,
+    );
+  return response.data;
+};
+
+/**
+ * Exports a process definition (fetches data; download must be triggered client-side)
+ * @param processDefinitionId The process definition ID
+ * @returns A promise that resolves to the exported process definition data
+ */
+export const exportProcessDefinition = async (
+  processDefinitionId: string,
+): Promise<ProcessDefinitionSchema> => {
+  const processManagementClient = await getIGRPProcessClient();
+  const response =
+    await processManagementClient.processes.exportProcessDefinition(
+      processDefinitionId,
+    );
+  return response.data;
+};
+
+/**
+ * Imports a process definition
+ * @param processDefinition The process definition to import
+ * @returns A promise that resolves to the imported process definition
+ */
+export const importProcessDefinition = async (
+  processDefinition: ProcessDefinitionSchema,
+): Promise<void> => {
+  const processManagementClient = await getIGRPProcessClient();
+  const response =
+    await processManagementClient.processes.importProcessDefinition(
+      processDefinition,
+    );
+  return response.data;
+};
+
+/**
+ * Archives a process definition
+ * @param processDefinitionId The process definition ID
+ * @returns A promise that resolves to the archived process definition
+ */
+export const archiveProcessDefinition = async (
+  processDefinitionId: string,
+): Promise<void> => {
+  const processManagementClient = await getIGRPProcessClient();
+  const response =
+    await processManagementClient.processes.archiveProcessDefinition(
+      processDefinitionId,
+    );
+  return response.data;
+};
+
+/**
+ * Unarchives a process definition
+ * @param processDefinitionId The process definition ID
+ * @returns A promise that resolves to the unarchived process definition
+ */
+export const unarchiveProcessDefinition = async (
+  processDefinitionId: string,
+): Promise<void> => {
+  const processManagementClient = await getIGRPProcessClient();
+  const response =
+    await processManagementClient.processes.unarchiveProcessDefinition(
+      processDefinitionId,
     );
   return response.data;
 };

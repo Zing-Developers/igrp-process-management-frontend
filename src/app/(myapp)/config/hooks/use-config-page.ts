@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getProcesses,
   updateProcessArtifact,
@@ -29,11 +29,14 @@ const SAVE_ERROR = {
  */
 export function useConfigPage({
   processSelected,
+  filterProcess,
 }: {
   processSelected?: ProcessDefinition;
+  filterProcess?: string;
 } = {}) {
   const processConfig = useProcessConfig({ processSelected });
   const { igrpToast } = useIGRPToast();
+  const queryClient = useQueryClient();
   const {
     assignGroups,
     numberingConfig,
@@ -41,14 +44,10 @@ export function useConfigPage({
     userTasks: userTasksConfig,
   } = processConfig;
 
-  const {
-    data: processesData,
-    isLoading: loading,
-    refetch: loadAllProcesses,
-  } = useQuery({
-    queryKey: ["all-processes"],
+  const { data, isLoading: loading } = useQuery({
+    queryKey: ["all-processes", filterProcess],
     queryFn: async () => {
-      const response = await getProcesses();
+      const response = await getProcesses(filterProcess);
       return (response.content || []).map((process) => ({
         ...process,
         version: `v${process.version}`,
@@ -56,7 +55,11 @@ export function useConfigPage({
     },
   });
 
-  const allProcesses = processesData ?? [];
+  const loadAllProcesses = () => {
+    queryClient.invalidateQueries({
+      queryKey: ["all-processes", filterProcess],
+    });
+  };
 
   const saveConfigurationMutation = useMutation({
     mutationFn: async () => {
@@ -74,7 +77,8 @@ export function useConfigPage({
     onSuccess: () => {
       igrpToast(SAVE_SUCCESS);
     },
-    onError: () => {
+    onError: (error) => {
+      console.error(error);
       igrpToast(SAVE_ERROR);
     },
   });
@@ -82,20 +86,12 @@ export function useConfigPage({
   const handleSaveUserTask = async (request: CreateProcessArtifactRequest) => {
     const processDefinitionId = processSelected?.id;
     if (!processDefinitionId) return;
+    console.log("request", request);
     userTasksConfig.patchEditedTask(request.key, request);
   };
 
-  const handleSaveAllUserTasks = async () => {
-    const dataList = userTasksConfig.getSaveAllUserTasksData();
-    if (dataList.length === 0) return;
-    for (const { processDefinitionId, request } of dataList) {
-      await updateProcessArtifact(processDefinitionId, request);
-    }
-    userTasksConfig.loadConfig();
-  };
-
   return {
-    allProcesses,
+    allProcesses: data ?? [],
     loading,
     loadAllProcesses,
     assignGroups: processConfig.assignGroups,
@@ -105,7 +101,6 @@ export function useConfigPage({
     userTasks: {
       ...userTasksConfig,
       handleSave: handleSaveUserTask,
-      handleSaveAll: handleSaveAllUserTasks,
     },
   };
 }

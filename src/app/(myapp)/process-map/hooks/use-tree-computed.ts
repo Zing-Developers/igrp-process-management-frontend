@@ -1,7 +1,6 @@
 import { useMemo } from "react";
-import { ProcessTreeNode } from "../types";
+import { ExtendedArea } from "../types";
 import { buildProcessTree, flattenTreeNodes } from "../utils/tree-utils";
-import { ExtendedArea } from "../../process-configuration/types";
 
 export function useTreeComputed(
   areas: ExtendedArea[],
@@ -16,7 +15,7 @@ export function useTreeComputed(
   }, [treeNodes, expandedNodes]);
 
   const totalProcesses = useMemo(() => {
-    const countProcesses = (nodes: ProcessTreeNode[]): number => {
+    const countProcesses = (nodes: ExtendedArea[]): number => {
       return nodes.reduce((count, node) => {
         if (node.type === "process") {
           return count + 1;
@@ -31,7 +30,7 @@ export function useTreeComputed(
   }, [treeNodes]);
 
   const totalAreas = useMemo(() => {
-    const countAreas = (nodes: ProcessTreeNode[]): number => {
+    const countAreas = (nodes: ExtendedArea[]): number => {
       return nodes.reduce((count, node) => {
         if (node.type === "area" || node.type === "subarea") {
           return count + 1;

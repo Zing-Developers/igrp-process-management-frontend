@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
-import { ProcessTreeNode } from "../types";
+import { ExtendedArea } from "../types";
 import { searchNodes } from "../utils/tree-utils";
 
-export function useTreeSearch(treeNodes: ProcessTreeNode[]) {
+export function useTreeSearch(treeNodes: ExtendedArea[]) {
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredNodes = useMemo(() => {

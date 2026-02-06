@@ -64,15 +64,17 @@ function handleAddGroup (value: string): void {
 
 function handleSave (): void {
 
-   if (!editingTask?.key || !editingTask?.name) return;
-    const req: CreateProcessArtifactRequest = {
-      key: editingTask.key,
-      name: editingTask.name,
-      formKey: formKey.trim(),
-      candidateGroups: candidateGroups.trim() || undefined,
-    };
-    onSave(req);
-    setOpen(false);
+  if (!editingTask?.key || !editingTask?.name) return;
+const req: CreateProcessArtifactRequest = {
+  key: editingTask.key,
+  name: editingTask.name,
+  formKey: formKey.trim(),
+  candidateGroups: candidateGroups.trim() || undefined,
+  dueDate: defaultDueDate.trim(),
+  priority: Number(defaultPriority),
+};
+onSave(req);
+setOpen(false);
 
 }
 
@@ -158,7 +160,7 @@ placeholder={ `e.g., P3D for 3 days` }
 showIcon={ false }
 required={ false }
   className={ cn('',) }
-  onChange={ (e) => setDefaultDueDate(e.target.value) }
+  onChange={ (e) => setFormKey(e.target.value) }
   value={ formKey }
 >
 </IGRPInputText>

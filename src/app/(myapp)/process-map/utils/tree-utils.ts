@@ -1,21 +1,20 @@
 import { Process } from "@igrp/platform-process-management-types";
-import { ExtendedArea } from "../../process-configuration/types";
-import { ProcessTreeNode } from "../types";
+import { ExtendedArea } from "../types";
 
 /**
  * Converts flat areas with processes into a hierarchical tree structure
  * Now works with ExtendedArea instead of ProcessMapArea
  */
-export function buildProcessTree(areas: ExtendedArea[]): ProcessTreeNode[] {
-  const treeNodes: ProcessTreeNode[] = [];
+export function buildProcessTree(areas: ExtendedArea[]): ExtendedArea[] {
+  const treeNodes: ExtendedArea[] = [];
 
   function processArea(
     area: ExtendedArea,
     applicationBase: string,
     level: number = 0,
     parentId?: string,
-  ): ProcessTreeNode {
-    const areaNode: ProcessTreeNode = {
+  ): ExtendedArea {
+    const areaNode: ExtendedArea = {
       id: area.id,
       name: area.name,
       type: level === 0 ? "area" : "subarea",
@@ -26,6 +25,9 @@ export function buildProcessTree(areas: ExtendedArea[]): ProcessTreeNode[] {
       hasChildren: true, // Assume areas can have children (subareas or processes)
       isLoaded: false, // Will be set to true when children are loaded
       applicationBase: applicationBase,
+      code: area.code,
+      status: area.status,
+      statusDesc: area.statusDesc,
     };
 
     // Add processes as children (processes are always loaded with the area)
@@ -36,7 +38,7 @@ export function buildProcessTree(areas: ExtendedArea[]): ProcessTreeNode[] {
         (process: Process) => process.status === "ACTIVE",
       );
 
-      const processNodes: ProcessTreeNode[] = activeProcesses.map(
+      const processNodes: ExtendedArea[] = activeProcesses.map(
         (process: Process) => ({
           id: `process-${process.id}`,
           name: process.name || process.processKey || "Unnamed Process",
@@ -47,6 +49,9 @@ export function buildProcessTree(areas: ExtendedArea[]): ProcessTreeNode[] {
           hasChildren: false,
           isLoaded: true,
           applicationBase: applicationBase,
+          code: "",
+          status: process.status,
+          statusDesc: process.statusDesc,
         }),
       );
       areaNode.children = [...processNodes];
@@ -75,12 +80,12 @@ export function buildProcessTree(areas: ExtendedArea[]): ProcessTreeNode[] {
  * Flattens tree nodes for rendering with proper indentation
  */
 export function flattenTreeNodes(
-  nodes: ProcessTreeNode[],
+  nodes: ExtendedArea[],
   expandedNodes: Set<string>,
-): ProcessTreeNode[] {
-  const flattened: ProcessTreeNode[] = [];
+): ExtendedArea[] {
+  const flattened: ExtendedArea[] = [];
 
-  function traverse(node: ProcessTreeNode) {
+  function traverse(node: ExtendedArea) {
     flattened.push(node);
 
     if (expandedNodes.has(node.id) && node.children) {
@@ -96,9 +101,9 @@ export function flattenTreeNodes(
  * Finds a node by ID in the tree
  */
 export function findNodeById(
-  nodes: ProcessTreeNode[],
+  nodes: ExtendedArea[],
   id: string,
-): ProcessTreeNode | undefined {
+): ExtendedArea | undefined {
   for (const node of nodes) {
     if (node.id === id) {
       return node;
@@ -114,12 +119,10 @@ export function findNodeById(
 /**
  * Gets all process nodes from the tree
  */
-export function getAllProcessNodes(
-  nodes: ProcessTreeNode[],
-): ProcessTreeNode[] {
-  const processes: ProcessTreeNode[] = [];
+export function getAllProcessNodes(nodes: ExtendedArea[]): ExtendedArea[] {
+  const processes: ExtendedArea[] = [];
 
-  function traverse(node: ProcessTreeNode) {
+  function traverse(node: ExtendedArea) {
     if (node.type === "process") {
       processes.push(node);
     }
@@ -136,15 +139,15 @@ export function getAllProcessNodes(
  * Searches nodes by name (case-insensitive)
  */
 export function searchNodes(
-  nodes: ProcessTreeNode[],
+  nodes: ExtendedArea[],
   searchTerm: string,
-): ProcessTreeNode[] {
+): ExtendedArea[] {
   if (!searchTerm.trim()) return nodes;
 
-  const results: ProcessTreeNode[] = [];
+  const results: ExtendedArea[] = [];
   const lowerSearchTerm = searchTerm.toLowerCase();
 
-  function traverse(node: ProcessTreeNode) {
+  function traverse(node: ExtendedArea) {
     if (node.name.toLowerCase().includes(lowerSearchTerm)) {
       results.push(node);
     }

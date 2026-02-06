@@ -1,31 +1,30 @@
 import React from "react";
-import { ExtendedArea } from "../types";
 import { NodeIcon } from "./node-icon";
-import { NodeContent } from "./node-content";
+import { AreaContent } from "./area-content";
 import { ExpandButton } from "./expand-button";
 import { Process } from "@igrp/platform-process-management-types";
+import { ExtendedArea } from "../../types";
 
 interface TreeNodeProps {
   node: ExtendedArea;
   expandedNodes: Set<string>;
   onToggle: (nodeId: string) => void;
-  onStartProcess: (
-    process: Process,
-    processDefinitionId: string,
-    processKey: string,
-    applicationBase: string,
-    businessKey?: string,
-    variables?: Array<{ name: string; value: string }>,
-  ) => void;
   searchTerm?: string;
+  onEdit: (node: ExtendedArea | Process, parentAreaId?: string) => void;
+  onDelete: (nodeId: string) => void;
+  onAddSubarea: (nodeId: string) => void;
+  onRemoveProcess: (nodeId: string, processId: string) => void;
 }
 
 export function TreeNode({
   node,
   expandedNodes,
   onToggle,
-  onStartProcess,
   searchTerm,
+  onEdit,
+  onDelete,
+  onAddSubarea,
+  onRemoveProcess,
 }: TreeNodeProps) {
   const isExpanded = expandedNodes.has(node.id);
   const hasChildren = node.children && node.children.length > 0;
@@ -40,7 +39,7 @@ export function TreeNode({
     <div className="w-full">
       <div
         className="flex items-center space-x-2 p-3 hover:bg-muted rounded-lg cursor-pointer group"
-        style={{ paddingLeft: `${(node.level || 0) * 20 + 8}px` }}
+        style={{ paddingLeft: `${node.level ?? 0 * 20 + 8}px` }}
         onClick={handleToggle}
       >
         <ExpandButton
@@ -51,7 +50,13 @@ export function TreeNode({
 
         <NodeIcon node={node} isExpanded={isExpanded} />
 
-        <NodeContent node={node} onStartProcess={onStartProcess} />
+        <AreaContent
+          node={node}
+          onEdit={onEdit}
+          onDelete={onDelete}
+          onAddSubarea={onAddSubarea}
+          onRemoveProcess={onRemoveProcess}
+        />
       </div>
 
       {isExpanded && hasChildren && (
@@ -62,8 +67,11 @@ export function TreeNode({
               node={child}
               expandedNodes={expandedNodes}
               onToggle={onToggle}
-              onStartProcess={onStartProcess}
               searchTerm={searchTerm}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onAddSubarea={onAddSubarea}
+              onRemoveProcess={onRemoveProcess}
             />
           ))}
         </div>

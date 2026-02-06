@@ -1,11 +1,12 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   assignGroupsToProcessDefinition,
   getProcessArtifacts,
+  getProcessDeployedArtifacts,
   getProcessNumberConfigs,
   saveProcessNumberConfig,
 } from "@/app/(myapp)/client/process";
@@ -70,18 +71,31 @@ export function useProcessConfig({
     assignGroupsForm.reset({ groups: candidateGroups?.trim() ?? "" });
   };
 
-  const loadNumberingConfig = async () => {
-    try {
-      const config = await getProcessNumberConfigs(processKey ?? "");
+  const { data: numberingConfigData, isError: numberingConfigError } = useQuery(
+    {
+      queryKey: ["process-number-config", processKey],
+      queryFn: () => getProcessNumberConfigs(processKey ?? ""),
+      enabled: !!processKey,
+    },
+  );
+
+  useEffect(() => {
+    if (numberingConfigData) {
       numberingForm.reset({
-        prefix: config.prefix ?? "",
-        dateFormat: config.dateFormat ?? "yyyy",
+        prefix: numberingConfigData.prefix ?? "",
+        dateFormat: numberingConfigData.dateFormat ?? "yyyy",
         separator: "-",
-        sequenceLength: config.checkDigitSize ?? 3,
+        sequenceLength: numberingConfigData.checkDigitSize ?? 3,
       });
-    } catch {
+    } else if (!processKey || numberingConfigError) {
       numberingForm.reset(numberingDefaultValues);
     }
+  }, [numberingConfigData, processKey, numberingConfigError]);
+
+  const loadNumberingConfig = () => {
+    queryClient.invalidateQueries({
+      queryKey: ["process-number-config", processKey],
+    });
   };
 
   type SaveOptions = { silent?: boolean };
@@ -91,7 +105,11 @@ export function useProcessConfig({
     opts?: SaveOptions,
   ) => {
     const data = values ?? numberingForm.getValues();
-    const parsed = processNumberingSchema.safeParse(data);
+    const parsed = processNumberingSchema.safeParse({
+      ...data,
+      sequenceLength: Number(data.sequenceLength),
+    });
+
     if (!parsed.success) {
       if (!opts?.silent) {
         igrpToast({
@@ -236,7 +254,7 @@ export function useProcessConfig({
 
   const { data: artifactsData, isLoading: loadingUserTasks } = useQuery({
     queryKey: ["process-artifacts", id],
-    queryFn: () => getProcessArtifacts(id!),
+    queryFn: () => getProcessDeployedArtifacts(id!),
     enabled: !!id,
   });
 
@@ -260,8 +278,8 @@ export function useProcessConfig({
       return {
         ...artifact,
         index,
-        defaultPriority: "",
-        defaultDueDate: "-",
+        defaultPriority: artifact.priority ?? "",
+        defaultDueDate: artifact.dueDate ?? "-",
         candidateGroups: getCandidateGroupsTemplate(groupsArray),
         candidateGroupsRaw: raw,
       };
@@ -297,6 +315,8 @@ export function useProcessConfig({
             key: task.key,
             formKey: task.formKey ?? "",
             name: task.name ?? "",
+            dueDate: task.dueDate ?? "",
+            priority: task.priority ?? "",
             candidateGroups: task.candidateGroupsRaw ?? "",
           };
       return { processDefinitionId: id!, request: req };

@@ -1,5 +1,5 @@
 import React from "react";
-import { ProcessTreeNode } from "../types";
+import { ExtendedArea } from "../types";
 import { ProcessTree } from "./process-tree";
 import { Process } from "@igrp/platform-process-management-types";
 
@@ -9,9 +9,8 @@ export function ProcessTreeComponent({
   searchTerm,
   onToggle,
   onStartProcess,
-  onViewDetails,
 }: {
-  nodes: ProcessTreeNode[];
+  nodes: ExtendedArea[];
   expandedNodes: Set<string>;
   searchTerm?: string;
   onToggle: (nodeId: string) => void;
@@ -23,7 +22,6 @@ export function ProcessTreeComponent({
     businessKey?: string,
     variables?: Array<{ name: string; value: string }>,
   ) => void;
-  onViewDetails: (process: Process) => void;
 }) {
   return (
     <ProcessTree
@@ -31,7 +29,6 @@ export function ProcessTreeComponent({
       expandedNodes={expandedNodes}
       onToggle={onToggle}
       onStartProcess={onStartProcess}
-      onViewDetails={onViewDetails}
       searchTerm={searchTerm}
     />
   );

@@ -1,21 +1,23 @@
 import React from "react";
-import { ExtendedArea } from "../types";
-import { NodeActions } from "./node-actions";
+import { ExtendedArea } from "../../types";
 import { Area, Process } from "@igrp/platform-process-management-types";
+import { AreaActions } from "./area-actions";
 
 interface NodeContentProps {
   node: ExtendedArea;
-  onStartProcess: (
-    process: Process,
-    processDefinitionId: string,
-    processKey: string,
-    applicationBase: string,
-    businessKey?: string,
-    variables?: Array<{ name: string; value: string }>,
-  ) => void;
+  onEdit: (node: ExtendedArea | Process, parentAreaId?: string) => void;
+  onDelete: (nodeId: string) => void;
+  onAddSubarea: (nodeId: string) => void;
+  onRemoveProcess: (nodeId: string, processId: string) => void;
 }
 
-export function NodeContent({ node, onStartProcess }: NodeContentProps) {
+export function AreaContent({
+  node,
+  onEdit,
+  onDelete,
+  onAddSubarea,
+  onRemoveProcess,
+}: NodeContentProps) {
   const isProcess = node.type === "process";
   const isAreaOrSubarea = node.type === "area" || node.type === "subarea";
 
@@ -48,7 +50,13 @@ export function NodeContent({ node, onStartProcess }: NodeContentProps) {
       </div>
 
       <div className="flex items-center space-x-2 flex-shrink-0">
-        <NodeActions node={node} onStartProcess={onStartProcess} />
+        <AreaActions
+          node={node}
+          onEdit={onEdit}
+          onDelete={onDelete}
+          onAddSubarea={onAddSubarea}
+          onRemoveProcess={onRemoveProcess}
+        />
       </div>
     </div>
   );

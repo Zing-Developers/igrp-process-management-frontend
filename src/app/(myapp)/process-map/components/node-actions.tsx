@@ -1,10 +1,10 @@
 import React from "react";
-import { ProcessTreeNode } from "../types";
+import { ExtendedArea } from "../types";
 import { Process } from "@igrp/platform-process-management-types";
 import { IGRPButton } from "@igrp/igrp-framework-react-design-system";
 
 interface NodeActionsProps {
-  node: ProcessTreeNode;
+  node: ExtendedArea;
   onStartProcess: (
     process: Process,
     processDefinitionId: string,
@@ -13,14 +13,9 @@ interface NodeActionsProps {
     businessKey?: string,
     variables?: Array<{ name: string; value: string }>,
   ) => void;
-  onViewDetails: (process: Process) => void;
 }
 
-export function NodeActions({
-  node,
-  onStartProcess,
-  onViewDetails,
-}: NodeActionsProps) {
+export function NodeActions({ node, onStartProcess }: NodeActionsProps) {
   if (node.type !== "process") {
     return null;
   }
@@ -41,22 +36,23 @@ export function NodeActions({
     }
   };
 
-  const handleViewDetails = (e: React.MouseEvent) => {
+  /*   const handleViewDetails = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (node.data) {
       onViewDetails(node.data as Process);
     }
-  };
+  }; */
 
   return (
     <div className="flex items-center space-x-1">
+      {/* 
       <IGRPButton
         onClick={handleViewDetails}
         title="Ver detalhes"
         iconName={"Eye"}
         size={"icon"}
         variant={"ghost"}
-      ></IGRPButton>
+      ></IGRPButton> */}
       <IGRPButton
         onClick={handleStartProcess}
         title="Iniciar processo"

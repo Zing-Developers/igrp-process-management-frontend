@@ -1,37 +1,36 @@
 import React from "react";
-import { ExtendedArea } from "../types";
 import { TreeNode } from "./tree-node";
-import { InfoCard } from "../../components/info-card";
+import { InfoCard } from "../../../components/info-card";
 import { Process } from "@igrp/platform-process-management-types";
+import { ExtendedArea } from "../../types";
 
-interface ExtendedAreaProps {
+interface ProcessTreeProps {
   nodes: ExtendedArea[];
   expandedNodes: Set<string>;
-  onToggle: (nodeId: string) => void;
-  onStartProcess: (
-    process: Process,
-    processDefinitionId: string,
-    processKey: string,
-    applicationBase: string,
-    businessKey?: string,
-    variables?: Array<{ name: string; value: string }>,
-  ) => void;
   searchTerm?: string;
+  onToggle: (nodeId: string) => void;
+  onEdit: (node: ExtendedArea | Process, parentAreaId?: string) => void;
+  onDelete: (nodeId: string) => void;
+  onAddSubarea: (nodeId: string) => void;
+  onRemoveProcess: (nodeId: string, processId: string) => void;
 }
 
-export function ProcessTree({
-  nodes,
+export function AreaTree({
+  nodes = [],
   expandedNodes,
   onToggle,
-  onStartProcess,
   searchTerm,
-}: ExtendedAreaProps) {
+  onEdit,
+  onDelete,
+  onAddSubarea,
+  onRemoveProcess,
+}: ProcessTreeProps) {
   if (nodes.length === 0) {
     return (
       <InfoCard
         iconName="FileText"
-        title="Nenhum processo encontrado"
-        description="Nenhum processo foi configurado em áreas."
+        title="Nenhuma área encontrada"
+        description="Nenhuma área foi configurada."
       />
     );
   }
@@ -48,8 +47,11 @@ export function ProcessTree({
             node={node}
             expandedNodes={expandedNodes}
             onToggle={onToggle}
-            onStartProcess={onStartProcess}
             searchTerm={searchTerm}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onAddSubarea={onAddSubarea}
+            onRemoveProcess={onRemoveProcess}
           />
         </div>
       ))}

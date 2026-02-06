@@ -1,15 +1,17 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { ProcessMapHookReturn } from "../types";
 import { useProcessMapData } from "./use-process-map-data";
 import { useTreeExpansion } from "./use-tree-expansion";
-import { useProcessOperations } from "./use-process-operations";
-import { useProcessModal } from "./use-process-modal";
 import { usePriorityModal } from "./use-priority-modal";
 import { useTreeSearch } from "./use-tree-search";
 import { useTreeComputed } from "./use-tree-computed";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { Process } from "@igrp/platform-process-management-types";
+import { Area, Process } from "@igrp/platform-process-management-types";
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
+import { useAccessManagement } from "../../access-management/hooks";
+import { useAreaHandlers } from "./area/use-area-handlers";
+import { useProcessOperations } from "./use-process-operations";
+import { getAllAreasFlat } from "../utils/area-hierarchy";
 
 export function useProcessMap(
   router?: AppRouterInstance,
@@ -27,12 +29,14 @@ export function useProcessMap(
     selectProcess,
     prepareProcessStart,
     startProcessWithPriority,
-  } = useProcessOperations(router);
+    handleRemoveProcess,
+    handleAssociateProcess,
+    allProcesses,
+  } = useProcessOperations(refreshData, router);
 
   const { igrpToast } = useIGRPToast();
 
   // Modal management
-  const { detailModal } = useProcessModal();
   const { priorityModal } = usePriorityModal();
 
   // Computed tree values
@@ -113,7 +117,27 @@ export function useProcessMap(
     [startProcessWithPriority, priorityModal, igrpToast],
   );
 
+  const { applicationsOptions } = useAccessManagement();
+
+  const flatAreas = getAllAreasFlat(areas);
+
+  const mapOptions = useMemo(() => {
+    return flatAreas.map((area: Area) => ({
+      label: area.name,
+      value: area.id,
+    }));
+  }, [flatAreas]);
+
+  // Area management - pass setAreaProcesses
+  const areaHandlers = useAreaHandlers(
+    areas,
+    handleAssociateProcess,
+    handleRemoveProcess,
+    refreshData,
+  );
+
   return {
+    allProcesses,
     // State
     areas,
     expandedNodes,
@@ -142,10 +166,20 @@ export function useProcessMap(
     refreshData,
 
     // Modals
-    detailModal,
     priorityModal: {
       ...priorityModal,
       onSave: handlePrioritySave,
+    },
+
+    manageAreas: {
+      areas: filteredNodes,
+      expandedNodes,
+      options: {
+        applications: applicationsOptions,
+        areas: mapOptions,
+      },
+      ...areaHandlers,
+      handleRemoveProcess,
     },
   };
 }

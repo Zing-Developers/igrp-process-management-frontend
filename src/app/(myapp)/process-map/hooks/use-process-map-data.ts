@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ExtendedArea } from "../../process-configuration/types";
 import {
   organizeAreasHierarchy,
@@ -7,80 +8,93 @@ import {
 import { keepLatestByKey } from "../utils/versioning";
 import { getAreas, getSubareas } from "@/app/(myapp)/client/area";
 
+const PROCESS_MAP_AREAS_QUERY_KEY = ["process-map-areas"] as const;
+
+async function fetchProcessMapAreas(): Promise<ExtendedArea[]> {
+  const areasResponse = await getAreas({});
+  const topLevelAreas =
+    areasResponse.content?.filter((area) => !area.areaId) || [];
+
+  return topLevelAreas.map((area) => ({
+    ...area,
+    process: area.process ? keepLatestByKey(area.process) : undefined,
+    subareas: [],
+  }));
+}
+
 export function useProcessMapData() {
-  const [areas, setAreas] = useState<ExtendedArea[]>([]);
-  const [loadedNodes, setLoadedNodes] = useState<Set<string>>(new Set());
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | undefined>();
+  const queryClient = useQueryClient();
+  const [loadedSubareasByParent, setLoadedSubareasByParent] = useState<
+    Record<string, ExtendedArea[]>
+  >({});
 
-  const loadData = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(undefined);
+  const {
+    data: queryData,
+    isLoading: loading,
+    error: queryError,
+  } = useQuery({
+    queryKey: PROCESS_MAP_AREAS_QUERY_KEY,
+    queryFn: fetchProcessMapAreas,
+  });
 
-      const areasResponse = await getAreas({});
-      const topLevelAreas =
-        areasResponse.content?.filter((area) => !area.areaId) || [];
+  const error =
+    queryError instanceof Error
+      ? queryError.message
+      : queryError
+        ? "Failed to load process map data"
+        : undefined;
 
-      const extendedAreas: ExtendedArea[] = topLevelAreas.map((area) => ({
-        ...area,
-        process: area.process ? keepLatestByKey(area.process) : undefined,
-        subareas: [],
-      }));
+  const loadedNodes = useMemo(
+    () => new Set(Object.keys(loadedSubareasByParent)),
+    [loadedSubareasByParent],
+  );
 
-      setAreas(extendedAreas);
-    } catch (err) {
-      setError("Failed to load process map data");
-      console.error("Error loading process map data:", err);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const areas = useMemo(() => {
+    const base = queryData ?? [];
+    const flatAreas = getAllAreasFlat(base);
+
+    Object.values(loadedSubareasByParent).forEach((subareas) => {
+      subareas.forEach((subarea) => {
+        const exists = flatAreas.find((area) => area.id === subarea.id);
+        if (!exists) {
+          flatAreas.push(subarea);
+        }
+      });
+    });
+
+    return organizeAreasHierarchy(flatAreas);
+  }, [queryData, loadedSubareasByParent]);
+
+  const refreshData = useCallback(() => {
+    setLoadedSubareasByParent({});
+    queryClient.invalidateQueries({ queryKey: PROCESS_MAP_AREAS_QUERY_KEY });
+  }, [queryClient]);
 
   const loadSubareas = useCallback(
     async (parentAreaId: string) => {
       try {
-        if (loadedNodes.has(parentAreaId)) {
+        if (loadedSubareasByParent[parentAreaId]) {
           return;
         }
 
         const subareas = await getSubareas(parentAreaId);
 
-        const normalizedSubareas = subareas.map((sa) => ({
+        const normalizedSubareas: ExtendedArea[] = subareas.map((sa) => ({
           ...sa,
           process: sa.process ? keepLatestByKey(sa.process) : undefined,
+        })) as ExtendedArea[];
+
+        setLoadedSubareasByParent((prev) => ({
+          ...prev,
+          [parentAreaId]: normalizedSubareas,
         }));
-
-        setAreas((prev) => {
-          const flatAreas = getAllAreasFlat(prev);
-
-          normalizedSubareas.forEach((subarea) => {
-            const exists = flatAreas.find((area) => area.id === subarea.id);
-            if (!exists) {
-              flatAreas.push(subarea as ExtendedArea);
-            }
-          });
-
-          return organizeAreasHierarchy(flatAreas);
-        });
-
-        setLoadedNodes((prev) => new Set([...prev, parentAreaId]));
       } catch (error) {
         console.error("Error loading subareas:", error);
         throw error;
       }
     },
-    [loadedNodes],
+    [loadedSubareasByParent],
   );
-
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
-  const refreshData = useCallback(async () => {
-    setLoadedNodes(new Set()); // Reset loaded nodes
-    await loadData();
-  }, [loadData]);
 
   return {
     areas,

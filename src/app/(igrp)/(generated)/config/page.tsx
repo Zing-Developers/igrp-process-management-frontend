@@ -268,7 +268,8 @@ export default function PageConfigComponent() {
                 {!selectedProcess?.name && (<p className={cn(' text-muted-foreground',)}    >
                   Select a process to configure</p>)}</div>
               <div className={cn('flex', ' flex justify-end gap-2',)}    >
-                {selectedProcess?.id && (<ActionsItem processDefinitionId={selectedProcess?.id} onArchiveSuccess={onArchiveSuccess} ></ActionsItem>)}
+                <ActionsItem processDefinitionId={selectedProcess?.id} onArchiveSuccess={onArchiveSuccess}
+                  onImportSuccess={loadAllProcesses} ></ActionsItem>
                 <IGRPButton
                   id={`button2`}
                   variant={`secondary`}

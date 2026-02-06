@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   assignGroupsToProcessDefinition,
   getProcessArtifacts,
+  getProcessDeployedArtifacts,
   getProcessNumberConfigs,
   saveProcessNumberConfig,
 } from "@/app/(myapp)/client/process";
@@ -246,7 +247,7 @@ export function useProcessConfig({
 
   const { data: artifactsData, isLoading: loadingUserTasks } = useQuery({
     queryKey: ["process-artifacts", id],
-    queryFn: () => getProcessArtifacts(id!),
+    queryFn: () => getProcessDeployedArtifacts(id!),
     enabled: !!id,
   });
 

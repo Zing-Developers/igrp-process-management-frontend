@@ -50,7 +50,6 @@ export const getProcessArtifacts = async (
   processDefinitionId: string,
 ): Promise<ProcessArtifact[]> => {
   const processManagementClient = await getIGRPProcessClient();
-  console.log("processDefinitionId", processDefinitionId);
   const response =
     await processManagementClient.processes.getProcessArtifacts(
       processDefinitionId,
@@ -88,6 +87,7 @@ export const updateProcessArtifact = async (
   artifact: CreateProcessArtifactRequest,
 ): Promise<ProcessArtifact> => {
   const processManagementClient = await getIGRPProcessClient();
+  console.log("artifact", artifact);
   const response =
     await processManagementClient.processes.updateProcessArtifact(
       processDefinitionId,
@@ -297,15 +297,16 @@ export const unassignGroupsToProcessDefinition = async (
 };
 
 /**
- * Exports a process definition
+ * Exports a process definition (fetches data; download must be triggered client-side)
  * @param processDefinitionId The process definition ID
- * @returns A promise that resolves to the exported process definition
+ * @returns A promise that resolves to the exported process definition data
  */
 export const exportProcessDefinition = async (
   processDefinitionId: string,
 ): Promise<ProcessDefinitionSchema> => {
   const processManagementClient = await getIGRPProcessClient();
-  const response = await processManagementClient.processes.exportProcessDefinition(processDefinitionId);
+  const response =
+    await processManagementClient.processes.exportProcessDefinition(processDefinitionId);
   return response.data;
 };
 

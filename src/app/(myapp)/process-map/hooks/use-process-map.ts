@@ -2,16 +2,16 @@ import { useCallback, useMemo } from "react";
 import { ProcessMapHookReturn } from "../types";
 import { useProcessMapData } from "./use-process-map-data";
 import { useTreeExpansion } from "./use-tree-expansion";
-import { useProcessOperations } from "./use-process-operations";
-import { useProcessModal } from "./use-process-modal";
 import { usePriorityModal } from "./use-priority-modal";
 import { useTreeSearch } from "./use-tree-search";
 import { useTreeComputed } from "./use-tree-computed";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { Area, Process } from "@igrp/platform-process-management-types";
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
-import { filterAreasRecursively, getAllAreasFlat } from "../../process-configuration/utils/area-hierarchy";
+import { getAllAreasFlat } from "../../process-configuration/utils/area-hierarchy";
 import { useAccessManagement } from "../../access-management/hooks";
+import { useAreaHandlers } from "./area/use-area-handlers";
+import { useProcessOperations } from "./use-process-operations";
 
 export function useProcessMap(
   router?: AppRouterInstance,
@@ -19,8 +19,6 @@ export function useProcessMap(
   // Data management
   const { areas, loadedNodes, loading, error, loadSubareas, refreshData } =
     useProcessMapData();
-
-
 
   // Tree expansion state
   const { expandedNodes, toggleNode: originalToggleNode } = useTreeExpansion();
@@ -31,7 +29,10 @@ export function useProcessMap(
     selectProcess,
     prepareProcessStart,
     startProcessWithPriority,
-  } = useProcessOperations(router);
+    handleRemoveProcess,
+    handleAssociateProcess,
+    allProcesses,
+  } = useProcessOperations(refreshData, router);
 
   const { igrpToast } = useIGRPToast();
 
@@ -126,7 +127,11 @@ export function useProcessMap(
     return flatAreas.map((area: Area) => ({ label: area.name, value: area.id }));
   }, [flatAreas]);
 
+  // Area management - pass setAreaProcesses
+  const areaHandlers = useAreaHandlers(areas, handleAssociateProcess, handleRemoveProcess, refreshData);
+
   return {
+    allProcesses,
     // State
     areas,
     expandedNodes,
@@ -167,6 +172,8 @@ export function useProcessMap(
         applications: applicationsOptions,
         areas: mapOptions,
       },
+      ...areaHandlers,
+      handleRemoveProcess
     },
   }
 };

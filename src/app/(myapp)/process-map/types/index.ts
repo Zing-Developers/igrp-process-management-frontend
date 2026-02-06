@@ -1,5 +1,5 @@
-import { Process } from "@igrp/platform-process-management-types";
-import { ExtendedArea } from "../../process-configuration/types";
+import { Area, Process, ProcessDefinition } from "@igrp/platform-process-management-types";
+import { AreaFormData, AreaModalState, ExtendedArea } from "../../process-configuration/types";
 
 // Use the same structure as process configuration - no need for ProcessMapArea
 
@@ -38,7 +38,7 @@ export interface ProcessMapActions {
     businessKey?: string,
     variables?: Array<{ name: string; value: string }>,
   ) => void; // Updated signature to match implementation
-  refreshData: () => Promise<void>;
+  refreshData: () => void;
 }
 
 export interface ProcessMapHookReturn
@@ -56,6 +56,8 @@ export interface ProcessMapHookReturn
   setSearchTerm: (term: string) => void;
   clearSearch: () => void;
 
+  allProcesses: any;
+
   // Modals
   priorityModal: {
     isOpen: boolean;
@@ -66,5 +68,31 @@ export interface ProcessMapHookReturn
     close: () => void;
     setOpen: (open: boolean) => void;
     onSave: (data: { priority: string }) => Promise<void>;
+  };
+
+  manageAreas: {
+    areas: ExtendedArea[];
+    expandedNodes: Set<string>;
+    options: {
+      applications: {
+        label: string;
+        value: string;
+      }[];
+      areas: {
+        label: string;
+        value: string;
+      }[];
+    };
+    handleCreateArea: (formData: AreaFormData) => Promise<void>;
+    handleUpdateArea: (areaId: string, formData: AreaFormData) => Promise<void>;
+    handleDeleteArea: (areaId: string) => Promise<void>;
+    handleRemoveProcess: (areaId: string, processId: string) => Promise<void>;
+    areaForm: {
+      modalState: AreaModalState;
+      openModal: (area?: ExtendedArea, parentAreaId?: string) => void;
+      closeModal: () => void;
+      setFormData: (formData: AreaFormData) => void;
+      formData: AreaFormData;
+    };
   };
 }

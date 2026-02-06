@@ -1,6 +1,8 @@
 import {
   IGRPCheckbox,
+  IGRPCheckboxPrimitive,
   IGRPLabel,
+  IGRPLabelPrimitive,
 } from "@igrp/igrp-framework-react-design-system";
 import { ScrollArea } from "@igrp/igrp-framework-react-design-system/dist/components/primitives/scroll-area";
 
@@ -14,25 +16,32 @@ function AddChecklistItem({
   addItem: (value: string) => void;
   removeItem: (value: string) => void;
   label: string;
-  availableItems?: string[];
+  availableItems?: any;
   items?: any;
 }) {
+
+  const isItemChecked = (group: { key?: string; }) =>
+    (items || []).some(
+      (item: any) => (item?.key) === (group?.key)
+    );
+
   return (
     <div className="space-y-2">
       <IGRPLabel label={label} />
       {availableItems && availableItems?.length > 0 ? (
         <ScrollArea className="h-48 border rounded-md p-3">
           <div className="space-y-2">
-            {(availableItems || []).map((group) => (
-              <div key={group} className="flex items-center justify-between py-1">
-                <IGRPLabel
-                  htmlFor={`process-group-${group}`}
-                  label={group}
-                  className="flex-1 cursor-pointer"
-                />
+            {(availableItems || []).map((group: any, index: number) => (
+              <div key={index} className="flex items-center justify-between py-1">
+                <IGRPLabelPrimitive htmlFor={`process-${index}`} className="flex-1 cursor-pointer">
+                  <div>
+                    <p className="font-medium">{group.name}</p>
+                    <p className="text-xs text-muted-foreground font-mono">{group.key}</p>
+                  </div>
+                </IGRPLabelPrimitive>
                 <IGRPCheckbox
                   id={`process-group-${group}`}
-                  checked={items.includes(group)}
+                  checked={isItemChecked(group)}
                   onCheckedChange={(checked) => {
                     if (checked) {
                       addItem(group);

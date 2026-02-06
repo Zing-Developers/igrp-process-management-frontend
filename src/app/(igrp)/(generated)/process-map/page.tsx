@@ -159,7 +159,7 @@ export default function PageProcessmapComponent() {
                             showIcon={true}
                             iconName={`Plus`}
                             className={cn()}
-                            onClick={() => { setOpenArea(!openArea) }}
+                            onClick={(open) => (open ? pm.manageAreas.areaForm.openModal() : pm.manageAreas.areaForm.closeModal())}
 
                           >
                             Adicionar Àrea
@@ -169,7 +169,11 @@ export default function PageProcessmapComponent() {
                         className={cn('space-y-4', 'space-x-3', 'space-y-3',)}
 
                       >
-                        <AreaTreeNodeComponent nodes={pm.manageAreas.areas} expandedNodes={pm.manageAreas.expandedNodes} onToggle={pm.toggleNode} ></AreaTreeNodeComponent>
+                        <AreaTreeNodeComponent nodes={pm.manageAreas.areas} expandedNodes={pm.manageAreas.expandedNodes} onToggle={pm.toggleNode}
+                          onDelete={pm.manageAreas.handleDeleteArea}
+                          onRemoveProcess={pm.manageAreas.handleRemoveProcess}
+                          onEdit={(node, parentAreaId) => { setOpenArea(true); pm.manageAreas.areaForm.openModal(node, parentAreaId) }}
+                          onAddSubarea={(parentAreaId) => pm.manageAreas.areaForm.openModal(undefined, parentAreaId)} ></AreaTreeNodeComponent>
                       </IGRPCardContent>
                       <IGRPCardFooter
 
@@ -209,8 +213,12 @@ export default function PageProcessmapComponent() {
                       >
                       </IGRPCardFooter>
                     </IGRPCard></div></div>
-                <AreaModal open={openArea} options={pm.manageAreas.options} setOpen={setOpenArea
-                } ></AreaModal>
+                <AreaModal options={pm.manageAreas.options} open={pm.manageAreas.areaForm.modalState.isOpen} isEditing={!!pm.manageAreas.areaForm.modalState.editingArea} formData={pm.manageAreas.areaForm.formData} allProcesses={pm.allProcesses?.content} setOpen={(open) => (!pm.manageAreas.areaForm.modalState.isOpen ? pm.manageAreas.areaForm.openModal() : pm.manageAreas.areaForm.closeModal())}
+                  onClose={pm.manageAreas.areaForm.closeModal}
+                  onSave={(data) => pm.manageAreas.areaForm.modalState.editingArea ?
+                    pm.manageAreas.handleUpdateArea(pm.manageAreas.areaForm.modalState.editingArea?.id, data) :
+                    pm.manageAreas.handleCreateArea(data)}
+                  onFormChange={pm.manageAreas.areaForm.setFormData} ></AreaModal>
               </>),
             },
           ]

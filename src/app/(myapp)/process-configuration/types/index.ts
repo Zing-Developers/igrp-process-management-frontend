@@ -1,4 +1,4 @@
-import { Area, Process } from "@igrp/platform-process-management-types";
+import { Area, Process, ProcessDefinition } from "@igrp/platform-process-management-types";
 
 // Extended interfaces for UI components
 export interface ExtendedArea extends Area {
@@ -11,6 +11,7 @@ export interface AreaFormData {
   description: string;
   applicationBase: string;
   parentId?: string; // Changed from area_fk to area_id
+  processes?: ProcessDefinition[];
 }
 
 export interface ExpandedAreas {

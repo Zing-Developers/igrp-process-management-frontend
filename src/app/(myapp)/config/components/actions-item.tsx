@@ -8,18 +8,21 @@ import {
   IGRPDropdownMenuTriggerPrimitive,
   IGRPIcon,
 } from "@igrp/igrp-framework-react-design-system";
-import { useState } from "react";
-import { archiveProcessDefinition, exportProcessDefinition } from "../../client/process";
+import { useRef, useState } from "react";
+import { archiveProcessDefinition, exportProcessDefinition, importProcessDefinition } from "../../client/process";
+import { ProcessDefinitionSchema } from "@igrp/platform-process-management-types";
 
 export function ActionsItem({
   processDefinitionId,
   onArchiveSuccess,
+  onImportSuccess,
 }: {
   processDefinitionId: string;
   onArchiveSuccess?: () => void;
+  onImportSuccess?: () => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { igrpToast } = useIGRPToast();
 
   const handleArchive = async () => {
@@ -45,7 +48,15 @@ export function ActionsItem({
 
   const handleExport = async () => {
     try {
-      await exportProcessDefinition(processDefinitionId);
+      const data = await exportProcessDefinition(processDefinitionId);
+      const json = JSON.stringify(data, null, 2);
+      const blob = new Blob([json], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${processDefinitionId}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
       igrpToast({
         title: "Process definition exported successfully",
         description: "The process definition has been exported successfully",
@@ -64,8 +75,46 @@ export function ActionsItem({
     }
   }
 
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const data = JSON.parse(text) as ProcessDefinitionSchema;
+      await importProcessDefinition(data);
+      igrpToast({
+        title: "Process definition imported successfully",
+        description: "The process definition has been imported successfully",
+        type: "success",
+      });
+      onImportSuccess?.();
+    } catch (error) {
+      console.error(error);
+      igrpToast({
+        title: "Error importing process definition",
+        description:
+          error instanceof SyntaxError
+            ? "Invalid JSON file"
+            : "An error occurred while importing the process definition",
+        type: "error",
+      });
+    }
+  };
+
   return (
     <>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".json,application/json"
+        className="hidden"
+        onChange={handleFileChange}
+        aria-hidden
+      />
       <IGRPDropdownMenuPrimitive>
         <IGRPDropdownMenuTriggerPrimitive asChild>
           <IGRPButton variant="outline">
@@ -74,18 +123,27 @@ export function ActionsItem({
         </IGRPDropdownMenuTriggerPrimitive>
         <IGRPDropdownMenuContentPrimitive>
           <IGRPDropdownMenuGroupPrimitive>
-            <IGRPDropdownMenuItemPrimitive onClick={handleExport}>
+            {processDefinitionId && (<IGRPDropdownMenuItemPrimitive onClick={handleExport}>
               <IGRPIcon iconName="Download" />
               Export
             </IGRPDropdownMenuItemPrimitive>
-          </IGRPDropdownMenuGroupPrimitive>
-          <IGRPDropdownMenuSeparatorPrimitive />
-          <IGRPDropdownMenuGroupPrimitive >
-            <IGRPDropdownMenuItemPrimitive variant="destructive" onClick={() => setIsOpen(!isOpen)}>
-              <IGRPIcon iconName="Archive" />
-              Archive
+            )}
+            <IGRPDropdownMenuItemPrimitive onClick={handleImportClick}>
+              <IGRPIcon iconName="Upload" />
+              Import new
             </IGRPDropdownMenuItemPrimitive>
           </IGRPDropdownMenuGroupPrimitive>
+          {processDefinitionId
+            && (<>
+              <IGRPDropdownMenuSeparatorPrimitive />
+              <IGRPDropdownMenuGroupPrimitive >
+                <IGRPDropdownMenuItemPrimitive variant="destructive" onClick={() => setIsOpen(!isOpen)}>
+                  <IGRPIcon iconName="Archive" />
+                  Archive
+                </IGRPDropdownMenuItemPrimitive>
+              </IGRPDropdownMenuGroupPrimitive>
+            </>
+            )}
         </IGRPDropdownMenuContentPrimitive>
       </IGRPDropdownMenuPrimitive >
 

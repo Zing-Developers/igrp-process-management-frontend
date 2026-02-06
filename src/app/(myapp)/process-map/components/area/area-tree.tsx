@@ -2,12 +2,18 @@ import React from "react";
 import { ProcessTreeNode } from "../../types";
 import { TreeNode } from "./tree-node";
 import { InfoCard } from "../../../components/info-card";
+import { Process } from "@igrp/platform-process-management-types";
+import { ExtendedArea } from "@/app/(myapp)/process-configuration/types";
 
 interface ProcessTreeProps {
   nodes: ProcessTreeNode[];
   expandedNodes: Set<string>;
-  onToggle: (nodeId: string) => void;
   searchTerm?: string;
+  onToggle: (nodeId: string) => void;
+  onEdit: (node: ExtendedArea | Process, parentAreaId?: string) => void;
+  onDelete: (nodeId: string) => void;
+  onAddSubarea: (nodeId: string) => void;
+  onRemoveProcess: (nodeId: string, processId: string) => void;
 }
 
 export function AreaTree({
@@ -15,6 +21,10 @@ export function AreaTree({
   expandedNodes,
   onToggle,
   searchTerm,
+  onEdit,
+  onDelete,
+  onAddSubarea,
+  onRemoveProcess,
 }: ProcessTreeProps) {
   if (nodes.length === 0) {
     return (
@@ -39,6 +49,10 @@ export function AreaTree({
             expandedNodes={expandedNodes}
             onToggle={onToggle}
             searchTerm={searchTerm}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onAddSubarea={onAddSubarea}
+            onRemoveProcess={onRemoveProcess}
           />
         </div>
       ))}

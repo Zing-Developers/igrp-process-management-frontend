@@ -84,18 +84,9 @@ export function useConfigPage({
   const handleSaveUserTask = async (request: CreateProcessArtifactRequest) => {
     const processDefinitionId = processSelected?.id;
     if (!processDefinitionId) return;
+    console.log("request", request);
     userTasksConfig.patchEditedTask(request.key, request);
   };
-
-  const handleSaveAllUserTasks = async () => {
-    const dataList = userTasksConfig.getSaveAllUserTasksData();
-    if (dataList.length === 0) return;
-    for (const { processDefinitionId, request } of dataList) {
-      await updateProcessArtifact(processDefinitionId, request);
-    }
-    userTasksConfig.loadConfig();
-  };
-
 
   return {
     allProcesses: data ?? [],
@@ -107,8 +98,7 @@ export function useConfigPage({
     saveConfigurationMutation,
     userTasks: {
       ...userTasksConfig,
-      handleSave: handleSaveUserTask,
-      handleSaveAll: handleSaveAllUserTasks,
+      handleSave: handleSaveUserTask
     },
   };
 }

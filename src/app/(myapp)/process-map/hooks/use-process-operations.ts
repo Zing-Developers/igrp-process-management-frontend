@@ -5,14 +5,20 @@ import {
 } from "@/app/(myapp)/client/task";
 import {
   Process,
+  ProcessData,
   ProcessInstance,
 } from "@igrp/platform-process-management-types";
 import { urlConfig } from "../../utils/url-config";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
-import { createAndStartProcess } from "@/app/(myapp)/client/process";
+import { createAndStartProcess, getProcesses } from "@/app/(myapp)/client/process";
+import { associateProcessToArea, removeProcessFromArea } from "../../client/area-process";
+import { useQuery } from "@tanstack/react-query";
 
-export function useProcessOperations(router?: AppRouterInstance) {
+export function useProcessOperations(
+  refreshData: () => void,
+  router?: AppRouterInstance,
+) {
   const [selectedProcess, setSelectedProcess] = useState<Process | undefined>();
   const [pendingProcessStart, setPendingProcessStart] = useState<{
     processDefinitionId: string;
@@ -27,6 +33,13 @@ export function useProcessOperations(router?: AppRouterInstance) {
   const selectProcess = useCallback((process: Process) => {
     setSelectedProcess(process);
   }, []);
+
+  const { data, isLoading: loading } = useQuery({
+    queryKey: ["all-processes"],
+    queryFn: async () => {
+      return await getProcesses();
+    },
+  });
 
   // Store process start parameters for later execution with priority
   const prepareProcessStart = useCallback(
@@ -125,11 +138,54 @@ export function useProcessOperations(router?: AppRouterInstance) {
     [pendingProcessStart, igrpToast, router],
   );
 
+  const handleRemoveProcess = async (
+    areaId: string,
+    processDefinitionId: string,
+  ) => {
+    try {
+      await removeProcessFromArea(areaId, processDefinitionId);
+
+      // Reload area processes for this area
+      refreshData();
+      igrpToast({
+        type: "success",
+        title: "Sucesso",
+        description: "Processo removido com sucesso!",
+      });
+    } catch (error) {
+      console.error("Error removing process:", error);
+      igrpToast({
+        type: "error",
+        title: "Erro",
+        description: "Erro ao remover processo. Tente novamente.",
+      });
+      throw error;
+    }
+  };
+
+  const handleAssociateProcess = async (
+    areaId: string,
+    processData: ProcessData,
+  ) => {
+    try {
+      await associateProcessToArea(areaId, processData);
+
+      // Reload area processes for this area
+      refreshData();
+    } catch (error) {
+      console.error("Error associating process:", error);
+      throw error;
+    }
+  };
+
   return {
     selectedProcess,
     selectProcess,
     prepareProcessStart,
     startProcessWithPriority,
     pendingProcessStart,
+    handleRemoveProcess,
+    handleAssociateProcess,
+    allProcesses: data,
   };
 }

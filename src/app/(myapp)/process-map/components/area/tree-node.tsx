@@ -1,8 +1,9 @@
 import React from "react";
 import { ProcessTreeNode } from "../../types";
 import { NodeIcon } from "./node-icon";
-import { NodeContent } from "./node-content";
+import { AreaContent } from "./area-content";
 import { ExpandButton } from "./expand-button";
+import { ExtendedArea } from "@/app/(myapp)/process-configuration/types";
 import { Process } from "@igrp/platform-process-management-types";
 
 interface TreeNodeProps {
@@ -10,6 +11,10 @@ interface TreeNodeProps {
   expandedNodes: Set<string>;
   onToggle: (nodeId: string) => void;
   searchTerm?: string;
+  onEdit: (node: ExtendedArea | Process, parentAreaId?: string) => void;
+  onDelete: (nodeId: string) => void;
+  onAddSubarea: (nodeId: string) => void;
+  onRemoveProcess: (nodeId: string, processId: string) => void;
 }
 
 export function TreeNode({
@@ -17,6 +22,10 @@ export function TreeNode({
   expandedNodes,
   onToggle,
   searchTerm,
+  onEdit,
+  onDelete,
+  onAddSubarea,
+  onRemoveProcess,
 }: TreeNodeProps) {
   const isExpanded = expandedNodes.has(node.id);
   const hasChildren = node.children && node.children.length > 0;
@@ -42,8 +51,12 @@ export function TreeNode({
 
         <NodeIcon node={node} isExpanded={isExpanded} />
 
-        <NodeContent
+        <AreaContent
           node={node}
+          onEdit={onEdit}
+          onDelete={onDelete}
+          onAddSubarea={onAddSubarea}
+          onRemoveProcess={onRemoveProcess}
         />
       </div>
 
@@ -56,6 +69,10 @@ export function TreeNode({
               expandedNodes={expandedNodes}
               onToggle={onToggle}
               searchTerm={searchTerm}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onAddSubarea={onAddSubarea}
+              onRemoveProcess={onRemoveProcess}
             />
           ))}
         </div>

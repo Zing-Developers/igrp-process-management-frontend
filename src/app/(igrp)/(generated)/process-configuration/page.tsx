@@ -99,7 +99,8 @@ export default function PageProcessconfigurationComponent() {
                     >
                       Nova Área
                     </IGRPButton></div></div>
-                <AreasList areas={pc.filteredAreas} expandedAreas={pc.expansion.expandedAreas} areaProcesses={pc.areaProcesses} onEdit={pc.areaForm.openModal}
+                <AreasList areas={pc.filteredAreas} expandedAreas={pc.expansion.expandedAreas}
+                  areaProcesses={pc.areaProcesses} onEdit={pc.areaForm.openModal}
                   onDelete={pc.areaOperations.handleDeleteArea}
                   onAddProcess={pc.handleOpenProcessModal}
                   onRemoveProcess={pc.processOperations.handleRemoveProcess}
@@ -124,7 +125,9 @@ export default function PageProcessconfigurationComponent() {
           ]
         }
       />
-      <AreaModal isEditing={!!pc.areaForm.modalState.editingArea} formData={pc.areaForm.formData} areas={pc.allAreasFlat} open={pc.areaForm.modalState.isOpen} applications={pc.applications} setOpen={(open) => (open ? pc.areaForm.openModal() : pc.areaForm.closeModal())}
+      <AreaModal isEditing={!!pc.areaForm.modalState.editingArea}
+        formData={pc.areaForm.formData} areas={pc.allAreasFlat}
+         open={pc.areaForm.modalState.isOpen} applications={pc.applications} setOpen={(open) => (open ? pc.areaForm.openModal() : pc.areaForm.closeModal())}
         onFormChange={pc.areaForm.setFormData}
         onSave={pc.areaForm.modalState.editingArea ? pc.handleUpdateArea : pc.handleCreateArea}
         onClose={pc.areaForm.closeModal} ></AreaModal>

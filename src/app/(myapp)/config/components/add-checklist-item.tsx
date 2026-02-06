@@ -1,6 +1,5 @@
 import {
   IGRPCheckbox,
-  IGRPCheckboxPrimitive,
   IGRPLabel,
   IGRPLabelPrimitive,
 } from "@igrp/igrp-framework-react-design-system";
@@ -19,11 +18,8 @@ function AddChecklistItem({
   availableItems?: any;
   items?: any;
 }) {
-
-  const isItemChecked = (group: { key?: string; }) =>
-    (items || []).some(
-      (item: any) => (item?.key) === (group?.key)
-    );
+  const isItemChecked = (group: { key?: string }) =>
+    (items || []).some((item: any) => item?.key === group?.key);
 
   return (
     <div className="space-y-2">
@@ -32,11 +28,19 @@ function AddChecklistItem({
         <ScrollArea className="h-48 border rounded-md p-3">
           <div className="space-y-2">
             {(availableItems || []).map((group: any, index: number) => (
-              <div key={index} className="flex items-center justify-between py-1">
-                <IGRPLabelPrimitive htmlFor={`process-${index}`} className="flex-1 cursor-pointer">
+              <div
+                key={index}
+                className="flex items-center justify-between py-1"
+              >
+                <IGRPLabelPrimitive
+                  htmlFor={`process-${index}`}
+                  className="flex-1 cursor-pointer"
+                >
                   <div>
                     <p className="font-medium">{group.name}</p>
-                    <p className="text-xs text-muted-foreground font-mono">{group.key}</p>
+                    <p className="text-xs text-muted-foreground font-mono">
+                      {group.key}
+                    </p>
                   </div>
                 </IGRPLabelPrimitive>
                 <IGRPCheckbox
@@ -52,7 +56,6 @@ function AddChecklistItem({
                 />
               </div>
             ))}
-
           </div>
         </ScrollArea>
       ) : (

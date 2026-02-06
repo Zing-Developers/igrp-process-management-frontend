@@ -21,7 +21,9 @@ import {
  * @param size The number of items per page.
  * @returns A promise that resolves to a paginated response of processes.
  */
-export const getProcesses = async (filter?: string): Promise<PaginatedResponse<Process>> => {
+export const getProcesses = async (
+  filter?: string,
+): Promise<PaginatedResponse<Process>> => {
   const processManagementClient = await getIGRPProcessClient();
   const response = await processManagementClient.processes.getProcesses({
     page: 0,
@@ -276,7 +278,6 @@ export const assignGroupsToProcessDefinition = async (
   return response.data;
 };
 
-
 /**
  * Unassigns groups from a process definition
  * @param processDefinitionId The process definition ID
@@ -306,7 +307,9 @@ export const exportProcessDefinition = async (
 ): Promise<ProcessDefinitionSchema> => {
   const processManagementClient = await getIGRPProcessClient();
   const response =
-    await processManagementClient.processes.exportProcessDefinition(processDefinitionId);
+    await processManagementClient.processes.exportProcessDefinition(
+      processDefinitionId,
+    );
   return response.data;
 };
 
@@ -319,7 +322,10 @@ export const importProcessDefinition = async (
   processDefinition: ProcessDefinitionSchema,
 ): Promise<void> => {
   const processManagementClient = await getIGRPProcessClient();
-  const response = await processManagementClient.processes.importProcessDefinition(processDefinition);
+  const response =
+    await processManagementClient.processes.importProcessDefinition(
+      processDefinition,
+    );
   return response.data;
 };
 
@@ -332,7 +338,10 @@ export const archiveProcessDefinition = async (
   processDefinitionId: string,
 ): Promise<void> => {
   const processManagementClient = await getIGRPProcessClient();
-  const response = await processManagementClient.processes.archiveProcessDefinition(processDefinitionId);
+  const response =
+    await processManagementClient.processes.archiveProcessDefinition(
+      processDefinitionId,
+    );
   return response.data;
 };
 
@@ -345,6 +354,9 @@ export const unarchiveProcessDefinition = async (
   processDefinitionId: string,
 ): Promise<void> => {
   const processManagementClient = await getIGRPProcessClient();
-  const response = await processManagementClient.processes.unarchiveProcessDefinition(processDefinitionId);
+  const response =
+    await processManagementClient.processes.unarchiveProcessDefinition(
+      processDefinitionId,
+    );
   return response.data;
 };

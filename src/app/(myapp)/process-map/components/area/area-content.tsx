@@ -1,11 +1,10 @@
 import React from "react";
-import { ProcessTreeNode } from "../../types";
+import { ExtendedArea } from "../../types";
 import { Area, Process } from "@igrp/platform-process-management-types";
 import { AreaActions } from "./area-actions";
-import { ExtendedArea } from "@/app/(myapp)/process-configuration/types";
 
 interface NodeContentProps {
-  node: ProcessTreeNode;
+  node: ExtendedArea;
   onEdit: (node: ExtendedArea | Process, parentAreaId?: string) => void;
   onDelete: (nodeId: string) => void;
   onAddSubarea: (nodeId: string) => void;
@@ -51,11 +50,13 @@ export function AreaContent({
       </div>
 
       <div className="flex items-center space-x-2 flex-shrink-0">
-        <AreaActions node={node}
+        <AreaActions
+          node={node}
           onEdit={onEdit}
           onDelete={onDelete}
           onAddSubarea={onAddSubarea}
-          onRemoveProcess={onRemoveProcess} />
+          onRemoveProcess={onRemoveProcess}
+        />
       </div>
     </div>
   );

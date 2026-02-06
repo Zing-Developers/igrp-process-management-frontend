@@ -1,19 +1,11 @@
 import React from "react";
-import { ProcessTreeNode } from "../types";
+import { ExtendedArea } from "../types";
 import { TreeNode } from "./tree-node";
 import { InfoCard } from "../../components/info-card";
-import {
-  IGRPCard,
-  IGRPCardContent,
-  IGRPCardDescription,
-  IGRPCardHeader,
-  IGRPCardTitle,
-} from "@igrp/igrp-framework-react-design-system";
-import { cn } from "@/lib/utils";
 import { Process } from "@igrp/platform-process-management-types";
 
-interface ProcessTreeProps {
-  nodes: ProcessTreeNode[];
+interface ExtendedAreaProps {
+  nodes: ExtendedArea[];
   expandedNodes: Set<string>;
   onToggle: (nodeId: string) => void;
   onStartProcess: (
@@ -24,7 +16,6 @@ interface ProcessTreeProps {
     businessKey?: string,
     variables?: Array<{ name: string; value: string }>,
   ) => void;
-  onViewDetails: (process: Process) => void;
   searchTerm?: string;
 }
 
@@ -33,9 +24,8 @@ export function ProcessTree({
   expandedNodes,
   onToggle,
   onStartProcess,
-  onViewDetails,
   searchTerm,
-}: ProcessTreeProps) {
+}: ExtendedAreaProps) {
   if (nodes.length === 0) {
     return (
       <InfoCard
@@ -59,7 +49,6 @@ export function ProcessTree({
             expandedNodes={expandedNodes}
             onToggle={onToggle}
             onStartProcess={onStartProcess}
-            onViewDetails={onViewDetails}
             searchTerm={searchTerm}
           />
         </div>

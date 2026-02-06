@@ -1,6 +1,4 @@
-import {
-  IGRPIcon,
-} from "@igrp/igrp-framework-react-design-system";
+import { IGRPIcon } from "@igrp/igrp-framework-react-design-system";
 
 export const InfoCard = ({
   iconName = "SquareCheckBig",

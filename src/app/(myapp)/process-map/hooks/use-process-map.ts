@@ -8,10 +8,10 @@ import { useTreeComputed } from "./use-tree-computed";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { Area, Process } from "@igrp/platform-process-management-types";
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
-import { getAllAreasFlat } from "../../process-configuration/utils/area-hierarchy";
 import { useAccessManagement } from "../../access-management/hooks";
 import { useAreaHandlers } from "./area/use-area-handlers";
 import { useProcessOperations } from "./use-process-operations";
+import { getAllAreasFlat } from "../utils/area-hierarchy";
 
 export function useProcessMap(
   router?: AppRouterInstance,
@@ -39,13 +39,11 @@ export function useProcessMap(
   // Modal management
   const { priorityModal } = usePriorityModal();
 
-
   // Computed tree values
   const { treeNodes, flatNodes, totalProcesses, totalAreas } = useTreeComputed(
     areas,
     expandedNodes,
   );
-
 
   // Search functionality
   const { searchTerm, setSearchTerm, filteredNodes, clearSearch } =
@@ -124,11 +122,19 @@ export function useProcessMap(
   const flatAreas = getAllAreasFlat(areas);
 
   const mapOptions = useMemo(() => {
-    return flatAreas.map((area: Area) => ({ label: area.name, value: area.id }));
+    return flatAreas.map((area: Area) => ({
+      label: area.name,
+      value: area.id,
+    }));
   }, [flatAreas]);
 
   // Area management - pass setAreaProcesses
-  const areaHandlers = useAreaHandlers(areas, handleAssociateProcess, handleRemoveProcess, refreshData);
+  const areaHandlers = useAreaHandlers(
+    areas,
+    handleAssociateProcess,
+    handleRemoveProcess,
+    refreshData,
+  );
 
   return {
     allProcesses,
@@ -173,7 +179,7 @@ export function useProcessMap(
         areas: mapOptions,
       },
       ...areaHandlers,
-      handleRemoveProcess
+      handleRemoveProcess,
     },
-  }
-};
+  };
+}

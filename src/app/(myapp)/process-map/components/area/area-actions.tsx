@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { ProcessTreeNode } from "../../types";
-import { IGRPAlertDialog, IGRPButton } from "@igrp/igrp-framework-react-design-system";
-import { ExtendedArea } from "@/app/(myapp)/process-configuration/types";
-import { Process } from "@igrp/platform-process-management-types";
+import { ExtendedArea } from "../../types";
+import {
+  IGRPAlertDialog,
+  IGRPButton,
+} from "@igrp/igrp-framework-react-design-system";
 
 interface NodeActionsProps {
-  node: ProcessTreeNode;
-  onEdit: (node: ExtendedArea | Process, parentAreaId?: string) => void;
+  node: ExtendedArea;
+  onEdit: (node: ExtendedArea, parentAreaId?: string) => void;
   onDelete: (nodeId: string) => void;
   onAddSubarea: (nodeId: string) => void;
   onRemoveProcess: (nodeId: string, processId: string) => void;
@@ -19,17 +20,15 @@ export function AreaActions({
   onAddSubarea,
   onRemoveProcess,
 }: NodeActionsProps) {
-
   const [isOpen, setIsOpen] = useState(false);
 
-  const { type, data } = node
+  const { type, data } = node;
 
   const isAreaOrSubarea = type === "area" || type === "subarea";
 
   return (
     <div className="flex items-center space-x-1">
-
-      {isAreaOrSubarea &&
+      {isAreaOrSubarea && (
         <>
           <IGRPButton
             onClick={(e) => {
@@ -42,11 +41,10 @@ export function AreaActions({
             variant={"ghost"}
           ></IGRPButton>
 
-
           <IGRPButton
             onClick={(e) => {
               e.stopPropagation();
-              onEdit(data, data?.areaId ?? undefined);
+              onEdit(data as ExtendedArea, data?.areaId ?? undefined);
             }}
             title="Editar"
             iconName={"Pencil"}
@@ -54,7 +52,7 @@ export function AreaActions({
             variant={"ghost"}
           ></IGRPButton>
         </>
-      }
+      )}
       <IGRPButton
         onClick={(e) => {
           e.stopPropagation();
@@ -65,22 +63,31 @@ export function AreaActions({
         size={"icon"}
         variant={"ghost"}
         iconClassName="text-destructive hover:text-destructive/80"
-      >
-      </IGRPButton>
+      ></IGRPButton>
 
-      <IGRPAlertDialog title="Excluir" open={isOpen} onOpenChange={setIsOpen}
-        description={isAreaOrSubarea ? "Tem certeza que deseja excluir esta área? Todas as subáreas também serão removidas." : "Tem certeza que deseja excluir este processo?"}
-        iconName="Trash2" showIcon={true}
+      <IGRPAlertDialog
+        title="Excluir"
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        description={
+          isAreaOrSubarea
+            ? "Tem certeza que deseja excluir esta área? Todas as subáreas também serão removidas."
+            : "Tem certeza que deseja excluir este processo?"
+        }
+        iconName="Trash2"
+        showIcon={true}
         variant="destructive"
         actionLabel="Excluir"
         cancelLabel="Cancel"
-        onAction={() => { isAreaOrSubarea ? onDelete(node.id) : onRemoveProcess(data?.areaId ?? "", data?.id ?? "") }}
+        onAction={() => {
+          isAreaOrSubarea
+            ? onDelete(node.id)
+            : onRemoveProcess(data?.areaId ?? "", data?.id ?? "");
+        }}
         onCancel={() => {
           setIsOpen(false);
         }}
-      >
-      </IGRPAlertDialog>
-
+      ></IGRPAlertDialog>
     </div>
   );
 }

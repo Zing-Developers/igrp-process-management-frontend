@@ -1,13 +1,12 @@
 import React from "react";
-import { ProcessTreeNode } from "../../types";
 import { NodeIcon } from "./node-icon";
 import { AreaContent } from "./area-content";
 import { ExpandButton } from "./expand-button";
-import { ExtendedArea } from "@/app/(myapp)/process-configuration/types";
 import { Process } from "@igrp/platform-process-management-types";
+import { ExtendedArea } from "../../types";
 
 interface TreeNodeProps {
-  node: ProcessTreeNode;
+  node: ExtendedArea;
   expandedNodes: Set<string>;
   onToggle: (nodeId: string) => void;
   searchTerm?: string;
@@ -40,7 +39,7 @@ export function TreeNode({
     <div className="w-full">
       <div
         className="flex items-center space-x-2 p-3 hover:bg-muted rounded-lg cursor-pointer group"
-        style={{ paddingLeft: `${node.level * 20 + 8}px` }}
+        style={{ paddingLeft: `${node.level ?? 0 * 20 + 8}px` }}
         onClick={handleToggle}
       >
         <ExpandButton

@@ -1,14 +1,29 @@
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
-import { AreaFormData, ExtendedArea } from "@/app/(myapp)/process-configuration/types";
 import { useAreaForm } from "./use-area-form";
-import { createArea, deleteArea, getSubareas, updateArea } from "@/app/(myapp)/client/area";
-import { findAreaById } from "@/app/(myapp)/process-configuration/utils/area-hierarchy";
-import { CreateAreaRequest, ProcessData, UpdateAreaRequest } from "@igrp/platform-process-management-types";
+import {
+  createArea,
+  deleteArea,
+  getSubareas,
+  updateArea,
+} from "@/app/(myapp)/client/area";
+import {
+  CreateAreaRequest,
+  Process,
+  UpdateAreaRequest,
+} from "@igrp/platform-process-management-types";
+import { findAreaById } from "../../utils/area-hierarchy";
+import { AreaFormData, ExtendedArea } from "../../types";
 
 export function useAreaHandlers(
   areas: ExtendedArea[],
-  handleAssociateProcess: (areaId: string, processData: ProcessData) => Promise<void>,
-  handleRemoveProcess: (areaId: string, processData: ProcessData) => Promise<void>,
+  handleAssociateProcess: (
+    areaId: string,
+    processData: Process,
+  ) => Promise<void>,
+  handleRemoveProcess: (
+    areaId: string,
+    processDefinitionId: string,
+  ) => Promise<void>,
   refreshData: () => void,
 ) {
   const { igrpToast } = useIGRPToast();
@@ -34,8 +49,6 @@ export function useAreaHandlers(
 
   const handleUpdateArea = async (areaId: string, formData: AreaFormData) => {
     try {
-
-      console.log(formData);
       const updatedArea = await updateArea(
         areaId,
         formData as UpdateAreaRequest,
@@ -95,6 +108,6 @@ export function useAreaHandlers(
     handleUpdateArea,
     handleDeleteArea,
     loadSubareas,
-    getSubareasForParent
+    getSubareasForParent,
   };
 }

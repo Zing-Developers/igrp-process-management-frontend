@@ -1,12 +1,11 @@
 import React from "react";
-import { ProcessTreeNode } from "../../types";
 import { TreeNode } from "./tree-node";
 import { InfoCard } from "../../../components/info-card";
 import { Process } from "@igrp/platform-process-management-types";
-import { ExtendedArea } from "@/app/(myapp)/process-configuration/types";
+import { ExtendedArea } from "../../types";
 
 interface ProcessTreeProps {
-  nodes: ProcessTreeNode[];
+  nodes: ExtendedArea[];
   expandedNodes: Set<string>;
   searchTerm?: string;
   onToggle: (nodeId: string) => void;

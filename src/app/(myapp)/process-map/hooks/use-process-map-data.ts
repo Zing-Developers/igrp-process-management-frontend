@@ -1,12 +1,12 @@
 import { useState, useMemo, useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { ExtendedArea } from "../../process-configuration/types";
-import {
-  organizeAreasHierarchy,
-  getAllAreasFlat,
-} from "../../process-configuration/utils/area-hierarchy";
 import { keepLatestByKey } from "../utils/versioning";
 import { getAreas, getSubareas } from "@/app/(myapp)/client/area";
+import { ExtendedArea } from "../types";
+import {
+  getAllAreasFlat,
+  organizeAreasHierarchy,
+} from "../utils/area-hierarchy";
 
 const PROCESS_MAP_AREAS_QUERY_KEY = ["process-map-areas"] as const;
 

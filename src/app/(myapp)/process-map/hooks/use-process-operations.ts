@@ -11,8 +11,14 @@ import {
 import { urlConfig } from "../../utils/url-config";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
-import { createAndStartProcess, getProcesses } from "@/app/(myapp)/client/process";
-import { associateProcessToArea, removeProcessFromArea } from "../../client/area-process";
+import {
+  createAndStartProcess,
+  getProcesses,
+} from "@/app/(myapp)/client/process";
+import {
+  associateProcessToArea,
+  removeProcessFromArea,
+} from "../../client/area-process";
 import { useQuery } from "@tanstack/react-query";
 
 export function useProcessOperations(
@@ -165,10 +171,10 @@ export function useProcessOperations(
 
   const handleAssociateProcess = async (
     areaId: string,
-    processData: ProcessData,
+    processData: Process,
   ) => {
     try {
-      await associateProcessToArea(areaId, processData);
+      await associateProcessToArea(areaId, processData as ProcessData);
 
       // Reload area processes for this area
       refreshData();

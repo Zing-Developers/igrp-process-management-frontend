@@ -1,7 +1,7 @@
 import React from "react";
 import { AreaTree } from "./area-tree";
 import { Process } from "@igrp/platform-process-management-types";
-import { ExtendedArea } from "@/app/(myapp)/process-configuration/types";
+import { ExtendedArea } from "../../types";
 
 function AreaTreeNodeComponent({
   nodes,
@@ -35,6 +35,5 @@ function AreaTreeNodeComponent({
     />
   );
 }
-
 
 export { AreaTreeNodeComponent };

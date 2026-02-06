@@ -1,10 +1,10 @@
 import React from "react";
-import { ProcessTreeNode } from "../types";
+import { ExtendedArea } from "../types";
 import { NodeActions } from "./node-actions";
 import { Area, Process } from "@igrp/platform-process-management-types";
 
 interface NodeContentProps {
-  node: ProcessTreeNode;
+  node: ExtendedArea;
   onStartProcess: (
     process: Process,
     processDefinitionId: string,
@@ -13,14 +13,9 @@ interface NodeContentProps {
     businessKey?: string,
     variables?: Array<{ name: string; value: string }>,
   ) => void;
-  onViewDetails: (process: Process) => void;
 }
 
-export function NodeContent({
-  node,
-  onStartProcess,
-  onViewDetails,
-}: NodeContentProps) {
+export function NodeContent({ node, onStartProcess }: NodeContentProps) {
   const isProcess = node.type === "process";
   const isAreaOrSubarea = node.type === "area" || node.type === "subarea";
 
@@ -53,11 +48,7 @@ export function NodeContent({
       </div>
 
       <div className="flex items-center space-x-2 flex-shrink-0">
-        <NodeActions
-          node={node}
-          onStartProcess={onStartProcess}
-          onViewDetails={onViewDetails}
-        />
+        <NodeActions node={node} onStartProcess={onStartProcess} />
       </div>
     </div>
   );

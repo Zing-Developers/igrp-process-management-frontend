@@ -29,7 +29,7 @@ import {
 	IGRPModalDialogClose 
 } from "@igrp/igrp-framework-react-design-system";
 
-export default function Areamodal({ open, setOpen, isEditing, formData, onFormChange, onSave, onClose, options, allProcesses } : { open: boolean, setOpen: (prompt: boolean) => void, isEditing: boolean, formData: object, onFormChange: (data: any) => void, onSave: (data: any) => void, onClose: () => void, options: any, allProcesses: any }) {
+export default function Areamodal({ open, setOpen, isEditing, formData, onFormChange, onSave, onClose, options, allProcesses } : { open: boolean, setOpen: (prompt: boolean) => void, isEditing: boolean, formData: any, onFormChange: (data: any) => void, onSave: (data: any) => void, onClose: () => void, options: any, allProcesses: any }) {
 
 
   
@@ -69,7 +69,8 @@ const { igrpToast } = useIGRPToast()
 
 async function handleFormSubmit (data: z.infer<any>): Promise<void  | undefined> {
 
-  const next = { ...data, processes: formData?.processes || [] };
+  const formProcesses = (formData as { processes?: unknown[] })?.processes;
+const next = { ...data, processes: data?.processes ?? formProcesses ?? [] };
 
 onFormChange(next)
 onSave(next)

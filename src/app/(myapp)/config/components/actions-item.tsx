@@ -1,4 +1,8 @@
-import { IGRPAlertDialog, IGRPButton, useIGRPToast } from "@igrp/igrp-framework-react-design-system";
+import {
+  IGRPAlertDialog,
+  IGRPButton,
+  useIGRPToast,
+} from "@igrp/igrp-framework-react-design-system";
 import {
   IGRPDropdownMenuPrimitive,
   IGRPDropdownMenuContentPrimitive,
@@ -9,7 +13,11 @@ import {
   IGRPIcon,
 } from "@igrp/igrp-framework-react-design-system";
 import { useRef, useState } from "react";
-import { archiveProcessDefinition, exportProcessDefinition, importProcessDefinition } from "../../client/process";
+import {
+  archiveProcessDefinition,
+  exportProcessDefinition,
+  importProcessDefinition,
+} from "../../client/process";
 import { ProcessDefinitionSchema } from "@igrp/platform-process-management-types";
 
 export function ActionsItem({
@@ -44,7 +52,7 @@ export function ActionsItem({
     } finally {
       setIsOpen(false);
     }
-  }
+  };
 
   const handleExport = async () => {
     try {
@@ -69,11 +77,10 @@ export function ActionsItem({
         description: "An error occurred while exporting the process definition",
         type: "error",
       });
-    }
-    finally {
+    } finally {
       setIsOpen(false);
     }
-  }
+  };
 
   const handleImportClick = () => {
     fileInputRef.current?.click();
@@ -123,33 +130,41 @@ export function ActionsItem({
         </IGRPDropdownMenuTriggerPrimitive>
         <IGRPDropdownMenuContentPrimitive>
           <IGRPDropdownMenuGroupPrimitive>
-            {processDefinitionId && (<IGRPDropdownMenuItemPrimitive onClick={handleExport}>
-              <IGRPIcon iconName="Download" />
-              Export
-            </IGRPDropdownMenuItemPrimitive>
+            {processDefinitionId && (
+              <IGRPDropdownMenuItemPrimitive onClick={handleExport}>
+                <IGRPIcon iconName="Download" />
+                Export
+              </IGRPDropdownMenuItemPrimitive>
             )}
             <IGRPDropdownMenuItemPrimitive onClick={handleImportClick}>
               <IGRPIcon iconName="Upload" />
               Import new
             </IGRPDropdownMenuItemPrimitive>
           </IGRPDropdownMenuGroupPrimitive>
-          {processDefinitionId
-            && (<>
+          {processDefinitionId && (
+            <>
               <IGRPDropdownMenuSeparatorPrimitive />
-              <IGRPDropdownMenuGroupPrimitive >
-                <IGRPDropdownMenuItemPrimitive variant="destructive" onClick={() => setIsOpen(!isOpen)}>
+              <IGRPDropdownMenuGroupPrimitive>
+                <IGRPDropdownMenuItemPrimitive
+                  variant="destructive"
+                  onClick={() => setIsOpen(!isOpen)}
+                >
                   <IGRPIcon iconName="Archive" />
                   Archive
                 </IGRPDropdownMenuItemPrimitive>
               </IGRPDropdownMenuGroupPrimitive>
             </>
-            )}
+          )}
         </IGRPDropdownMenuContentPrimitive>
-      </IGRPDropdownMenuPrimitive >
+      </IGRPDropdownMenuPrimitive>
 
-      <IGRPAlertDialog title="Archive" open={isOpen} onOpenChange={setIsOpen}
+      <IGRPAlertDialog
+        title="Archive"
+        open={isOpen}
+        onOpenChange={setIsOpen}
         description="Are you sure you want to archive this process definition?"
-        iconName="Archive" showIcon={true}
+        iconName="Archive"
+        showIcon={true}
         variant="destructive"
         actionLabel="Archive"
         cancelLabel="Cancel"
@@ -157,9 +172,7 @@ export function ActionsItem({
         onCancel={() => {
           setIsOpen(false);
         }}
-      >
-      </IGRPAlertDialog>
+      ></IGRPAlertDialog>
     </>
   );
 }
-

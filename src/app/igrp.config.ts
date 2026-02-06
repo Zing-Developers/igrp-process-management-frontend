@@ -42,10 +42,9 @@
  */
 
 export default {
-  types: ["process-configuration/types/index"],
+  types: ["process-map/types/index"],
   actions: [],
   functions: [
-    "process-configuration/hooks/use-process-configuration",
     "process-map/hooks/use-process-map",
     "available-tasks/hooks/use-available-tasks",
     "process-instances/hooks/use-process-instances",
@@ -60,9 +59,6 @@ export default {
     "config/hooks/use-config-page",
   ],
   components: [
-    "process-configuration/components/areas-list",
-    "process-configuration/components/process-list",
-    "process-configuration/components/artifact-processes-list",
     "process-map/components/process-tree-node",
     "components/recent-items-card",
     "components/loading-page",

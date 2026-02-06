@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Area } from "@igrp/platform-process-management-types";
-import { AreaFormData, AreaModalState } from "@/app/(myapp)/process-configuration/types";
+import { AreaFormData, AreaModalState, ExtendedArea } from "../../types";
+import { Process } from "@igrp/platform-process-management-types";
 
 export function useAreaForm() {
   const [modalState, setModalState] = useState<AreaModalState>({
@@ -17,17 +17,18 @@ export function useAreaForm() {
     processes: [],
   });
 
-  const openModal = (area?: Area, parentAreaId?: string) => {
-
+  const openModal = (area?: ExtendedArea, parentAreaId?: string) => {
     if (area) {
-
-      const processes = area.process?.filter((process) => process.status === "ACTIVE").map((process) => ({
-        processKey: process.processKey,
-        name: process.name,
-        releaseId: process.id,
-        version: process.version.toString(),
-        key: process.processKey,
-      }));
+      const processes = area.process
+        ?.filter((process) => process.status === "ACTIVE")
+        .map((process) => ({
+          ...process,
+          processKey: process.processKey,
+          name: process.name,
+          releaseId: process.id,
+          version: process.version.toString(),
+          key: process.processKey,
+        }));
 
       setModalState({
         isOpen: true,

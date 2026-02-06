@@ -56,7 +56,9 @@ export function useConfigPage({
   });
 
   const loadAllProcesses = () => {
-    queryClient.invalidateQueries({ queryKey: ["all-processes", filterProcess] });
+    queryClient.invalidateQueries({
+      queryKey: ["all-processes", filterProcess],
+    });
   };
 
   const saveConfigurationMutation = useMutation({
@@ -98,7 +100,7 @@ export function useConfigPage({
     saveConfigurationMutation,
     userTasks: {
       ...userTasksConfig,
-      handleSave: handleSaveUserTask
+      handleSave: handleSaveUserTask,
     },
   };
 }

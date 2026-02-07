@@ -1,5 +1,5 @@
 import React from "react";
-import { NodeIcon } from "./node-icon";
+import { NodeIcon } from "../node-icon";
 import { AreaContent } from "./area-content";
 import { ExpandButton } from "./expand-button";
 import { Process } from "@igrp/platform-process-management-types";

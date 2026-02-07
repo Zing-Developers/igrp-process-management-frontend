@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useMemo, useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { keepLatestByKey } from "../utils/versioning";
 import { getAreas, getSubareas } from "@/app/(myapp)/client/area";
@@ -10,23 +10,42 @@ import {
 
 const PROCESS_MAP_AREAS_QUERY_KEY = ["process-map-areas"] as const;
 
+const sortByName = (a: { name?: string }, b: { name?: string }) =>
+  (a.name ?? "").localeCompare(b.name ?? "", undefined, { sensitivity: "base" });
+
+async function fetchAreaWithSubareas(
+  area: ExtendedArea,
+): Promise<ExtendedArea> {
+  const normalized: ExtendedArea = {
+    ...area,
+    process: area.process ? keepLatestByKey(area.process?.filter((process) => process.status === "ACTIVE")) : undefined,
+    subareas: [],
+  };
+
+  const subareasResponse = await getSubareas(area.id);
+  if (subareasResponse.length > 0) {
+    normalized.subareas = await Promise.all(
+      subareasResponse.map((sa) => fetchAreaWithSubareas(sa)),
+    );
+    normalized.subareas.sort(sortByName);
+  }
+
+  return normalized;
+}
+
 async function fetchProcessMapAreas(): Promise<ExtendedArea[]> {
   const areasResponse = await getAreas({});
   const topLevelAreas =
     areasResponse.content?.filter((area) => !area.areaId) || [];
 
-  return topLevelAreas.map((area) => ({
-    ...area,
-    process: area.process ? keepLatestByKey(area.process) : undefined,
-    subareas: [],
-  }));
+  const fullHierarchy = await Promise.all(
+    topLevelAreas.map((area) => fetchAreaWithSubareas(area)),
+  );
+  return fullHierarchy.sort(sortByName);
 }
 
 export function useProcessMapData() {
   const queryClient = useQueryClient();
-  const [loadedSubareasByParent, setLoadedSubareasByParent] = useState<
-    Record<string, ExtendedArea[]>
-  >({});
 
   const {
     data: queryData,
@@ -35,6 +54,7 @@ export function useProcessMapData() {
   } = useQuery({
     queryKey: PROCESS_MAP_AREAS_QUERY_KEY,
     queryFn: fetchProcessMapAreas,
+    staleTime: 60_000,
   });
 
   const error =
@@ -44,57 +64,25 @@ export function useProcessMapData() {
         ? "Failed to load process map data"
         : undefined;
 
-  const loadedNodes = useMemo(
-    () => new Set(Object.keys(loadedSubareasByParent)),
-    [loadedSubareasByParent],
-  );
+  const loadedNodes = useMemo(() => {
+    const flatAreas = getAllAreasFlat(queryData ?? []);
+    return new Set(flatAreas.map((a) => a.id));
+  }, [queryData]);
 
   const areas = useMemo(() => {
     const base = queryData ?? [];
     const flatAreas = getAllAreasFlat(base);
-
-    Object.values(loadedSubareasByParent).forEach((subareas) => {
-      subareas.forEach((subarea) => {
-        const exists = flatAreas.find((area) => area.id === subarea.id);
-        if (!exists) {
-          flatAreas.push(subarea);
-        }
-      });
-    });
-
-    return organizeAreasHierarchy(flatAreas);
-  }, [queryData, loadedSubareasByParent]);
+    const hierarchy = organizeAreasHierarchy(flatAreas);
+    return [...hierarchy].sort(sortByName);
+  }, [queryData]);
 
   const refreshData = useCallback(() => {
-    setLoadedSubareasByParent({});
     queryClient.invalidateQueries({ queryKey: PROCESS_MAP_AREAS_QUERY_KEY });
   }, [queryClient]);
 
-  const loadSubareas = useCallback(
-    async (parentAreaId: string) => {
-      try {
-        if (loadedSubareasByParent[parentAreaId]) {
-          return;
-        }
-
-        const subareas = await getSubareas(parentAreaId);
-
-        const normalizedSubareas: ExtendedArea[] = subareas.map((sa) => ({
-          ...sa,
-          process: sa.process ? keepLatestByKey(sa.process) : undefined,
-        })) as ExtendedArea[];
-
-        setLoadedSubareasByParent((prev) => ({
-          ...prev,
-          [parentAreaId]: normalizedSubareas,
-        }));
-      } catch (error) {
-        console.error("Error loading subareas:", error);
-        throw error;
-      }
-    },
-    [loadedSubareasByParent],
-  );
+  const loadSubareas = useCallback(async (_parentAreaId: string) => {
+    // No-op: all data is loaded upfront in fetchProcessMapAreas
+  }, []);
 
   return {
     areas,

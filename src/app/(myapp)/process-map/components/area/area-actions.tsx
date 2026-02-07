@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ExtendedArea } from "../../types";
 import {
   IGRPAlertDialog,
+  IGRPBadgePrimitive,
   IGRPButton,
 } from "@igrp/igrp-framework-react-design-system";
 
@@ -25,21 +26,21 @@ export function AreaActions({
   const { type, data } = node;
 
   const isAreaOrSubarea = type === "area" || type === "subarea";
+  const processCount =
+    isAreaOrSubarea && data && "process" in data
+      ? (data as ExtendedArea).process?.length ?? 0
+      : 0;
 
   return (
     <div className="flex items-center space-x-1">
+      {processCount > 0 && (
+        <IGRPBadgePrimitive variant="secondary" className="text-xs">
+          {processCount}
+        </IGRPBadgePrimitive>
+      )}
       {isAreaOrSubarea && (
         <>
-          <IGRPButton
-            onClick={(e) => {
-              e.stopPropagation();
-              onAddSubarea(node.id);
-            }}
-            title="Adicionar Subárea"
-            iconName={"FolderPlus"}
-            size={"icon"}
-            variant={"ghost"}
-          ></IGRPButton>
+
 
           <IGRPButton
             onClick={(e) => {
@@ -62,8 +63,20 @@ export function AreaActions({
         iconName="Trash2"
         size={"icon"}
         variant={"ghost"}
-        iconClassName="text-destructive hover:text-destructive/80"
       ></IGRPButton>
+
+      {isAreaOrSubarea && (
+        <IGRPButton
+          onClick={(e) => {
+            e.stopPropagation();
+            onAddSubarea(node.id);
+          }}
+          title="Adicionar Subárea"
+          iconName={"Plus"}
+          size={"icon"}
+          variant={"ghost"}
+        ></IGRPButton>
+      )}
 
       <IGRPAlertDialog
         title="Excluir"

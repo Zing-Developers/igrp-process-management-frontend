@@ -8,37 +8,41 @@ interface NodeIconProps {
 }
 
 export function NodeIcon({ node, isExpanded }: NodeIconProps) {
+
+  const { hasChildren } = node;
+
   switch (node.type) {
     case "area":
-      return (
-        <IGRPIcon
-          name={`icon1`}
-          iconName={"Building"}
-          size={18}
-          className={cn(`text-primary`)}
-        ></IGRPIcon>
-      );
     case "subarea":
-      return isExpanded ? (
+      return hasChildren ? (
+        isExpanded ? (
+          <IGRPIcon
+            name={`icon1`}
+            iconName={"FolderOpen"}
+            size={18}
+            className={cn(`text-primary`)}
+          ></IGRPIcon>
+        ) : (
+          <IGRPIcon
+            name={`icon1`}
+            iconName={"Folder"}
+            size={18}
+            className={cn(`text-primary`)}
+          ></IGRPIcon>
+        )) : (
         <IGRPIcon
           name={`icon1`}
-          iconName={"FolderOpen"}
+          iconName={"FolderTree"}
           size={18}
-          className={cn(`text-primary`)}
+          className={cn(`text-muted-foreground`)}
         ></IGRPIcon>
-      ) : (
-        <IGRPIcon
-          name={`icon1`}
-          iconName={"Folder"}
-          size={18}
-          className={cn(`text-primary`)}
-        ></IGRPIcon>
-      );
+      )
+
     case "process":
       return (
         <IGRPIcon
           name={`icon1`}
-          iconName={"FileText"}
+          iconName={"Workflow"}
           size={18}
           className={cn(`text-muted-foreground`)}
         ></IGRPIcon>

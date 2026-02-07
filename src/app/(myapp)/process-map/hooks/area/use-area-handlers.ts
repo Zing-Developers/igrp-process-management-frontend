@@ -35,11 +35,21 @@ export function useAreaHandlers(
       const newArea = await createArea(formData as CreateAreaRequest);
 
       (formData.processes || []).forEach(async (process) => {
-        await handleAssociateProcess(newArea.id, process);
+        await handleAssociateProcess(newArea.id, {
+          ...process,
+          releaseId: process.releaseId ?? process.id,
+        });
       });
 
       // Add the new area to the flat list and reorganize
       refreshData();
+
+      igrpToast({
+        type: "success",
+        title: "Sucesso",
+        description: "Área criada com sucesso!",
+      });
+
       return newArea;
     } catch (error) {
       console.error("Error creating area:", error);
@@ -55,10 +65,19 @@ export function useAreaHandlers(
       );
 
       (formData.processes || []).forEach(async (process) => {
-        await handleAssociateProcess(updatedArea.id, process);
+        await handleAssociateProcess(areaId, {
+          ...process,
+          releaseId: process.releaseId ?? process.id,
+        });
       });
 
       refreshData();
+
+      igrpToast({
+        type: "success",
+        title: "Sucesso",
+        description: "Área atualizada com sucesso!",
+      });
 
       return updatedArea;
     } catch (error) {

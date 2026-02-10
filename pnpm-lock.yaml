@@ -33,8 +33,8 @@ importers:
         specifier: 0.1.0-beta.4
         version: 0.1.0-beta.4
       '@igrp/platform-process-management-types':
-        specifier: 0.1.0-beta.7
-        version: 0.1.0-beta.7
+        specifier: 0.1.0-beta.9
+        version: 0.1.0-beta.9
       '@tanstack/react-query':
         specifier: ^5.90.20
         version: 5.90.20(react@19.2.3)
@@ -234,8 +234,8 @@ packages:
     resolution: {integrity: sha512-kZcr338bXEGEYJNdKkibrMIP5cV+ikbyWJAFOtvEyON07ZkU4fRMB8GZrYl8buaRLg9chhTdGGXsQ8mIuoODbQ==}
     engines: {node: '>=20.x.x'}
 
-  '@igrp/platform-process-management-types@0.1.0-beta.7':
-    resolution: {integrity: sha512-4eGGHOBkqHWCDa7A0D6a0NkDZsYA/Mf2ivpZJUcVqnRamN+QnNNMrB4ZSFji21oy/b0aZ8vAFoThdvk3nDCF3A==}
+  '@igrp/platform-process-management-types@0.1.0-beta.9':
+    resolution: {integrity: sha512-bKaISLDLHD8tu6M+5aZ6sojfDykXAAvThD6uwr2e72A2M1V2A3EsY9DrZLrGXbhjXD+plUUjXCoeJUxEuHV8sw==}
     engines: {node: '>=20.x.x'}
 
   '@img/colour@1.0.0':
@@ -1980,7 +1980,7 @@ snapshots:
 
   '@igrp/platform-process-management-types@0.1.0-beta.6': {}
 
-  '@igrp/platform-process-management-types@0.1.0-beta.7': {}
+  '@igrp/platform-process-management-types@0.1.0-beta.9': {}
 
   '@img/colour@1.0.0':
     optional: true

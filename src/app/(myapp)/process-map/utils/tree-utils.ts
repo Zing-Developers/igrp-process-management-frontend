@@ -15,8 +15,7 @@ export function buildProcessTree(areas: ExtendedArea[]): ExtendedArea[] {
     parentId?: string,
   ): ExtendedArea {
     const areaNode: ExtendedArea = {
-      id: area.id,
-      name: area.name,
+      ...area,
       type: level === 0 ? "area" : "subarea",
       level,
       parentId,
@@ -24,10 +23,7 @@ export function buildProcessTree(areas: ExtendedArea[]): ExtendedArea[] {
       children: [],
       hasChildren: true, // Assume areas can have children (subareas or processes)
       isLoaded: false, // Will be set to true when children are loaded
-      applicationBase: applicationBase,
-      code: area.code,
-      status: area.status,
-      statusDesc: area.statusDesc,
+      applicationBase: applicationBase
     };
 
     // Add processes as children (processes are always loaded with the area)
@@ -40,6 +36,7 @@ export function buildProcessTree(areas: ExtendedArea[]): ExtendedArea[] {
 
       const processNodes: ExtendedArea[] = activeProcesses.map(
         (process: Process) => ({
+          ...process,
           id: `process-${process.id}`,
           name: process.name || process.processKey || "Unnamed Process",
           type: "process",
@@ -50,8 +47,6 @@ export function buildProcessTree(areas: ExtendedArea[]): ExtendedArea[] {
           isLoaded: true,
           applicationBase: applicationBase,
           code: "",
-          status: process.status,
-          statusDesc: process.statusDesc,
         }),
       );
       areaNode.children = [...processNodes];

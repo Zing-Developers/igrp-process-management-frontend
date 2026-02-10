@@ -43,7 +43,13 @@ export function useProcessOperations(
   const { data, isLoading: loading } = useQuery({
     queryKey: ["all-processes"],
     queryFn: async () => {
-      return await getProcesses();
+      const response = await getProcesses();
+      const sortedContent = [...(response.content ?? [])].sort((a, b) =>
+        (a.name ?? "").localeCompare(b.name ?? "", undefined, {
+          sensitivity: "base",
+        }),
+      );
+      return { ...response, content: sortedContent };
     },
   });
 
@@ -141,7 +147,7 @@ export function useProcessOperations(
         return null;
       }
     },
-    [pendingProcessStart, igrpToast, router],
+    [pendingProcessStart],
   );
 
   const handleRemoveProcess = async (

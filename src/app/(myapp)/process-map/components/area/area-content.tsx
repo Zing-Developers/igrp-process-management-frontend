@@ -2,6 +2,7 @@ import React from "react";
 import { ExtendedArea } from "../../types";
 import { Area, Process } from "@igrp/platform-process-management-types";
 import { AreaActions } from "./area-actions";
+import { IGRPIcon } from "@igrp/igrp-framework-react-design-system";
 
 interface NodeContentProps {
   node: ExtendedArea;
@@ -18,8 +19,9 @@ export function AreaContent({
   onAddSubarea,
   onRemoveProcess,
 }: NodeContentProps) {
-  const isProcess = node.type === "process";
-  const isAreaOrSubarea = node.type === "area" || node.type === "subarea";
+  const { type } = node;
+  const isProcess = type === "process";
+  const isAreaOrSubarea = type === "area" || type === "subarea";
 
   return (
     <div className="flex items-center justify-between w-full">

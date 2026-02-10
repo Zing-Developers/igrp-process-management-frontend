@@ -11,14 +11,20 @@ import {
 const PROCESS_MAP_AREAS_QUERY_KEY = ["process-map-areas"] as const;
 
 const sortByName = (a: { name?: string }, b: { name?: string }) =>
-  (a.name ?? "").localeCompare(b.name ?? "", undefined, { sensitivity: "base" });
+  (a.name ?? "").localeCompare(b.name ?? "", undefined, {
+    sensitivity: "base",
+  });
 
 async function fetchAreaWithSubareas(
   area: ExtendedArea,
 ): Promise<ExtendedArea> {
   const normalized: ExtendedArea = {
     ...area,
-    process: area.process ? keepLatestByKey(area.process?.filter((process) => process.status === "ACTIVE")) : undefined,
+    process: area.process
+      ? keepLatestByKey(
+          area.process?.filter((process) => process.status === "ACTIVE"),
+        )
+      : undefined,
     subareas: [],
   };
 

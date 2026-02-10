@@ -45,11 +45,9 @@ export function useProcessOperations(
     queryFn: async () => {
       const response = await getProcesses();
       const sortedContent = [...(response.content ?? [])].sort((a, b) =>
-        (a.name ?? "").localeCompare(
-          b.name ?? "",
-          undefined,
-          { sensitivity: "base" },
-        ),
+        (a.name ?? "").localeCompare(b.name ?? "", undefined, {
+          sensitivity: "base",
+        }),
       );
       return { ...response, content: sortedContent };
     },

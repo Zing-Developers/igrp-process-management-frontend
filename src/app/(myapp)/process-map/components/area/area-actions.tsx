@@ -28,7 +28,7 @@ export function AreaActions({
   const isAreaOrSubarea = type === "area" || type === "subarea";
   const processCount =
     isAreaOrSubarea && data && "process" in data
-      ? (data as ExtendedArea).process?.length ?? 0
+      ? ((data as ExtendedArea).process?.length ?? 0)
       : 0;
 
   return (
@@ -40,8 +40,6 @@ export function AreaActions({
       )}
       {isAreaOrSubarea && (
         <>
-
-
           <IGRPButton
             onClick={(e) => {
               e.stopPropagation();

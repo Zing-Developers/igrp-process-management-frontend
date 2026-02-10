@@ -8,7 +8,6 @@ interface NodeIconProps {
 }
 
 export function NodeIcon({ node, isExpanded }: NodeIconProps) {
-
   const { hasChildren } = node;
 
   switch (node.type) {
@@ -29,14 +28,15 @@ export function NodeIcon({ node, isExpanded }: NodeIconProps) {
             size={18}
             className={cn(`text-primary`)}
           ></IGRPIcon>
-        )) : (
+        )
+      ) : (
         <IGRPIcon
           name={`icon1`}
           iconName={"FolderTree"}
           size={18}
           className={cn(`text-muted-foreground`)}
         ></IGRPIcon>
-      )
+      );
 
     case "process":
       return (

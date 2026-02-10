@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -248,38 +248,56 @@ export function useProcessConfig({
   };
 
   // --- userTasks ---
-  const editedTasksPatch = useRef<Record<string, CreateProcessArtifactRequest>>(
-    {},
-  );
+  const [editedTasksPatch, setEditedTasksPatch] = useState<
+    Record<string, CreateProcessArtifactRequest>
+  >({});
 
   const { data: artifactsData, isLoading: loadingUserTasks } = useQuery({
     queryKey: ["process-artifacts", id],
-    queryFn: () => getProcessDeployedArtifacts(id!),
+    queryFn: () => getProcessArtifacts(id!),
     enabled: !!id,
   });
 
   const toCandidateGroupsString = (val: unknown): string =>
     Array.isArray(val)
       ? val
-          .map((s) => String(s).trim())
-          .filter(Boolean)
-          .join(",")
+        .map((s) => String(s).trim())
+        .filter(Boolean)
+        .join(",")
       : String(val ?? "");
 
   const userTasksList: any = (artifactsData ?? []).map(
     (artifact: ProcessArtifact, index: number) => {
-      const raw = toCandidateGroupsString(artifact.candidateGroups);
+      const patched = editedTasksPatch[artifact.key];
+      const source = patched
+        ? {
+            ...artifact,
+            name: patched.name ?? artifact.name,
+            dueDate: patched.dueDate ?? artifact.dueDate,
+            priority: patched.priority ?? artifact.priority,
+            candidateGroups: patched.candidateGroups ?? artifact.candidateGroups,
+          }
+        : artifact;
+
+      const raw = toCandidateGroupsString(source.candidateGroups);
       const groupsArray = raw
         ? raw
-            .split(",")
-            .map((s) => s.trim())
-            .filter(Boolean)
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
         : [];
+
+      const defaultPriorityDesc = source.priority
+        ? PRIORITY_OPTIONS.find(
+            (o) => o.value.toString() === source.priority.toString(),
+          )?.label
+        : "";
+
       return {
-        ...artifact,
+        ...source,
         index,
-        defaultPriority: artifact.priority ?? "",
-        defaultDueDate: artifact.dueDate ?? "-",
+        defaultPriority: defaultPriorityDesc,
+        defaultDueDate: source.dueDate ?? "-",
         candidateGroups: getCandidateGroupsTemplate(groupsArray),
         candidateGroupsRaw: raw,
       };
@@ -287,7 +305,7 @@ export function useProcessConfig({
   );
 
   const loadUserTasksConfig = () => {
-    editedTasksPatch.current = {};
+    setEditedTasksPatch({});
     queryClient.invalidateQueries({ queryKey: ["process-artifacts", id] });
   };
 
@@ -295,7 +313,7 @@ export function useProcessConfig({
     taskKey: string,
     request: CreateProcessArtifactRequest,
   ) => {
-    editedTasksPatch.current[taskKey] = request;
+    setEditedTasksPatch((prev) => ({ ...prev, [taskKey]: request }));
   };
 
   const getSaveUserTaskData = (
@@ -305,20 +323,20 @@ export function useProcessConfig({
 
   const getSaveAllUserTasksData = () =>
     userTasksList.map((task: any) => {
-      const patched = editedTasksPatch.current[task.key];
+      const patched = editedTasksPatch[task.key];
       const req: CreateProcessArtifactRequest = patched
         ? {
-            ...patched,
-            candidateGroups: toCandidateGroupsString(patched.candidateGroups),
-          }
+          ...patched,
+          candidateGroups: toCandidateGroupsString(patched.candidateGroups),
+        }
         : {
-            key: task.key,
-            formKey: task.formKey ?? "",
-            name: task.name ?? "",
-            dueDate: task.dueDate ?? "",
-            priority: task.priority ?? "",
-            candidateGroups: task.candidateGroupsRaw ?? "",
-          };
+          key: task.key,
+          formKey: task.formKey ?? "",
+          name: task.name ?? "",
+          dueDate: task.dueDate ?? "",
+          priority: task.priority ?? "",
+          candidateGroups: task.candidateGroupsRaw ?? "",
+        };
       return { processDefinitionId: id!, request: req };
     });
 

@@ -157,8 +157,7 @@ export function useProcessOperations(
     try {
       await removeProcessFromArea(areaId, processDefinitionId);
 
-      // Reload area processes for this area
-      refreshData();
+      await refreshData();
       igrpToast({
         type: "success",
         title: "Sucesso",
@@ -182,8 +181,7 @@ export function useProcessOperations(
     try {
       await associateProcessToArea(areaId, processData as ProcessData);
 
-      // Reload area processes for this area
-      refreshData();
+      await refreshData();
     } catch (error) {
       console.error("Error associating process:", error);
       throw error;

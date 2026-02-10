@@ -24,7 +24,7 @@ export function useAreaHandlers(
     areaId: string,
     processDefinitionId: string,
   ) => Promise<void>,
-  refreshData: () => void,
+  refreshData: () => void | Promise<void>,
 ) {
   const { igrpToast } = useIGRPToast();
 
@@ -34,14 +34,13 @@ export function useAreaHandlers(
     try {
       const newArea = await createArea(formData as CreateAreaRequest);
 
-      (formData.processes || []).forEach(async (process) => {
+      for (const process of formData.processes || []) {
         await handleAssociateProcess(newArea.id, {
           ...process,
           releaseId: process.releaseId ?? process.id,
         });
-      });
+      }
 
-      // Add the new area to the flat list and reorganize
       refreshData();
 
       igrpToast({
@@ -64,12 +63,12 @@ export function useAreaHandlers(
         formData as UpdateAreaRequest,
       );
 
-      (formData.processes || []).forEach(async (process) => {
+      for (const process of formData.processes || []) {
         await handleAssociateProcess(areaId, {
           ...process,
           releaseId: process.releaseId ?? process.id,
         });
-      });
+      }
 
       refreshData();
 
@@ -110,7 +109,7 @@ export function useAreaHandlers(
   const loadSubareas = async (parentAreaId: string) => {
     try {
       await getSubareas(parentAreaId);
-      refreshData();
+      await refreshData();
     } catch (error) {
       console.error("Error loading subareas:", error);
     }

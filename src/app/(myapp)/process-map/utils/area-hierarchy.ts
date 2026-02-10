@@ -40,19 +40,7 @@ export const getAllAreasFlat = (hierarchicalAreas: ExtendedArea[]): Area[] => {
   const addAreasRecursively = (areas: ExtendedArea[]) => {
     areas.forEach((area) => {
       flatAreas.push({
-        id: area.id,
-        code: area.code,
-        name: area.name,
-        description: area.description,
-        applicationBase: area.applicationBase,
-        areaId: area.areaId, // Use area_id instead of area_fk
-        process: area.process,
-        createdAt: area.createdAt,
-        updatedAt: area.updatedAt,
-        createdBy: area.createdBy,
-        updatedBy: area.updatedBy,
-        status: area.status,
-        statusDesc: area.statusDesc,
+        ...area,
       });
 
       if (area.subareas && area.subareas.length > 0) {

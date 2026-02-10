@@ -22,8 +22,8 @@ async function fetchAreaWithSubareas(
     ...area,
     process: area.process
       ? keepLatestByKey(
-          area.process?.filter((process) => process.status === "ACTIVE"),
-        )
+        area.process?.filter((process) => process.status === "ACTIVE"),
+      )
       : undefined,
     subareas: [],
   };
@@ -61,6 +61,7 @@ export function useProcessMapData() {
     queryKey: PROCESS_MAP_AREAS_QUERY_KEY,
     queryFn: fetchProcessMapAreas,
     staleTime: 60_000,
+    retryDelay: 1000,
   });
 
   const error =
@@ -83,7 +84,7 @@ export function useProcessMapData() {
   }, [queryData]);
 
   const refreshData = useCallback(() => {
-    queryClient.invalidateQueries({ queryKey: PROCESS_MAP_AREAS_QUERY_KEY });
+    queryClient.refetchQueries({ queryKey: PROCESS_MAP_AREAS_QUERY_KEY });
   }, [queryClient]);
 
   const loadSubareas = useCallback(async (_parentAreaId: string) => {

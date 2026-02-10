@@ -17,18 +17,16 @@ export function ExpandButton({
   }
 
   return (
-    <div className="w-6 h-6 flex items-center justify-center">
-      <IGRPButton
-        onClick={(e) => {
-          e.stopPropagation();
-          onToggle();
-        }}
-        variant="ghost"
-        size="icon"
-        iconName={isExpanded ? "ChevronDown" : "ChevronRight"}
-        className="p-1 hover:bg-muted rounded w-6 h-6"
-        iconClassName="w-4 h-4 text-muted-foreground"
-      />
-    </div>
+    <IGRPButton
+      onClick={(e) => {
+        e.stopPropagation();
+        onToggle();
+      }}
+      variant="ghost"
+      size="icon"
+      iconName={isExpanded ? "ChevronDown" : "ChevronRight"}
+      className="p-1 hover:bg-muted rounded w-6 h-6"
+      iconClassName="w-4 h-4 text-muted-foreground"
+    />
   );
 }

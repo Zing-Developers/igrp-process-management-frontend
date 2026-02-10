@@ -26,27 +26,32 @@ export function TreeNode({
   onAddSubarea,
   onRemoveProcess,
 }: TreeNodeProps) {
-  const isExpanded = expandedNodes.has(node.id);
-  const hasChildren = node.children && node.children.length > 0;
+  const { level = 0, id, type, color, children } = node
+  const isExpanded = expandedNodes.has(id);
+  const hasChildren = children && children.length > 0;
 
   const handleToggle = () => {
-    if (hasChildren || node.type === "area") {
-      onToggle(node.id);
+    if (hasChildren || type === "area") {
+      onToggle(id);
     }
   };
 
   return (
     <div className="w-full">
       <div
-        className="flex items-center space-x-2 p-3 hover:bg-muted rounded-lg cursor-pointer group"
-        style={{ paddingLeft: `${node.level ?? 0 * 20 + 8}px` }}
+        className="flex items-center gap-2 px-3 py-2 hover:bg-muted rounded-md cursor-pointer group"
+        style={{ paddingLeft: `${level * 1.5 + 0.75}rem` }}
         onClick={handleToggle}
       >
         <ExpandButton
           isExpanded={isExpanded}
-          hasChildren={hasChildren || node.type === "area"}
+          hasChildren={hasChildren || type === "area"}
           onToggle={handleToggle}
         />
+
+        {!hasChildren && <div className="w-5" />}
+
+        {color && <div className="h-4 w-5 rounded" style={{ backgroundColor: color }} />}
 
         <NodeIcon node={node} isExpanded={isExpanded} />
 
@@ -61,7 +66,7 @@ export function TreeNode({
 
       {isExpanded && hasChildren && (
         <div className="ml-4">
-          {node.children?.map((child) => (
+          {children?.map((child) => (
             <TreeNode
               key={child.id}
               node={child}

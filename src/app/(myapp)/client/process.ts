@@ -207,6 +207,8 @@ export const createAndStartProcess = async (
     priority: priority,
   };
 
+  console.log("body", body);
+
   const processManagementClient = await getIGRPProcessClient();
   const response =
     await processManagementClient.processes.createAndStartProcess(body);

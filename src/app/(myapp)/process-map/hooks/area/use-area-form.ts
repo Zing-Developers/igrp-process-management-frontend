@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { AreaFormData, AreaModalState, ExtendedArea } from "../../types";
-import { Process } from "@igrp/platform-process-management-types";
 
 export function useAreaForm() {
   const [modalState, setModalState] = useState<AreaModalState>({
@@ -21,14 +20,6 @@ export function useAreaForm() {
     if (area) {
       const processes = area.process
         ?.filter((process) => process.status === "ACTIVE")
-        .map((process) => ({
-          ...process,
-          processKey: process.processKey,
-          name: process.name,
-          releaseId: process.id,
-          version: process.version.toString(),
-          key: process.processKey,
-        }));
 
       setModalState({
         isOpen: true,

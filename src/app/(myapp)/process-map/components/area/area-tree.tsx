@@ -30,7 +30,7 @@ export function AreaTree({
       <InfoCard
         iconName="FileText"
         title="Nenhuma área encontrada"
-        description="Nenhuma área foi configurada."
+        description="Nenhuma área definida. Clique em 'Adicionar Área' para criar uma."
       />
     );
   }

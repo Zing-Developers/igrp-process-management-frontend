@@ -18,6 +18,8 @@ function AddChecklistItem({
   availableItems?: any;
   items?: any;
 }) {
+
+
   const isItemChecked = (group: { key?: string }) =>
     (items || []).some((item: any) => item?.key === group?.key);
 
@@ -39,7 +41,7 @@ function AddChecklistItem({
                   <div>
                     <p className="font-medium">{group.name}</p>
                     <p className="text-xs text-muted-foreground font-mono">
-                      {group.key}
+                      {group.processKey}
                     </p>
                   </div>
                 </IGRPLabelPrimitive>

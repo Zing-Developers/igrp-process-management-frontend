@@ -13,8 +13,8 @@ import {
   useIGRPToast,
 } from "@igrp/igrp-framework-react-design-system";
 import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
-import { FilterData } from "@/app/(myapp)/components/filter-data";
 import { DateRange } from "@igrp/igrp-framework-react-design-system";
+import { FilterData } from "@/app/(myapp)/components/filter-data";
 import {
   IGRPInputSearch,
   IGRPCombobox,
@@ -50,14 +50,25 @@ export default function Taskprocessfilter({
   const [selectProcesstypeOptions, setSelectProcesstypeOptions] = useState<
     IGRPOptionsProps[]
   >([]);
-  const [selectOrganicOptions, setSelectOrganicOptions] = useState<
-    IGRPOptionsProps[]
-  >([]);
-  const [selectUserOptions, setSelectUserOptions] = useState<
-    IGRPOptionsProps[]
-  >([]);
 
   const { igrpToast } = useIGRPToast();
+
+  function getDateRange(): any | undefined {
+    //convert dateFrom and dateTo to date format dd-MM-yyyy and return the date range
+
+    const { dateFrom, dateTo } = filters;
+
+    if (!dateFrom || !dateTo) {
+      return undefined;
+    }
+
+    const [year, month, day] = dateFrom?.split("-") || [];
+    const dateFromFormatted = `${day}/${month}/${year}`;
+    const [yearTo, monthTo, dayTo] = dateTo?.split("-") || [];
+    const dateToFormatted = `${dayTo}/${monthTo}/${yearTo}`;
+
+    return { from: new Date(dateFromFormatted), to: new Date(dateToFormatted) };
+  }
 
   //---------------------Reserved Area begin-----------------------------------
   const [showFilter, setShowFilter] = useState<boolean>(false);
@@ -74,13 +85,16 @@ export default function Taskprocessfilter({
     handleProcessNumberChange,
     handleDateChange,
     handleFiltersChange,
+    resetFilters,
   } = useProcessTasksFilter(
     setSelectAreaOptions,
     setSelectSubareaOptions,
     setSelectProcesstypeOptions,
     setSelectStatusOptions,
-    setSelectOrganicOptions,
-    setSelectUserOptions,
+    //setSelectOrganicOptions,
+    //setSelectUserOptions,
+    () => {},
+    () => {},
     onFiltersChange,
     isProcess,
   );
@@ -90,14 +104,9 @@ export default function Taskprocessfilter({
     onSearch(searchTerm);
   };
 
-  // Handle filter application
-  const handleApplyFilters = () => {
-    onApplyFilters(filters);
-  };
-
   // Handle filter reset
   const handleResetFilters = () => {
-    onResetFilters();
+    resetFilters();
     setSearchTerm("");
   };
 
@@ -125,32 +134,37 @@ export default function Taskprocessfilter({
           onSearch={handleSearchSubmit}
           value={searchTerm}
         ></IGRPInputSearch>
-        <IGRPCombobox
-          id={`Status`}
-          label={undefined}
-          variant={`single`}
-          placeholder={`Selecione um estado...`}
-          selectLabel={`No option found`}
-          showSearch={true}
-          showIcon={false}
-          iconName={`CornerDownRight`}
-          className={cn()}
-          onChange={(selected) =>
-            handleStatusChange(Array.isArray(selected) ? selected[0] : selected)
-          }
-          options={selectStatusOptions}
-          value={filters.status}
-        ></IGRPCombobox>
-        <FilterData
-          onChange={(filters) => handleFiltersChange(filters)}
-        ></FilterData>
-        <IGRPDatePickerRange
-          placeholder={`Selecione uma data`}
-          id={`datePickerRange1`}
-          dateFormat={`dd/MM/yyyy`}
-          onDateChange={(date) => handleDateChange(date ?? null)}
-          className={cn()}
-        />
+        <div className={cn("grid", "grid-cols-3 ", " gap-4")}>
+          <IGRPCombobox
+            id={`Status`}
+            label={undefined}
+            variant={`single`}
+            placeholder={`Selecione um estado...`}
+            selectLabel={`No option found`}
+            showSearch={true}
+            showIcon={false}
+            iconName={`CornerDownRight`}
+            className={cn("col-span-1")}
+            onChange={(selected) =>
+              handleStatusChange(
+                Array.isArray(selected) ? selected[0] : selected,
+              )
+            }
+            options={selectStatusOptions}
+            value={filters.status}
+          ></IGRPCombobox>
+          <IGRPDatePickerRange
+            placeholder={`Selecione uma data`}
+            id={`datePickerRange1`}
+            dateFormat={`dd/MM/yyyy`}
+            onDateChange={(date) => handleDateChange(date ?? null)}
+            date={getDateRange()}
+            className={cn("col-span-1")}
+          />
+          <FilterData
+            onChange={(filters) => handleFiltersChange(filters)}
+          ></FilterData>
+        </div>
         <IGRPButton
           id={`button3`}
           variant={`outline`}
@@ -245,36 +259,6 @@ export default function Taskprocessfilter({
             options={selectProcesstypeOptions}
             value={filters.processType}
             disabled={!filters.areaId && !filters.subareaId}
-          ></IGRPCombobox>
-          <IGRPCombobox
-            id={`Organic`}
-            label={`Departamento`}
-            variant={`single`}
-            placeholder={`Selecione uma departamento...`}
-            selectLabel={`No option found`}
-            showSearch={true}
-            showIcon={false}
-            iconName={`CornerDownRight`}
-            className={cn("col-span-1")}
-            onChange={handleOrganicChange}
-            options={selectOrganicOptions}
-            value={filters.organic}
-          ></IGRPCombobox>
-          <IGRPCombobox
-            id={`User`}
-            label={`Utilizador`}
-            variant={`single`}
-            placeholder={`Selecione um utilizador...`}
-            selectLabel={`No option found`}
-            showSearch={true}
-            showIcon={false}
-            iconName={`CornerDownRight`}
-            className={cn("col-span-1")}
-            onChange={(selected) =>
-              handleUserChange(Array.isArray(selected) ? selected[0] : selected)
-            }
-            options={selectUserOptions}
-            value={filters.user}
           ></IGRPCombobox>
         </div>
       )}

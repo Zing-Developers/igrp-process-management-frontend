@@ -22,7 +22,7 @@ import {
 	IGRPDataTableRowAction,
 	IGRPDataTableButtonLink 
 } from "@igrp/igrp-framework-react-design-system";
-import {useMyTasks} from '@/app/(myapp)/mytasks/hooks/use-my-tasks'
+import {useMyTasks} from '@/app/(myapp)/my-tasks/hooks/use-my-tasks'
 import { useRouter } from 'next/navigation'
 import { urlConfig } from '@/app/(myapp)/utils/url-config'
 import {useDashboard} from '@/app/(myapp)/dashboard/hooks/use-dashboard'

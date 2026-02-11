@@ -21,7 +21,7 @@ import {
 	IGRPDataTableRowAction,
 	IGRPDataTableButtonLink 
 } from "@igrp/igrp-framework-react-design-system";
-import {useAvailableTasks} from '@/app/(myapp)/availabletasks/hooks/use-available-tasks'
+import {useAvailableTasks} from '@/app/(myapp)/available-tasks/hooks/use-available-tasks'
 import {useDashboard} from '@/app/(myapp)/dashboard/hooks/use-dashboard'
 import {getPriorityColor} from '@/app/(myapp)/utils/status-badge'
 import {getTaskStatusColor} from '@/app/(myapp)/utils/status-badge'
@@ -154,9 +154,10 @@ onFiltersChange={ handleApplyFilters } ></TaskProcessFilter></div>
 <FilterActives  filters={ filters }  onFiltersChange={ handleApplyFilters } ></FilterActives>
 { !loading && (<IGRPDataTable<Table1, Table1>
   id={ `tasks` }
-  showFilter={ true }
   showPagination={ true }
+  isNumericPagination={ true }
   paginationClassName={ `px-3 pb-3` }
+  pageSizePagination={ [] }
   className={ cn('','border-0 border-solid border-[#000000]',) }
   columns={
     [

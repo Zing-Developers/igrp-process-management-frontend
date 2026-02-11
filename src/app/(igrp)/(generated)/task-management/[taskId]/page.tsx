@@ -8,7 +8,7 @@
 
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
-import {TaskInformation} from '@/app/(myapp)/taskmanagement/components/task-information'
+import {TaskInformation} from '@/app/(myapp)/task-management/components/task-information'
 import {Empty} from '@/app/(myapp)/components/empty'
 import {VariablesView} from '@/app/(myapp)/components/variables-view'
 import {TaskInstanceEventsView} from '@/app/(myapp)/components/task-instance-events-view'
@@ -23,7 +23,7 @@ import {
 	IGRPButton,
 	IGRPSeparator 
 } from "@igrp/igrp-framework-react-design-system";
-import {useTaskDetails} from '@/app/(myapp)/taskmanagement/hooks/use-task-details'
+import {useTaskDetails} from '@/app/(myapp)/task-management/hooks/use-task-details'
 
 
 export default function PageDetalhedatarefaComponent({ params } : { params: Promise<{ taskId: string }> } ) {

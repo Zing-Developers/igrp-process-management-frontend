@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getAreas } from "../../../external/client/services/area";
-import { getAreaProcesses } from "../../../external/client/services/area-process";
-import { getProcessInstancesStatus } from "../../../external/client/services/process-instances";
+import { getAreas } from "../../../client/area";
+import { getAreaProcesses } from "../../../client/area-process";
+import { getProcessInstancesStatus } from "../../../client/process-instances";
 import { VariableFilter } from "../../filter-data";
-import { getTaskStatus } from "@/app/(myapp)/external/client/services/task";
+import { getTaskStatus } from "@/app/(myapp)/client/task";
 
 export interface DropdownOption {
   label: string;
@@ -39,7 +39,7 @@ export function useDropdownData(filters: FilterState, isProcess?: boolean) {
   const { data: areasData } = useQuery({
     queryKey: ["areas"],
     queryFn: async () => {
-      const areasResponse = await getAreas("", 0, 100);
+      const areasResponse = await getAreas({});
       return areasResponse.content.map((area) => ({
         label: area.name,
         value: area.id,
@@ -57,7 +57,7 @@ export function useDropdownData(filters: FilterState, isProcess?: boolean) {
     queryKey: ["subareas", filters.areaId],
     queryFn: async () => {
       if (!filters.areaId) return [];
-      const subareasResponse = await getAreas("", 0, 100, filters.areaId);
+      const subareasResponse = await getAreas({ parentId: filters.areaId });
       return subareasResponse.content.map((subarea) => ({
         label: subarea.name,
         value: subarea.id,

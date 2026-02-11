@@ -22,7 +22,7 @@ import {
 	IGRPDataTableRowAction,
 	IGRPDataTableButtonLink 
 } from "@igrp/igrp-framework-react-design-system";
-import { useTaskManagement } from '@/app/(myapp)/taskmanagement/hooks/use-task-management'
+import { useTaskManagement } from '@/app/(myapp)/task-management/hooks/use-task-management'
 import { useRouter } from 'next/navigation'
 import { urlConfig } from '@/app/(myapp)/utils/url-config'
 import {useDashboard} from '@/app/(myapp)/dashboard/hooks/use-dashboard'
@@ -77,12 +77,7 @@ const {
   tableData,
   loading,
   error,
-  totalElements,
-  totalPages,
-  currentPage,
   handleSearch,
-  handlePageChange,
-  applyFilters,
   resetFilters,
   updateFilters,
   handleOpenAssignModal,
@@ -93,14 +88,14 @@ const {
 
 // Transform data for the table
 useEffect(() => {
-  if (stats) {
+  if (stats && !statsLoading) {
     setStatstatsCard1Value(stats.tasks.totalTasks);
     setStatstatsCard5Value(stats.tasks.totalTasksAvailable);
     setStatstatsCard2Value(stats.tasks.totalTasksAssigned);
     setStatstatsCard3Value(stats.tasks.totalTasksCancelled);
     setStatstatsCard4Value(stats.tasks.totalTasksCompleted);
   }
-}, [stats]);
+}, [stats, statsLoading]);
 
 const handleSearchSubmit = (searchTerm: string) => {
   handleSearch(searchTerm);

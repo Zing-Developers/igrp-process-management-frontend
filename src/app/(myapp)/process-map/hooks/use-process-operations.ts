@@ -1,0 +1,201 @@
+import { useState, useCallback } from "react";
+import {
+  claimTask,
+  getTasksByProcessInstance,
+} from "@/app/(myapp)/client/task";
+import {
+  Process,
+  ProcessData,
+  ProcessInstance,
+} from "@igrp/platform-process-management-types";
+import { urlConfig } from "../../utils/url-config";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
+import {
+  createAndStartProcess,
+  getProcesses,
+} from "@/app/(myapp)/client/process";
+import {
+  associateProcessToArea,
+  removeProcessFromArea,
+} from "../../client/area-process";
+import { useQuery } from "@tanstack/react-query";
+
+export function useProcessOperations(
+  refreshData: () => void,
+  router?: AppRouterInstance,
+) {
+  const [selectedProcess, setSelectedProcess] = useState<Process | undefined>();
+  const [pendingProcessStart, setPendingProcessStart] = useState<{
+    processDefinitionId: string;
+    processKey: string;
+    applicationBase: string;
+    businessKey?: string;
+    variables?: Array<{ name: string; value: string }>;
+  } | null>(null);
+
+  const { igrpToast } = useIGRPToast();
+
+  const selectProcess = useCallback((process: Process) => {
+    setSelectedProcess(process);
+  }, []);
+
+  const { data, isLoading: loading } = useQuery({
+    queryKey: ["all-processes"],
+    queryFn: async () => {
+      const response = await getProcesses();
+      const sortedContent = [...(response.content ?? [])].sort((a, b) =>
+        (a.name ?? "").localeCompare(b.name ?? "", undefined, {
+          sensitivity: "base",
+        }),
+      );
+      return { ...response, content: sortedContent };
+    },
+  });
+
+  // Store process start parameters for later execution with priority
+  const prepareProcessStart = useCallback(
+    (
+      processDefinitionId: string,
+      processKey: string,
+      applicationBase: string,
+      businessKey?: string,
+      variables?: Array<{ name: string; value: string }>,
+    ) => {
+      setPendingProcessStart({
+        processDefinitionId,
+        processKey,
+        applicationBase,
+        businessKey,
+        variables,
+      });
+    },
+    [],
+  );
+
+  const startProcessWithPriority = useCallback(
+    async (priority: number): Promise<ProcessInstance | null> => {
+      if (!pendingProcessStart) {
+        console.error("No pending process start found");
+        return null;
+      }
+
+      try {
+        const instance = await createAndStartProcess(
+          pendingProcessStart.processDefinitionId,
+          pendingProcessStart.processKey,
+          pendingProcessStart.applicationBase,
+          priority, // Add priority parameter
+          pendingProcessStart.businessKey,
+          pendingProcessStart.variables,
+        );
+
+        // Clear pending process start
+        setPendingProcessStart(null);
+
+        igrpToast({
+          type: "success",
+          title: "Processo Iniciado",
+          description: pendingProcessStart.processKey
+            ? `O processo ${pendingProcessStart.processKey} foi iniciado com sucesso.`
+            : "O processo foi iniciado com sucesso.",
+        });
+
+        // Redirect to process instance URL if router is available
+        if (router && instance) {
+          try {
+            // Fetch tasks for the process instance to get task execution info
+            const tasksResponse = await getTasksByProcessInstance(instance.id);
+            // Check if there are active tasks available
+            if (tasksResponse.content && tasksResponse.content.length > 0) {
+              const firstTask = tasksResponse.content[0];
+
+              // Claim the task before redirecting
+              await claimTask(firstTask.id); // You may want to get the actual user from context/session
+
+              // Build task execution URL using the first available task
+              const taskUrl = await urlConfig.buildTaskExecutionUrl(
+                instance.procReleaseKey,
+                firstTask.processInstanceId,
+                firstTask.taskKey,
+                firstTask.id,
+                firstTask.applicationBase ?? "",
+              );
+              router.push(taskUrl);
+            }
+          } catch (taskError) {
+            console.warn(
+              "Error fetching tasks for process instance:",
+              taskError,
+            );
+          }
+        }
+
+        return instance;
+      } catch (err) {
+        console.error("Error starting process:", err);
+
+        // Clear pending process start on error
+        setPendingProcessStart(null);
+
+        igrpToast({
+          type: "error",
+          title: "Erro ao Iniciar Processo",
+          description: "Ocorreu um erro ao tentar iniciar o processo.",
+        });
+
+        return null;
+      }
+    },
+    [pendingProcessStart],
+  );
+
+  const handleRemoveProcess = async (
+    areaId: string,
+    processDefinitionId: string,
+  ) => {
+    try {
+      await removeProcessFromArea(areaId, processDefinitionId);
+
+      await refreshData();
+      igrpToast({
+        type: "success",
+        title: "Sucesso",
+        description: "Processo removido com sucesso!",
+      });
+    } catch (error) {
+      console.error("Error removing process:", error);
+      igrpToast({
+        type: "error",
+        title: "Erro",
+        description: "Erro ao remover processo. Tente novamente.",
+      });
+      throw error;
+    }
+  };
+
+  const handleAssociateProcess = async (
+    areaId: string,
+    processData: Process,
+  ) => {
+    try {
+      await associateProcessToArea(areaId, processData as ProcessData);
+
+      await refreshData();
+    } catch (error) {
+      console.error("Error associating process:", error);
+      throw error;
+    }
+  };
+
+  return {
+    selectedProcess,
+    selectProcess,
+    prepareProcessStart,
+    startProcessWithPriority,
+    pendingProcessStart,
+    handleRemoveProcess,
+    handleAssociateProcess,
+    allProcesses: data,
+  };
+}

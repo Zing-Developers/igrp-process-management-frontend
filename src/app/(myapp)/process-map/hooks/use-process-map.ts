@@ -1,0 +1,185 @@
+import { useCallback, useMemo } from "react";
+import { ProcessMapHookReturn } from "../types";
+import { useProcessMapData } from "./use-process-map-data";
+import { useTreeExpansion } from "./use-tree-expansion";
+import { usePriorityModal } from "./use-priority-modal";
+import { useTreeSearch } from "./use-tree-search";
+import { useTreeComputed } from "./use-tree-computed";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { Area, Process } from "@igrp/platform-process-management-types";
+import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
+import { useAccessManagement } from "../../access-management/hooks";
+import { useAreaHandlers } from "./area/use-area-handlers";
+import { useProcessOperations } from "./use-process-operations";
+import { getAllAreasFlat } from "../utils/area-hierarchy";
+
+export function useProcessMap(
+  router?: AppRouterInstance,
+): ProcessMapHookReturn {
+  // Data management
+  const { areas, loadedNodes, loading, error, loadSubareas, refreshData } =
+    useProcessMapData();
+
+  // Tree expansion state
+  const { expandedNodes, toggleNode: originalToggleNode } = useTreeExpansion();
+
+  // Process operations (now with priority workflow)
+  const {
+    selectedProcess,
+    selectProcess,
+    prepareProcessStart,
+    startProcessWithPriority,
+    handleRemoveProcess,
+    handleAssociateProcess,
+    allProcesses,
+  } = useProcessOperations(refreshData, router);
+
+  const { igrpToast } = useIGRPToast();
+
+  // Modal management
+  const { priorityModal } = usePriorityModal();
+
+  // Computed tree values
+  const { treeNodes, flatNodes, totalProcesses, totalAreas } = useTreeComputed(
+    areas,
+    expandedNodes,
+  );
+
+  // Search functionality
+  const { searchTerm, setSearchTerm, filteredNodes, clearSearch } =
+    useTreeSearch(treeNodes);
+
+  // Enhanced toggle node that also loads subareas when expanding
+  const toggleNode = useCallback(
+    async (nodeId: string) => {
+      const isCurrentlyExpanded = expandedNodes.has(nodeId);
+
+      // Toggle the expansion state
+      originalToggleNode(nodeId);
+
+      // If we're expanding (not collapsing) and haven't loaded subareas yet, load them
+      if (!isCurrentlyExpanded && !loadedNodes.has(nodeId)) {
+        try {
+          await loadSubareas(nodeId);
+        } catch (error) {
+          console.error("Failed to load subareas:", error);
+          igrpToast({
+            type: "error",
+            title: "Erro",
+            description: "Erro ao carregar subáreas. Tente novamente.",
+          });
+        }
+      }
+    },
+    [expandedNodes, originalToggleNode, loadedNodes, loadSubareas, igrpToast],
+  );
+
+  // New startProcess function that opens priority modal first
+  const startProcess = useCallback(
+    (
+      process: Process,
+      processDefinitionId: string,
+      processKey: string,
+      applicationBase: string,
+      businessKey?: string,
+      variables?: Array<{ name: string; value: string }>,
+    ) => {
+      // Prepare the process start parameters
+      prepareProcessStart(
+        processDefinitionId,
+        processKey,
+        applicationBase,
+        businessKey,
+        variables,
+      );
+
+      // Open priority modal
+      priorityModal.open(process);
+    },
+    [prepareProcessStart, priorityModal],
+  );
+
+  // Handle priority modal save
+  const handlePrioritySave = useCallback(
+    async (data: { priority: string }) => {
+      const priority = parseInt(data.priority, 10);
+      if (!isNaN(priority)) {
+        await startProcessWithPriority(priority);
+        priorityModal.close();
+      } else {
+        igrpToast({
+          type: "error",
+          title: "Erro",
+          description: "Por favor, selecione uma prioridade válida.",
+        });
+      }
+    },
+    [startProcessWithPriority, priorityModal, igrpToast],
+  );
+
+  const { applicationsOptions } = useAccessManagement();
+
+  const flatAreas = getAllAreasFlat(areas);
+
+  const mapOptions = useMemo(() => {
+    return flatAreas.map((area: Area) => ({
+      label: area.name,
+      value: area.id,
+    }));
+  }, [flatAreas]);
+
+  // Area management - pass setAreaProcesses
+  const areaHandlers = useAreaHandlers(
+    areas,
+    handleAssociateProcess,
+    handleRemoveProcess,
+    refreshData,
+  );
+
+  return {
+    allProcesses,
+    // State
+    areas,
+    expandedNodes,
+    loadedNodes,
+    selectedProcess,
+    loading,
+    error,
+
+    // Computed values
+    treeNodes,
+    flatNodes,
+    filteredNodes,
+    totalProcesses,
+    totalAreas,
+
+    // Search
+    searchTerm,
+    setSearchTerm,
+    clearSearch,
+
+    // Actions
+    toggleNode,
+    loadSubareas,
+    selectProcess,
+    startProcess, // Updated to use priority workflow
+    refreshData,
+
+    // Modals
+    priorityModal: {
+      ...priorityModal,
+      onSave: handlePrioritySave,
+    },
+
+    manageAreas: {
+      areas: filteredNodes,
+      expandedNodes,
+      options: {
+        applications: applicationsOptions,
+        areas: mapOptions,
+      },
+      ...areaHandlers,
+      handleRemoveProcess,
+    },
+  };
+}

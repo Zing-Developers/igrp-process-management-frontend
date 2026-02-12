@@ -73,9 +73,7 @@ export async function refreshAccessToken(token: JWT): Promise<JWT> {
   }
 }
 
-
 export async function signOut(token: JWT) {
-
   if (token.refreshToken) {
     try {
       const url = `${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/logout`;

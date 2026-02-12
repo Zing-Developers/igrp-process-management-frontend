@@ -58,12 +58,10 @@ export function useAreaHandlers(
 
   const handleUpdateArea = async (areaId: string, formData: AreaFormData) => {
     try {
-
       const updatedArea = await updateArea(
         areaId,
         formData as UpdateAreaRequest,
       );
-
 
       for (const process of formData.processes || []) {
         await handleAssociateProcess(areaId, {

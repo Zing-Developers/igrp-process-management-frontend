@@ -23,7 +23,7 @@ export function buildProcessTree(areas: ExtendedArea[]): ExtendedArea[] {
       children: [],
       hasChildren: true, // Assume areas can have children (subareas or processes)
       isLoaded: false, // Will be set to true when children are loaded
-      applicationBase: applicationBase
+      applicationBase: applicationBase,
     };
 
     // Add processes as children (processes are always loaded with the area)

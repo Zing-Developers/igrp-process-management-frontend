@@ -26,7 +26,7 @@ export function TreeNode({
   onAddSubarea,
   onRemoveProcess,
 }: TreeNodeProps) {
-  const { level = 0, id, type, color, children } = node
+  const { level = 0, id, type, color, children } = node;
   const isExpanded = expandedNodes.has(id);
   const hasChildren = children && children.length > 0;
 
@@ -51,7 +51,9 @@ export function TreeNode({
 
         {!hasChildren && <div className="w-5" />}
 
-        {color && <div className="h-4 w-5 rounded" style={{ backgroundColor: color }} />}
+        {color && (
+          <div className="h-4 w-5 rounded" style={{ backgroundColor: color }} />
+        )}
 
         <NodeIcon node={node} isExpanded={isExpanded} />
 

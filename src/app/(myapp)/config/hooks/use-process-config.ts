@@ -5,8 +5,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   assignGroupsToProcessDefinition,
+  createProcessDefinitionPriority,
   getProcessArtifacts,
-  getProcessDeployedArtifacts,
   getProcessNumberConfigs,
   saveProcessNumberConfig,
 } from "@/app/(myapp)/client/process";
@@ -17,15 +17,16 @@ import {
   type AssignGroupsValues,
   type ProcessNumberingValues,
   type PriorityOption,
-} from "./schemas";
+} from "../schemas";
 import {
   CreateProcessArtifactRequest,
+  Priority,
   ProcessArtifact,
   ProcessDefinition,
 } from "@igrp/platform-process-management-types";
-import { getCandidateGroupsTemplate } from "../utils/columns-template";
+import { getCandidateGroupsTemplate } from "../../utils/columns-template";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { PRIORITY_OPTIONS } from "./constants";
+import { PRIORITY_OPTIONS } from "../constants";
 
 const numberingDefaultValues: ProcessNumberingValues = {
   prefix: "",
@@ -244,7 +245,27 @@ export function useProcessConfig({
   };
 
   const handleSavePriorityConfig = async (_opts?: SaveOptions) => {
-    // TODO: wire to API when endpoint exists for process priority options
+    const priorities = priorityOptions.map((o) => ({
+      code: o.value,
+      label: o.label,
+      weight: 0,
+      processDefinitionKey: processKey!,
+      color: "",
+    }));
+
+    for (const priority of priorities) {
+      const newPriority = {
+        code: priority.code,
+        label: priority.label,
+        weight: Number(priority.code) ?? 1,
+        processDefinitionKey: processKey!,
+        color: "",
+        id: "",
+      } as Priority;
+
+      console.log("newPriority", newPriority);
+      await createProcessDefinitionPriority(processKey!, newPriority);
+    }
   };
 
   // --- userTasks ---

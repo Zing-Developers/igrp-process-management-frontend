@@ -11,7 +11,7 @@ import type {
   ProcessDefinition,
 } from "@igrp/platform-process-management-types";
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
-import { useProcessConfig } from "../use-process-config";
+import { useProcessConfig } from "./use-process-config";
 
 const SAVE_SUCCESS = {
   type: "success" as const,

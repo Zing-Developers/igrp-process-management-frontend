@@ -18,8 +18,9 @@ export function useAreaForm() {
 
   const openModal = (area?: ExtendedArea, parentAreaId?: string) => {
     if (area) {
-      const processes = area.process
-        ?.filter((process) => process.status === "ACTIVE")
+      const processes = area.process?.filter(
+        (process) => process.status === "ACTIVE",
+      );
 
       setModalState({
         isOpen: true,

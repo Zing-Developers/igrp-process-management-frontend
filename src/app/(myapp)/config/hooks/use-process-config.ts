@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   assignGroupsToProcessDefinition,
+  unassignGroupsToProcessDefinition,
   createProcessDefinitionPriority,
   deleteProcessDefinitionPriority,
   getProcessArtifacts,
@@ -51,6 +52,8 @@ export function useProcessConfig({
   const { processKey, candidateGroups, id } = processSelected || {};
 
   // --- assignGroups (candidate groups) ---
+  const savedCandidateGroupsRef = useRef<string>("");
+
   const assignGroupsForm = useForm<AssignGroupsValues>({
     resolver: zodResolver(assignGroupsSchema),
     defaultValues: { groups: "" },
@@ -70,7 +73,9 @@ export function useProcessConfig({
   };
 
   const loadAssignGroupsConfig = () => {
-    assignGroupsForm.reset({ groups: candidateGroups?.trim() ?? "" });
+    const current = candidateGroups?.trim() ?? "";
+    savedCandidateGroupsRef.current = current;
+    assignGroupsForm.reset({ groups: current });
   };
 
   const { data: numberingConfigData, isError: numberingConfigError } = useQuery(
@@ -156,16 +161,6 @@ export function useProcessConfig({
     groups: string,
     opts?: SaveOptions,
   ) => {
-    if (!id) {
-      if (!opts?.silent) {
-        igrpToast({
-          type: "error",
-          title: "Erro",
-          description: "Processo não selecionado.",
-        });
-      }
-      throw new Error("Processo não selecionado.");
-    }
     const parsed = assignGroupsSchema.safeParse({ groups });
     if (!parsed.success) {
       if (!opts?.silent) {
@@ -179,7 +174,29 @@ export function useProcessConfig({
     }
 
     try {
-      await assignGroupsToProcessDefinition(id, parsed.data.groups.trim());
+      const newGroups = parsed.data.groups.trim();
+      const savedGroups = savedCandidateGroupsRef.current;
+
+      const toArray = (s: string) =>
+        s
+          ? s
+              .split(",")
+              .map((g) => g.trim())
+              .filter(Boolean)
+          : [];
+      const savedList = toArray(savedGroups);
+      const newList = toArray(newGroups);
+      const toUnassign = savedList.filter((g) => !newList.includes(g));
+
+      if (toUnassign.length > 0) {
+        await unassignGroupsToProcessDefinition(id!, toUnassign.join(", "));
+      }
+      if (newList.length > 0) {
+        await assignGroupsToProcessDefinition(id!, newGroups);
+      }
+
+      savedCandidateGroupsRef.current = newGroups;
+
       if (!opts?.silent) {
         igrpToast({
           type: "success",

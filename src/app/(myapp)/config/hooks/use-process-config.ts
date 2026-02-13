@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   assignGroupsToProcessDefinition,
   createProcessDefinitionPriority,
+  deleteProcessDefinitionPriority,
   getProcessArtifacts,
+  getProcessDefinitionPriorities,
   getProcessNumberConfigs,
   saveProcessNumberConfig,
 } from "@/app/(myapp)/client/process";
@@ -15,8 +17,7 @@ import {
   assignGroupsSchema,
   processNumberingSchema,
   type AssignGroupsValues,
-  type ProcessNumberingValues,
-  type PriorityOption,
+  type ProcessNumberingValues
 } from "../schemas";
 import {
   CreateProcessArtifactRequest,
@@ -200,72 +201,90 @@ export function useProcessConfig({
   };
 
   // --- priorityOptions ---
-  const defaultPriorityOptions: PriorityOption[] = PRIORITY_OPTIONS.map(
-    (o) => ({
-      label: o.label,
-      value: String(o.value),
-    }),
+  const fallbackPrioritys: Priority[] = PRIORITY_OPTIONS.map((o) => ({
+    label: o.label,
+    value: String(o.value),
+    code: String(o.value),
+    weight: Number(o.value) ?? 1,
+    processDefinitionKey: processKey!,
+    color: o.color,
+    id: undefined,
+  }));
+
+  const { data: prioritiesData } = useQuery({
+    queryKey: ["process-priorities", processKey],
+    queryFn: () => getProcessDefinitionPriorities(processKey ?? ""),
+    enabled: !!processKey,
+  });
+
+  const defaultPrioritys: Priority[] = useMemo(() => {
+    if (prioritiesData && prioritiesData.length > 0) {
+      return prioritiesData;
+    }
+    return fallbackPrioritys;
+  }, [prioritiesData]);
+
+  const [priorityOptions, setPrioritys] = useState<Priority[]>(
+    fallbackPrioritys,
   );
 
-  const [priorityOptions, setPriorityOptions] = useState<PriorityOption[]>(
-    defaultPriorityOptions,
-  );
+  const [deletedPriorities, setDeletedPriorities] = useState<Priority[]>([]);
+
   const [newPriorityLabel, setNewPriorityLabel] = useState("");
   const [newPriorityValue, setNewPriorityValue] = useState("");
+  const [newPriorityColor, setNewPriorityColor] = useState("");
+
+  useEffect(() => {
+    setPrioritys(defaultPrioritys);
+  }, [defaultPrioritys]);
 
   const loadPriorityConfig = () => {
-    setPriorityOptions(defaultPriorityOptions);
+    queryClient.invalidateQueries({ queryKey: ["process-priorities", processKey] });
     setNewPriorityLabel("");
     setNewPriorityValue("");
+    setNewPriorityColor("");
   };
 
-  const updatePriorityOption = (
+  const updatePriority = (
     index: number,
     field: string,
     value: string,
   ) => {
-    setPriorityOptions((prev) =>
+    setPrioritys((prev) =>
       prev.map((opt, i) =>
-        i === index ? { ...opt, [field as "label" | "value"]: value } : opt,
+        i === index ? { ...opt, [field as "label" | "value" | "color"]: value } : opt,
       ),
     );
   };
 
-  const removePriorityOption = (index: number) => {
-    setPriorityOptions((prev) => prev.filter((_, i) => i !== index));
+  const removePriority = (index: number) => {
+    //save deleted priorities to local variable if id is not undefined
+    const deletedPriority = priorityOptions.find((_, i) => i === index);
+    if (deletedPriority?.id) {
+      setDeletedPriorities((prev) => [...prev, deletedPriority]);
+    }
+    setPrioritys((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const addPriorityOption = () => {
+  const addPriority = () => {
     const label = newPriorityLabel.trim();
     const value = newPriorityValue.trim();
+    const color = newPriorityColor.trim();
     if (!label || !value) return;
-    setPriorityOptions((prev) => [...prev, { label, value }]);
+    setPrioritys((prev) => [...prev, { ...prev, label, value, code: value, weight: Number(value) ?? 1, processDefinitionKey: processKey!, color }]);
     setNewPriorityLabel("");
     setNewPriorityValue("");
+    setNewPriorityColor("");
   };
 
   const handleSavePriorityConfig = async (_opts?: SaveOptions) => {
-    const priorities = priorityOptions.map((o) => ({
-      code: o.value,
-      label: o.label,
-      weight: 0,
-      processDefinitionKey: processKey!,
-      color: "",
-    }));
-
-    for (const priority of priorities) {
-      const newPriority = {
-        code: priority.code,
-        label: priority.label,
-        weight: Number(priority.code) ?? 1,
-        processDefinitionKey: processKey!,
-        color: "",
-        id: "",
-      } as Priority;
-
-      console.log("newPriority", newPriority);
-      await createProcessDefinitionPriority(processKey!, newPriority);
-    }
+    await createProcessDefinitionPriority(processKey!, priorityOptions);
+    //call deleted priorities
+    deletedPriorities.forEach((priority) => {
+      deleteProcessDefinitionPriority(priority.id!);
+    });
+    setDeletedPriorities([]);
+    queryClient.invalidateQueries({ queryKey: ["process-priorities", processKey] });
   };
 
   // --- userTasks ---
@@ -282,9 +301,9 @@ export function useProcessConfig({
   const toCandidateGroupsString = (val: unknown): string =>
     Array.isArray(val)
       ? val
-          .map((s) => String(s).trim())
-          .filter(Boolean)
-          .join(",")
+        .map((s) => String(s).trim())
+        .filter(Boolean)
+        .join(",")
       : String(val ?? "");
 
   const userTasksList: any = (artifactsData ?? []).map(
@@ -292,27 +311,27 @@ export function useProcessConfig({
       const patched = editedTasksPatch[artifact.key];
       const source = patched
         ? {
-            ...artifact,
-            name: patched.name ?? artifact.name,
-            dueDate: patched.dueDate ?? artifact.dueDate,
-            priority: patched.priority ?? artifact.priority,
-            candidateGroups:
-              patched.candidateGroups ?? artifact.candidateGroups,
-          }
+          ...artifact,
+          name: patched.name ?? artifact.name,
+          dueDate: patched.dueDate ?? artifact.dueDate,
+          priority: patched.priority ?? artifact.priority,
+          candidateGroups:
+            patched.candidateGroups ?? artifact.candidateGroups,
+        }
         : artifact;
 
       const raw = toCandidateGroupsString(source.candidateGroups);
       const groupsArray = raw
         ? raw
-            .split(",")
-            .map((s) => s.trim())
-            .filter(Boolean)
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
         : [];
 
       const defaultPriorityDesc = source.priority
         ? PRIORITY_OPTIONS.find(
-            (o) => o.value.toString() === source.priority.toString(),
-          )?.label
+          (o) => o.value.toString() === source.priority.toString(),
+        )?.label
         : "";
 
       return {
@@ -348,17 +367,17 @@ export function useProcessConfig({
       const patched = editedTasksPatch[task.key];
       const req: CreateProcessArtifactRequest = patched
         ? {
-            ...patched,
-            candidateGroups: toCandidateGroupsString(patched.candidateGroups),
-          }
+          ...patched,
+          candidateGroups: toCandidateGroupsString(patched.candidateGroups),
+        }
         : {
-            key: task.key,
-            formKey: task.formKey ?? "",
-            name: task.name ?? "",
-            dueDate: task.dueDate ?? "",
-            priority: task.priority ?? "",
-            candidateGroups: task.candidateGroupsRaw ?? "",
-          };
+          key: task.key,
+          formKey: task.formKey ?? "",
+          name: task.name ?? "",
+          dueDate: task.dueDate ?? "",
+          priority: task.priority ?? "",
+          candidateGroups: task.candidateGroupsRaw ?? "",
+        };
       return { processDefinitionId: id!, request: req };
     });
 
@@ -379,12 +398,14 @@ export function useProcessConfig({
     priorityConfig: {
       priorityOptions,
       newPriorityLabel,
+      newPriorityColor,
       setNewPriorityLabel,
       newPriorityValue,
       setNewPriorityValue,
-      updatePriorityOption,
-      removePriorityOption,
-      addPriorityOption,
+      setNewPriorityColor,
+      updatePriority,
+      removePriority,
+      addPriority,
       loadConfig: loadPriorityConfig,
       handleSave: handleSavePriorityConfig,
     },

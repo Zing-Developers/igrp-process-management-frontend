@@ -90,7 +90,6 @@ export const updateProcessArtifact = async (
   artifact: CreateProcessArtifactRequest,
 ): Promise<ProcessArtifact> => {
   const processManagementClient = await getIGRPProcessClient();
-  console.log("artifact", artifact);
   const response =
     await processManagementClient.processes.updateProcessArtifact(
       processDefinitionId,
@@ -402,15 +401,13 @@ export const getProcessDefinitionPriorities = async (
  */
 export const createProcessDefinitionPriority = async (
   processDefinitionId: string,
-  priority: Priority,
-): Promise<Priority> => {
+  priorities: Priority[],
+): Promise<Priority[]> => {
   const processManagementClient = await getIGRPProcessClient();
-  console.log("priority", priority);
-  console.log("processDefinitionId", processDefinitionId);
   const response =
     await processManagementClient.processes.createProcessDefinitionPriority(
       processDefinitionId,
-      priority,
+      priorities,
     );
   return response.data;
 };

@@ -9,7 +9,7 @@ export const DATE_FORMAT_OPTIONS: IGRPOptionsProps[] = [
 ];
 
 export const PRIORITY_OPTIONS: IGRPOptionsProps[] = [
-  { label: "Low", value: "1" },
-  { label: "Normal", value: "2" },
-  { label: "Urgent", value: "3" },
+  { label: "Low", value: "1", color: "#2E7D32" },
+  { label: "Normal", value: "2", color: "#ED6C02" },
+  { label: "Urgent", value: "3", color: "#B91C1C" },
 ];

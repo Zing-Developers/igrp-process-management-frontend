@@ -17,7 +17,7 @@ import {
   assignGroupsSchema,
   processNumberingSchema,
   type AssignGroupsValues,
-  type ProcessNumberingValues
+  type ProcessNumberingValues,
 } from "../schemas";
 import {
   CreateProcessArtifactRequest,
@@ -224,9 +224,8 @@ export function useProcessConfig({
     return fallbackPrioritys;
   }, [prioritiesData]);
 
-  const [priorityOptions, setPrioritys] = useState<Priority[]>(
-    fallbackPrioritys,
-  );
+  const [priorityOptions, setPrioritys] =
+    useState<Priority[]>(fallbackPrioritys);
 
   const [deletedPriorities, setDeletedPriorities] = useState<Priority[]>([]);
 
@@ -239,20 +238,20 @@ export function useProcessConfig({
   }, [defaultPrioritys]);
 
   const loadPriorityConfig = () => {
-    queryClient.invalidateQueries({ queryKey: ["process-priorities", processKey] });
+    queryClient.invalidateQueries({
+      queryKey: ["process-priorities", processKey],
+    });
     setNewPriorityLabel("");
     setNewPriorityValue("");
     setNewPriorityColor("");
   };
 
-  const updatePriority = (
-    index: number,
-    field: string,
-    value: string,
-  ) => {
+  const updatePriority = (index: number, field: string, value: string) => {
     setPrioritys((prev) =>
       prev.map((opt, i) =>
-        i === index ? { ...opt, [field as "label" | "value" | "color"]: value } : opt,
+        i === index
+          ? { ...opt, [field as "label" | "value" | "color"]: value }
+          : opt,
       ),
     );
   };
@@ -271,7 +270,18 @@ export function useProcessConfig({
     const value = newPriorityValue.trim();
     const color = newPriorityColor.trim();
     if (!label || !value) return;
-    setPrioritys((prev) => [...prev, { ...prev, label, value, code: value, weight: Number(value) ?? 1, processDefinitionKey: processKey!, color }]);
+    setPrioritys((prev) => [
+      ...prev,
+      {
+        ...prev,
+        label,
+        value,
+        code: value,
+        weight: Number(value) ?? 1,
+        processDefinitionKey: processKey!,
+        color,
+      },
+    ]);
     setNewPriorityLabel("");
     setNewPriorityValue("");
     setNewPriorityColor("");
@@ -284,7 +294,9 @@ export function useProcessConfig({
       deleteProcessDefinitionPriority(priority.id!);
     });
     setDeletedPriorities([]);
-    queryClient.invalidateQueries({ queryKey: ["process-priorities", processKey] });
+    queryClient.invalidateQueries({
+      queryKey: ["process-priorities", processKey],
+    });
   };
 
   // --- userTasks ---
@@ -301,9 +313,9 @@ export function useProcessConfig({
   const toCandidateGroupsString = (val: unknown): string =>
     Array.isArray(val)
       ? val
-        .map((s) => String(s).trim())
-        .filter(Boolean)
-        .join(",")
+          .map((s) => String(s).trim())
+          .filter(Boolean)
+          .join(",")
       : String(val ?? "");
 
   const userTasksList: any = (artifactsData ?? []).map(
@@ -311,27 +323,27 @@ export function useProcessConfig({
       const patched = editedTasksPatch[artifact.key];
       const source = patched
         ? {
-          ...artifact,
-          name: patched.name ?? artifact.name,
-          dueDate: patched.dueDate ?? artifact.dueDate,
-          priority: patched.priority ?? artifact.priority,
-          candidateGroups:
-            patched.candidateGroups ?? artifact.candidateGroups,
-        }
+            ...artifact,
+            name: patched.name ?? artifact.name,
+            dueDate: patched.dueDate ?? artifact.dueDate,
+            priority: patched.priority ?? artifact.priority,
+            candidateGroups:
+              patched.candidateGroups ?? artifact.candidateGroups,
+          }
         : artifact;
 
       const raw = toCandidateGroupsString(source.candidateGroups);
       const groupsArray = raw
         ? raw
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean)
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean)
         : [];
 
       const defaultPriorityDesc = source.priority
         ? PRIORITY_OPTIONS.find(
-          (o) => o.value.toString() === source.priority.toString(),
-        )?.label
+            (o) => o.value.toString() === source.priority.toString(),
+          )?.label
         : "";
 
       return {
@@ -367,17 +379,17 @@ export function useProcessConfig({
       const patched = editedTasksPatch[task.key];
       const req: CreateProcessArtifactRequest = patched
         ? {
-          ...patched,
-          candidateGroups: toCandidateGroupsString(patched.candidateGroups),
-        }
+            ...patched,
+            candidateGroups: toCandidateGroupsString(patched.candidateGroups),
+          }
         : {
-          key: task.key,
-          formKey: task.formKey ?? "",
-          name: task.name ?? "",
-          dueDate: task.dueDate ?? "",
-          priority: task.priority ?? "",
-          candidateGroups: task.candidateGroupsRaw ?? "",
-        };
+            key: task.key,
+            formKey: task.formKey ?? "",
+            name: task.name ?? "",
+            dueDate: task.dueDate ?? "",
+            priority: task.priority ?? "",
+            candidateGroups: task.candidateGroupsRaw ?? "",
+          };
       return { processDefinitionId: id!, request: req };
     });
 

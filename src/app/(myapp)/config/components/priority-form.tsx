@@ -45,7 +45,9 @@ function PriorityForm({
               <IGRPTableHeadPrimitive className="w-32">
                 Value
               </IGRPTableHeadPrimitive>
-              <IGRPTableHeadPrimitive className="w-32">Color</IGRPTableHeadPrimitive>
+              <IGRPTableHeadPrimitive className="w-32">
+                Color
+              </IGRPTableHeadPrimitive>
               <IGRPTableHeadPrimitive className="w-16"></IGRPTableHeadPrimitive>
             </IGRPTableRowPrimitive>
           </IGRPTableHeaderPrimitive>
@@ -76,7 +78,9 @@ function PriorityForm({
                     defaultValue="#2E7D32"
                     placeholder="Color (e.g., #2E7D32)" //text-success-500 #00FF00
                     value={option.color}
-                    onChange={(value) => updatePriorityOption(index, "color", value)}
+                    onChange={(value) =>
+                      updatePriorityOption(index, "color", value)
+                    }
                     showHexValue={true}
                   />
                 </IGRPTableCellPrimitive>
@@ -121,7 +125,7 @@ function PriorityForm({
           <IGRPInputColor
             defaultValue="#2E7D32"
             placeholder="Color (e.g., #2E7D32)" //green #00FF00
-            value={newPriorityColor || '#2E7D32'}
+            value={newPriorityColor || "#2E7D32"}
             onChange={(value) => setNewPriorityColor(value)}
             className="w-32"
             showHexValue={true}

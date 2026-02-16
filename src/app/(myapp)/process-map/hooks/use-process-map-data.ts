@@ -7,6 +7,7 @@ import {
   getAllAreasFlat,
   organizeAreasHierarchy,
 } from "../utils/area-hierarchy";
+import { getProcessDefinitionPriorities } from "../../client/process";
 
 const PROCESS_MAP_AREAS_QUERY_KEY = ["process-map-areas"] as const;
 
@@ -22,8 +23,8 @@ async function fetchAreaWithSubareas(
     ...area,
     process: area.process
       ? keepLatestByKey(
-          area.process?.filter((process) => process.status === "ACTIVE"),
-        )
+        area.process?.filter((process) => process.status === "ACTIVE"),
+      )
       : undefined,
     subareas: [],
   };
@@ -91,6 +92,7 @@ export function useProcessMapData() {
     // No-op: all data is loaded upfront in fetchProcessMapAreas
   }, []);
 
+ 
   return {
     areas,
     loadedNodes,

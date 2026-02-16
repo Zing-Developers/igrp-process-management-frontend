@@ -1,3 +1,4 @@
+import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
 import { Area, Process } from "@igrp/platform-process-management-types";
 
 // Use the same structure as process configuration - no need for ProcessMapArea
@@ -42,7 +43,7 @@ export interface ProcessMapActions {
 
 export interface ProcessMapHookReturn
   extends ProcessMapState,
-    ProcessMapActions {
+  ProcessMapActions {
   // Computed values
   treeNodes: ExtendedArea[];
   flatNodes: ExtendedArea[];
@@ -68,6 +69,9 @@ export interface ProcessMapHookReturn
     setOpen: (open: boolean) => void;
     onSave: (data: { priority: string }) => Promise<void>;
   };
+
+  loadingPriorities: boolean;
+  prioritiesOptions: IGRPOptionsProps[] | undefined;
 
   manageAreas: {
     areas: ExtendedArea[];

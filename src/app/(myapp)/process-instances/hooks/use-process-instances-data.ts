@@ -12,19 +12,14 @@ export function useProcessInstancesData() {
   const { data, isLoading, error } = useQuery({
     queryKey: [
       "process-instances",
-      filters.processType,
-      filters.processNumber,
-      filters.status,
-      filters.dateFrom,
-      filters.dateTo,
-      filters.areaId,
-      filters.subareaId,
-      filters.organic,
-      filters.user,
+      filters
     ],
     queryFn: () => {
       return getProcessInstances(filters as Partial<ProcessInstancesFilters>);
     },
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    retryDelay: 1000
   });
 
   const { content, ...rest } = data ?? {};

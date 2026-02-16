@@ -40,7 +40,7 @@ export function useMyTasksData() {
       // Map filter fields to match the service interface
       const mappedFilters = {
         processNumber: filtersToUse.processNumber || "",
-        processKey: filtersToUse.processType || "",
+        processReleaseKey: filtersToUse.processType || "",
         status: filtersToUse.status || "",
         dateFrom: filtersToUse.dateFrom || "",
         dateTo: filtersToUse.dateTo || "",

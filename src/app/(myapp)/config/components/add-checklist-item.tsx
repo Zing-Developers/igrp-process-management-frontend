@@ -18,8 +18,6 @@ function AddChecklistItem({
   availableItems?: any;
   items?: any;
 }) {
-
-
   const isItemChecked = (group: { key?: string }) =>
     (items || []).some((item: any) => item?.key === group?.key);
 

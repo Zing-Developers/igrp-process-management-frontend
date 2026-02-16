@@ -13,6 +13,7 @@ import {
   ProcessSequence,
   ProcessStats,
   ProcessDefinitionSchema,
+  Priority,
 } from "@igrp/platform-process-management-types";
 
 /**
@@ -89,7 +90,6 @@ export const updateProcessArtifact = async (
   artifact: CreateProcessArtifactRequest,
 ): Promise<ProcessArtifact> => {
   const processManagementClient = await getIGRPProcessClient();
-  console.log("artifact", artifact);
   const response =
     await processManagementClient.processes.updateProcessArtifact(
       processDefinitionId,
@@ -206,8 +206,6 @@ export const createAndStartProcess = async (
     variables,
     priority: priority,
   };
-
-  console.log("body", body);
 
   const processManagementClient = await getIGRPProcessClient();
   const response =
@@ -359,6 +357,57 @@ export const unarchiveProcessDefinition = async (
   const response =
     await processManagementClient.processes.unarchiveProcessDefinition(
       processDefinitionId,
+    );
+  return response.data;
+};
+
+/**
+ * Deletes a priority for a process definition
+ * @param processDefinitionId The process definition ID
+ * @returns A promise that resolves to the deleted priority
+ */
+export const deleteProcessDefinitionPriority = async (
+  processDefinitionId: string,
+): Promise<void> => {
+  const processManagementClient = await getIGRPProcessClient();
+  const response =
+    await processManagementClient.processes.deleteProcessDefinitionPriority(
+      processDefinitionId,
+    );
+  return response.data;
+};
+
+/**
+ * Gets all priorities for a process definition
+ * @param processDefinitionId The process definition ID
+ * @returns A promise that resolves to the priorities
+ */
+export const getProcessDefinitionPriorities = async (
+  processDefinitionId: string,
+): Promise<Priority[]> => {
+  const processManagementClient = await getIGRPProcessClient();
+  const response =
+    await processManagementClient.processes.getProcessDefinitionPriorities(
+      processDefinitionId,
+    );
+  return response.data;
+};
+
+/**
+ * Creates a new priority for a process definition
+ * @param processDefinitionId The process definition ID
+ * @param priority The priority to create
+ * @returns A promise that resolves to the created priority
+ */
+export const createProcessDefinitionPriority = async (
+  processDefinitionId: string,
+  priorities: Priority[],
+): Promise<Priority[]> => {
+  const processManagementClient = await getIGRPProcessClient();
+  const response =
+    await processManagementClient.processes.createProcessDefinitionPriority(
+      processDefinitionId,
+      priorities,
     );
   return response.data;
 };

@@ -17,6 +17,7 @@ import {
 	IGRPModalDialogContent,
 	IGRPModalDialogHeader,
 	IGRPModalDialogTitle,
+	IGRPModalDialogDescription,
 	IGRPForm,
 	IGRPCombobox,
 	IGRPInputText,
@@ -115,7 +116,9 @@ useEffect(() => {
     });
 }, [formData]);
 
-const title = isEditing ? 'Editar Área' : 'Nova Área';
+const title = isEditing ? 'Editar Área' : 'Adicionar Nova Área';
+const modalDescription = isEditing ? 'Atualize os detalhes da área e as atribuições de processos' : 'Crie uma nova área ou sub-área no mapa de processos';
+
 
 useEffect(() => {
   let cleanup: (() => void) | undefined;
@@ -210,6 +213,14 @@ const itemsChecked = (formData.processes || []).map((process: any) => ({
 >
   { title }
 </IGRPModalDialogTitle>
+  <IGRPModalDialogDescription
+  id={ `modalDialogDescription1` }
+  
+  
+  
+>
+  { modalDescription }
+</IGRPModalDialogDescription>
 </IGRPModalDialogHeader>
   <IGRPForm
   schema={ form1 }

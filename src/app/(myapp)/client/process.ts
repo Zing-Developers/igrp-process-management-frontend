@@ -390,6 +390,7 @@ export const getProcessDefinitionPriorities = async (
     await processManagementClient.processes.getProcessDefinitionPriorities(
       processDefinitionId,
     );
+  console.log("response", response.data);
   return response.data;
 };
 

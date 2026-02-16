@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { ProcessMapHookReturn } from "../types";
 import { useProcessMapData } from "./use-process-map-data";
 import { useTreeExpansion } from "./use-tree-expansion";
@@ -16,6 +16,9 @@ import { getAllAreasFlat } from "../utils/area-hierarchy";
 export function useProcessMap(
   router?: AppRouterInstance,
 ): ProcessMapHookReturn {
+
+  const [processKey, setProcessKey] = useState<string | undefined>(undefined);
+
   // Data management
   const { areas, loadedNodes, loading, error, loadSubareas, refreshData } =
     useProcessMapData();
@@ -37,7 +40,7 @@ export function useProcessMap(
   const { igrpToast } = useIGRPToast();
 
   // Modal management
-  const { priorityModal } = usePriorityModal();
+  const { priorityModal, priorities, loadingPriorities } = usePriorityModal({ processKey });
 
   // Computed tree values
   const { treeNodes, flatNodes, totalProcesses, totalAreas } = useTreeComputed(
@@ -84,6 +87,7 @@ export function useProcessMap(
       businessKey?: string,
       variables?: Array<{ name: string; value: string }>,
     ) => {
+      setProcessKey(processKey);
       // Prepare the process start parameters
       prepareProcessStart(
         processDefinitionId,
@@ -164,6 +168,9 @@ export function useProcessMap(
     selectProcess,
     startProcess, // Updated to use priority workflow
     refreshData,
+
+    prioritiesOptions: priorities,
+    loadingPriorities: loadingPriorities,
 
     // Modals
     priorityModal: {

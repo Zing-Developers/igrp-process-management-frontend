@@ -32,6 +32,9 @@ export function useTaskManagement() {
 
       return getTasks(cleanFilters);
     },
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    retryDelay: 1000
   });
 
   const { content, ...rest } = data ?? {};

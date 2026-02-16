@@ -48,6 +48,9 @@ export function useMyTasksData() {
 
       return getMyTasks(mappedFilters);
     },
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    retryDelay: 1000
   });
 
   const { content, ...rest } = data ?? {};

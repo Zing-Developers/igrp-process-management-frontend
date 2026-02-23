@@ -23,8 +23,8 @@ async function fetchAreaWithSubareas(
     ...area,
     process: area.process
       ? keepLatestByKey(
-        area.process?.filter((process) => process.status === "ACTIVE"),
-      )
+          area.process?.filter((process) => process.status === "ACTIVE"),
+        )
       : undefined,
     subareas: [],
   };
@@ -92,7 +92,6 @@ export function useProcessMapData() {
     // No-op: all data is loaded upfront in fetchProcessMapAreas
   }, []);
 
- 
   return {
     areas,
     loadedNodes,

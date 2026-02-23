@@ -47,7 +47,7 @@ export function useConfigPage({
   const { data, isLoading: loading } = useQuery({
     queryKey: ["all-processes", filterProcess],
     queryFn: async () => {
-      const response = await getProcesses(filterProcess);
+      const response = await getProcesses({ processName: filterProcess });
       return (response.content || []).map((process) => ({
         ...process,
         version: `v${process.version}`,

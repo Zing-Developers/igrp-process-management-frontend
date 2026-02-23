@@ -58,7 +58,7 @@ export const getMyTasks = async (
   params?: TaskManagementFilters,
 ): Promise<PaginatedResponse<Task>> => {
   const processManagementClient = await getIGRPProcessClient();
-  console.log("params",params )
+  console.log("params", params);
   const response = await processManagementClient.tasks.getMyTasks({
     ...params,
     status: "ASSIGNED",

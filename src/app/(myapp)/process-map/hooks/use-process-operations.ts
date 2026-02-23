@@ -43,7 +43,7 @@ export function useProcessOperations(
   const { data, isLoading: loading } = useQuery({
     queryKey: ["all-processes"],
     queryFn: async () => {
-      const response = await getProcesses();
+      const response = await getProcesses({ filterByCurrentUser: true });
       const sortedContent = [...(response.content ?? [])].sort((a, b) =>
         (a.name ?? "").localeCompare(b.name ?? "", undefined, {
           sensitivity: "base",

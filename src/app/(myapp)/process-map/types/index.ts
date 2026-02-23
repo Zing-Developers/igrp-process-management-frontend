@@ -43,7 +43,7 @@ export interface ProcessMapActions {
 
 export interface ProcessMapHookReturn
   extends ProcessMapState,
-  ProcessMapActions {
+    ProcessMapActions {
   // Computed values
   treeNodes: ExtendedArea[];
   flatNodes: ExtendedArea[];

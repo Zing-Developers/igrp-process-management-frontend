@@ -30,11 +30,11 @@ importers:
         specifier: 0.1.0-beta.63
         version: 0.1.0-beta.63
       '@igrp/platform-process-management-client-ts':
-        specifier: 0.1.0-beta.9
-        version: 0.1.0-beta.9
-      '@igrp/platform-process-management-types':
         specifier: 0.1.0-beta.10
         version: 0.1.0-beta.10
+      '@igrp/platform-process-management-types':
+        specifier: 0.1.0-beta.11
+        version: 0.1.0-beta.11
       '@tanstack/react-query':
         specifier: ^5.90.20
         version: 5.90.21(react@19.2.3)
@@ -227,11 +227,11 @@ packages:
   '@igrp/platform-access-management-client-ts@0.1.0-beta.63':
     resolution: {integrity: sha512-RhxxTRTFZxzRMNWQaoZbaTCdKyY8k4Mv6N282qXnE2irW3n5VX4mo/wdrRisMkz0csx3lSwVN43lPW4ORyUfqA==}
 
-  '@igrp/platform-process-management-client-ts@0.1.0-beta.9':
-    resolution: {integrity: sha512-GATPrLDirWENm6auje1fzdVyv1pkE9s11WHOD4XNBAGltI6FBZz8T4wNG3C/LK85h++Li3Bb7XS5/7yt5Zuxsw==}
+  '@igrp/platform-process-management-client-ts@0.1.0-beta.10':
+    resolution: {integrity: sha512-+pTTm3FGg2deTMwuHd/4XEduceP2QBMhN+J9tGCela3+sW3y9npgu6dFCbPQr2a/EaiAqB2SXqzuMZGdKJrwWA==}
 
-  '@igrp/platform-process-management-types@0.1.0-beta.10':
-    resolution: {integrity: sha512-zorf194VtG9w5uhI6wsIacvbEFaguhwQFP9583upAls0xSmiQ2ESTThRDpdpW+I2di6E18pKIuo8P3KFBZrmpQ==}
+  '@igrp/platform-process-management-types@0.1.0-beta.11':
+    resolution: {integrity: sha512-0u2s/Te1sDcpT8CNCNOEC8OUv701v9dyaAbDtp9nP0qKpDrqNnmIEdKhEpuXw7NNP/kixqRrqK4z4yK9D3Nvfg==}
     engines: {node: '>=20.x.x'}
 
   '@img/colour@1.0.0':
@@ -1970,11 +1970,11 @@ snapshots:
 
   '@igrp/platform-access-management-client-ts@0.1.0-beta.63': {}
 
-  '@igrp/platform-process-management-client-ts@0.1.0-beta.9':
+  '@igrp/platform-process-management-client-ts@0.1.0-beta.10':
     dependencies:
-      '@igrp/platform-process-management-types': 0.1.0-beta.10
+      '@igrp/platform-process-management-types': 0.1.0-beta.11
 
-  '@igrp/platform-process-management-types@0.1.0-beta.10': {}
+  '@igrp/platform-process-management-types@0.1.0-beta.11': {}
 
   '@img/colour@1.0.0':
     optional: true

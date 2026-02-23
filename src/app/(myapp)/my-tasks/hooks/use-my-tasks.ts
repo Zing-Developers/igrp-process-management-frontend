@@ -35,11 +35,7 @@ export function useMyTasks() {
         currentStep: task.name,
         process: getProcessInfo(task.processName, task.processNumber),
         startedAt: format(task.startedAt, "dd MMM, HH:mm"),
-        endedAt: getDateTemplate(task.endedAt),
-        duration:
-          diffTime > 0
-            ? formatDuration(diffTime)
-            : formatDistanceToNow(task.startedAt, { addSuffix: false }),
+        duration: formatDuration(diffTime),
         priority: task.priority + "",
         processKey: task.processKey,
         processInstanceId: task.processInstanceId,

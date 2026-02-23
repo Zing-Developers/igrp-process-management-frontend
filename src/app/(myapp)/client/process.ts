@@ -14,6 +14,7 @@ import {
   ProcessStats,
   ProcessDefinitionSchema,
   Priority,
+  ProcessFilter,
 } from "@igrp/platform-process-management-types";
 
 /**
@@ -23,13 +24,13 @@ import {
  * @returns A promise that resolves to a paginated response of processes.
  */
 export const getProcesses = async (
-  filter?: string,
+  filter?: ProcessFilter,
 ): Promise<PaginatedResponse<Process>> => {
   const processManagementClient = await getIGRPProcessClient();
   const response = await processManagementClient.processes.getProcesses({
+    ...filter,
     page: 0,
     size: DEFAULT_PAGE_SIZE,
-    processName: filter,
   });
   return response.data;
 };
@@ -379,35 +380,37 @@ export const deleteProcessDefinitionPriority = async (
 
 /**
  * Gets all priorities for a process definition
- * @param processDefinitionId The process definition ID
+ * @param processDefinitionKey The process definition ID
  * @returns A promise that resolves to the priorities
  */
 export const getProcessDefinitionPriorities = async (
-  processDefinitionId: string,
+  processDefinitionKey: string,
 ): Promise<Priority[]> => {
+  if (!processDefinitionKey) {
+    return [];
+  }
   const processManagementClient = await getIGRPProcessClient();
   const response =
     await processManagementClient.processes.getProcessDefinitionPriorities(
-      processDefinitionId,
+      processDefinitionKey,
     );
-  console.log("response", response.data);
   return response.data;
 };
 
 /**
  * Creates a new priority for a process definition
- * @param processDefinitionId The process definition ID
+ * @param processDefinitionKey The process definition ID
  * @param priority The priority to create
  * @returns A promise that resolves to the created priority
  */
 export const createProcessDefinitionPriority = async (
-  processDefinitionId: string,
+  processDefinitionKey: string,
   priorities: Priority[],
 ): Promise<Priority[]> => {
   const processManagementClient = await getIGRPProcessClient();
   const response =
     await processManagementClient.processes.createProcessDefinitionPriority(
-      processDefinitionId,
+      processDefinitionKey,
       priorities,
     );
   return response.data;

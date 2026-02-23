@@ -43,17 +43,22 @@ export function usePriorityModal({ processKey }: { processKey?: string }) {
     [closeModal],
   );
 
-  const { data: priorities, isLoading: loadingPriorities, error: errorPriorities } = useQuery({
+  const {
+    data: priorities,
+    isLoading: loadingPriorities,
+    error: errorPriorities,
+  } = useQuery({
     queryKey: ["process-map-areas-priority-options", processKey ?? ""],
     queryFn: async () => {
       const priorities = await getProcessDefinitionPriorities(processKey ?? "");
-      return priorities.map((priority) => ({
-        value: priority.code,
-        label: priority.label,
-      })) ?? [];
+      return (
+        priorities.map((priority) => ({
+          value: priority.code,
+          label: priority.label,
+        })) ?? []
+      );
     },
   });
-
 
   return {
     priorityModal: {
@@ -64,7 +69,6 @@ export function usePriorityModal({ processKey }: { processKey?: string }) {
       open: openModal,
       close: closeModal,
       setOpen,
-
     },
     priorities,
     loadingPriorities,

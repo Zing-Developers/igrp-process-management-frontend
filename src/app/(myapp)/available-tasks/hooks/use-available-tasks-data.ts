@@ -32,7 +32,7 @@ export function useAvailableTasksData() {
     },
     refetchOnWindowFocus: true,
     refetchOnMount: true,
-    retryDelay: 1000
+    retryDelay: 1000,
   });
 
   // Transform query result to state format

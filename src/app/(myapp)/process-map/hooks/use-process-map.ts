@@ -16,7 +16,6 @@ import { getAllAreasFlat } from "../utils/area-hierarchy";
 export function useProcessMap(
   router?: AppRouterInstance,
 ): ProcessMapHookReturn {
-
   const [processKey, setProcessKey] = useState<string | undefined>(undefined);
 
   // Data management
@@ -40,12 +39,15 @@ export function useProcessMap(
   const { igrpToast } = useIGRPToast();
 
   // Modal management
-  const { priorityModal, priorities, loadingPriorities } = usePriorityModal({ processKey });
+  const { priorityModal, priorities, loadingPriorities } = usePriorityModal({
+    processKey,
+  });
 
   // Computed tree values
   const { treeNodes, flatNodes, totalProcesses, totalAreas } = useTreeComputed(
     areas,
     expandedNodes,
+    allProcesses?.content ?? [],
   );
 
   // Search functionality

@@ -13,7 +13,7 @@ export function ProcessTreeComponent({
   nodes: ExtendedArea[];
   expandedNodes: Set<string>;
   searchTerm?: string;
-  onToggle: (nodeId: string) => void;
+  onToggle: (node: ExtendedArea) => void;
   onStartProcess: (
     process: Process,
     processDefinitionId: string,

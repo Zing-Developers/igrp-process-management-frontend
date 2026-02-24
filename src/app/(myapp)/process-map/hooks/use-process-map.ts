@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { ProcessMapHookReturn } from "../types";
+import { ExtendedArea, ProcessMapHookReturn } from "../types";
 import { useProcessMapData } from "./use-process-map-data";
 import { useTreeExpansion } from "./use-tree-expansion";
 import { usePriorityModal } from "./use-priority-modal";
@@ -16,6 +16,9 @@ import { getAllAreasFlat } from "../utils/area-hierarchy";
 export function useProcessMap(
   router?: AppRouterInstance,
 ): ProcessMapHookReturn {
+  const [activeArea, setActiveArea] = useState<ExtendedArea | undefined>(
+    undefined,
+  );
   const [processKey, setProcessKey] = useState<string | undefined>(undefined);
 
   // Data management
@@ -56,8 +59,12 @@ export function useProcessMap(
 
   // Enhanced toggle node that also loads subareas when expanding
   const toggleNode = useCallback(
-    async (nodeId: string) => {
+    async (node: ExtendedArea) => {
+      const { id: nodeId } = node;
+
       const isCurrentlyExpanded = expandedNodes.has(nodeId);
+
+      setActiveArea(node);
 
       // Toggle the expansion state
       originalToggleNode(nodeId);
@@ -67,7 +74,6 @@ export function useProcessMap(
         try {
           await loadSubareas(nodeId);
         } catch (error) {
-          console.error("Failed to load subareas:", error);
           igrpToast({
             type: "error",
             title: "Erro",
@@ -189,6 +195,7 @@ export function useProcessMap(
       },
       ...areaHandlers,
       handleRemoveProcess,
+      activeArea,
     },
   };
 }

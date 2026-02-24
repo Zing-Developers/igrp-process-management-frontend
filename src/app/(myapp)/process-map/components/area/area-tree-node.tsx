@@ -16,7 +16,7 @@ function AreaTreeNodeComponent({
   nodes: ExtendedArea[];
   expandedNodes: Set<string>;
   searchTerm?: string;
-  onToggle: (nodeId: string) => void;
+  onToggle: (node: ExtendedArea) => void;
   onEdit: (node: ExtendedArea | Process, parentAreaId?: string) => void;
   onDelete: (nodeId: string) => void;
   onAddSubarea: (nodeId: string) => void;

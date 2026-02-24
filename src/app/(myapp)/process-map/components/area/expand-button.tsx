@@ -12,21 +12,23 @@ export function ExpandButton({
   isExpanded,
   onToggle,
 }: ExpandButtonProps) {
-  if (!hasChildren) {
-    return <div className="w-6 h-6" />; // Placeholder for alignment
-  }
-
   return (
-    <IGRPButton
-      onClick={(e) => {
-        e.stopPropagation();
-        onToggle();
-      }}
-      variant="ghost"
-      size="icon"
-      iconName={isExpanded ? "ChevronDown" : "ChevronRight"}
-      className="p-1 hover:bg-muted rounded w-6 h-6"
-      iconClassName="w-4 h-4 text-muted-foreground"
-    />
+    <>
+      {hasChildren ? (
+        <IGRPButton
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggle();
+          }}
+          variant="ghost"
+          size="icon"
+          iconName={isExpanded ? "ChevronDown" : "ChevronRight"}
+          className="p-1 hover:bg-muted rounded w-6 h-6"
+          iconClassName="w-6 h-6 text-muted-foreground"
+        />
+      ) : (
+        <div className="w-6 h-6" />
+      )}
+    </>
   );
 }

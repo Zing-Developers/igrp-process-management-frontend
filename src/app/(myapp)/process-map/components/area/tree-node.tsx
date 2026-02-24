@@ -8,7 +8,7 @@ import { ExtendedArea } from "../../types";
 interface TreeNodeProps {
   node: ExtendedArea;
   expandedNodes: Set<string>;
-  onToggle: (nodeId: string) => void;
+  onToggle: (node: ExtendedArea) => void;
   searchTerm?: string;
   onEdit: (node: ExtendedArea | Process, parentAreaId?: string) => void;
   onDelete: (nodeId: string) => void;
@@ -26,30 +26,24 @@ export function TreeNode({
   onAddSubarea,
   onRemoveProcess,
 }: TreeNodeProps) {
-  const { level = 0, id, type, color, children } = node;
+  const { level = 0, id, type, color, subareas, children } = node;
   const isExpanded = expandedNodes.has(id);
-  const hasChildren = children && children.length > 0;
+  const hasChildren = subareas && subareas.length > 0;
 
-  const handleToggle = () => {
-    if (hasChildren || type === "area") {
-      onToggle(id);
-    }
-  };
+  if (type === "process") return null;
 
   return (
     <div className="w-full">
       <div
         className="flex items-center gap-2 px-3 py-2 hover:bg-muted rounded-md cursor-pointer group"
         style={{ paddingLeft: `${level * 1.5 + 0.75}rem` }}
-        onClick={handleToggle}
+        onClick={() => onToggle(node)}
       >
         <ExpandButton
           isExpanded={isExpanded}
           hasChildren={hasChildren || type === "area"}
-          onToggle={handleToggle}
+          onToggle={() => onToggle(node)}
         />
-
-        {!hasChildren && <div className="w-5" />}
 
         {color && (
           <div className="h-4 w-5 rounded" style={{ backgroundColor: color }} />

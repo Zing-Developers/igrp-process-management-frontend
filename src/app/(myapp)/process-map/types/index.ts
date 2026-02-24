@@ -27,7 +27,7 @@ export interface ProcessMapState {
 }
 
 export interface ProcessMapActions {
-  toggleNode: (nodeId: string) => void;
+  toggleNode: (node: ExtendedArea) => void;
   loadSubareas: (areaId: string) => Promise<void>;
   selectProcess: (process: Process) => void;
   startProcess: (
@@ -58,6 +58,9 @@ export interface ProcessMapHookReturn
 
   allProcesses: any;
 
+  loadingPriorities: boolean;
+  prioritiesOptions: IGRPOptionsProps[] | undefined;
+
   // Modals
   priorityModal: {
     isOpen: boolean;
@@ -69,9 +72,6 @@ export interface ProcessMapHookReturn
     setOpen: (open: boolean) => void;
     onSave: (data: { priority: string }) => Promise<void>;
   };
-
-  loadingPriorities: boolean;
-  prioritiesOptions: IGRPOptionsProps[] | undefined;
 
   manageAreas: {
     areas: ExtendedArea[];
@@ -97,6 +97,7 @@ export interface ProcessMapHookReturn
       setFormData: (formData: AreaFormData) => void;
       formData: AreaFormData;
     };
+    activeArea: ExtendedArea | undefined;
   };
 }
 

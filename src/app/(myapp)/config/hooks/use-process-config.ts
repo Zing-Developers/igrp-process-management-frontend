@@ -132,14 +132,16 @@ export function useProcessConfig({
     }
 
     try {
-      await saveProcessNumberConfig(processKey ?? "", {
+      const data = {
         name: `${processKey}_sequence`,
         prefix: parsed.data.prefix,
         dateFormat: parsed.data.dateFormat,
         checkDigitSize: parsed.data.sequenceLength,
         padding: 0,
         numberIncrement: 1,
-      });
+        separator: parsed.data.separator,
+      };
+      await saveProcessNumberConfig(processKey ?? "", data);
       if (!opts?.silent) {
         igrpToast({
           type: "success",
@@ -183,9 +185,9 @@ export function useProcessConfig({
       const toArray = (s: string) =>
         s
           ? s
-              .split(",")
-              .map((g) => g.trim())
-              .filter(Boolean)
+            .split(",")
+            .map((g) => g.trim())
+            .filter(Boolean)
           : [];
       const savedList = toArray(savedGroups);
       const newList = toArray(newGroups);
@@ -333,9 +335,9 @@ export function useProcessConfig({
   const toCandidateGroupsString = (val: unknown): string =>
     Array.isArray(val)
       ? val
-          .map((s) => String(s).trim())
-          .filter(Boolean)
-          .join(",")
+        .map((s) => String(s).trim())
+        .filter(Boolean)
+        .join(",")
       : String(val ?? "");
 
   const userTasksList: any = (artifactsData ?? []).map(
@@ -343,27 +345,27 @@ export function useProcessConfig({
       const patched = editedTasksPatch[artifact.key];
       const source = patched
         ? {
-            ...artifact,
-            name: patched.name ?? artifact.name,
-            dueDate: patched.dueDate ?? artifact.dueDate,
-            priority: patched.priority ?? artifact.priority,
-            candidateGroups:
-              patched.candidateGroups ?? artifact.candidateGroups,
-          }
+          ...artifact,
+          name: patched.name ?? artifact.name,
+          dueDate: patched.dueDate ?? artifact.dueDate,
+          priority: patched.priority ?? artifact.priority,
+          candidateGroups:
+            patched.candidateGroups ?? artifact.candidateGroups,
+        }
         : artifact;
 
       const raw = toCandidateGroupsString(source.candidateGroups);
       const groupsArray = raw
         ? raw
-            .split(",")
-            .map((s) => s.trim())
-            .filter(Boolean)
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
         : [];
 
       const defaultPriorityDesc = source.priority
         ? PRIORITY_OPTIONS.find(
-            (o) => o.value.toString() === source.priority.toString(),
-          )?.label
+          (o) => o.value.toString() === source.priority.toString(),
+        )?.label
         : "";
 
       return {
@@ -399,17 +401,17 @@ export function useProcessConfig({
       const patched = editedTasksPatch[task.key];
       const req: CreateProcessArtifactRequest = patched
         ? {
-            ...patched,
-            candidateGroups: toCandidateGroupsString(patched.candidateGroups),
-          }
+          ...patched,
+          candidateGroups: toCandidateGroupsString(patched.candidateGroups),
+        }
         : {
-            key: task.key,
-            formKey: task.formKey ?? "",
-            name: task.name ?? "",
-            dueDate: task.dueDate ?? "",
-            priority: task.priority ?? "",
-            candidateGroups: task.candidateGroupsRaw ?? "",
-          };
+          key: task.key,
+          formKey: task.formKey ?? "",
+          name: task.name ?? "",
+          dueDate: task.dueDate ?? "",
+          priority: task.priority ?? "",
+          candidateGroups: task.candidateGroupsRaw ?? "",
+        };
       return { processDefinitionId: id!, request: req };
     });
 

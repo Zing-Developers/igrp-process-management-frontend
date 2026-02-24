@@ -114,7 +114,7 @@ export function useProcessConfig({
     const data = values ?? numberingForm.getValues();
     const parsed = processNumberingSchema.safeParse({
       ...data,
-      sequenceLength: Number(data.sequenceLength),
+      sequenceLength: Number(data.sequenceLength ?? 3),
     });
 
     if (!parsed.success) {

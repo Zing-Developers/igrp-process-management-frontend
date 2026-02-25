@@ -1,13 +1,23 @@
 import { useState, useCallback, useMemo } from "react";
 import { getTasks, assignTask } from "../../client/task";
-import { getDateTemplate, getProcessInfo } from "../../utils/columns-template";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getProcessDefinitionPriorities } from "../../client/process";
+import {
+  getDateTemplate,
+  getProcessInfo,
+  getPriorityTemplate,
+  formatDuration,
+} from "../../utils/columns-template";
+import { useQuery, useQueries, useQueryClient } from "@tanstack/react-query";
 import {
   AssignTaskModalState,
   TaskManagementFilters,
   TaskManagementState,
   TaskManagementTableRow,
 } from "../types";
+import {
+  getPriorityBadgeFromApi,
+  type ApiPriorityInfo,
+} from "../../utils/status-badge";
 
 export function useTaskManagement() {
   const queryClient = useQueryClient();
@@ -46,6 +56,56 @@ export function useTaskManagement() {
     error: error instanceof Error ? error.message : error ? error : null,
   };
 
+  // Unique process keys from current tasks (for loading priorities per process)
+  const processKeys = useMemo(() => {
+    const keys = new Set<string>();
+    state.tasks.forEach((t) => {
+      if (t.processKey) keys.add(t.processKey);
+    });
+    return Array.from(keys);
+  }, [state.tasks]);
+
+  const priorityQueries = useQueries({
+    queries: processKeys.map((processKey) => ({
+      queryKey: ["process-priorities", processKey],
+      queryFn: () => getProcessDefinitionPriorities(processKey),
+      enabled: !!processKey,
+    })),
+  });
+
+  // Map: processKey -> priority value -> { label, value, color }
+  const prioritiesByProcessKey = useMemo((): Record<
+    string,
+    Record<string, ApiPriorityInfo>
+  > => {
+    const map: Record<string, Record<string, ApiPriorityInfo>> = {};
+    processKeys.forEach((processKey, i) => {
+      const list = priorityQueries[i]?.data ?? [];
+      map[processKey] = {};
+      list.forEach((p) => {
+        const value = String(p.code ?? "");
+        if (value) {
+          map[processKey][value] = {
+            label: p.label ?? value,
+            value,
+            color: p.color,
+          };
+        }
+      });
+    });
+    return map;
+  }, [processKeys, priorityQueries]);
+
+  const getPriorityBadge = useCallback(
+    (processKey: string | undefined, priorityValue: string) => {
+      const apiPriority = processKey
+        ? prioritiesByProcessKey[processKey]?.[priorityValue]
+        : undefined;
+      return getPriorityBadgeFromApi(apiPriority, { priority: priorityValue });
+    },
+    [prioritiesByProcessKey],
+  );
+
   // Transform tasks data for table display
   const tableData = useMemo((): TaskManagementTableRow[] => {
     /* eslint-disable @typescript-eslint/ban-ts-comment */
@@ -54,7 +114,7 @@ export function useTaskManagement() {
       const createdDate = new Date(task.startedAt);
       const currentDate = new Date();
       const diffTime = Math.abs(currentDate.getTime() - createdDate.getTime());
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      const priorityValue = task.priority + "";
 
       return {
         currentStep: task.name,
@@ -62,19 +122,22 @@ export function useTaskManagement() {
         assignedBy: task.assignedBy || "",
         startedAt: getDateTemplate(task.startedAt),
         endedAt: getDateTemplate(task.endedAt),
-        duration: diffDays.toString(),
+        duration: formatDuration(diffTime),
         status: task.status,
         taskId: task.id,
         taskKey: task.taskKey,
         processKey: task.processKey,
         processInstanceId: task.processInstanceId,
         processName: task.processName,
-        priority: task.priority + "",
+        priority: getPriorityTemplate(
+          getPriorityBadge(task.processKey, priorityValue),
+          priorityValue,
+        ),
         statusDesc: task.statusDesc,
         applicationBase: task.applicationBase,
       };
     });
-  }, [state.tasks]);
+  }, [state.tasks, getPriorityBadge]);
 
   // Fetch tasks function - now just updates pagination/filter states
   const fetchTasks = useCallback((appliedFilters?: TaskManagementFilters) => {
@@ -177,6 +240,8 @@ export function useTaskManagement() {
     error: state.error,
     // Filters
     filters,
+    // Priority badge (uses API per process definition)
+    getPriorityBadge,
     // Assign Task Modal
     assignModalState,
     // Actions

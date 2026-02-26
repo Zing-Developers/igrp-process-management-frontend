@@ -2,8 +2,12 @@ import { useMemo } from "react";
 import { useMyTasksData } from "./use-my-tasks-data";
 import { TaskTableRow } from "../types";
 import { unclaimTask } from "../../client/task";
-import { getDateTemplate, getProcessInfo } from "../../utils/columns-template";
-import { format, formatDistanceToNow } from "date-fns";
+import {
+  getProcessInfo,
+  getPriorityTemplate,
+} from "../../utils/columns-template";
+import { useProcessPriorities } from "../../hooks/use-process-priorities";
+import { format } from "date-fns";
 import { formatDuration } from "../../utils/shared";
 
 export function useMyTasks() {
@@ -20,23 +24,35 @@ export function useMyTasks() {
     refetchMyTasks,
   } = useMyTasksData();
 
+  const processKeys = useMemo(() => {
+    const keys = new Set<string>();
+    myTasksState.tasks.forEach((t) => {
+      if (t.processKey) keys.add(t.processKey);
+    });
+    return Array.from(keys);
+  }, [myTasksState.tasks]);
+
+  const { getPriorityBadge } = useProcessPriorities(processKeys);
+
   // Transform tasks data for the table
   const tableData = useMemo((): TaskTableRow[] => {
     /* eslint-disable @typescript-eslint/ban-ts-comment */
     // @ts-expect-error Allow JSX in table row fields without refactor
-
     return myTasksState.tasks.map((task) => {
-      // Calculate waiting days
       const createdDate = new Date(task.startedAt);
       const currentDate = new Date();
       const diffTime = Math.abs(currentDate.getTime() - createdDate.getTime());
+      const priorityValue = task.priority + "";
 
       return {
         currentStep: task.name,
         process: getProcessInfo(task.processName, task.processNumber),
         startedAt: format(task.startedAt, "dd MMM, HH:mm"),
         duration: formatDuration(diffTime),
-        priority: task.priority + "",
+        priority: getPriorityTemplate(
+          getPriorityBadge(task.processKey, priorityValue),
+          priorityValue,
+        ),
         processKey: task.processKey,
         processInstanceId: task.processInstanceId,
         taskKey: task.taskKey,
@@ -45,7 +61,7 @@ export function useMyTasks() {
         applicationBase: task.applicationBase,
       };
     });
-  }, [myTasksState.tasks]);
+  }, [myTasksState.tasks, getPriorityBadge]);
 
   // Handle search functionality
   const handleSearch = (searchTerm: string) => {

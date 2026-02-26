@@ -30,9 +30,9 @@ export interface TaskTableRow {
   endedAt?: string;
   priority: string;
   duration: string;
-  processKey: string;
-  processInstanceId: string;
-  taskKey: string;
+  //processKey: string;
+  //processInstanceId: string;
+  //taskKey: string;
   taskId: string;
   processName: string;
 }

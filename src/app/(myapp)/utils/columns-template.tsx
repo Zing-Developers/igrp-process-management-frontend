@@ -57,16 +57,12 @@ export const getPriorityTemplate = (
 ) => {
   if (opts.badgeStyle) {
     return (
-      <IGRPBadgePrimitive
-        style={opts.badgeStyle}
-      >
+      <IGRPBadgePrimitive style={opts.badgeStyle}>
         {opts.label ?? priorityValue}
       </IGRPBadgePrimitive>
     );
   }
-  return (
-    <></>
-  );
+  return <></>;
 };
 
 export const getDateTemplate = (date_: string | Date) => {

@@ -42,6 +42,7 @@ export default function PageTaskmanagementComponent() {
     duration: string;
     status: string;
     priority: string;
+    taskId: string;
 }
 
   const [statstatsCard1Value, setStatstatsCard1Value] = useState<string | number>(0);

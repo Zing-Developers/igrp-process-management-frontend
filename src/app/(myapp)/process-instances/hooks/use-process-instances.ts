@@ -47,6 +47,9 @@ export function useProcessInstances() {
       const diffTime = Math.abs(now.getTime() - createdDate.getTime());
       const priorityValue = instance.priority + "";
 
+      const startedBy =
+        instance.userProfileStartedBy?.fullName || instance.startedBy;
+
       return {
         processInfo: getProcessInfo(instance.name, instance.number),
         createBy: undefined,
@@ -70,7 +73,7 @@ export function useProcessInstances() {
         ),
         processInstanceId: instance.id,
         procReleaseKey: instance.procReleaseKey,
-        startedBy: instance.startedBy,
+        startedBy: startedBy,
         statusDesc: instance.statusDesc,
         businessKey: getBusinessKeyTemplate(instance.businessKey ?? ""),
       };

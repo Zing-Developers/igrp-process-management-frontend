@@ -32,15 +32,15 @@ export default function PageProcessinstancesComponent() {
   
   type Table1 = {
     processInfo: string;
-    status: string;
+    businessKey: string;
+    startedBy: string;
     version: string;
     progress: string;
-    businessKey: string;
     startedAt: string;
     daysWaiting: string;
-    startedBy: string;
-    processInstanceId: string;
+    status: string;
     priority: string;
+    processInstanceId: string;
 }
 
   const [statstatsCard1Value, setStatstatsCard1Value] = useState<string | number>(0);
@@ -58,6 +58,17 @@ async function goToProcessRuntime (row: any): Promise<void  | undefined> {
   row.processInstanceId,
   row.taskKey,
   row.taskId,
+  row.applicationBase
+);
+router.push(taskUrl as any);
+
+}
+
+async function consultarProcess (row: any): Promise<void> {
+
+  // Navigate to task execution page using centralized URL config
+const taskUrl = await urlConfig.buildProcessInstanceUrl(
+  row.processInstanceId,
   row.applicationBase
 );
 router.push(taskUrl as any);
@@ -322,6 +333,14 @@ return (
   icon={ `Info` }
   className={ cn() }
   action={ () => {goToProcessRuntime(rowData)} }
+>
+</IGRPDataTableButtonLink>
+  <IGRPDataTableButtonLink
+  labelTrigger={ `Consuta Processo` }
+  variant={ `ghost` }
+  icon={ `FileSpreadsheet` }
+  className={ cn() }
+  action={ () => {consultarProcess(rowData);} }
 >
 </IGRPDataTableButtonLink>
 </IGRPDataTableRowAction>

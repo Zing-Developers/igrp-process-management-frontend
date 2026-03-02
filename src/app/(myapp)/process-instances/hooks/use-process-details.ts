@@ -53,6 +53,7 @@ export const useProcessDetails = (processInstanceId: string) => {
 
     // Map and add duration
     const mapped = data.activityProgress.map((task: ActivityProgress) => {
+      const assignee = task.userProfileAssignee?.fullName || task.assignee;
       // Duration will be calculated from activityDetails if available
       const created = new Date(data?.processInstance?.startedAt || Date.now());
       const now = data?.processInstance?.endedAt
@@ -62,6 +63,7 @@ export const useProcessDetails = (processInstanceId: string) => {
       return {
         ...task,
         duration: diff,
+        assignee,
       };
     });
 
@@ -78,6 +80,9 @@ export const useProcessDetails = (processInstanceId: string) => {
   ]);
 
   const transformedProcess = useMemo(() => {
+    const startedBy =
+      data?.processInstance?.userProfileStartedBy?.fullName ||
+      data?.processInstance?.startedBy;
     const created = new Date(data?.processInstance?.startedAt || Date.now());
     const now = data?.processInstance?.endedAt
       ? new Date(data?.processInstance?.endedAt)
@@ -89,6 +94,7 @@ export const useProcessDetails = (processInstanceId: string) => {
       color:
         status === "COMPLETED" ? "success" : ("secondary" as IGRPColorVariants),
       duration: formatDuration(diff) as string,
+      startedBy,
     };
   }, [data?.processInstance]);
 

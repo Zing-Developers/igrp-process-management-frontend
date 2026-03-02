@@ -72,10 +72,13 @@ export function useTaskManagement() {
       const diffTime = Math.abs(currentDate.getTime() - createdDate.getTime());
       const priorityValue = task.priority + "";
 
+      const assignedBy =
+        task.userProfileAssignedBy?.fullName || task.assignedBy;
+
       return {
         currentStep: task.name,
         process: getProcessInfo(task.processName, task.processNumber),
-        assignedBy: task.assignedBy || "",
+        assignedBy: assignedBy || "",
         startedAt: getDateTemplate(task.startedAt),
         endedAt: getDateTemplate(task.endedAt),
         duration: formatDuration(diffTime),

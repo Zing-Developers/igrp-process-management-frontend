@@ -40,9 +40,10 @@ export const urlConfig = {
   buildProcessInstanceUrl: async (
     processInstanceId: string,
     applicationBase: string,
+    processKey: string,
   ): Promise<string> => {
     if (process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL) {
-      return `${process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL}/process/view/${processInstanceId}`;
+      return `${process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL}/process/view/${processKey}/${processInstanceId}`;
     }
     const application = await getApplication(applicationBase);
     const { slug, url } = application;
@@ -53,7 +54,7 @@ export const urlConfig = {
         ? formatSlug(slug)
         : (url ?? "");
 
-    return `${href}/process/view/${processInstanceId}`;
+    return `${href}/process/view/${processKey}/${processInstanceId}`;
   },
 
   /**

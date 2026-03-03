@@ -83,3 +83,52 @@ export const getPriorityColor = (item: { priority: string | number }) => {
     iconName: "",
   };
 };
+
+/** Priority from API (getProcessDefinitionPriorities): label + value + optional color (hex). */
+export interface ApiPriorityInfo {
+  label: string;
+  value: string;
+  color?: string;
+}
+
+/**
+ * Returns badge options for a task priority using API-defined priorities when available.
+ * When apiPriority is provided with color, badgeStyle is set for custom hex; otherwise uses fallback bgClass.
+ */
+export function getPriorityBadgeFromApi(
+  apiPriority: ApiPriorityInfo | undefined,
+  fallback: { priority: string | number },
+): {
+  label: string;
+  bgClass: string;
+  badgeStyle?: React.CSSProperties;
+  textClass: string;
+  className: string;
+  iconName: string;
+} {
+  if (apiPriority) {
+    const label = apiPriority.label || String(apiPriority.value);
+    const fallbackStyle = getPriorityColor(fallback);
+    if (apiPriority.color) {
+      return {
+        label,
+        bgClass: "",
+        badgeStyle: {
+          backgroundColor: `${apiPriority.color}20`,
+          color: apiPriority.color,
+        },
+        textClass: "",
+        className: "",
+        iconName: "",
+      };
+    }
+    return {
+      label,
+      bgClass: fallbackStyle.bgClass,
+      textClass: "",
+      className: "",
+      iconName: "",
+    };
+  }
+  return getPriorityColor(fallback);
+}

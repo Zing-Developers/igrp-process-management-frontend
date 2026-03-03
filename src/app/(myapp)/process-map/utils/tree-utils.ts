@@ -5,7 +5,10 @@ import { ExtendedArea } from "../types";
  * Converts flat areas with processes into a hierarchical tree structure
  * Now works with ExtendedArea instead of ProcessMapArea
  */
-export function buildProcessTree(areas: ExtendedArea[]): ExtendedArea[] {
+export function buildProcessTree(
+  areas: ExtendedArea[],
+  allProcesses: Process[],
+): ExtendedArea[] {
   const treeNodes: ExtendedArea[] = [];
 
   function processArea(
@@ -23,19 +26,21 @@ export function buildProcessTree(areas: ExtendedArea[]): ExtendedArea[] {
       children: [],
       hasChildren: true, // Assume areas can have children (subareas or processes)
       isLoaded: false, // Will be set to true when children are loaded
-      applicationBase: applicationBase
+      applicationBase: applicationBase,
     };
 
     // Add processes as children (processes are always loaded with the area)
     const areaProcesses = area.process || [];
     if (areaProcesses && areaProcesses.length > 0) {
       // Filter only active processes
-      const activeProcesses = areaProcesses.filter(
-        (process: Process) => process.status === "ACTIVE",
-      );
 
-      const processNodes: ExtendedArea[] = activeProcesses.map(
-        (process: Process) => ({
+      const processNodes: ExtendedArea[] = areaProcesses
+        .filter(
+          (process: Process) =>
+            process.status === "ACTIVE" &&
+            allProcesses.some((p) => p.id === process.releaseId),
+        )
+        .map((process: Process) => ({
           ...process,
           id: `process-${process.id}`,
           name: process.name || process.processKey || "Unnamed Process",
@@ -47,8 +52,7 @@ export function buildProcessTree(areas: ExtendedArea[]): ExtendedArea[] {
           isLoaded: true,
           applicationBase: applicationBase,
           code: "",
-        }),
-      );
+        }));
       areaNode.children = [...processNodes];
     }
 

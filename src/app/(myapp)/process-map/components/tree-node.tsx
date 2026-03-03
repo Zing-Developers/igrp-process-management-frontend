@@ -8,7 +8,7 @@ import { Process } from "@igrp/platform-process-management-types";
 interface TreeNodeProps {
   node: ExtendedArea;
   expandedNodes: Set<string>;
-  onToggle: (nodeId: string) => void;
+  onToggle: (node: ExtendedArea) => void;
   onStartProcess: (
     process: Process,
     processDefinitionId: string,
@@ -27,32 +27,27 @@ export function TreeNode({
   onStartProcess,
   searchTerm,
 }: TreeNodeProps) {
-
   const { color, id, type, level = 0, children } = node;
 
   const isExpanded = expandedNodes.has(id);
   const hasChildren = children && children.length > 0;
 
-  const handleToggle = () => {
-    if (hasChildren || type === "area") {
-      onToggle(id);
-    }
-  };
-
   return (
     <div className="w-full">
       <div
-        className="flex items-center gap-2 px-3 py-2 hover:bg-muted rounded-md cursor-pointer group"
+        className="flex items-center gap-2 px-3 py-2 hover:bg-muted rounded-md cursor-pointer group/process"
         style={{ paddingLeft: `${level * 1.5 + 0.75}rem` }}
-        onClick={handleToggle}
+        onClick={() => onToggle(node)}
       >
         <ExpandButton
           isExpanded={isExpanded}
           hasChildren={hasChildren || type === "area"}
-          onToggle={handleToggle}
+          onToggle={() => onToggle(node)}
         />
 
-        {color && <div className="h-4 w-5 rounded" style={{ backgroundColor: color }} />}
+        {color && (
+          <div className="h-4 w-5 rounded" style={{ backgroundColor: color }} />
+        )}
 
         <NodeIcon node={node} isExpanded={isExpanded} />
 

@@ -10,6 +10,7 @@ import { getIGRPProcessClient } from "@/lib/api-client";
 import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
 import { TaskManagementFilters } from "@/app/(myapp)/task-management/types";
 import { DEFAULT_PAGE_SIZE } from "@/app/(myapp)/utils/shared";
+import { Cousine } from "next/font/google";
 
 /**
  * Fetches a paginated list of tasks with optional filters.
@@ -57,6 +58,7 @@ export const getMyTasks = async (
   params?: TaskManagementFilters,
 ): Promise<PaginatedResponse<Task>> => {
   const processManagementClient = await getIGRPProcessClient();
+  console.log("params", params);
   const response = await processManagementClient.tasks.getMyTasks({
     ...params,
     status: "ASSIGNED",

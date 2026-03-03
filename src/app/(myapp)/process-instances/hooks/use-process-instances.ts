@@ -10,9 +10,11 @@ import {
   getBusinessKeyTemplate,
   getDateTemplate,
   getProcessInfo,
+  getPriorityTemplate,
   getProcessStatusTemplate,
   getProgressTemplate,
 } from "../../utils/columns-template";
+import { useProcessPriorities } from "../../hooks/use-process-priorities";
 import { format, formatDistanceToNow } from "date-fns";
 
 export function useProcessInstances() {
@@ -24,6 +26,16 @@ export function useProcessInstances() {
     resetFilters,
   } = useProcessInstancesData();
 
+  const processKeys = useMemo(() => {
+    const keys = new Set<string>();
+    processInstancesState.processInstances.forEach((i) => {
+      if (i.procReleaseKey) keys.add(i.procReleaseKey);
+    });
+    return Array.from(keys);
+  }, [processInstancesState.processInstances]);
+
+  const { getPriorityBadge } = useProcessPriorities(processKeys);
+
   // Transform process instances to table format
   const tableData = useMemo((): ProcessInstanceTableRow[] => {
     /* eslint-disable @typescript-eslint/ban-ts-comment */
@@ -33,6 +45,10 @@ export function useProcessInstances() {
       const createdDate = new Date(instance.startedAt);
       const now = instance.endedAt ? new Date(instance.endedAt) : new Date();
       const diffTime = Math.abs(now.getTime() - createdDate.getTime());
+      const priorityValue = instance.priority + "";
+
+      const startedBy =
+        instance.userProfileStartedBy?.fullName || instance.startedBy;
 
       return {
         processInfo: getProcessInfo(instance.name, instance.number),
@@ -48,18 +64,21 @@ export function useProcessInstances() {
           instance.progress,
           instance.status as ProcessInstanceStatus,
         ),
-        priority: instance.priority + "",
+        priority: getPriorityTemplate(
+          getPriorityBadge(instance.procReleaseKey, priorityValue),
+          priorityValue,
+        ),
         status: getProcessStatusTemplate(
           instance.status as ProcessInstanceStatus,
         ),
         processInstanceId: instance.id,
         procReleaseKey: instance.procReleaseKey,
-        startedBy: instance.startedBy,
+        startedBy: startedBy,
         statusDesc: instance.statusDesc,
         businessKey: getBusinessKeyTemplate(instance.businessKey ?? ""),
       };
     });
-  }, [processInstancesState.processInstances]);
+  }, [processInstancesState.processInstances, getPriorityBadge]);
 
   const handleSearch = (searchTerm: string) => {
     // Update filters - query will automatically refetch when filters change

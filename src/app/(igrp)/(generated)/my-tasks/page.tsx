@@ -37,8 +37,8 @@ export default function PageMytasksComponent() {
     startedAt: string;
     duration: string;
     priority: string;
-    processName: string;
     taskId: string;
+    processName: string;
 }
 
   const [statstatsCard1Value, setStatstatsCard1Value] = useState<string | number>(0);
@@ -326,14 +326,6 @@ return (
 </IGRPDataTableButtonLink>
 </IGRPDataTableRowAction>
 );
-          },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: 'processName'
-,accessorKey: 'processName',
-          cell: ({ row }) => {
-          return row.getValue("processName")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },

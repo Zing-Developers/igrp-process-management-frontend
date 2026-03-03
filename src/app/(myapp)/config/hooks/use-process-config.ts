@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   assignGroupsToProcessDefinition,
+  unassignGroupsToProcessDefinition,
+  createProcessDefinitionPriority,
+  deleteProcessDefinitionPriority,
   getProcessArtifacts,
-  getProcessDeployedArtifacts,
+  getProcessDefinitionPriorities,
   getProcessNumberConfigs,
   saveProcessNumberConfig,
 } from "@/app/(myapp)/client/process";
@@ -16,16 +19,16 @@ import {
   processNumberingSchema,
   type AssignGroupsValues,
   type ProcessNumberingValues,
-  type PriorityOption,
-} from "./schemas";
+} from "../schemas";
 import {
   CreateProcessArtifactRequest,
+  Priority,
   ProcessArtifact,
   ProcessDefinition,
 } from "@igrp/platform-process-management-types";
-import { getCandidateGroupsTemplate } from "../utils/columns-template";
+import { getCandidateGroupsTemplate } from "../../utils/columns-template";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { PRIORITY_OPTIONS } from "./constants";
+import { PRIORITY_OPTIONS } from "../constants";
 
 const numberingDefaultValues: ProcessNumberingValues = {
   prefix: "",
@@ -49,6 +52,8 @@ export function useProcessConfig({
   const { processKey, candidateGroups, id } = processSelected || {};
 
   // --- assignGroups (candidate groups) ---
+  const savedCandidateGroupsRef = useRef<string>("");
+
   const assignGroupsForm = useForm<AssignGroupsValues>({
     resolver: zodResolver(assignGroupsSchema),
     defaultValues: { groups: "" },
@@ -68,7 +73,9 @@ export function useProcessConfig({
   };
 
   const loadAssignGroupsConfig = () => {
-    assignGroupsForm.reset({ groups: candidateGroups?.trim() ?? "" });
+    const current = candidateGroups?.trim() ?? "";
+    savedCandidateGroupsRef.current = current;
+    assignGroupsForm.reset({ groups: current });
   };
 
   const { data: numberingConfigData, isError: numberingConfigError } = useQuery(
@@ -85,7 +92,10 @@ export function useProcessConfig({
         prefix: numberingConfigData.prefix ?? "",
         dateFormat: numberingConfigData.dateFormat ?? "yyyy",
         separator: "-",
-        sequenceLength: numberingConfigData.checkDigitSize ?? 3,
+        sequenceLength:
+          numberingConfigData.checkDigitSize !== 0
+            ? numberingConfigData.checkDigitSize
+            : 3,
       });
     } else if (!processKey || numberingConfigError) {
       numberingForm.reset(numberingDefaultValues);
@@ -107,7 +117,7 @@ export function useProcessConfig({
     const data = values ?? numberingForm.getValues();
     const parsed = processNumberingSchema.safeParse({
       ...data,
-      sequenceLength: Number(data.sequenceLength),
+      sequenceLength: Number(data.sequenceLength ?? 3),
     });
 
     if (!parsed.success) {
@@ -122,14 +132,16 @@ export function useProcessConfig({
     }
 
     try {
-      await saveProcessNumberConfig(processKey ?? "", {
+      const data = {
         name: `${processKey}_sequence`,
         prefix: parsed.data.prefix,
         dateFormat: parsed.data.dateFormat,
         checkDigitSize: parsed.data.sequenceLength,
         padding: 0,
         numberIncrement: 1,
-      });
+        separator: parsed.data.separator,
+      };
+      await saveProcessNumberConfig(processKey ?? "", data);
       if (!opts?.silent) {
         igrpToast({
           type: "success",
@@ -154,16 +166,6 @@ export function useProcessConfig({
     groups: string,
     opts?: SaveOptions,
   ) => {
-    if (!id) {
-      if (!opts?.silent) {
-        igrpToast({
-          type: "error",
-          title: "Erro",
-          description: "Processo não selecionado.",
-        });
-      }
-      throw new Error("Processo não selecionado.");
-    }
     const parsed = assignGroupsSchema.safeParse({ groups });
     if (!parsed.success) {
       if (!opts?.silent) {
@@ -177,7 +179,29 @@ export function useProcessConfig({
     }
 
     try {
-      await assignGroupsToProcessDefinition(id, parsed.data.groups.trim());
+      const newGroups = parsed.data.groups.trim();
+      const savedGroups = savedCandidateGroupsRef.current;
+
+      const toArray = (s: string) =>
+        s
+          ? s
+              .split(",")
+              .map((g) => g.trim())
+              .filter(Boolean)
+          : [];
+      const savedList = toArray(savedGroups);
+      const newList = toArray(newGroups);
+      const toUnassign = savedList.filter((g) => !newList.includes(g));
+
+      if (toUnassign.length > 0) {
+        await unassignGroupsToProcessDefinition(id!, toUnassign.join(", "));
+      }
+      if (newList.length > 0) {
+        await assignGroupsToProcessDefinition(id!, newGroups);
+      }
+
+      savedCandidateGroupsRef.current = newGroups;
+
       if (!opts?.silent) {
         igrpToast({
           type: "success",
@@ -199,52 +223,102 @@ export function useProcessConfig({
   };
 
   // --- priorityOptions ---
-  const defaultPriorityOptions: PriorityOption[] = PRIORITY_OPTIONS.map(
-    (o) => ({
-      label: o.label,
-      value: String(o.value),
-    }),
-  );
+  const fallbackPrioritys: Priority[] = PRIORITY_OPTIONS.map((o) => ({
+    label: o.label,
+    value: String(o.value),
+    code: String(o.value),
+    weight: Number(o.value) ?? 1,
+    processDefinitionKey: processKey!,
+    color: o.color,
+    id: undefined,
+  }));
 
-  const [priorityOptions, setPriorityOptions] = useState<PriorityOption[]>(
-    defaultPriorityOptions,
-  );
+  const { data: prioritiesData } = useQuery({
+    queryKey: ["process-priorities", processKey],
+    queryFn: () => getProcessDefinitionPriorities(processKey ?? ""),
+    enabled: !!processKey,
+  });
+
+  const defaultPrioritys: Priority[] = useMemo(() => {
+    if (prioritiesData && prioritiesData.length > 0) {
+      return prioritiesData;
+    }
+    return fallbackPrioritys;
+  }, [prioritiesData]);
+
+  const [priorityOptions, setPrioritys] =
+    useState<Priority[]>(fallbackPrioritys);
+
+  const [deletedPriorities, setDeletedPriorities] = useState<Priority[]>([]);
+
   const [newPriorityLabel, setNewPriorityLabel] = useState("");
   const [newPriorityValue, setNewPriorityValue] = useState("");
+  const [newPriorityColor, setNewPriorityColor] = useState("");
+
+  useEffect(() => {
+    setPrioritys(defaultPrioritys);
+  }, [defaultPrioritys]);
 
   const loadPriorityConfig = () => {
-    setPriorityOptions(defaultPriorityOptions);
+    queryClient.invalidateQueries({
+      queryKey: ["process-priorities", processKey],
+    });
     setNewPriorityLabel("");
     setNewPriorityValue("");
+    setNewPriorityColor("");
   };
 
-  const updatePriorityOption = (
-    index: number,
-    field: string,
-    value: string,
-  ) => {
-    setPriorityOptions((prev) =>
+  const updatePriority = (index: number, field: string, value: string) => {
+    setPrioritys((prev) =>
       prev.map((opt, i) =>
-        i === index ? { ...opt, [field as "label" | "value"]: value } : opt,
+        i === index
+          ? { ...opt, [field as "label" | "value" | "color"]: value }
+          : opt,
       ),
     );
   };
 
-  const removePriorityOption = (index: number) => {
-    setPriorityOptions((prev) => prev.filter((_, i) => i !== index));
+  const removePriority = (index: number) => {
+    //save deleted priorities to local variable if id is not undefined
+    const deletedPriority = priorityOptions.find((_, i) => i === index);
+    if (deletedPriority?.id) {
+      setDeletedPriorities((prev) => [...prev, deletedPriority]);
+    }
+    setPrioritys((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const addPriorityOption = () => {
+  const addPriority = () => {
     const label = newPriorityLabel.trim();
     const value = newPriorityValue.trim();
+    const color = newPriorityColor.trim();
     if (!label || !value) return;
-    setPriorityOptions((prev) => [...prev, { label, value }]);
+    setPrioritys((prev) => [
+      ...prev,
+      {
+        ...prev,
+        label,
+        value,
+        code: value,
+        weight: Number(value) ?? 1,
+        processDefinitionKey: processKey!,
+        color,
+      },
+    ]);
     setNewPriorityLabel("");
     setNewPriorityValue("");
+    setNewPriorityColor("");
   };
 
   const handleSavePriorityConfig = async (_opts?: SaveOptions) => {
-    // TODO: wire to API when endpoint exists for process priority options
+    await createProcessDefinitionPriority(processKey!, priorityOptions);
+    //call deleted priorities
+    deletedPriorities.forEach((priority) => {
+      deleteProcessDefinitionPriority(priority.id!);
+    });
+    setDeletedPriorities([]);
+    queryClient.invalidateQueries({
+      queryKey: ["process-priorities", processKey],
+    });
   };
 
   // --- userTasks ---
@@ -358,12 +432,14 @@ export function useProcessConfig({
     priorityConfig: {
       priorityOptions,
       newPriorityLabel,
+      newPriorityColor,
       setNewPriorityLabel,
       newPriorityValue,
       setNewPriorityValue,
-      updatePriorityOption,
-      removePriorityOption,
-      addPriorityOption,
+      setNewPriorityColor,
+      updatePriority,
+      removePriority,
+      addPriority,
       loadConfig: loadPriorityConfig,
       handleSave: handleSavePriorityConfig,
     },

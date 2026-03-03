@@ -1,5 +1,5 @@
-import { useCallback, useMemo } from "react";
-import { ProcessMapHookReturn } from "../types";
+import { useCallback, useMemo, useState } from "react";
+import { ExtendedArea, ProcessMapHookReturn } from "../types";
 import { useProcessMapData } from "./use-process-map-data";
 import { useTreeExpansion } from "./use-tree-expansion";
 import { usePriorityModal } from "./use-priority-modal";
@@ -16,6 +16,11 @@ import { getAllAreasFlat } from "../utils/area-hierarchy";
 export function useProcessMap(
   router?: AppRouterInstance,
 ): ProcessMapHookReturn {
+  const [activeArea, setActiveArea] = useState<ExtendedArea | undefined>(
+    undefined,
+  );
+  const [processKey, setProcessKey] = useState<string | undefined>(undefined);
+
   // Data management
   const { areas, loadedNodes, loading, error, loadSubareas, refreshData } =
     useProcessMapData();
@@ -37,12 +42,15 @@ export function useProcessMap(
   const { igrpToast } = useIGRPToast();
 
   // Modal management
-  const { priorityModal } = usePriorityModal();
+  const { priorityModal, priorities, loadingPriorities } = usePriorityModal({
+    processKey,
+  });
 
   // Computed tree values
   const { treeNodes, flatNodes, totalProcesses, totalAreas } = useTreeComputed(
     areas,
     expandedNodes,
+    allProcesses?.content ?? [],
   );
 
   // Search functionality
@@ -51,8 +59,12 @@ export function useProcessMap(
 
   // Enhanced toggle node that also loads subareas when expanding
   const toggleNode = useCallback(
-    async (nodeId: string) => {
+    async (node: ExtendedArea) => {
+      const { id: nodeId } = node;
+
       const isCurrentlyExpanded = expandedNodes.has(nodeId);
+
+      setActiveArea(node);
 
       // Toggle the expansion state
       originalToggleNode(nodeId);
@@ -62,7 +74,6 @@ export function useProcessMap(
         try {
           await loadSubareas(nodeId);
         } catch (error) {
-          console.error("Failed to load subareas:", error);
           igrpToast({
             type: "error",
             title: "Erro",
@@ -84,6 +95,7 @@ export function useProcessMap(
       businessKey?: string,
       variables?: Array<{ name: string; value: string }>,
     ) => {
+      setProcessKey(processKey);
       // Prepare the process start parameters
       prepareProcessStart(
         processDefinitionId,
@@ -165,6 +177,9 @@ export function useProcessMap(
     startProcess, // Updated to use priority workflow
     refreshData,
 
+    prioritiesOptions: priorities,
+    loadingPriorities: loadingPriorities,
+
     // Modals
     priorityModal: {
       ...priorityModal,
@@ -180,6 +195,7 @@ export function useProcessMap(
       },
       ...areaHandlers,
       handleRemoveProcess,
+      activeArea,
     },
   };
 }

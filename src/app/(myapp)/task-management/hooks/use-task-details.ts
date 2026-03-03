@@ -23,6 +23,7 @@ export const useTaskDetails = (taskId: string) => {
     retry: true,
     retryDelay: 1000,
   });
+  ("");
 
   const transformTask = useMemo(() => {
     if (!data) return null;
@@ -42,8 +43,6 @@ export const useTaskDetails = (taskId: string) => {
       ],
     };
   }, [data]);
-
-  console.log(transformTask);
 
   const refetchTask = useCallback(() => {
     queryClient.refetchQueries({ queryKey: ["task-details", taskId] });

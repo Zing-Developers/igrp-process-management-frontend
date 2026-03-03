@@ -1,3 +1,4 @@
+import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
 import { Area, Process } from "@igrp/platform-process-management-types";
 
 // Use the same structure as process configuration - no need for ProcessMapArea
@@ -26,7 +27,7 @@ export interface ProcessMapState {
 }
 
 export interface ProcessMapActions {
-  toggleNode: (nodeId: string) => void;
+  toggleNode: (node: ExtendedArea) => void;
   loadSubareas: (areaId: string) => Promise<void>;
   selectProcess: (process: Process) => void;
   startProcess: (
@@ -56,6 +57,9 @@ export interface ProcessMapHookReturn
   clearSearch: () => void;
 
   allProcesses: any;
+
+  loadingPriorities: boolean;
+  prioritiesOptions: IGRPOptionsProps[] | undefined;
 
   // Modals
   priorityModal: {
@@ -93,6 +97,7 @@ export interface ProcessMapHookReturn
       setFormData: (formData: AreaFormData) => void;
       formData: AreaFormData;
     };
+    activeArea: ExtendedArea | undefined;
   };
 }
 

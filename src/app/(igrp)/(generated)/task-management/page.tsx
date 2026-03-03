@@ -22,11 +22,10 @@ import {
 	IGRPDataTableRowAction,
 	IGRPDataTableButtonLink 
 } from "@igrp/igrp-framework-react-design-system";
-import { useTaskManagement } from '@/app/(myapp)/task-management/hooks/use-task-management'
 import { useRouter } from 'next/navigation'
 import { urlConfig } from '@/app/(myapp)/utils/url-config'
 import {useDashboard} from '@/app/(myapp)/dashboard/hooks/use-dashboard'
-import {getPriorityColor} from '@/app/(myapp)/utils/status-badge'
+import { useTaskManagement } from '@/app/(myapp)/task-management/hooks/use-task-management'
 import {getTaskStatusColor} from '@/app/(myapp)/utils/status-badge'
 
 
@@ -35,14 +34,14 @@ export default function PageTaskmanagementComponent() {
 
   
   type Table1 = {
-    currentStep: string;
-    taskKey: string;
     process: string;
-    priority: string;
+    currentStep: string;
     assignedBy: string;
     startedAt: string;
     endedAt: string;
+    duration: string;
     status: string;
+    priority: string;
     taskId: string;
 }
 
@@ -83,6 +82,7 @@ const {
   handleOpenAssignModal,
   handleCloseAssignModal,
   handleAssignTask,
+  getPriorityBadge,
   filters
 } = useTaskManagement();
 
@@ -308,22 +308,6 @@ onFiltersChange={ handleApplyFilters } ></TaskProcessFilter></div>
   columns={
     [
         {
-          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Tarefa` } />)
-,accessorKey: 'currentStep',
-          cell: ({ row }) => {
-          return row.getValue("currentStep")
-          },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
-          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Tarefa ID` } />)
-,accessorKey: 'taskKey',
-          cell: ({ row }) => {
-          return row.getValue("taskKey")
-          },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
           header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Processo` } />)
 ,accessorKey: 'process',
           cell: ({ row }) => {
@@ -332,20 +316,10 @@ onFiltersChange={ handleApplyFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Prioridade` } />)
-,accessorKey: 'priority',
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Tarefa` } />)
+,accessorKey: 'currentStep',
           cell: ({ row }) => {
-          const rowData = row.original;
-
-const { iconName, bgClass, textClass, label, className } = getPriorityColor(rowData);
-
-return <IGRPDataTableCellBadge
-  label={ label ?? row.original.priority }
-  variant={ `soft` }
-badgeClassName={ `${bgClass} ${textClass} ${className}` }
->
-
-</IGRPDataTableCellBadge>
+          return row.getValue("currentStep")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },
@@ -374,6 +348,14 @@ badgeClassName={ `${bgClass} ${textClass} ${className}` }
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
+          header: 'Duração'
+,accessorKey: 'duration',
+          cell: ({ row }) => {
+          return row.getValue("duration")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
           header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Estado` } />)
 ,accessorKey: 'status',
           cell: ({ row }) => {
@@ -388,6 +370,14 @@ badgeClassName={ `${bgClass} ${textClass} ${className}` }
 >
 
 </IGRPDataTableCellBadge>
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Prioridade'
+,accessorKey: 'priority',
+          cell: ({ row }) => {
+          return row.getValue("priority")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },
@@ -407,14 +397,6 @@ return (
   action={ () => {} }
 >
 </IGRPDataTableButtonLink>
-  { (rowData.status !== 'COMPLETED' && rowData.status !== 'CREATED') && (<IGRPDataTableButtonLink
-  labelTrigger={ `Executar Tarefa` }
-  variant={ `ghost` }
-  icon={ `Play` }
-  className={ cn() }
-  action={ () => {executeTask(rowData)} }
->
-</IGRPDataTableButtonLink>)}
   <IGRPDataTableButtonLink
   labelTrigger={ `Atribuir Tarefa` }
   variant={ `ghost` }

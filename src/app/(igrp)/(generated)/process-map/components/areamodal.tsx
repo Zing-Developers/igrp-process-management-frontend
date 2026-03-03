@@ -17,6 +17,7 @@ import {
   IGRPModalDialogContent,
   IGRPModalDialogHeader,
   IGRPModalDialogTitle,
+  IGRPModalDialogDescription,
   IGRPForm,
   IGRPCombobox,
   IGRPInputText,
@@ -115,7 +116,9 @@ export default function Areamodal({ open, setOpen, isEditing, formData, onFormCh
       });
   }, [formData]);
 
-  const title = isEditing ? 'Editar Área' : 'Nova Área';
+  const title = isEditing ? 'Editar Área' : 'Adicionar Nova Área';
+  const modalDescription = isEditing ? 'Atualize os detalhes da área e as atribuições de processos' : 'Crie uma nova área ou sub-área no mapa de processos';
+
 
   useEffect(() => {
     let cleanup: (() => void) | undefined;
@@ -174,8 +177,15 @@ export default function Areamodal({ open, setOpen, isEditing, formData, onFormCh
 
   const processesItems = (allProcesses || []).map((process: any) => ({
     ...process,
-    key: process.processKey
+    key: process.id
   }));
+
+  const itemsChecked = (formData.processes || []).map((process: any) => ({
+    ...process,
+    key: process.releaseId ?? process.id
+  }));
+
+
 
 
   return (
@@ -203,6 +213,14 @@ export default function Areamodal({ open, setOpen, isEditing, formData, onFormCh
             >
               {title}
             </IGRPModalDialogTitle>
+            <IGRPModalDialogDescription
+              id={`modalDialogDescription1`}
+
+
+
+            >
+              {modalDescription}
+            </IGRPModalDialogDescription>
           </IGRPModalDialogHeader>
           <IGRPForm
             schema={form1}
@@ -264,7 +282,7 @@ export default function Areamodal({ open, setOpen, isEditing, formData, onFormCh
                 <IGRPInputColor
                   id={`color`}
                   label={`Cor`}
-                  defaultValue={`#000000`}
+                  defaultValue={`#3b82f6`}
                   showHexValue={true}
                   required={false}
                   className={cn('col-span-1',)}
@@ -301,7 +319,7 @@ export default function Areamodal({ open, setOpen, isEditing, formData, onFormCh
 
               >
               </IGRPInputHidden>
-              <AddChecklistItem label={`Associar Processos`} availableItems={processesItems} items={formData.processes} addItem={handleAddItem}
+              <AddChecklistItem label={`Associar Processos`} availableItems={processesItems} items={itemsChecked} addItem={handleAddItem}
                 removeItem={handleRemoveItem} ></AddChecklistItem>
             </>
           </IGRPForm>

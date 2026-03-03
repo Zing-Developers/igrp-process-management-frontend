@@ -37,7 +37,7 @@ export function useAreaHandlers(
       for (const process of formData.processes || []) {
         await handleAssociateProcess(newArea.id, {
           ...process,
-          releaseId: process.releaseId ?? process.id,
+          releaseId: process.id,
         });
       }
 

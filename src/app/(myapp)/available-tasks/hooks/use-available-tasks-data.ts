@@ -30,6 +30,9 @@ export function useAvailableTasksData() {
         dateTo: filtersToUse.dateTo || undefined,
       });
     },
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    retryDelay: 1000,
   });
 
   // Transform query result to state format

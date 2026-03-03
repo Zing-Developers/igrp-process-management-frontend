@@ -12,6 +12,7 @@ import {ProcessTreeComponent} from '@/app/(myapp)/process-map/components/process
 import PriorityModal from '@/components/prioritymodal'
 import {LoadingPage} from '@/app/(myapp)/components/loading-page'
 import {AreaTreeNodeComponent} from '@/app/(myapp)/process-map/components/area/area-tree-node'
+import {AreaDetails} from '@/app/(myapp)/process-map/components/area/area-details'
 import AreaModal from '@/app/(igrp)/(generated)/process-map/components/areamodal'
 import { 
   IGRPPageHeader,
@@ -80,8 +81,8 @@ const pm = useProcessMap( router);
           value: `tabsItem2-vy8A`,
           label: `Ver Mapa`,
           icon: `Eye`,
-          badgeVariant: `solid`,
-          badgeColor: `primary`,
+          badgeVariant: `solid` as const,
+          badgeColor: `primary` as const,
 content: (<>
             <IGRPHeadline
   id={ `headline1` }
@@ -112,7 +113,7 @@ placeholder={ `Procurar por processos...` }
 >
 </IGRPInputSearch>
             { !pm.loading && (<ProcessTreeComponent  nodes={ pm.filteredNodes } expandedNodes={ pm.expandedNodes } searchTerm={ pm.searchTerm } onStartProcess={ pm.startProcess }  onToggle={ pm.toggleNode } ></ProcessTreeComponent>)}
-            <PriorityModal  open={ pm.priorityModal.isOpen } modalTitle={ pm.priorityModal.modalTitle } modalSubTitle={ pm.priorityModal.modalSubTitle }  setOpen={ pm.priorityModal.setOpen }
+            <PriorityModal  open={ pm.priorityModal.isOpen } modalTitle={ pm.priorityModal.modalTitle } modalSubTitle={ pm.priorityModal.modalSubTitle } prioritiesOptions={ pm.prioritiesOptions } loadingPriorities={ pm.loadingPriorities }  setOpen={ pm.priorityModal.setOpen }
 onSave={ pm.priorityModal.onSave } ></PriorityModal>
             <LoadingPage  isLoading={ pm.loading }   ></LoadingPage>
 </>),
@@ -122,8 +123,8 @@ onSave={ pm.priorityModal.onSave } ></PriorityModal>
           value: `tabsItem1-IAqL`,
           label: `Gerir Área`,
           icon: `Settings`,
-          badgeVariant: `solid`,
-          badgeColor: `primary`,
+          badgeVariant: `solid` as const,
+          badgeColor: `primary` as const,
 content: (<>
             <div className={ cn('grid','lg:grid-cols-2 ',' gap-4',)}    >
 	<div className={ cn('col-span-1 flex flex-col gap-6 ',)}    >
@@ -206,11 +207,9 @@ showIcon={ false }
   className={ cn('space-y-4','space-x-3','space-y-3',) }
   
 >
+  <AreaDetails  selectedArea={ pm.manageAreas?.activeArea }  onEdit={ (node, parentAreaId) => { setOpenArea(true); pm.manageAreas.areaForm.openModal(node as ExtendedArea, parentAreaId) } }
+onDelete={ pm.manageAreas.handleDeleteArea } ></AreaDetails>
 </IGRPCardContent>
-  <IGRPCardFooter
-  
->
-</IGRPCardFooter>
 </IGRPCard></div></div>
             <AreaModal  options={ pm.manageAreas.options } open={ pm.manageAreas.areaForm.modalState.isOpen } isEditing={ !!pm.manageAreas.areaForm.modalState.editingArea } formData={ pm.manageAreas.areaForm.formData } allProcesses={ pm.allProcesses?.content }  setOpen={ (open) => (!pm.manageAreas.areaForm.modalState.isOpen ? pm.manageAreas.areaForm.openModal() : pm.manageAreas.areaForm.closeModal()) }
 onClose={ pm.manageAreas.areaForm.closeModal }

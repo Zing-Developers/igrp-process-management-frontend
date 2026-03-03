@@ -36,10 +36,10 @@ export interface TaskManagementTableRow {
   startedAt: string;
   endedAt: string;
   priority: string;
-  duration?: string;
+  duration: string;
   status: string;
   taskId: string;
-  taskKey: string;
+  //taskKey?: string;
   processKey?: string;
   processInstanceId?: string;
   processName?: string;

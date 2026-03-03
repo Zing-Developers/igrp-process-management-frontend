@@ -2,7 +2,12 @@ import { useMemo, useCallback } from "react";
 import { useAvailableTasksData } from "./use-available-tasks-data";
 import { claimTask } from "../../client/task";
 import { TaskTableRow } from "../types";
-import { getProcessInfo, getUserInfo } from "../../utils/columns-template";
+import {
+  getProcessInfo,
+  getPriorityTemplate,
+  getUserInfo,
+} from "../../utils/columns-template";
+import { useProcessPriorities } from "../../hooks/use-process-priorities";
 import { format, formatDistanceToNow } from "date-fns";
 import { formatDuration } from "../../utils/shared";
 
@@ -17,22 +22,31 @@ export function useAvailableTasks() {
     refetchTasks,
   } = useAvailableTasksData();
 
-  // Transform tasks to table format
+  const processKeys = useMemo(() => {
+    const keys = new Set<string>();
+    tasksState.tasks.forEach((t) => {
+      if (t.processKey) keys.add(t.processKey);
+    });
+    return Array.from(keys);
+  }, [tasksState.tasks]);
 
+  const { getPriorityBadge } = useProcessPriorities(processKeys);
+
+  // Transform tasks to table format
   const tableData = useMemo((): TaskTableRow[] => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error Allow JSX in table row fields without refactor
     return tasksState.tasks.map((task) => {
-      // Calculate days waiting
       const createdDate = new Date(task.startedAt);
       const now = new Date();
       const diffTime = Math.abs(now.getTime() - createdDate.getTime());
-      //TODO: Fix this
+      const priorityValue = task.priority + "";
+
       return {
         processInfo: getProcessInfo(task.processName, task.processNumber),
         processNumber: task.processNumber,
         startedAt: format(task.startedAt, "dd MMM, HH:mm"),
-        endAt: null, //getDateTemplate(task.endAt ?? ''),
+        endAt: null,
         createBy: getUserInfo(task.assignedBy),
         taskName: task.name,
         status: task.status,
@@ -44,10 +58,13 @@ export function useAvailableTasks() {
         processInstanceId: task.processInstanceId,
         createdDate: task.startedAt,
         assignedBy: task.assignedBy,
-        priority: task.priority + "",
+        priority: getPriorityTemplate(
+          getPriorityBadge(task.processKey, priorityValue),
+          priorityValue,
+        ),
       };
     });
-  }, [tasksState.tasks]);
+  }, [tasksState.tasks, getPriorityBadge]);
 
   // Claim task function
   const handleClaimTask = useCallback(

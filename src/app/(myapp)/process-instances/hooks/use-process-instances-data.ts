@@ -10,21 +10,13 @@ export function useProcessInstancesData() {
   // Use query at the top level - hooks must be called at the top level
   // Use individual filter values in queryKey to ensure automatic reactivity
   const { data, isLoading, error } = useQuery({
-    queryKey: [
-      "process-instances",
-      filters.processType,
-      filters.processNumber,
-      filters.status,
-      filters.dateFrom,
-      filters.dateTo,
-      filters.areaId,
-      filters.subareaId,
-      filters.organic,
-      filters.user,
-    ],
+    queryKey: ["process-instances", filters],
     queryFn: () => {
       return getProcessInstances(filters as Partial<ProcessInstancesFilters>);
     },
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    retryDelay: 1000,
   });
 
   const { content, ...rest } = data ?? {};

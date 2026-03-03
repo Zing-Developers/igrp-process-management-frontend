@@ -29,7 +29,7 @@ import {
   IGRPModalDialogFooter,
   IGRPButton,
 } from "@igrp/igrp-framework-react-design-system";
-import { PRIORITY_OPTIONS } from "../app/(myapp)/enum/priority";
+import { PRIORITY_OPTIONS } from "@/app/(myapp)/config/constants";
 
 export default function Commonusertaskmodalform({
   open,
@@ -48,6 +48,8 @@ export default function Commonusertaskmodalform({
   userRequired?: boolean;
   showPriority?: boolean;
 }) {
+  z.config(z.locales.en());
+
   const form1 = z.object({
     user: z.string().optional(),
     candidateGroups: z.string().optional(),

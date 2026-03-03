@@ -7,7 +7,7 @@ import { Process } from "@igrp/platform-process-management-types";
 interface ExtendedAreaProps {
   nodes: ExtendedArea[];
   expandedNodes: Set<string>;
-  onToggle: (nodeId: string) => void;
+  onToggle: (node: ExtendedArea) => void;
   onStartProcess: (
     process: Process,
     processDefinitionId: string,

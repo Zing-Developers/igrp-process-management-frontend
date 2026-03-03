@@ -13,7 +13,6 @@ import { format } from "date-fns";
 
 interface TaskInformationProps extends Task {
   description?: string;
-  dueDate?: Date;
   followUpDate?: Date;
   priorityLabel?: string;
   priorityVariant?: IGRPColorVariants;
@@ -29,6 +28,8 @@ export function TaskInformation({
   const candidateGroups = task?.candidateGroups
     ? task?.candidateGroups.split(",")
     : [];
+
+  const assignedBy = task.userProfileAssignedBy?.fullName || task.assignedBy;
 
   return (
     <div className="space-y-4">
@@ -52,7 +53,7 @@ export function TaskInformation({
               <div className="flex justify-between">
                 <span className="text-sm text-muted-foreground">Assignee</span>
                 <span className="text-sm font-medium">
-                  {task.assignedBy || "Unassigned"}
+                  {assignedBy || "Unassigned"}
                 </span>
               </div>
 
@@ -143,7 +144,7 @@ export function TaskInformation({
                     </span>
                     <span className="text-sm flex items-center gap-2">
                       {format(task.dueDate, "MMM d, yyyy HH:mm")}
-                      {new Date() > task.dueDate && (
+                      {new Date() > new Date(task.dueDate) && (
                         <IGRPIcon
                           iconName="AlertTriangle"
                           className="h-4 w-4 text-destructive"

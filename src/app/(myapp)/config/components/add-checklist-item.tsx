@@ -39,7 +39,7 @@ function AddChecklistItem({
                   <div>
                     <p className="font-medium">{group.name}</p>
                     <p className="text-xs text-muted-foreground font-mono">
-                      {group.key}
+                      {group.processKey}
                     </p>
                   </div>
                 </IGRPLabelPrimitive>

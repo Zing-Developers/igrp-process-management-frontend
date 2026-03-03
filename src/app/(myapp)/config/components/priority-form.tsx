@@ -1,6 +1,6 @@
 import {
   IGRPButton,
-  IGRPIcon,
+  IGRPInputColor,
   IGRPInputText,
   IGRPLabel,
   IGRPSeparator,
@@ -18,7 +18,9 @@ function PriorityForm({
   removePriorityOption,
   addPriorityOption,
   newPriorityLabel,
+  newPriorityColor,
   setNewPriorityLabel,
+  setNewPriorityColor,
   newPriorityValue,
   setNewPriorityValue,
 }: {
@@ -30,6 +32,8 @@ function PriorityForm({
   setNewPriorityLabel: (value: string) => void;
   newPriorityValue: string;
   setNewPriorityValue: (value: string) => void;
+  newPriorityColor: string;
+  setNewPriorityColor: (value: string) => void;
 }) {
   return (
     <>
@@ -40,6 +44,9 @@ function PriorityForm({
               <IGRPTableHeadPrimitive>Label</IGRPTableHeadPrimitive>
               <IGRPTableHeadPrimitive className="w-32">
                 Value
+              </IGRPTableHeadPrimitive>
+              <IGRPTableHeadPrimitive className="w-32">
+                Color
               </IGRPTableHeadPrimitive>
               <IGRPTableHeadPrimitive className="w-16"></IGRPTableHeadPrimitive>
             </IGRPTableRowPrimitive>
@@ -64,6 +71,17 @@ function PriorityForm({
                       updatePriorityOption(index, "value", e.target.value)
                     }
                     className="h-8"
+                  />
+                </IGRPTableCellPrimitive>
+                <IGRPTableCellPrimitive>
+                  <IGRPInputColor
+                    defaultValue="#ED6C02"
+                    placeholder="Color (e.g., #ED6C02)" //text-success-500 #00FF00
+                    value={option.color}
+                    onChange={(value) =>
+                      updatePriorityOption(index, "color", value)
+                    }
+                    showHexValue={true}
                   />
                 </IGRPTableCellPrimitive>
                 <IGRPTableCellPrimitive>
@@ -103,6 +121,14 @@ function PriorityForm({
             value={newPriorityValue}
             onChange={(e) => setNewPriorityValue(e.target.value)}
             className="w-32"
+          />
+          <IGRPInputColor
+            defaultValue="#ED6C02"
+            placeholder="Color (e.g., #ED6C02)" //green #00FF00
+            value={newPriorityColor || "#ED6C02"}
+            onChange={(value) => setNewPriorityColor(value)}
+            className="w-32"
+            showHexValue={true}
           />
           <IGRPButton
             onClick={addPriorityOption}

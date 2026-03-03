@@ -136,7 +136,8 @@ export function TaskInstanceEventsView({
                     />
                   </div>
                   <span className="text-sm text-foreground font-mono">
-                    {event.performedBy}
+                    {event.userProfilePerformedBy?.fullName ||
+                      event.performedBy}
                   </span>
                   <IGRPCopyTo value={event.performedBy} />
                 </div>

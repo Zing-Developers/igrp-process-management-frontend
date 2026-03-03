@@ -3,9 +3,9 @@ name: Deploy
 on:
   push:
     branches:
-      - cloud-dev1
+      - cloud-dev
     paths-ignore:
-      - '.github/workflows/**'
+      - '.github/**'
       - 'k8s/**'
       - '.gitattributes'
 
@@ -20,7 +20,7 @@ env:
   K8S_NAMESPACE: igrp-process-runtime-frontend
   K8S_DEPLOYMENT_NAME: igrp-process-runtime-frontend
   DOCKER_REGISTRY_ENV: dev
-  DOCKER_HUB_IMAGE_TAG: igrp-process-management-frontend-with-basepath
+  DOCKER_HUB_IMAGE_TAG: igrp-process-management-frontend
 
 jobs:
   pre-deploy:
@@ -61,15 +61,6 @@ jobs:
         with:
           driver: docker  # Switching to the Docker driver
 
-      - name: Add custom CA certificate
-        run: |
-          echo "${{ secrets.DOCKER_REPO_CERT }}" | sudo tee /etc/ssl/certs/repo-ca.crt
-          sudo update-ca-certificates
-          sudo mkdir -p /etc/docker/certs.d/docker-repo.zingaistudio.com
-          sudo cp /etc/ssl/certs/repo-ca.crt /etc/docker/certs.d/docker-repo.zingaistudio.com/ca.crt
-          sudo systemctl restart docker
-
-
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -81,34 +72,12 @@ jobs:
         with:
           push: true
           tags: |
-            irnzing/irn:${{ env.DOCKER_HUB_IMAGE_TAG }} 
-
-  deploy:
-    name: Deploy to Kubernetes
-    needs: build_and_push
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3   
-
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.BASTION_SSH }}
-            
-     
-      - name: Apply Kubernetes Manifests on Remote Server
-        run: |
-          ssh -o StrictHostKeyChecking=no root@${{ env.SERVER_IP }} << EOF
-            export K8S_DEPLOYMENT_NAME="${{ env.K8S_DEPLOYMENT_NAME }}"
-            export K8S_NAMESPACE="${{ env.K8S_NAMESPACE }}"
-            kubectl rollout restart deployment $K8S_DEPLOYMENT_NAME -n $K8S_NAMESPACE
-          EOF
+            irnzing/irn:igrp-process-management-frontend-with-basepath
 
   notify:
     name: Notify Discord on Workflow Status
     runs-on: ubuntu-latest
-    needs: [pre-deploy, build_and_push, deploy]  # depends on all previous jobs
+    needs: [pre-deploy, build_and_push]  # depends on all previous jobs
     if: always()  # runs even if a previous job failed
     steps:
       - name: Checkout repo
@@ -117,8 +86,7 @@ jobs:
       - name: Send Discord Notification
         run: |
           if [ "${{ needs.pre-deploy.result }}" != "success" ] || \
-             [ "${{ needs.build_and_push.result }}" != "success" ] || \
-             [ "${{ needs.deploy.result }}" != "success" ]; then
+             [ "${{ needs.build_and_push.result }}" != "success" ] then
             COLOR=15158332
             EMOJI=":red_circle:"
             MESSAGE="DEPLOY FAILED!"

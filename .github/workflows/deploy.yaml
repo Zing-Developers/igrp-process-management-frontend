@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - cloud-dev1
+      - cloud-dev
     paths-ignore:
       - '.github/**'
       - 'k8s/**'

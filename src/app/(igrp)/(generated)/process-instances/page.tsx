@@ -17,15 +17,13 @@ import {
   IGRPPageHeader,
 	IGRPStatsCard,
 	IGRPDataTable,
-	IGRPDataTableCellBadge,
 	IGRPDataTableRowAction,
 	IGRPDataTableButtonLink 
 } from "@igrp/igrp-framework-react-design-system";
-import {useProcessInstances} from '@/app/(myapp)/processinstances/hooks/use-process-instances'
 import { useRouter } from "next/navigation"
 import { urlConfig } from '@/app/(myapp)/utils/url-config'
 import {useDashboard} from '@/app/(myapp)/dashboard/hooks/use-dashboard'
-import {getPriorityColor} from '@/app/(myapp)/utils/status-badge'
+import {useProcessInstances} from '@/app/(myapp)/process-instances/hooks/use-process-instances'
 
 
 export default function PageProcessinstancesComponent() {
@@ -34,14 +32,14 @@ export default function PageProcessinstancesComponent() {
   
   type Table1 = {
     processInfo: string;
-    status: string;
-    priority: string;
+    businessKey: string;
+    startedBy: string;
     version: string;
     progress: string;
-    businessKey: string;
     startedAt: string;
     daysWaiting: string;
-    startedBy: string;
+    status: string;
+    priority: string;
     processInstanceId: string;
 }
 
@@ -66,6 +64,18 @@ router.push(taskUrl as any);
 
 }
 
+async function consultarProcess (row: any): Promise<void> {
+
+  // Navigate to task execution page using centralized URL config
+const taskUrl = await urlConfig.buildProcessInstanceUrl(
+  row.processInstanceId,
+  row.applicationBase,
+  row.procReleaseKey
+);
+router.push(taskUrl as any);
+
+}
+
 //-------------------reserved area start----------------------------
 const { stats, loading: statsLoading } = useDashboard();
 const router = useRouter()
@@ -73,11 +83,7 @@ const {
   tableData,
   loading,
   error,
-  totalElements,
-  totalPages,
-  currentPage,
   handleSearch,
-  applyFilters,
   resetFilters,
   updateFilters,
   filters
@@ -85,11 +91,13 @@ const {
 
 // Update table data when process instances change
 useEffect(() => {
-  setStatstatsCard1Value(stats.processInstances.totalInstances);
-  setStatstatsCard2Value(stats.processInstances.totalRunning);
-  setStatstatsCard3Value(stats.processInstances.totalCompleted);
-  setStatstatsCard4Value(stats.processInstances.totalCancelled);
-}, [ stats]);
+  if (stats && !statsLoading) {
+    setStatstatsCard1Value(stats.processInstances.totalInstances);
+    setStatstatsCard2Value(stats.processInstances.totalRunning);
+    setStatstatsCard3Value(stats.processInstances.totalCompleted);
+    setStatstatsCard4Value(stats.processInstances.totalCancelled);
+  }
+}, [stats]);
 
 // Handle filter application with process instance filters
 const handleApplyFilters = (filters?: any) => {
@@ -249,28 +257,18 @@ onFiltersChange={ handleApplyFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Estado` } />)
-,accessorKey: 'status',
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Business Key` } />)
+,accessorKey: 'businessKey',
           cell: ({ row }) => {
-          return row.getValue("status")
+          return row.getValue("businessKey")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Prioridade` } />)
-,accessorKey: 'priority',
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Iniciado por` } />)
+,accessorKey: 'startedBy',
           cell: ({ row }) => {
-          const rowData = row.original;
-
-const { iconName, bgClass, textClass, label, className } = getPriorityColor(rowData);
-
-return <IGRPDataTableCellBadge
-  label={ label ?? row.original.priority }
-  variant={ `soft` }
-badgeClassName={ `${bgClass} ${textClass} ${className}` }
->
-
-</IGRPDataTableCellBadge>
+          return row.getValue("startedBy")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },
@@ -291,14 +289,6 @@ badgeClassName={ `${bgClass} ${textClass} ${className}` }
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Business Key` } />)
-,accessorKey: 'businessKey',
-          cell: ({ row }) => {
-          return row.getValue("businessKey")
-          },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
           header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Iniciado` } />)
 ,accessorKey: 'startedAt',
           cell: ({ row }) => {
@@ -315,10 +305,18 @@ badgeClassName={ `${bgClass} ${textClass} ${className}` }
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Iniciado por` } />)
-,accessorKey: 'startedBy',
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Estado` } />)
+,accessorKey: 'status',
           cell: ({ row }) => {
-          return row.getValue("startedBy")
+          return row.getValue("status")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Prioridade'
+,accessorKey: 'priority',
+          cell: ({ row }) => {
+          return row.getValue("priority")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },
@@ -336,6 +334,14 @@ return (
   icon={ `Info` }
   className={ cn() }
   action={ () => {goToProcessRuntime(rowData)} }
+>
+</IGRPDataTableButtonLink>
+  <IGRPDataTableButtonLink
+  labelTrigger={ `Consuta Processo` }
+  variant={ `ghost` }
+  icon={ `FileSpreadsheet` }
+  className={ cn() }
+  action={ () => {consultarProcess(rowData);} }
 >
 </IGRPDataTableButtonLink>
 </IGRPDataTableRowAction>

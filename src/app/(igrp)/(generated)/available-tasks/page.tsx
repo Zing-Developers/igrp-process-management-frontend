@@ -21,9 +21,8 @@ import {
 	IGRPDataTableRowAction,
 	IGRPDataTableButtonLink 
 } from "@igrp/igrp-framework-react-design-system";
-import {useAvailableTasks} from '@/app/(myapp)/availabletasks/hooks/use-available-tasks'
 import {useDashboard} from '@/app/(myapp)/dashboard/hooks/use-dashboard'
-import {getPriorityColor} from '@/app/(myapp)/utils/status-badge'
+import {useAvailableTasks} from '@/app/(myapp)/available-tasks/hooks/use-available-tasks'
 import {getTaskStatusColor} from '@/app/(myapp)/utils/status-badge'
 
 
@@ -32,11 +31,11 @@ export default function PageAvailabletasksComponent() {
 
   
   type Table1 = {
-    taskName: string;
     processInfo: string;
+    taskName: string;
     startedAt: string;
-    priority: string;
     duration: string;
+    priority: string;
     status: string;
     taskId: string;
 }
@@ -154,25 +153,26 @@ onFiltersChange={ handleApplyFilters } ></TaskProcessFilter></div>
 <FilterActives  filters={ filters }  onFiltersChange={ handleApplyFilters } ></FilterActives>
 { !loading && (<IGRPDataTable<Table1, Table1>
   id={ `tasks` }
-  showFilter={ true }
   showPagination={ true }
+  isNumericPagination={ true }
   paginationClassName={ `px-3 pb-3` }
+  pageSizePagination={ [] }
   className={ cn('','border-0 border-solid border-[#000000]',) }
   columns={
     [
-        {
-          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Tarefa` } />)
-,accessorKey: 'taskName',
-          cell: ({ row }) => {
-          return row.getValue("taskName")
-          },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
         {
           header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Processo` } />)
 ,accessorKey: 'processInfo',
           cell: ({ row }) => {
           return row.getValue("processInfo")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Tarefa` } />)
+,accessorKey: 'taskName',
+          cell: ({ row }) => {
+          return row.getValue("taskName")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },
@@ -185,28 +185,18 @@ onFiltersChange={ handleApplyFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Prioridade` } />)
-,accessorKey: 'priority',
-          cell: ({ row }) => {
-          const rowData = row.original;
-
-const { iconName, bgClass, textClass, label, className } = getPriorityColor(rowData);
-
-return <IGRPDataTableCellBadge
-  label={ label ?? row.original.priority }
-  variant={ `soft` }
-badgeClassName={ `${bgClass} ${textClass} ${className}` }
->
-
-</IGRPDataTableCellBadge>
-          },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
           header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Duraçāo` } />)
 ,accessorKey: 'duration',
           cell: ({ row }) => {
           return row.getValue("duration")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: 'Prioridade'
+,accessorKey: 'priority',
+          cell: ({ row }) => {
+          return row.getValue("priority")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },

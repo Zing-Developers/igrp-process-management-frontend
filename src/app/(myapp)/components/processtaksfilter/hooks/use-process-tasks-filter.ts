@@ -17,7 +17,8 @@ export function useProcessTasksFilter(
   onFiltersChange?: (filters: any) => void,
   isProcess?: boolean,
 ) {
-  const { filters, dropdownOptions, updateFilters } = useFilterData(isProcess);
+  const { filters, dropdownOptions, updateFilters, resetFilters } =
+    useFilterData(isProcess);
   const isInitialMount = useRef(true);
   const prevFiltersRef = useRef(filters);
 
@@ -183,7 +184,7 @@ export function useProcessTasksFilter(
   return {
     // Filter values
     filters,
-
+    resetFilters,
     // Actions
     handleAreaChange,
     handleSubareaChange,

@@ -18,15 +18,13 @@ import {
   IGRPPageHeader,
 	IGRPStatsCard,
 	IGRPDataTable,
-	IGRPDataTableCellBadge,
 	IGRPDataTableRowAction,
 	IGRPDataTableButtonLink 
 } from "@igrp/igrp-framework-react-design-system";
-import {useMyTasks} from '@/app/(myapp)/mytasks/hooks/use-my-tasks'
 import { useRouter } from 'next/navigation'
 import { urlConfig } from '@/app/(myapp)/utils/url-config'
 import {useDashboard} from '@/app/(myapp)/dashboard/hooks/use-dashboard'
-import {getPriorityColor} from '@/app/(myapp)/utils/status-badge'
+import {useMyTasks} from '@/app/(myapp)/my-tasks/hooks/use-my-tasks'
 
 
 export default function PageMytasksComponent() {
@@ -34,16 +32,13 @@ export default function PageMytasksComponent() {
 
   
   type Table1 = {
-    processName: string;
-    currentStep: string;
     process: string;
+    currentStep: string;
     startedAt: string;
     duration: string;
     priority: string;
-    processKey: string;
-    processInstanceId: string;
-    taskKey: string;
     taskId: string;
+    processName: string;
 }
 
   const [statstatsCard1Value, setStatstatsCard1Value] = useState<string | number>(0);
@@ -267,18 +262,18 @@ onFiltersChange={ handleApplyFilters } ></TaskProcessFilter></div>
   columns={
     [
         {
-          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Tarefa` } />)
-,accessorKey: 'currentStep',
-          cell: ({ row }) => {
-          return row.getValue("currentStep")
-          },
-          filterFn: IGRPDataTableFacetedFilterFn
-        },
-        {
           header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Processo` } />)
 ,accessorKey: 'process',
           cell: ({ row }) => {
           return row.getValue("process")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Tarefa` } />)
+,accessorKey: 'currentStep',
+          cell: ({ row }) => {
+          return row.getValue("currentStep")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },
@@ -299,20 +294,10 @@ onFiltersChange={ handleApplyFilters } ></TaskProcessFilter></div>
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Prioridade` } />)
+          header: 'Prioridade'
 ,accessorKey: 'priority',
           cell: ({ row }) => {
-          const rowData = row.original;
-
-const { iconName, bgClass, textClass, label, className } = getPriorityColor(rowData);
-
-return <IGRPDataTableCellBadge
-  label={ label ?? row.original.priority }
-  variant={ `soft` }
-badgeClassName={ `${bgClass} ${textClass} ${className}` }
->
-
-</IGRPDataTableCellBadge>
+          return row.getValue("priority")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },

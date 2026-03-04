@@ -37,12 +37,24 @@ export const urlConfig = {
    * @param processInstanceId - Process instance ID
    * @returns Complete URL for process instance
    */
-  buildProcessInstanceUrl: (
-    procReleaseKey: string,
+  buildProcessInstanceUrl: async (
     processInstanceId: string,
-  ): string => {
-    const BASE_RUNTIME_URL = process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL ?? "";
-    return `${BASE_RUNTIME_URL}/process/${procReleaseKey}/${processInstanceId}`;
+    applicationBase: string,
+    processKey: string,
+  ): Promise<string> => {
+    if (process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL) {
+      return `${process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL}/process/view/${processKey}/${processInstanceId}`;
+    }
+    const application = await getApplication(applicationBase);
+    const { slug, url } = application;
+
+    const href = process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL
+      ? process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL
+      : slug
+        ? formatSlug(slug)
+        : (url ?? "");
+
+    return `${href}/process/view/${processKey}/${processInstanceId}`;
   },
 
   /**

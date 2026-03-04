@@ -1,93 +1,364 @@
-# blank-template
+# IGRP Framework Next.js Template
 
+A production-ready template for building applications with the IGRP Framework on Next.js 15. This template provides a complete foundation with authentication, layout management, and a modern UI built on top of the IGRP design system.
 
+## 📋 Table of Contents
 
-## Getting started
+- [Overview](#overview)
+- [Prerequisites](#prerequisites)
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [Configuration](#configuration)
+- [Environment Variables](#environment-variables)
+- [Available Scripts](#available-scripts)
+- [How It's Built](#how-its-built)
+- [Authentication](#authentication)
+- [Preview Mode](#preview-mode)
+- [Docker Support](#docker-support)
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## 🎯 Overview
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+The IGRP Framework Next.js Template is a comprehensive starter template that includes:
 
-## Add your files
+- **Next.js 15** with App Router and Turbopack
+- **IGRP Framework** integration with layout management
+- **NextAuth.js** for authentication
+- **TypeScript** for type safety
+- **Tailwind CSS** for styling
+- **React Query** for data fetching
+- **React Hook Form** with Zod validation
+- **Biome** for code formatting and linting
+- **[Lucide](https://lucide.dev/icons/)** for icon library
+- **Modern UI Components** from IGRP Design System
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+## 📦 Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- **Node.js** >= 22.x.x
+- **pnpm** (recommended) or npm/yarn
+- **Git**
+
+## 🚀 Getting Started
+
+### 1. Install Dependencies
+
+```bash
+pnpm install
+```
+
+### 2. Configure Environment Variables
+
+Create a `.env.local` file in the root directory with the following variables:
+
+```env
+# Application Configuration
+IGRP_APP_CODE=your-app-code
+IGRP_PREVIEW_MODE=false
+NEXT_PUBLIC_BASE_PATH=
+
+# NextAuth Configuration
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_URL_INTERNAL=http://localhost:3000
+NEXTAUTH_SECRET=your-secret-key-here
+
+# API Configuration
+IGRP_ACCESS_MANAGEMENT_API=https://your-api-url.com
+NEXT_PUBLIC_IGRP_APP_HOME_SLUG=/
+NEXT_IGRP_APP_CENTER_URL=https://app-center-url.com
+
+# Image Domains (comma-separated)
+NEXT_PUBLIC_ALLOWED_DOMAINS=example.com,cdn.example.com
+```
+
+### 3. Start Development Server
+
+```bash
+pnpm dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+### 4. Build for Production
+
+```bash
+pnpm build
+pnpm start
+```
+
+## 📁 Project Structure
 
 ```
-cd existing_repo
-git remote add origin https://code.irn.justica.gov.pt/devops/templates/templates-exemplo/blank-template.git
-git branch -M main
-git push -uf origin main
+templates/demo/
+├── src/
+│   ├── app/                   # Next.js App Router pages
+│   │   ├── (auth)/            # Authentication routes (login, logout)
+│   │   ├── (igrp)/            # IGRP-protected routes
+│   │   │   ├── layout.tsx    # IGRP layout wrapper
+│   │   │   └── page.tsx      # Home page
+│   │   ├── api/               # API routes
+│   │   │   └── auth/         # NextAuth API routes
+│   │   └── layout.tsx        # Root layout
+│   ├── actions/               # Server actions
+│   │   └── igrp/             # IGRP-specific actions
+│   ├── config/               # Configuration files
+│   │   ├── login.ts         # Login configuration
+│   │   └── site.ts          # Site metadata
+│   ├── lib/                  # Utility libraries
+│   │   ├── auth-helpers.ts  # Authentication helpers
+│   │   ├── auth-options.ts  # NextAuth configuration
+│   │   └── fonts.ts         # Font configuration
+│   ├── temp/                 # Mock data (for preview mode)
+│   │   ├── applications/    # Mock applications
+│   │   ├── menus/           # Mock menu items
+│   │   └── users/           # Mock user data
+│   ├── styles/               # Global styles
+│   ├── middleware.ts         # Next.js middleware
+│   └── igrp.template.config.ts  # IGRP configuration builder
+├── public/                    # Static assets
+├── create-template/          # Template publishing scripts
+├── docker/                   # Docker configuration
+└── package.json
 ```
 
-## Integrate with your tools
+## ⚙️ Configuration
 
-- [ ] [Set up project integrations](https://code.irn.justica.gov.pt/devops/templates/templates-exemplo/blank-template/-/settings/integrations)
+### IGRP Configuration
 
-## Collaborate with your team
+The main IGRP configuration is built in `src/igrp.template.config.ts`. This file:
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+- Configures the IGRP layout (header, sidebar, menus)
+- Sets up authentication and session management
+- Defines preview mode behavior
+- Configures API management client
 
-## Test and Deploy
+### Layout Configuration
 
-Use the built-in continuous integration in GitLab.
+The layout is configured in `src/app/(igrp)/layout.tsx`:
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+- Wraps routes with IGRP layout components
+- Handles authentication redirects
+- Manages session state
+- Configures preview mode
 
-***
+### Site Customization
 
-# Editing this README
+Coming soon
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+### Login Customization
 
-## Suggestions for a good README
+Coming soon
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+## 🔐 Environment Variables
 
-## Name
-Choose a self-explaining name for your project.
+### Required Variables
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `IGRP_APP_CODE` | Your application code identifier | `my-app` |
+| `NEXTAUTH_URL` | Public URL of your application | `http://localhost:3000` |
+| `NEXTAUTH_SECRET` | Secret key for NextAuth encryption | Generate with `openssl rand -base64 32` |
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+### Optional Variables
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `IGRP_PREVIEW_MODE` | Enable preview mode (no auth required) | `false` |
+| `IGRP_ACCESS_MANAGEMENT_API` | API Management base URL | - |
+| `NEXT_PUBLIC_BASE_PATH` | Base path for the application | `/` |
+| `NEXT_PUBLIC_IGRP_APP_HOME_SLUG` | Default home route | `/` |
+| `NEXT_IGRP_APP_CENTER_URL` | Application center URL | - |
+| `NEXT_PUBLIC_ALLOWED_DOMAINS` | Allowed image domains (comma-separated) | - |
+| `IGRP_SYNC_ON_CODE_MENUS` | Enable synchronization of menus defined in code with the IGRP system | `false` |
+| `IGRP_SYNC_ACCESS` | Enable synchronization of applications, resources, and menus with the IGRP Access Management API | `true` |
+| `IGRP_M2M_SERVICE_ID` | Unique identifier for your service in the IGRP Access Management system (required when `IGRP_SYNC_ACCESS=true`) | - |
+| `IGRP_M2M_TOKEN` | Authentication token for machine-to-machine API calls (required when `IGRP_SYNC_ACCESS=true`) | - |
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+### Synchronization Variables
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+The following variables control how your application synchronizes with the IGRP system:
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+#### `IGRP_SYNC_ON_CODE_MENUS`
+- **Purpose**: Controls whether menus defined in your application code are synchronized with the IGRP system
+- **Usage**: Set to `true` to enable code-based menu synchronization, `false` to disable
+- **When to use**: Enable this if you want to sync menus that are hardcoded in your application with the IGRP framework
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+#### `IGRP_SYNC_ACCESS`
+- **Purpose**: Controls synchronization of applications, resources, and menus with the IGRP Access Management API
+- **Usage**: Set to `true` to enable access management synchronization, `false` to disable
+- **When to use**: Enable this if you want your application to automatically sync its structure (applications, resources, menus) with the IGRP Access Management system
+- **Note**: Requires `IGRP_M2M_SERVICE_ID` and `IGRP_M2M_TOKEN` to be configured when enabled
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+#### `IGRP_M2M_SERVICE_ID`
+- **Purpose**: Unique identifier for your service in the IGRP Access Management system
+- **Usage**: Set this to your service identifier (e.g., `demo-igrp` or `your-service-name`)
+- **Required when**: `IGRP_SYNC_ACCESS=true`
+- **How to get**: Contact your IGRP Access Management administrator
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+#### `IGRP_M2M_TOKEN`
+- **Purpose**: Authentication token used for machine-to-machine API calls to the IGRP Access Management API
+- **Usage**: Set this to the token provided by your IGRP Access Management administrator
+- **Required when**: `IGRP_SYNC_ACCESS=true`
+- **How to get**: Contact your IGRP Access Management administrator
+- **Security**: Keep this token secure and never commit it to version control
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+## 📜 Available Scripts
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+### Development
 
-## License
-For open source projects, say how it is licensed.
+```bash
+# Start development server with Turbopack
+pnpm dev
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+# Format code with Biome
+pnpm format
+
+# Lint and fix code with Biome
+pnpm lint
+```
+
+### Production
+
+```bash
+# Build for production (includes formatting)
+pnpm build
+
+# Start production server
+pnpm start
+```
+
+## 🏗️ How It's Built
+
+### Architecture Overview
+
+The template follows Next.js 15 App Router architecture with the following key components:
+
+#### 1. **Root Layout** (`src/app/layout.tsx`)
+
+- Provides global layout structure
+- Configures metadata and viewport
+- Wraps application with IGRP root layout
+
+#### 2. **IGRP Layout** (`src/app/(igrp)/layout.tsx`)
+
+- Handles authentication checks
+- Manages session state
+- Redirects unauthenticated users to login
+- Wraps routes with IGRP layout components (header, sidebar)
+
+#### 3. **Middleware** (`src/middleware.ts`)
+
+- Intercepts requests before they reach pages
+- Validates authentication tokens
+- Handles public paths (login, logout, API routes)
+- Supports preview mode bypass
+
+#### 4. **Configuration Builder** (`src/igrp.template.config.ts`)
+
+- Builds IGRP configuration object
+- Loads mock data for preview mode
+- Configures layout, API, and toaster settings
+- Manages session configuration
+
+#### 5. **Server Actions** (`src/actions/igrp/`)
+
+- `layout.ts`: Fetches layout configuration and session
+- `auth.ts`: Authentication-related actions
+
+### Key Technologies
+
+- **Next.js 15**: React framework with App Router
+- **Turbopack**: Fast bundler for development
+- **TypeScript**: Type-safe JavaScript
+- **NextAuth.js**: Authentication library
+- **React Query**: Server state management
+- **React Hook Form**: Form handling
+- **Zod**: Schema validation
+- **Tailwind CSS**: Utility-first CSS framework
+- **Biome**: Fast formatter and linter
+
+### Data Flow
+
+1. **Request arrives** → Middleware checks authentication
+2. **Authenticated** → Request proceeds to layout
+3. **Layout loads** → Fetches configuration and session
+4. **Configuration built** → IGRP layout components render
+5. **Page renders** → With header, sidebar, and content
+
+## 🔒 Authentication
+
+The template uses NextAuth.js for authentication. Configuration is in `src/lib/auth-options.ts`.
+
+### Authentication Flow
+
+1. User visits protected route
+2. Middleware checks for valid session
+3. If no session → Redirect to `/login`
+4. User authenticates → Session created
+5. User redirected to original destination
+
+### Customizing Authentication
+
+To customize authentication:
+
+1. Edit `src/lib/auth-options.ts` to configure providers
+2. Update `src/app/(auth)/login/page.tsx` for custom login UI
+3. Modify `src/middleware.ts` for custom auth logic
+
+## 👁️ Preview Mode
+
+Preview mode allows you to develop and test without authentication:
+
+```env
+IGRP_PREVIEW_MODE=true
+```
+
+When enabled:
+
+- Authentication checks are bypassed
+- Mock data is used for menus, users, and applications
+- Session refetching is disabled
+- No redirects to login page
+
+**Mock data sources:**
+
+- `src/temp/users/use-mock-user.ts`
+- `src/temp/menus/use-mock-menus.ts`
+- `src/temp/applications/use-mock-apps.ts`
+
+## 🐳 Docker Support
+
+### Development
+
+```bash
+docker build -f docker/development/Dockerfile -t my-igrp-template:latest .
+docker run -d --name my-igrp-template -p 3000:3000 --restart unless-stopped --env-file docker/development/.env.development my-igrp-template:latest
+```
+
+### Production
+
+Use the production Dockerfile with appropriate environment variables.
+
+## 📚 Additional Resources
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [IGRP Framework Documentation](https://github.com/NOSiCode-CV/IGRP-Framework)
+- [NextAuth.js Documentation](https://next-auth.js.org)
+- [React Query Documentation](https://tanstack.com/query/latest)
+
+## 🤝 Contributing
+
+Contributions are welcome! Please ensure you:
+
+1. Follow the code style (Biome formatting)
+2. Add appropriate TypeScript types
+3. Test your changes thoroughly
+4. Update documentation as needed
+
+## 📄 License
+
+MIT License - see LICENSE file for details
+
+---
+
+**Built with ❤️ by the IGRP Team**

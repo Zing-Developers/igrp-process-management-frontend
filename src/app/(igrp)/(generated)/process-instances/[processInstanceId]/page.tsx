@@ -25,7 +25,7 @@ import {
   IGRPCardContent,
   IGRPHeadline,
 } from "@igrp/igrp-framework-react-design-system";
-import { useProcessDetails } from "@/app/(myapp)/processinstances/hooks/use-process-details";
+import { useProcessDetails } from "@/app/(myapp)/process-instances/hooks/use-process-details";
 import { format, formatDistanceToNow } from "date-fns";
 
 export default function PageViewComponent({

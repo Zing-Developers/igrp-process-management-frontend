@@ -26,7 +26,7 @@ import {
   IGRPModalDialogFooter,
   IGRPButton,
 } from "@igrp/igrp-framework-react-design-system";
-import { PRIORITY_OPTIONS } from "../app/(myapp)/enum/priority";
+import { PRIORITY_OPTIONS } from "@/app/(myapp)/config/constants";
 
 export default function Prioritymodal({
   open,
@@ -34,13 +34,19 @@ export default function Prioritymodal({
   onSave,
   modalTitle,
   modalSubTitle,
+  prioritiesOptions,
+  loadingPriorities,
 }: {
   open: boolean;
   setOpen: (prompt: boolean) => void;
   onSave: (data: any) => void;
   modalTitle: string;
   modalSubTitle: string;
+  prioritiesOptions: any;
+  loadingPriorities: boolean;
 }) {
+  z.config(z.locales.en());
+
   const form1 = z.object({
     priority: z.string().nonempty(),
   });
@@ -48,7 +54,7 @@ export default function Prioritymodal({
   type Form1ZodType = typeof form1;
 
   const initForm1: z.infer<Form1ZodType> = {
-    priority: `2`,
+    priority: `1`,
   };
 
   const formform1Ref = useRef<IGRPFormHandle<Form1ZodType> | null>(null);
@@ -60,8 +66,12 @@ export default function Prioritymodal({
   const { igrpToast } = useIGRPToast();
 
   useEffect(() => {
-    setSelectpriorityOptions(PRIORITY_OPTIONS);
-  }, []);
+    setSelectpriorityOptions(
+      (prioritiesOptions || []).length > 0
+        ? prioritiesOptions
+        : PRIORITY_OPTIONS,
+    );
+  }, [loadingPriorities, prioritiesOptions]);
 
   return (
     <div className={cn("component")}>

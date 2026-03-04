@@ -25,10 +25,12 @@ export function createConfig(
   const appRoutes = routes?.appRoutes ?? [];
   const paramMapBody = routes?.paramMapBody ?? "";
 
+  const igrpSyncAccess = process.env.IGRP_SYNC_ACCESS === "true";
+
   return igrpBuildConfig({
     appCode: process.env.IGRP_APP_CODE || "",
     previewMode: isPreviewMode(),
-    syncAccess: process.env.IGRP_SYNC_ACCESS === "true",
+    syncAccess: igrpSyncAccess,
     appInformation: getPackageJson(),
     layoutMockData: {
       getHeaderData: async () => ({
@@ -64,8 +66,8 @@ export function createConfig(
       m2mServiceId: process.env.IGRP_M2M_SERVICE_ID || "",
       m2mToken: process.env.IGRP_M2M_TOKEN || "",
       syncOnCodeMenus: process.env.IGRP_SYNC_ON_CODE_MENUS === "true",
-      appRoutes,
-      paramMapBody,
+      appRoutes: igrpSyncAccess ? appRoutes : [],
+      paramMapBody: igrpSyncAccess ? paramMapBody : "",
     },
     toasterConfig: {
       showToaster: true,

@@ -2,6 +2,7 @@ import {
   IGRPBadgePrimitive,
   IGRPCopyTo,
   IGRPIcon,
+  IGRPDataTableCellBadge,
   Progress,
   cn,
 } from "@igrp/igrp-framework-react-design-system";
@@ -39,6 +40,29 @@ const progressColor = (status: string) => {
   if (status === "terminated") return "bg-red-500";
   if (status === "suspended") return "bg-amber-500";
   return "bg-blue-500";
+};
+
+/** Options returned by getPriorityBadge / getPriorityBadgeFromApi for rendering the priority badge. */
+export interface PriorityBadgeOptions {
+  label: string;
+  bgClass: string;
+  textClass: string;
+  className: string;
+  badgeStyle?: React.CSSProperties;
+}
+
+export const getPriorityTemplate = (
+  opts: PriorityBadgeOptions,
+  priorityValue: string,
+) => {
+  if (opts.badgeStyle) {
+    return (
+      <IGRPBadgePrimitive style={opts.badgeStyle}>
+        {opts.label ?? priorityValue}
+      </IGRPBadgePrimitive>
+    );
+  }
+  return <></>;
 };
 
 export const getDateTemplate = (date_: string | Date) => {
@@ -227,4 +251,22 @@ export const getTypeIcon = (value: unknown) => {
     default:
       return <IGRPIcon iconName="Type" />;
   }
+};
+
+export const getCandidateGroupsTemplate = (candidateGroups: string[]) => {
+  const groups = candidateGroups ?? [];
+  return (
+    <div className="flex flex-wrap gap-1">
+      {groups.slice(0, 2).map((group) => (
+        <IGRPBadgePrimitive key={group} variant="secondary" className="text-xs">
+          {group}
+        </IGRPBadgePrimitive>
+      ))}
+      {candidateGroups.length > 2 && (
+        <IGRPBadgePrimitive variant="outline" className="text-xs">
+          +{candidateGroups.length - 2}
+        </IGRPBadgePrimitive>
+      )}
+    </div>
+  );
 };

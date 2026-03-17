@@ -1,7 +1,7 @@
 import { ProcessManagementClient } from "@igrp/platform-process-management-client-ts";
 import { getIGRPProcessClientConfig } from "./api-config";
 import { getAccessToken, refreshAccessToken } from "./auth-helpers";
-import { LRUCache } from 'lru-cache';
+import { LRUCache } from "lru-cache";
 import { getOrFetchToken } from "./rsa-token-handlers";
 
 const cache = new LRUCache<string, string>({
@@ -42,7 +42,8 @@ export async function getIGRPProcessClient(): Promise<ProcessManagementClient> {
     throw new Error("Access token not available");
   }
 
-  const IRN_APISIX_TOKEN_ENABLED = process.env.IRN_APISIX_TOKEN_ENABLED ?? false
+  const IRN_APISIX_TOKEN_ENABLED =
+    process.env.IRN_APISIX_TOKEN_ENABLED ?? false;
 
   const ROTATED_TOKEN = await getOrFetchToken("api-six-token-v.0", cache);
 
@@ -50,14 +51,16 @@ export async function getIGRPProcessClient(): Promise<ProcessManagementClient> {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     Accept: "application/json",
-    ...(IRN_APISIX_TOKEN_ENABLED ? {
-       Authorization: `Bearer ${ROTATED_TOKEN}`,
-        "X-Access-Token": `Bearer ${token?.accessToken}`,
-        Cookie: `session_id=${token?.session_id}`,
-    } : {
-      Authorization: `Bearer ${token.accessToken}`,
-      Cookie: `session_id=${token?.session_id}`,
-    })
+    ...(IRN_APISIX_TOKEN_ENABLED
+      ? {
+          Authorization: `Bearer ${ROTATED_TOKEN}`,
+          "X-Access-Token": `Bearer ${token?.accessToken}`,
+          Cookie: `session_id=${token?.session_id}`,
+        }
+      : {
+          Authorization: `Bearer ${token.accessToken}`,
+          Cookie: `session_id=${token?.session_id}`,
+        }),
   };
 
   // Create new client instance with current token

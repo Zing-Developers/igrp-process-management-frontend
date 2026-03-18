@@ -19,7 +19,6 @@ export const authOptions: AuthOptions = {
       // Initial sign in
       if (account && user) {
         try {
-
           if (process.env.IRN_API_BACKOFFICE_BASE_URL) {
             const sessionData = await expSystemAdminAPIClient.auth.login({
               accessToken: account.access_token,

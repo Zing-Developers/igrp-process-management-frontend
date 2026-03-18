@@ -19,17 +19,19 @@ export const authOptions: AuthOptions = {
       // Initial sign in
       if (account && user) {
         try {
-          const sessionData = await expSystemAdminAPIClient.auth.login({
-            accessToken: account.access_token,
-            refreshToken: account.refresh_token,
-            expiresIn: account.expires_in,
-          });
+          if (process.env.IRN_API_BACKOFFICE_BASE_URL) {
+            const sessionData = await expSystemAdminAPIClient.auth.login({
+              accessToken: account.access_token,
+              refreshToken: account.refresh_token,
+              expiresIn: account.expires_in,
+            });
 
-          if (!sessionData.sessionId) {
-            throw new Error("Null session data");
+            if (!sessionData.sessionId) {
+              throw new Error("Null session data");
+            }
+
+            token.session_id = sessionData.sessionId;
           }
-
-          token.session_id = sessionData.sessionId;
 
           token.accessToken = account.access_token;
           token.expiresAt = account.expires_at

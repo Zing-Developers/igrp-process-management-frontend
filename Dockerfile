@@ -1,14 +1,14 @@
 FROM node:24-alpine AS base
-RUN apk add --no-cache libc6-compat && corepack enable
+RUN apk add --no-cache libc6-compat && \
+    corepack enable && \
+    corepack prepare pnpm@9.15.9 --activate
 # ENV PNPM_HOME=/pnpm
 # ENV PATH="$PNPM_HOME:$PATH"
 WORKDIR /app
 
 FROM base AS deps
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* *.npmrc ./
-RUN npm install -g pnpm@9.15.9 && \
-    pnpm install \
-      --registry=https://nexus.tools.irn.internal/repository/npm-group/ \
+RUN pnpm install \
       --no-frozen-lockfile \
       --strict-peer-dependencies=false
 

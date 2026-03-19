@@ -1,18 +1,16 @@
 FROM node:24-alpine AS base
-RUN apk add --no-cache libc6-compat && corepack enable
+RUN apk add --no-cache libc6-compat && \
+    corepack enable && \
+    corepack prepare pnpm@9.15.9 --activate
 # ENV PNPM_HOME=/pnpm
 # ENV PATH="$PNPM_HOME:$PATH"
 WORKDIR /app
 
 FROM base AS deps
-COPY package.json .npmrc ./
-COPY pnpm-lock.yaml ./
-RUN node -v && pnpm -v
-RUN if [ -f pnpm-lock.yaml ]; then \
-    echo "Using frozen lockfile" && pnpm i --frozen-lockfile; \
-  else \
-    echo "No lockfile found, installing dependencies"; \
-  fi
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* *.npmrc ./
+RUN pnpm install \
+      --no-frozen-lockfile \
+      --strict-peer-dependencies=false
 
 FROM base AS builder
 WORKDIR /app

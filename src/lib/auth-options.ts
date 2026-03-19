@@ -19,13 +19,8 @@ export const authOptions: AuthOptions = {
       // Initial sign in
       if (account && user) {
         try {
-          if (process.env.IRN_API_BACKOFFICE_BASE_URL) {
-
-            console.log("🟢 EXCHANGE_WITH", {
-              accessToken: account.access_token,
-              refreshToken: account.refresh_token,
-              expiresIn: account.expires_at,
-            })
+          if (!process.env.IRN_SYSTEM_ADMINISTRATION_DISABLED) {
+            console.log("🔴 token_exchanged");
 
             const sessionData = await expSystemAdminAPIClient.auth.login({
               accessToken: account.access_token,

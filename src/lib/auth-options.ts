@@ -20,10 +20,17 @@ export const authOptions: AuthOptions = {
       if (account && user) {
         try {
           if (process.env.IRN_API_BACKOFFICE_BASE_URL) {
+
+            console.log("🟢 EXCHANGE_WITH", {
+              accessToken: account.access_token,
+              refreshToken: account.refresh_token,
+              expiresIn: account.expires_at,
+            })
+
             const sessionData = await expSystemAdminAPIClient.auth.login({
               accessToken: account.access_token,
               refreshToken: account.refresh_token,
-              expiresIn: account.expires_in,
+              expiresIn: account.expires_at,
             });
 
             if (!sessionData.sessionId) {

@@ -1,4 +1,9 @@
+import { APIExperienceAuthInterceptor } from "@/lib/irn-api-token-provider";
 import { Client, createClient } from "@irn/irn-experience-sdk";
+
+const interceptors = new APIExperienceAuthInterceptor(
+  "interceptor-cached-token_v.2",
+);
 
 const trimTrailingSlash = (url: string) => url.replace(/\/+$/, "");
 
@@ -23,5 +28,6 @@ const createLazyClient = (factory: () => Client): Client => {
 export const expSystemAdminAPIClient = createLazyClient(() =>
   createClient({
     baseUrl: getSystemAdminBaseUrl(),
+    interceptors: [interceptors],
   }),
 );

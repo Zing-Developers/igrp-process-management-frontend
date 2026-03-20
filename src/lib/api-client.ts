@@ -45,7 +45,10 @@ export async function getIGRPProcessClient(): Promise<ProcessManagementClient> {
   const IRN_APISIX_TOKEN_ENABLED =
     process.env.IRN_APISIX_TOKEN_ENABLED ?? false;
 
-  const ROTATED_TOKEN = await getOrFetchToken("api-six-token-v.0", cache);
+  let ROTATED_TOKEN = "";
+
+  if (IRN_APISIX_TOKEN_ENABLED)
+    ROTATED_TOKEN = await getOrFetchToken("api-six-token-v.0", cache);
 
   // Prepare headers with authentication
   const headers: Record<string, string> = {
@@ -53,16 +56,16 @@ export async function getIGRPProcessClient(): Promise<ProcessManagementClient> {
     Accept: "application/json",
     ...(IRN_APISIX_TOKEN_ENABLED
       ? {
-          Authorization: `Bearer ${ROTATED_TOKEN}`,
-          "X-Access-Token": `Bearer ${token?.accessToken}`,
-          Cookie: `session_id=${token?.session_id}`,
-        }
+        Authorization: `Bearer ${ROTATED_TOKEN}`,
+        "X-Access-Token": `Bearer ${token?.accessToken}`,
+        Cookie: `session_id=${token?.session_id}`,
+      }
       : {
-          Authorization: `Bearer ${token.accessToken}`,
-          ...(!process.env.IRN_SYSTEM_ADMINISTRATION_DISABLED
-            ? { Cookie: `session_id=${token?.session_id}` }
-            : {}),
-        }),
+        Authorization: `Bearer ${token.accessToken}`,
+        ...(!process.env.IRN_SYSTEM_ADMINISTRATION_DISABLED
+          ? { Cookie: `session_id=${token?.session_id}` }
+          : {}),
+      }),
   };
 
   // Create new client instance with current token

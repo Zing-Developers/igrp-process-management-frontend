@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import { configLayout } from "@/actions/igrp/layout";
 import { isPreviewMode as checkPreviewMode } from "@/lib/utils";
 import { QueryProvider } from "@/components/providers";
+import IRNLayout from "@/components/irn-ui-commons/irn-layout";
 
 export default async function IGRPRootLayout({
   children,
@@ -42,8 +43,16 @@ export default async function IGRPRootLayout({
   }
 
   return (
-    <IGRPLayout config={config}>
-      <QueryProvider>{children}</QueryProvider>
-    </IGRPLayout>
+    <IRNLayout>
+      <main className="px-4">
+        <QueryProvider>{children}</QueryProvider>
+      </main>
+    </IRNLayout>
   );
+
+  // return (
+  //   <IGRPLayout config={config}>
+  //     <QueryProvider>{children}</QueryProvider>
+  //   </IGRPLayout>
+  // );
 }

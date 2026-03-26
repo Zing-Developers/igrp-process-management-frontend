@@ -3,8 +3,15 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@import "@igrp/framework-next-ui/dist/styles.css";
-@import "@igrp/igrp-framework-react-design-system/dist/styles.css";
+/* @import "@igrp/framework-next-ui/dist/styles.css";
+@import "@igrp/igrp-framework-react-design-system/dist/styles.css"; */
+
+
+/* important */
+@source "../../node_modules/@irn/irn-backoffice-design-system/dist/styles.css";
+@import '@irn/irn-backoffice-design-system/styles';
+
+
 @import "./themes.css";
 
 @theme inline {

@@ -15,7 +15,17 @@ function isPublicPath(pathname: string) {
 }
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, origin, href } = request.nextUrl;
+
+  //  ======= auth form flow
+  // if AUTH_LOGIN_PATH_URL go there and login
+  const authLoginPathUrl = process.env.AUTH_LOGIN_PATH_URL;
+
+  if (pathname.startsWith("/login") && authLoginPathUrl) {
+    const loginRedirectUrl = new URL(authLoginPathUrl, origin);
+    loginRedirectUrl.searchParams.set("callbackUrl", href);
+    return NextResponse.redirect(loginRedirectUrl);
+  }
 
   // Skip authentication checks if preview mode is enabled
   if (!isPreviewMode()) {

@@ -56,16 +56,16 @@ export async function getIGRPProcessClient(): Promise<ProcessManagementClient> {
     Accept: "application/json",
     ...(IRN_APISIX_TOKEN_ENABLED
       ? {
-        Authorization: `Bearer ${ROTATED_TOKEN}`,
-        "X-Access-Token": `Bearer ${token?.accessToken}`,
-        Cookie: `session_id=${token?.session_id}`,
-      }
+          Authorization: `Bearer ${ROTATED_TOKEN}`,
+          "X-Access-Token": `Bearer ${token?.accessToken}`,
+          Cookie: `session_id=${token?.session_id}`,
+        }
       : {
-        Authorization: `Bearer ${token.accessToken}`,
-        ...(!process.env.IRN_SYSTEM_ADMINISTRATION_DISABLED
-          ? { Cookie: `session_id=${token?.session_id}` }
-          : {}),
-      }),
+          Authorization: `Bearer ${token.accessToken}`,
+          ...(!process.env.IRN_SYSTEM_ADMINISTRATION_DISABLED
+            ? { Cookie: `session_id=${token?.session_id}` }
+            : {}),
+        }),
   };
 
   // Create new client instance with current token

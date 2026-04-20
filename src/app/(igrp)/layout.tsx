@@ -49,10 +49,4 @@ export default async function IGRPRootLayout({
       </main>
     </IRNLayout>
   );
-
-  // return (
-  //   <IGRPLayout config={config}>
-  //     <QueryProvider>{children}</QueryProvider>
-  //   </IGRPLayout>
-  // );
 }

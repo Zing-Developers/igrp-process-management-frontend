@@ -35,6 +35,12 @@ importers:
       '@igrp/platform-process-management-types':
         specifier: 0.1.0-beta.13
         version: 0.1.0-beta.13
+      '@irn/irn-backoffice-design-system':
+        specifier: ^1.4.5
+        version: 1.4.5(@igrp/framework-next-types@0.1.0-beta.91(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3))(@igrp/igrp-framework-react-design-system@0.1.0-beta.91(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(lucide-react@0.563.0(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(recharts@2.15.4(react-dom@19.2.3(react@19.2.3))(react@19.2.3))
+      '@irn/irn-backoffice-integration':
+        specifier: ^1.0.13
+        version: 1.0.13(@igrp/framework-next-types@0.1.0-beta.91(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3))(@igrp/igrp-framework-react-design-system@0.1.0-beta.91(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(lucide-react@0.563.0(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(recharts@2.15.4(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(use-sync-external-store@1.6.0(react@19.2.3))
       '@irn/irn-experience-sdk':
         specifier: ^2.1.1
         version: 2.1.1(@types/node@24.11.0)(typescript@5.9.3)
@@ -386,6 +392,25 @@ packages:
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     cpu: [x64]
     os: [win32]
+
+  '@irn/irn-backoffice-design-system@1.4.5':
+    resolution: {integrity: sha512-CELrUAWULJsY0Y2IhfkgG10A/EL3lvD1hAGJz+VkUrBocEGBW1IWboY2l6GIgMRb7A+BGk+MflsT8/H47Ggq+Q==}
+    engines: {node: '>=20.x.x'}
+    peerDependencies:
+      '@igrp/framework-next-types': ^0.1.0-beta.18
+      '@igrp/igrp-framework-react-design-system': ^0.1.0-beta.18
+      lucide-react: ^0.544.0
+      next: ^15.5.7
+      react: ^19.2.3
+      react-dom: ^19.2.3
+      recharts: ^2.12.0
+
+  '@irn/irn-backoffice-integration@1.0.13':
+    resolution: {integrity: sha512-JcfTff+AypXOCz7JZmTs+fnSDLdNuOGVL8kyzsyrBbymRbeFE1RqDuVY3FrErCHHuCEqYtitmrpFiBtUQCpXnQ==}
+    peerDependencies:
+      next: ^15.5.7
+      react: ^19.1.2
+      react-dom: ^19.1.2
 
   '@irn/irn-experience-sdk@2.1.1':
     resolution: {integrity: sha512-HsyZi3iyqX2tGwLZnA9omNix+PtatXkvCafFT20DiCYTJn4+sZtsrqEn1UryQTDfiW2H4QS6c9kN7PWnCOn0Gg==}
@@ -1931,6 +1956,24 @@ packages:
   zod@4.3.6:
     resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
 
+  zustand@5.0.12:
+    resolution: {integrity: sha512-i77ae3aZq4dhMlRhJVCYgMLKuSiZAaUPAct2AksxQ+gOtimhGMdXljRT21P5BNpeT4kXlLIckvkPM029OljD7g==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=18.0.0'
+      immer: '>=9.0.6'
+      react: '>=18.0.0'
+      use-sync-external-store: '>=1.2.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+      use-sync-external-store:
+        optional: true
+
 snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
@@ -2211,6 +2254,41 @@ snapshots:
 
   '@img/sharp-win32-x64@0.34.5':
     optional: true
+
+  '@irn/irn-backoffice-design-system@1.4.5(@igrp/framework-next-types@0.1.0-beta.91(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3))(@igrp/igrp-framework-react-design-system@0.1.0-beta.91(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(lucide-react@0.563.0(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(recharts@2.15.4(react-dom@19.2.3(react@19.2.3))(react@19.2.3))':
+    dependencies:
+      '@igrp/framework-next-types': 0.1.0-beta.91(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
+      '@igrp/igrp-framework-react-design-system': 0.1.0-beta.91(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      clsx: 2.1.1
+      cmdk: 1.1.1(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      lucide-react: 0.563.0(react@19.2.3)
+      next: 15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+      recharts: 2.15.4(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      tailwind-merge: 3.4.0
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
+
+  '@irn/irn-backoffice-integration@1.0.13(@igrp/framework-next-types@0.1.0-beta.91(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3))(@igrp/igrp-framework-react-design-system@0.1.0-beta.91(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(lucide-react@0.563.0(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(recharts@2.15.4(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(use-sync-external-store@1.6.0(react@19.2.3))':
+    dependencies:
+      '@irn/irn-backoffice-design-system': 1.4.5(@igrp/framework-next-types@0.1.0-beta.91(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3))(@igrp/igrp-framework-react-design-system@0.1.0-beta.91(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(lucide-react@0.563.0(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(recharts@2.15.4(react-dom@19.2.3(react@19.2.3))(react@19.2.3))
+      clsx: 2.1.1
+      next: 15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+      tailwind-merge: 3.4.0
+      zustand: 5.0.12(@types/react@19.2.9)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
+    transitivePeerDependencies:
+      - '@igrp/framework-next-types'
+      - '@igrp/igrp-framework-react-design-system'
+      - '@types/react'
+      - '@types/react-dom'
+      - immer
+      - lucide-react
+      - recharts
+      - use-sync-external-store
 
   '@irn/irn-experience-sdk@2.1.1(@types/node@24.11.0)(typescript@5.9.3)':
     dependencies:
@@ -3698,3 +3776,9 @@ snapshots:
   yn@3.1.1: {}
 
   zod@4.3.6: {}
+
+  zustand@5.0.12(@types/react@19.2.9)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3)):
+    optionalDependencies:
+      '@types/react': 19.2.9
+      react: 19.2.3
+      use-sync-external-store: 1.6.0(react@19.2.3)

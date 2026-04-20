@@ -1,6 +1,6 @@
 {
   "name": "process-management-frontend",
-  "version": "0.0.1-alpha.5",
+  "version": "1.0.0-dev.3",
   "description": "Process Management Frontend for IGRP",
   "scripts": {
     "dev": "next dev --turbopack",
@@ -19,11 +19,16 @@
     "@igrp/platform-access-management-client-ts": "0.1.0-beta.63",
     "@igrp/platform-process-management-client-ts": "0.1.0-beta.12",
     "@igrp/platform-process-management-types": "0.1.0-beta.13",
+    "@irn/irn-backoffice-design-system": "^1.4.5",
+    "@irn/irn-backoffice-integration": "^1.0.13",
+    "@irn/irn-experience-sdk": "^2.1.1",
     "@tanstack/react-query": "^5.90.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cookies": "^0.9.1",
     "date-fns": "^4.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "lru-cache": "^11.2.7",
     "next": "15.5.9",
     "next-auth": "4.24.13",
     "react": "19.2.3",
@@ -36,6 +41,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.2.6",
     "@tailwindcss/postcss": "^4.1.17",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.10.1",
     "@types/react": "19.2.9",
     "@types/react-dom": "19.2.3",

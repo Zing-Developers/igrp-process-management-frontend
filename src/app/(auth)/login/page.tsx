@@ -7,6 +7,10 @@ import { cn } from "@/lib/utils";
 const { sliderPosition, texts } = loginConfig;
 const { logo, name } = siteConfig;
 
+export const metadata = {
+  title: "Login",
+};
+
 export default async function AuthPage({
   searchParams,
 }: {

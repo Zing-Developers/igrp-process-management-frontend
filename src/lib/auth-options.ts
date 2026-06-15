@@ -18,26 +18,31 @@ export const authOptions: AuthOptions = {
     async jwt({ token, account, user }) {
       // Initial sign in
       if (account && user) {
-
         try {
-          const sessionData = await expSystemAdminAPIClient.auth.login({
-            accessToken: account.access_token,
-            refreshToken: account.refresh_token,
-            expiresIn: account.expires_in,
-          });
+          if (!process.env.IRN_SYSTEM_ADMINISTRATION_DISABLED) {
+            console.log("🔴 token_exchanged");
 
-          if (!sessionData.sessionId) {
-            throw new Error('Null session data');
+            const sessionData = await expSystemAdminAPIClient.auth.login({
+              accessToken: account.access_token,
+              refreshToken: account.refresh_token,
+              expiresIn: account.expires_at,
+            });
+
+            if (!sessionData.sessionId) {
+              throw new Error("Null session data");
+            }
+
+            token.session_id = sessionData.sessionId;
           }
 
-          token.session_id = sessionData.sessionId;
-
           token.accessToken = account.access_token;
-          token.expiresAt = account.expires_at ? account.expires_at * 1000 : Date.now() + 3600 * 1000;
+          token.expiresAt = account.expires_at
+            ? account.expires_at * 1000
+            : Date.now() + 3600 * 1000;
           token.refreshToken = account.refresh_token;
         } catch (error) {
-          console.error('[Auth] Backend login failed:', error);
-          throw new Error('Error creating BFF Session ID');
+          console.error("[Auth] Backend login failed:", error);
+          throw new Error("Error creating BFF Session ID");
         }
       }
 

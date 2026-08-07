@@ -215,7 +215,7 @@ export default function PageProcessinstancesComponent() {
           cardBorder={`rounded-lg`}
           cardVariant={`success`}
           iconBackground={`square`}
-          title={`Total Finalizados`}
+          title={`Total finalizados`}
           titleSize={`sm`}
           valueSize={`2xl`}
           showIcon={true}

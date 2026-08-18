@@ -11,7 +11,7 @@ import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-re
 import { AppliedFilter, AppliedFiltersSection, FiltersSection } from '@/app/(myapp)/components/filter-section'
 import { FilterData } from '@/app/(myapp)/components/filter-data'
 import { useDropdownData } from '@/app/(myapp)/components/processtaksfilter/hooks/use-dropdown-data'
-import { format } from 'date-fns'
+import { IRNDatePicker } from '@irn/irn-backoffice-design-system'
 import { IGRPDataTableFacetedFilterFn, IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
 import { LoadingPage } from '@/app/(myapp)/components/loading-page'
@@ -23,7 +23,6 @@ import {
   IGRPDataTableRowAction,
   IGRPDataTableButtonLink,
   IGRPCombobox,
-  IGRPDatePickerRange,
   IGRPInputText
 } from "@igrp/igrp-framework-react-design-system";
 import { useRouter } from 'next/navigation'
@@ -125,19 +124,16 @@ export default function PageMytasksComponent() {
     applyFilters();
   };
 
-  const getDateRange = () => {
-    if (!draftFilters.dateFrom && !draftFilters.dateTo) return undefined;
+  const toPickerDate = (value: string | null) => {
+    if (!value) return undefined;
+    const [day, month, year] = value.split('-');
+    return `${year}-${month}-${day}`;
+  };
 
-    const parseDate = (value: string | null) => {
-      if (!value) return undefined;
-      const [day, month, year] = value.split('-').map(Number);
-      return new Date(year, month - 1, day);
-    };
-
-    return {
-      from: parseDate(draftFilters.dateFrom),
-      to: parseDate(draftFilters.dateTo),
-    };
+  const fromPickerDate = (value: string) => {
+    if (!value) return null;
+    const [year, month, day] = value.split('-');
+    return `${day}-${month}-${year}`;
   };
 
   const selectedValue = (value: string | string[]) =>
@@ -148,11 +144,6 @@ export default function PageMytasksComponent() {
       key: 'processNumber',
       label: `Número do processo: ${filters.processNumber}`,
       onRemove: () => updateFilters({ processNumber: '' }),
-    },
-    filters.processType && {
-      key: 'processType',
-      label: `Tipo de processo: ${filters.processType}`,
-      onRemove: () => updateFilters({ processType: '' }),
     },
     filters.status && {
       key: 'status',
@@ -351,32 +342,26 @@ export default function PageMytasksComponent() {
               }))
             }
           />
-          <IGRPDatePickerRange
-            id="period"
-            label="Período"
-            placeholder="Selecione uma data"
-            dateFormat="dd/MM/yyyy"
-            date={getDateRange()}
-            onDateChange={(date) =>
-              setDraftFilters((currentFilters) => ({
-                ...currentFilters,
-                dateFrom: date?.from ? format(date.from, 'dd-MM-yyyy') : null,
-                dateTo: date?.to ? format(date.to, 'dd-MM-yyyy') : null,
-              }))
-            }
-          />
-          <IGRPInputText
-            id="processType"
-            label="Tipo de processo"
-            placeholder="Digite o tipo de processo"
-            value={draftFilters.processType}
-            onChange={(event) =>
-              setDraftFilters((currentFilters) => ({
-                ...currentFilters,
-                processType: event.target.value,
-              }))
-            }
-          />
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Período</label>
+            <IRNDatePicker
+              mode="range"
+              value={toPickerDate(draftFilters.dateFrom)}
+              endValue={toPickerDate(draftFilters.dateTo)}
+              onChange={() => {}}
+              onRangeChange={(startDate, endDate) =>
+                setDraftFilters((currentFilters) => ({
+                  ...currentFilters,
+                  dateFrom: fromPickerDate(startDate),
+                  dateTo: fromPickerDate(endDate),
+                }))
+              }
+              placeholder="Selecione a data ou o intervalo"
+              align="center"
+              triggerClassName="w-full justify-between font-normal"
+              className="w-full [&>[role=dialog]]:!fixed [&>[role=dialog]]:!inset-auto [&>[role=dialog]]:!top-4 [&>[role=dialog]]:!left-1/2 [&>[role=dialog]]:!-translate-x-1/2 [&>[role=dialog]]:!mt-0 [&>[role=dialog]]:!max-h-[calc(100dvh-2rem)] [&>[role=dialog]]:!w-[min(362px,calc(100vw-2rem))] [&>[role=dialog]]:overflow-y-auto"
+            />
+          </div>
           <div className="md:col-span-2">
             <FilterData
               value={draftFilters.variables}

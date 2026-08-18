@@ -50,7 +50,7 @@ export function FiltersSection({
           <IGRPButton
             variant={hasAppliedFilters ? "default" : "outline"}
             showIcon={true}
-            iconName="Filter"
+            iconName="Funnel"
           >
             {title}
           </IGRPButton>

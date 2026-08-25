@@ -42,6 +42,12 @@ export default async function IGRPRootLayout({
     redirect(urlLogin);
   }
 
+  // return (
+  //   <IGRPLayout config={config}>
+  //     <QueryProvider>{children}</QueryProvider>
+  //   </IGRPLayout>
+  // );
+
   return (
     <IRNLayout>
       <main className="px-4">

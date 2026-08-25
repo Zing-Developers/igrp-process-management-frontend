@@ -26,7 +26,6 @@ export async function Header() {
           variant: "destructive",
         },
       ]}
-      
     />
   );
 }

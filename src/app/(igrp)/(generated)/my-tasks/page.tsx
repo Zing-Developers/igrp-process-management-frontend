@@ -192,12 +192,16 @@ export default function PageMytasksComponent() {
 
 
   return (
-    <div className={cn('page', 'space-y-6',)}    > 
+    <div className={cn('page', 'space-y-6',)}    >
 
       <PageHeader
         name={`Minhas Tarefas`}
-        description={`Tarefas atribuídas a você`}></PageHeader>
-
+        description={`Tarefas atribuídas a você`}
+        badgeCount={parseInt(`${statstatsCard1Value}`)}
+      ></PageHeader>
+      
+      {/* HIDDING */}
+      {/* 
       <div className={cn('grid', 'md:grid-cols-2 ', 'lg:grid-cols-4 ', 'xl:grid-cols-5 ', ' gap-4',)}    >
         <IGRPStatsCard
           id={`statsCard1`}
@@ -306,7 +310,7 @@ export default function PageMytasksComponent() {
           onClick={() => { }}
           value={statstatsCard3Value}
         >
-        </IGRPStatsCard></div>
+        </IGRPStatsCard></div> */}
       <FiltersSection
         hasAppliedFilters={appliedFilters.length > 0}
         onApply={handleApplyFilters}
@@ -348,7 +352,7 @@ export default function PageMytasksComponent() {
               mode="range"
               value={toPickerDate(draftFilters.dateFrom)}
               endValue={toPickerDate(draftFilters.dateTo)}
-              onChange={() => {}}
+              onChange={() => { }}
               onRangeChange={(startDate, endDate) =>
                 setDraftFilters((currentFilters) => ({
                   ...currentFilters,

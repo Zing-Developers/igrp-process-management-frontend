@@ -8,22 +8,25 @@
 
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
-import TaskProcessFilter from '@/components/taskprocessfilter'
-import { FilterActives } from '@/app/(myapp)/components/filter-actives'
+import { AppliedFilter, AppliedFiltersSection, FiltersSection } from '@/app/(myapp)/components/filter-section'
+import { FilterData } from '@/app/(myapp)/components/filter-data'
+import { useDropdownData } from '@/app/(myapp)/components/processtaksfilter/hooks/use-dropdown-data'
+import { IRNDatePicker } from '@irn/irn-backoffice-design-system'
 import { IGRPDataTableFacetedFilterFn, IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
 import { LoadingPage } from '@/app/(myapp)/components/loading-page'
 import {
-  IGRPPageHeader,
-  IGRPStatsCard,
   IGRPDataTable,
   IGRPDataTableRowAction,
-  IGRPDataTableButtonLink
+  IGRPDataTableButtonLink,
+  IGRPCombobox,
+  IGRPInputText
 } from "@igrp/igrp-framework-react-design-system";
 import { useRouter } from "next/navigation"
 import { urlConfig } from '@/app/(myapp)/utils/url-config'
 import { useDashboard } from '@/app/(myapp)/dashboard/hooks/use-dashboard'
 import { useProcessInstances } from '@/app/(myapp)/process-instances/hooks/use-process-instances'
+import { PageHeader } from '@/app/(myapp)/components/PageHeader';
 
 export default function PageProcessinstancesComponent() {
 
@@ -41,11 +44,6 @@ export default function PageProcessinstancesComponent() {
   }
 
   const [statstatsCard1Value, setStatstatsCard1Value] = useState<string | number>(0);
-  const [statstatsCard2Value, setStatstatsCard2Value] = useState<string | number>(0);
-  const [statstatsCard4Value, setStatstatsCard4Value] = useState<string | number>(0);
-  const [statstatsCard3Value, setStatstatsCard3Value] = useState<string | number>(0);
-
-
   const { igrpToast } = useIGRPToast()
 
   async function goToProcessRuntime(row: any): Promise<void | undefined> {
@@ -81,38 +79,80 @@ export default function PageProcessinstancesComponent() {
     loading,
     error,
     handleSearch,
-    resetFilters,
     updateFilters,
+    applyFilters,
+    resetFilters,
     filters
   } = useProcessInstances();
+  const [draftFilters, setDraftFilters] = useState(filters);
+  const { dropdownOptions } = useDropdownData(draftFilters, true);
 
   // Update table data when process instances change
   useEffect(() => {
     if (stats && !statsLoading) {
       setStatstatsCard1Value(stats.processInstances.totalInstances);
-      setStatstatsCard2Value(stats.processInstances.totalRunning);
-      setStatstatsCard3Value(stats.processInstances.totalCompleted);
-      setStatstatsCard4Value(stats.processInstances.totalCancelled);
     }
   }, [stats]);
 
-  // Handle filter application with process instance filters
-  const handleApplyFilters = (filters?: any) => {
-    if (filters) {
-      // Update filters directly - useQuery will auto-refetch
-      updateFilters(filters);
-    }
+  useEffect(() => {
+    setDraftFilters(filters);
+  }, [filters]);
+
+  const handleApplyFilters = () => {
+    updateFilters(draftFilters);
+    applyFilters();
   };
 
   // Handle filter reset
   const handleResetFilters = () => {
     resetFilters();
+    setDraftFilters((currentFilters) => ({
+      ...currentFilters,
+      areaId: '', subareaId: '', processType: '', processNumber: '', status: '',
+      dateFrom: null, dateTo: null, organic: '', user: '', variables: [],
+    }));
   };
 
   // Handle search
   const handleSearchSubmit = (searchTerm: string) => {
     handleSearch(searchTerm);
   };
+
+  const toPickerDate = (value: string | null) => {
+    if (!value) return undefined;
+    const [day, month, year] = value.split('-');
+    return `${year}-${month}-${day}`;
+  };
+
+  const fromPickerDate = (value: string) => {
+    if (!value) return null;
+    const [year, month, day] = value.split('-');
+    return `${day}-${month}-${year}`;
+  };
+
+  const selectedValue = (value: string | string[]) =>
+    Array.isArray(value) ? value[0] : value;
+
+  const optionLabel = (options: { label: string; value: string }[], value: string) =>
+    options.find((option) => option.value === value)?.label ?? value;
+
+  const appliedFilters: AppliedFilter[] = [
+    filters.areaId && { key: 'areaId', label: `\u00c1rea: ${optionLabel(dropdownOptions.areas, filters.areaId)}`, onRemove: () => updateFilters({ areaId: '', subareaId: '', processType: '' }) },
+    filters.subareaId && { key: 'subareaId', label: `Sub-\u00e1rea: ${optionLabel(dropdownOptions.subareas, filters.subareaId)}`, onRemove: () => updateFilters({ subareaId: '', processType: '' }) },
+    filters.processType && { key: 'processType', label: `Tipo de processo: ${optionLabel(dropdownOptions.processTypes, filters.processType)}`, onRemove: () => updateFilters({ processType: '' }) },
+    filters.processNumber && { key: 'processNumber', label: `N\u00famero do processo: ${filters.processNumber}`, onRemove: () => updateFilters({ processNumber: '' }) },
+    filters.status && { key: 'status', label: `Estado: ${optionLabel(dropdownOptions.statuses, filters.status)}`, onRemove: () => updateFilters({ status: '' }) },
+    (filters.dateFrom || filters.dateTo) && { key: 'period', label: `Per\u00edodo: ${filters.dateFrom ?? ''}${filters.dateTo ? ` a ${filters.dateTo}` : ''}`, onRemove: () => updateFilters({ dateFrom: null, dateTo: null }) },
+    ...filters.variables.filter((filter) => filter.value !== '').map((filter) => ({
+      key: `variable-${filter.id}`,
+      label: `${filter.name}: ${filter.value}`,
+      onRemove: () => {
+        const nextVariables = filters.variables.filter((item) => item.id !== filter.id);
+        setDraftFilters((currentFilters) => ({ ...currentFilters, variables: nextVariables }));
+        updateFilters({ variables: nextVariables });
+      },
+    })),
+  ].filter((filter): filter is AppliedFilter => Boolean(filter));
 
   // Show error toast if there's an error
   useEffect(() => {
@@ -129,6 +169,9 @@ export default function PageProcessinstancesComponent() {
 
   return (
     <div className={cn('page', 'space-y-6',)}    >
+      {/* Legacy header, cards, and filter UI retained for generated-page traceability.
+          The replacement below uses the shared filter interaction pattern. */}
+      {/*
       <IGRPPageHeader
         id={`pageHeader1`}
         title={`Histórico de Processo`}
@@ -237,6 +280,39 @@ export default function PageProcessinstancesComponent() {
           onResetFilters={handleResetFilters}
           onFiltersChange={handleApplyFilters} ></TaskProcessFilter></div>
       <FilterActives filters={filters} onFiltersChange={handleApplyFilters} ></FilterActives>
+      */}
+      <PageHeader
+        name={"Hist\u00f3rico de Processo"}
+        description={"Consultar e auditar inst\u00e2ncias hist\u00f3ricas de processos"}
+        badgeCount={parseInt(`${statstatsCard1Value}`)}
+      />
+      <FiltersSection
+        hasAppliedFilters={appliedFilters.length > 0}
+        onApply={handleApplyFilters}
+        onClear={handleResetFilters}
+      >
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <IGRPInputText
+            id="processNumber"
+            label={"N\u00famero do processo"}
+            placeholder="Ex: CV-24509202511"
+            value={draftFilters.processNumber}
+            onChange={(event) => setDraftFilters((currentFilters) => ({ ...currentFilters, processNumber: event.target.value }))}
+          />
+          <IGRPCombobox id="status" label="Estado" variant="single" placeholder="Selecione um estado..." selectLabel={"Nenhuma op\u00e7\u00e3o encontrada"} showSearch={true} showIcon={false} options={dropdownOptions.statuses} value={draftFilters.status} onChange={(value) => setDraftFilters((currentFilters) => ({ ...currentFilters, status: selectedValue(value) }))} />
+          <IGRPCombobox id="area" label={"\u00c1rea"} variant="single" placeholder={"Selecione uma \u00e1rea..."} selectLabel={"Nenhuma op\u00e7\u00e3o encontrada"} showSearch={true} showIcon={false} options={dropdownOptions.areas} value={draftFilters.areaId} onChange={(value) => setDraftFilters((currentFilters) => ({ ...currentFilters, areaId: selectedValue(value), subareaId: '', processType: '' }))} />
+          <IGRPCombobox id="subarea" label={"Sub-\u00e1rea"} variant="single" placeholder={"Selecione uma sub-\u00e1rea..."} selectLabel={"Nenhuma op\u00e7\u00e3o encontrada"} showSearch={true} showIcon={false} options={dropdownOptions.subareas} value={draftFilters.subareaId} disabled={!draftFilters.areaId} onChange={(value) => setDraftFilters((currentFilters) => ({ ...currentFilters, subareaId: selectedValue(value), processType: '' }))} />
+          <IGRPCombobox id="processType" label="Tipo de processo" variant="single" placeholder="Selecione um tipo de processo..." selectLabel={"Nenhuma op\u00e7\u00e3o encontrada"} showSearch={true} showIcon={false} options={dropdownOptions.processTypes} value={draftFilters.processType} disabled={!draftFilters.areaId} onChange={(value) => setDraftFilters((currentFilters) => ({ ...currentFilters, processType: selectedValue(value) }))} />
+          <div className="space-y-2">
+            <label className="text-sm font-medium">{"Per\u00edodo"}</label>
+            <IRNDatePicker mode="range" value={toPickerDate(draftFilters.dateFrom)} endValue={toPickerDate(draftFilters.dateTo)} onChange={() => { }} onRangeChange={(startDate, endDate) => setDraftFilters((currentFilters) => ({ ...currentFilters, dateFrom: fromPickerDate(startDate), dateTo: fromPickerDate(endDate) }))} placeholder="Selecione a data ou o intervalo" align="center" triggerClassName="w-full justify-between font-normal" className="w-full [&>[role=dialog]]:!fixed [&>[role=dialog]]:!inset-auto [&>[role=dialog]]:!top-4 [&>[role=dialog]]:!left-1/2 [&>[role=dialog]]:!-translate-x-1/2 [&>[role=dialog]]:!mt-0 [&>[role=dialog]]:!max-h-[calc(100dvh-2rem)] [&>[role=dialog]]:!w-[min(362px,calc(100vw-2rem))] [&>[role=dialog]]:overflow-y-auto" />
+          </div>
+          <div className="md:col-span-2">
+            <FilterData value={draftFilters.variables} onChange={(variables) => setDraftFilters((currentFilters) => ({ ...currentFilters, variables }))} />
+          </div>
+        </div>
+      </FiltersSection>
+      <AppliedFiltersSection filters={appliedFilters} />
       {!loading && (<IGRPDataTable<Table1, Table1>
         id={`processes`}
         showFilter={true}

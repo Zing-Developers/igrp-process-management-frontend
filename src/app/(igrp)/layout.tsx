@@ -48,7 +48,6 @@ export default async function IGRPRootLayout({
   //   </IGRPLayout>
   // );
 
-
   return (
     <IRNLayout>
       <main className="px-4">

@@ -43,7 +43,7 @@ async function IRNLayout({ children }: { children: React.ReactNode }) {
   return (
     <main className="pt-24">
       <Header />
-      <section>{children}</section>
+      <section className="px-2">{children}</section>
     </main>
   );
 }

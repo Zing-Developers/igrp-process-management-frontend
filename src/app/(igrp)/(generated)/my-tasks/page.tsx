@@ -42,6 +42,7 @@ export default function PageMytasksComponent() {
     startedAt: string;
     duration: string;
     priority: string;
+    updatedBy: string;
     taskId: string;
     processName: string;
   }
@@ -425,6 +426,14 @@ export default function PageMytasksComponent() {
               , accessorKey: 'priority',
               cell: ({ row }) => {
                 return row.getValue("priority")
+              },
+              filterFn: IGRPDataTableFacetedFilterFn
+            },
+            {
+              header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={`Atualizado por`} />)
+              , accessorKey: 'updatedBy',
+              cell: ({ row }) => {
+                return row.getValue("updatedBy")
               },
               filterFn: IGRPDataTableFacetedFilterFn
             },

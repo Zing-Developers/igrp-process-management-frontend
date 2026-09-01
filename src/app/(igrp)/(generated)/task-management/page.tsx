@@ -8,25 +8,28 @@
 
 import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
-import TaskProcessFilter from '@/components/taskprocessfilter'
-import {FilterActives} from '@/app/(myapp)/components/filter-actives'
+import { AppliedFilter, AppliedFiltersSection, FiltersSection } from '@/app/(myapp)/components/filter-section'
+import { FilterData } from '@/app/(myapp)/components/filter-data'
+import { FilterState, useDropdownData } from '@/app/(myapp)/components/processtaksfilter/hooks/use-dropdown-data'
+import { IRNDatePicker } from '@irn/irn-backoffice-design-system'
 import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@igrp/igrp-framework-react-design-system";
 import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
 import {LoadingPage} from '@/app/(myapp)/components/loading-page'
 import CommonUserTaskModalForm from '@/components/commonusertaskmodalform'
 import { 
-  IGRPPageHeader,
-	IGRPStatsCard,
 	IGRPDataTable,
 	IGRPDataTableCellBadge,
 	IGRPDataTableRowAction,
-	IGRPDataTableButtonLink 
+	IGRPDataTableButtonLink,
+  IGRPCombobox,
+  IGRPInputText
 } from "@igrp/igrp-framework-react-design-system";
 import { useRouter } from 'next/navigation'
 import { urlConfig } from '@/app/(myapp)/utils/url-config'
 import {useDashboard} from '@/app/(myapp)/dashboard/hooks/use-dashboard'
 import { useTaskManagement } from '@/app/(myapp)/task-management/hooks/use-task-management'
 import {getTaskStatusColor} from '@/app/(myapp)/utils/status-badge'
+import { PageHeader } from '@/app/(myapp)/components/PageHeader';
 
 
 export default function PageTaskmanagementComponent() {
@@ -42,14 +45,11 @@ export default function PageTaskmanagementComponent() {
     duration: string;
     status: string;
     priority: string;
+    updatedBy: string;
     taskId: string;
 }
 
   const [statstatsCard1Value, setStatstatsCard1Value] = useState<string | number>(0);
-  const [statstatsCard5Value, setStatstatsCard5Value] = useState<string | number>(0);
-  const [statstatsCard2Value, setStatstatsCard2Value] = useState<string | number>(0);
-  const [statstatsCard4Value, setStatstatsCard4Value] = useState<string | number>(0);
-  const [statstatsCard3Value, setStatstatsCard3Value] = useState<string | number>(0);
   
   
 const { igrpToast } = useIGRPToast()
@@ -77,23 +77,25 @@ const {
   loading,
   error,
   handleSearch,
-  resetFilters,
   updateFilters,
+  applyFilters,
+  resetFilters,
   handleOpenAssignModal,
   handleCloseAssignModal,
   handleAssignTask,
   getPriorityBadge,
   filters
 } = useTaskManagement();
+const [draftFilters, setDraftFilters] = useState<FilterState>({
+  areaId: '', subareaId: '', processType: '', processNumber: '', status: '',
+  dateFrom: null, dateTo: null, organic: '', user: '', variables: [],
+});
+const { dropdownOptions } = useDropdownData(draftFilters);
 
 // Transform data for the table
 useEffect(() => {
   if (stats && !statsLoading) {
     setStatstatsCard1Value(stats.tasks.totalTasks);
-    setStatstatsCard5Value(stats.tasks.totalTasksAvailable);
-    setStatstatsCard2Value(stats.tasks.totalTasksAssigned);
-    setStatstatsCard3Value(stats.tasks.totalTasksCancelled);
-    setStatstatsCard4Value(stats.tasks.totalTasksCompleted);
   }
 }, [stats, statsLoading]);
 
@@ -101,16 +103,82 @@ const handleSearchSubmit = (searchTerm: string) => {
   handleSearch(searchTerm);
 };
 
-const handleApplyFilters = (filters?: any) => {
-   if (filters) {
-    // Update filters directly - useQuery will auto-refetch
-    updateFilters(filters);
-  }
+useEffect(() => {
+  setDraftFilters((currentFilters) => ({
+    ...currentFilters,
+    areaId: filters.areaId ?? '',
+    subareaId: filters.subareaId ?? '',
+    processType: filters.processType ?? '',
+    processNumber: filters.processNumber ?? '',
+    status: filters.status ?? '',
+    dateFrom: filters.dateFrom ?? null,
+    dateTo: filters.dateTo ?? null,
+    organic: filters.organic ?? '',
+    user: filters.user ?? '',
+    variables: (filters.variables ?? []).map((filter, index) => ({
+      ...filter,
+      id: `existing-variable-${index}`,
+    })),
+  }));
+}, [filters]);
+
+const handleApplyFilters = () => {
+  updateFilters({
+    areaId: draftFilters.areaId,
+    subareaId: draftFilters.subareaId,
+    processType: draftFilters.processType,
+    processNumber: draftFilters.processNumber,
+    status: draftFilters.status,
+    dateFrom: draftFilters.dateFrom ?? undefined,
+    dateTo: draftFilters.dateTo ?? undefined,
+    organic: draftFilters.organic,
+    user: draftFilters.user,
+    variables: draftFilters.variables.map(({ id, ...filter }) => filter),
+  });
+  applyFilters();
 };
 
 const handleResetFilters = () => {
   resetFilters();
+  setDraftFilters((currentFilters) => ({
+    ...currentFilters,
+    areaId: '', subareaId: '', processType: '', processNumber: '', status: '',
+    dateFrom: null, dateTo: null, organic: '', user: '', variables: [],
+  }));
 };
+
+const toPickerDate = (value: string | null) => {
+  if (!value) return undefined;
+  const [day, month, year] = value.split('-');
+  return `${year}-${month}-${day}`;
+};
+
+const fromPickerDate = (value: string) => {
+  if (!value) return null;
+  const [year, month, day] = value.split('-');
+  return `${day}-${month}-${year}`;
+};
+
+const selectedValue = (value: string | string[]) => Array.isArray(value) ? value[0] : value;
+const optionLabel = (options: { label: string; value: string }[], value: string) => options.find((option) => option.value === value)?.label ?? value;
+
+const appliedFilters: AppliedFilter[] = [
+   draftFilters.areaId && { key: 'areaId', label: `\u00c1rea: ${optionLabel(dropdownOptions.areas, draftFilters.areaId)}`, onRemove: () => updateFilters({ areaId: '', subareaId: '', processType: '' }) },
+   draftFilters.subareaId && { key: 'subareaId', label: `Sub-\u00e1rea: ${optionLabel(dropdownOptions.subareas, draftFilters.subareaId)}`, onRemove: () => updateFilters({ subareaId: '', processType: '' }) },
+   draftFilters.processType && { key: 'processType', label: `Tipo de processo: ${optionLabel(dropdownOptions.processTypes, draftFilters.processType)}`, onRemove: () => updateFilters({ processType: '' }) },
+   draftFilters.processNumber && { key: 'processNumber', label: `N\u00famero do processo: ${draftFilters.processNumber}`, onRemove: () => updateFilters({ processNumber: '' }) },
+   draftFilters.status && { key: 'status', label: `Estado: ${optionLabel(dropdownOptions.statuses, draftFilters.status)}`, onRemove: () => updateFilters({ status: '' }) },
+   (draftFilters.dateFrom || draftFilters.dateTo) && { key: 'period', label: `Per\u00edodo: ${draftFilters.dateFrom ?? ''}${draftFilters.dateTo ? ` a ${draftFilters.dateTo}` : ''}`, onRemove: () => updateFilters({ dateFrom: undefined, dateTo: undefined }) },
+   ...draftFilters.variables.filter((filter) => filter.value !== '').map((filter) => ({
+    key: `variable-${filter.id}`,
+    label: `${filter.name}: ${filter.value}`,
+    onRemove: () => {
+      const nextVariables = draftFilters.variables.filter((item) => item.id !== filter.id);
+      setDraftFilters((currentFilters) => ({ ...currentFilters, variables: nextVariables }));
+      updateFilters({ variables: nextVariables.map(({ id, ...item }) => item) });
+    },
+  })),
+].filter((filter): filter is AppliedFilter => Boolean(filter));
 
 // Show error toast if there's an error
 useEffect(() => {
@@ -170,6 +238,9 @@ const modalSubtitle = `Indicar um utilizador para assumir a tarefa "${assignModa
 
   return (
 <div className={ cn('page','space-y-6',)}    >
+  {/* Legacy header, cards, and filter UI retained for generated-page traceability.
+      The replacement below uses the shared filter interaction pattern. */}
+  {/*
 	<IGRPPageHeader
   id={ `pageHeader1` }
   title={ `Gestão de Tarefas` }
@@ -299,6 +370,29 @@ onApplyFilters={ handleApplyFilters }
 onResetFilters={ handleResetFilters }
 onFiltersChange={ handleApplyFilters } ></TaskProcessFilter></div>
 <FilterActives  filters={ filters }  onFiltersChange={ handleApplyFilters } ></FilterActives>
+  */}
+  <PageHeader
+    name={"Gest\u00e3o de Tarefas"}
+    description="Visualize e gerencie todas as tarefas do sistema"
+    badgeCount={parseInt(`${statstatsCard1Value}`)}
+  />
+  <FiltersSection hasAppliedFilters={appliedFilters.length > 0} onApply={handleApplyFilters} onClear={handleResetFilters}>
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <IGRPInputText id="processNumber" label={"N\u00famero do processo"} placeholder="Ex: CV-24509202511" value={draftFilters.processNumber} onChange={(event) => setDraftFilters((currentFilters) => ({ ...currentFilters, processNumber: event.target.value }))} />
+      <IGRPCombobox id="status" label="Estado" variant="single" placeholder="Selecione um estado..." selectLabel={"Nenhuma op\u00e7\u00e3o encontrada"} showSearch={true} showIcon={false} options={dropdownOptions.statuses} value={draftFilters.status} onChange={(value) => setDraftFilters((currentFilters) => ({ ...currentFilters, status: selectedValue(value) }))} />
+      <IGRPCombobox id="area" label={"\u00c1rea"} variant="single" placeholder={"Selecione uma \u00e1rea..."} selectLabel={"Nenhuma op\u00e7\u00e3o encontrada"} showSearch={true} showIcon={false} options={dropdownOptions.areas} value={draftFilters.areaId} onChange={(value) => setDraftFilters((currentFilters) => ({ ...currentFilters, areaId: selectedValue(value), subareaId: '', processType: '' }))} />
+      <IGRPCombobox id="subarea" label={"Sub-\u00e1rea"} variant="single" placeholder={"Selecione uma sub-\u00e1rea..."} selectLabel={"Nenhuma op\u00e7\u00e3o encontrada"} showSearch={true} showIcon={false} options={dropdownOptions.subareas} value={draftFilters.subareaId} disabled={!draftFilters.areaId} onChange={(value) => setDraftFilters((currentFilters) => ({ ...currentFilters, subareaId: selectedValue(value), processType: '' }))} />
+      <IGRPCombobox id="processType" label="Tipo de processo" variant="single" placeholder="Selecione um tipo de processo..." selectLabel={"Nenhuma op\u00e7\u00e3o encontrada"} showSearch={true} showIcon={false} options={dropdownOptions.processTypes} value={draftFilters.processType} disabled={!draftFilters.areaId} onChange={(value) => setDraftFilters((currentFilters) => ({ ...currentFilters, processType: selectedValue(value) }))} />
+      <div className="space-y-2">
+        <label className="text-sm font-medium">{"Per\u00edodo"}</label>
+        <IRNDatePicker mode="range" value={toPickerDate(draftFilters.dateFrom)} endValue={toPickerDate(draftFilters.dateTo)} onChange={() => { }} onRangeChange={(startDate, endDate) => setDraftFilters((currentFilters) => ({ ...currentFilters, dateFrom: fromPickerDate(startDate), dateTo: fromPickerDate(endDate) }))} placeholder="Selecione a data ou o intervalo" align="center" triggerClassName="w-full justify-between font-normal" className="w-full [&>[role=dialog]]:!fixed [&>[role=dialog]]:!inset-auto [&>[role=dialog]]:!top-4 [&>[role=dialog]]:!left-1/2 [&>[role=dialog]]:!-translate-x-1/2 [&>[role=dialog]]:!mt-0 [&>[role=dialog]]:!max-h-[calc(100dvh-2rem)] [&>[role=dialog]]:!w-[min(362px,calc(100vw-2rem))] [&>[role=dialog]]:overflow-y-auto" />
+      </div>
+      <div className="md:col-span-2">
+        <FilterData value={draftFilters.variables} onChange={(variables) => setDraftFilters((currentFilters) => ({ ...currentFilters, variables }))} />
+      </div>
+    </div>
+  </FiltersSection>
+  <AppliedFiltersSection filters={appliedFilters} />
 { !loading && (<IGRPDataTable<Table1, Table1>
   id={ `table1` }
   showFilter={ true }
@@ -378,6 +472,14 @@ badgeClassName={ `${bgClass} ${textClass} ${className}` }
 ,accessorKey: 'priority',
           cell: ({ row }) => {
           return row.getValue("priority")
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Atualizado por` } />)
+,accessorKey: 'updatedBy',
+          cell: ({ row }) => {
+          return row.getValue("updatedBy")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },

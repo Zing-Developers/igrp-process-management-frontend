@@ -59,6 +59,14 @@ export function useMyTasks() {
         taskId: task.id,
         processName: task.processName,
         applicationBase: task.applicationBase,
+        updatedBy:
+          task.userProfileEndedBy?.fullName ||
+          task.endedBy ||
+          task.userProfileAssignedBy?.fullName ||
+          task.assignedBy ||
+          task.userProfileStartedBy?.fullName ||
+          task.startedBy ||
+          "-",
       };
     });
   }, [myTasksState.tasks, getPriorityBadge]);

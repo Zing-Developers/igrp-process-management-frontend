@@ -37,16 +37,16 @@ export function ActionsItem({
     try {
       await archiveProcessDefinition(processDefinitionId);
       igrpToast({
-        title: "Process definition archived successfully",
-        description: "The process definition has been archived successfully",
+        title: "Definição de processo arquivada",
+        description: "A definição de processo foi arquivada com sucesso.",
         type: "success",
       });
       onArchiveSuccess?.();
     } catch (error) {
       console.error(error);
       igrpToast({
-        title: "Error archiving process definition",
-        description: "An error occurred while archiving the process definition",
+        title: "Erro ao arquivar a definição de processo",
+        description: "Ocorreu um erro ao arquivar a definição de processo.",
         type: "error",
       });
     } finally {
@@ -66,15 +66,15 @@ export function ActionsItem({
       a.click();
       URL.revokeObjectURL(url);
       igrpToast({
-        title: "Process definition exported successfully",
-        description: "The process definition has been exported successfully",
+        title: "Definição de processo exportada",
+        description: "A definição de processo foi exportada com sucesso.",
         type: "success",
       });
     } catch (error) {
       console.error(error);
       igrpToast({
-        title: "Error exporting process definition",
-        description: "An error occurred while exporting the process definition",
+        title: "Erro ao exportar a definição de processo",
+        description: "Ocorreu um erro ao exportar a definição de processo.",
         type: "error",
       });
     } finally {
@@ -94,19 +94,19 @@ export function ActionsItem({
       const data = JSON.parse(text) as ProcessDefinitionSchema;
       await importProcessDefinition(data);
       igrpToast({
-        title: "Process definition imported successfully",
-        description: "The process definition has been imported successfully",
+        title: "Definição de processo importada",
+        description: "A definição de processo foi importada com sucesso.",
         type: "success",
       });
       onImportSuccess?.();
     } catch (error) {
       console.error(error);
       igrpToast({
-        title: "Error importing process definition",
+        title: "Erro ao importar a definição de processo",
         description:
           error instanceof SyntaxError
-            ? "Invalid JSON file"
-            : "An error occurred while importing the process definition",
+            ? "Ficheiro JSON inválido."
+            : "Ocorreu um erro ao importar a definição de processo.",
         type: "error",
       });
     }
@@ -133,12 +133,12 @@ export function ActionsItem({
             {processDefinitionId && (
               <IGRPDropdownMenuItemPrimitive onClick={handleExport}>
                 <IGRPIcon iconName="Download" />
-                Export
+                Exportar
               </IGRPDropdownMenuItemPrimitive>
             )}
             <IGRPDropdownMenuItemPrimitive onClick={handleImportClick}>
               <IGRPIcon iconName="Upload" />
-              Import new
+                Importar novo
             </IGRPDropdownMenuItemPrimitive>
           </IGRPDropdownMenuGroupPrimitive>
           {processDefinitionId && (
@@ -150,7 +150,7 @@ export function ActionsItem({
                   onClick={() => setIsOpen(!isOpen)}
                 >
                   <IGRPIcon iconName="Archive" />
-                  Archive
+                  Arquivar
                 </IGRPDropdownMenuItemPrimitive>
               </IGRPDropdownMenuGroupPrimitive>
             </>
@@ -159,15 +159,15 @@ export function ActionsItem({
       </IGRPDropdownMenuPrimitive>
 
       <IGRPAlertDialog
-        title="Archive"
+        title="Arquivar"
         open={isOpen}
         onOpenChange={setIsOpen}
-        description="Are you sure you want to archive this process definition?"
+        description="Tem a certeza de que pretende arquivar esta definição de processo?"
         iconName="Archive"
         showIcon={true}
         variant="destructive"
-        actionLabel="Archive"
-        cancelLabel="Cancel"
+        actionLabel="Arquivar"
+        cancelLabel="Cancelar"
         onAction={handleArchive}
         onCancel={() => {
           setIsOpen(false);

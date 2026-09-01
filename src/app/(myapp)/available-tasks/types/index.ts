@@ -54,4 +54,5 @@ export interface TaskTableRow {
   createdDate: string;
   assignee?: string;
   priority: string;
+  updatedBy: string;
 }

@@ -58,6 +58,14 @@ export function useAvailableTasks() {
         processInstanceId: task.processInstanceId,
         createdDate: task.startedAt,
         assignedBy: task.assignedBy,
+        updatedBy:
+          task.userProfileEndedBy?.fullName ||
+          task.endedBy ||
+          task.userProfileAssignedBy?.fullName ||
+          task.assignedBy ||
+          task.userProfileStartedBy?.fullName ||
+          task.startedBy ||
+          "-",
         priority: getPriorityTemplate(
           getPriorityBadge(task.processKey, priorityValue),
           priorityValue,

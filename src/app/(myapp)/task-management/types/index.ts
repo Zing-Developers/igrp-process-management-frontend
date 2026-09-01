@@ -39,6 +39,7 @@ export interface TaskManagementTableRow {
   duration: string;
   status: string;
   taskId: string;
+  updatedBy: string;
   //taskKey?: string;
   processKey?: string;
   processInstanceId?: string;

@@ -36,8 +36,8 @@ importers:
         specifier: 0.1.0-beta.13
         version: 0.1.0-beta.13
       '@irn/irn-auth-sdk':
-        specifier: ^1.0.3
-        version: 1.0.3(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+        specifier: ^2.2.3
+        version: 2.2.3(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@irn/irn-backoffice-design-system':
         specifier: ^1.4.5
         version: 1.9.0(@igrp/framework-next-types@0.1.0-beta.91(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3))(@igrp/igrp-framework-react-design-system@0.1.0-beta.91(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(lucide-react@0.563.0(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(recharts@2.15.4(react-dom@19.2.3(react@19.2.3))(react@19.2.3))
@@ -68,6 +68,9 @@ importers:
       lru-cache:
         specifier: ^11.2.7
         version: 11.5.2
+      lucide-react:
+        specifier: 0.563.0
+        version: 0.563.0(react@19.2.3)
       next:
         specifier: 15.5.9
         version: 15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -469,14 +472,18 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@irn/irn-auth-sdk@1.0.3':
-    resolution: {integrity: sha512-1QKqyEFYE+1ll1LbOaVX9OVm38CPy9uyCveEcPZE7GIqPJx8IZG/QNt1lWM8iP3cAgVapXrzPZemp0ovQZIbvA==}
+  '@irn/irn-auth-sdk@2.2.3':
+    resolution: {integrity: sha512-fn69KEhVdoXKruvukTPQ5x2D+fAiGHocjj3u8U5cLm88j0nOjOsvz28eeMWbl9IM1AWv/q+djdeHmO9qnN6fDQ==}
     engines: {node: '>=18'}
     peerDependencies:
+      '@opentelemetry/api': '>=1.7.0'
       next: '>=15.0.0'
       next-auth: '>=4.24.0'
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
+    peerDependenciesMeta:
+      '@opentelemetry/api':
+        optional: true
 
   '@irn/irn-backoffice-design-system@1.9.0':
     resolution: {integrity: sha512-Hv6ONjHjPSBtfssV3rvI0pcs/k6WbQfzOiZHq2vLVV3r+zvo9d1dVnIe1E4xSGx7gxXpMWgjNeJOsURLaee5Ag==}
@@ -2379,7 +2386,7 @@ snapshots:
   '@img/sharp-win32-x64@0.34.5':
     optional: true
 
-  '@irn/irn-auth-sdk@1.0.3(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+  '@irn/irn-auth-sdk@2.2.3(next-auth@4.24.13(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
       jose: 5.10.0
       next: 15.5.9(react-dom@19.2.3(react@19.2.3))(react@19.2.3)

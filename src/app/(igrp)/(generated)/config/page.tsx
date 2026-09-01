@@ -10,6 +10,7 @@ import { use, useState, useEffect, useRef } from 'react';
 import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import {ProcessItem} from '@/app/(myapp)/config/components/process-item'
 import {ActionsItem} from '@/app/(myapp)/config/components/actions-item'
+import { PageHeader } from '@/app/(myapp)/components/PageHeader';
 import {SelectedItems} from '@/app/(myapp)/config/components/selected-items'
 import {AddChecklistItem} from '@/app/(myapp)/config/components/add-checklist-item'
 import {AddItem} from '@/app/(myapp)/config/components/add-item'
@@ -19,7 +20,6 @@ import { IGRPDataTableFacetedFilterFn , IGRPDataTableDateRangeFilterFn } from "@
 import { IGRPDataTableHeaderSortToggle, IGRPDataTableHeaderSortDropdown, IGRPDataTableHeaderRowsSelect } from "@igrp/igrp-framework-react-design-system";
 import TaskEditor from '@/app/(igrp)/(generated)/config/components/taskeditor'
 import { 
-  IGRPPageHeader,
 	IGRPCard,
 	IGRPCardHeader,
 	IGRPHeadline,
@@ -35,7 +35,11 @@ import {
 	IGRPInputNumber,
 	IGRPDataTable,
 	IGRPDataTableRowAction,
-	IGRPDataTableButtonLink 
+	IGRPDataTableButtonLink,
+	IGRPDropdownMenu,
+	IGRPDropdownMenuTrigger,
+	IGRPDropdownMenuContent,
+	IGRPDropdownMenuItem
 } from "@igrp/igrp-framework-react-design-system";
 import {useConfigPage} from '@/app/(myapp)/config/hooks/use-config-page'
 import { DATE_FORMAT_OPTIONS } from '@/app/(myapp)/config/constants'
@@ -179,19 +183,13 @@ const groupsValue = assignGroups.form.watch('groups') ?? '';
   return (
 <div className={ cn('page','space-y-6',)}    >
 	<div className={ cn('section',' space-y-6',)}    >
-	<IGRPPageHeader
-  id={ `pageHeader1` }
-  title={ `Process Configuration` }
-  description={ `Configure process numbering, candidate groups, and task settings` }
-  iconBackButton={ `Settings` }
-  showBackButton={ true }
-  urlBackButton={ `/#` }
-  variant={ `h3` }
-  
->
-  <div className="flex items-center gap-2">
-</div>
-</IGRPPageHeader>
+<PageHeader
+  name={ `Configuração de Processos` }
+  description={ `Configure a numeração, os grupos candidatos e as definições das tarefas.` }
+  badgeCount={ allProcesses.length }
+/>
+
+ 
 
 <div className={ cn('grid','lg:grid-cols-4 ',' gap-4',)}    >
 	<div className={ cn('col-span-1 flex flex-col gap-6 ',)}    >
@@ -207,8 +205,8 @@ const groupsValue = assignGroups.form.watch('groups') ?? '';
 >
   <IGRPHeadline
   id={ `headline2` }
-  title={ `Processes` }
-description={ `Select a process to configure` }
+  title={ `Processos` }
+description={ `Selecione um processo para configurar` }
 variant={ `h6` }
 roleColor={ `solid` }
 color={ `primary` }
@@ -230,7 +228,7 @@ startIcon={ `Search` }
 submitIcon={ `ArrowRight` }
 required={ false }
 submitButtonLabel={ undefined }
-placeholder={ `Search...` }
+placeholder={ `Pesquisar...` }
   className={ cn('pl-3','',) }
   setValueChange={ (value) => setFilterProcess(value)
  }
@@ -267,7 +265,7 @@ description={ selectedProcess?.processKey + ' - ' + selectedProcess?.version  }
 >
 </IGRPHeadline>)}
 { !selectedProcess?.name  && (<p className={ cn(' text-muted-foreground',)}    >
-	Select a process to configure</p>)}</div>
+	Selecione um processo para configurar</p>)}</div>
 <div className={ cn('flex',' flex justify-end gap-2',)}    >
 	<ActionsItem  processDefinitionId={ selectedProcess?.id }  onArchiveSuccess={ onArchiveSuccess }
 onImportSuccess={ loadAllProcesses } ></ActionsItem>
@@ -280,7 +278,7 @@ showIcon={ false }
   onClick={ () => {} }
   
 >
-  Cancel
+  Cancelar
 </IGRPButton>
 <IGRPButton
   id={ `button1` }
@@ -291,8 +289,29 @@ showIcon={ false }
   onClick={ handleSaveConfiguration }
   
 >
-  Save Configuration
-</IGRPButton></div></div>
+  Guardar configuração
+</IGRPButton>
+
+ <IGRPDropdownMenu>
+    <IGRPDropdownMenuTrigger asChild>
+      <IGRPButton
+        id="m2mKeysMenu"
+        variant="outline"
+        size="default"
+        showIcon={true}
+        iconName="ChevronDown"
+      >
+        Segurança
+      </IGRPButton>
+    </IGRPDropdownMenuTrigger>
+    <IGRPDropdownMenuContent align="end">
+      <IGRPDropdownMenuItem asChild>
+        <a href="/api-keys">Chaves M2M</a>
+      </IGRPDropdownMenuItem>
+    </IGRPDropdownMenuContent>
+  </IGRPDropdownMenu>
+
+</div></div>
 <IGRPTabs
   variant={ `default` }
   tabContentClassName={ `space-y-4` }
@@ -309,7 +328,7 @@ showIcon={ false }
         
         {
           value: `tabsItem1-bwOE`,
-          label: `General Settings`,
+          label: `Definições gerais`,
           icon: `Settings2`,
           badgeVariant: `solid`,
           badgeColor: `primary`,
@@ -326,8 +345,8 @@ content: (<>
 >
   <IGRPHeadline
   id={ `headline3` }
-  title={ `Process-Level Candidate Groups` }
-description={ `Groups that have access to this process. These groups apply to all tasks unless overridden at the task level.` }
+  title={ `Grupos candidatos do processo` }
+description={ `Grupos com acesso a este processo. Aplicam-se a todas as tarefas, salvo se forem substituídos ao nível da tarefa.` }
 variant={ `h6` }
 roleColor={ `solid` }
 color={ `primary` }
@@ -349,7 +368,7 @@ showIcon={ false }
   
 >
 </IGRPSeparator>
-  <AddChecklistItem  label={ `Available Groups` } availableItems={ [] }  removeItem={ handleRemoveGroup }
+  <AddChecklistItem  label={ `Grupos disponíveis` } availableItems={ [] }  removeItem={ handleRemoveGroup }
 addItem={ handleAddGroup } ></AddChecklistItem>
   <IGRPSeparator
   id={ `separator1` }
@@ -358,7 +377,7 @@ addItem={ handleAddGroup } ></AddChecklistItem>
   
 >
 </IGRPSeparator>
-  <AddItem  label={ `Add Custom Group` } placeholder={ `Enter group name...` } value={ newGroupInput }  setValue={ setNewGroupInput }
+  <AddItem  label={ `Adicionar grupo personalizado` } placeholder={ `Introduza o nome do grupo...` } value={ newGroupInput }  setValue={ setNewGroupInput }
 addItem={ handleAddGroup } ></AddItem>
 </IGRPCardContent>
 </IGRPCard>
@@ -374,8 +393,8 @@ addItem={ handleAddGroup } ></AddItem>
 >
   <IGRPHeadline
   id={ `headline4` }
-  title={ `Priority Options` }
-description={ `Define the priority levels available for tasks in this process. Each option has a label and numeric value.` }
+  title={ `Opções de prioridade` }
+description={ `Defina os níveis de prioridade disponíveis para as tarefas deste processo. Cada opção tem uma designação e um valor numérico.` }
 variant={ `h6` }
 roleColor={ `solid` }
 color={ `primary` }
@@ -402,7 +421,7 @@ setNewPriorityColor={ priorityConfig.setNewPriorityColor } ></PriorityForm>
         
         {
           value: `tabsItem2-niex`,
-          label: `Process Numbering`,
+          label: `Numeração do processo`,
           icon: `Hash`,
           badgeVariant: `solid`,
           badgeColor: `primary`,
@@ -419,8 +438,8 @@ content: (<>
 >
   <IGRPHeadline
   id={ `headline5` }
-  title={ `Process Numbering Configuration` }
-description={ `Configure how process instance numbers are generated. Example: LOAN-2026-001` }
+  title={ `Configuração da numeração do processo` }
+description={ `Configure a geração dos números das instâncias do processo. Exemplo: EMP-2026-001` }
 variant={ `h6` }
 roleColor={ `solid` }
 color={ `primary` }
@@ -437,10 +456,10 @@ showIcon={ false }
   <div className={ cn('grid','lg:grid-cols-2 ',' gap-4',)}    >
 	<IGRPInputText
   id={ `inputText1` }
-  label={ `Prefix` }
+  label={ `Prefixo` }
 showIcon={ false }
 required={ false }
-placeholder={ `e.g., LOAN` }
+placeholder={ `ex.: EMP` }
   className={ cn('col-span-1',) }
   onChange={ (e)=>numberingConfig.addFieldValue('prefix', e.target.value) }
   value={ numberingValues.prefix }
@@ -448,10 +467,10 @@ placeholder={ `e.g., LOAN` }
 </IGRPInputText>
 <IGRPCombobox
   id={ `combobox1` }
-  label={ `Date Format` }
+  label={ `Formato da data` }
 variant={ `single` }
-placeholder={ `Select an option...` }
-selectLabel={ `No option found` }
+placeholder={ `Selecione uma opção...` }
+selectLabel={ `Nenhuma opção encontrada` }
 showSearch={ true }
 showIcon={ false }
 iconName={ `CornerDownRight` }
@@ -463,7 +482,7 @@ value={  numberingValues.dateFormat }
 </IGRPCombobox>
 <IGRPInputText
   id={ `inputText2` }
-  label={ `Separator` }
+  label={ `Separador` }
 showIcon={ false }
 required={ false }
 placeholder={ `-` }
@@ -474,7 +493,7 @@ placeholder={ `-` }
 </IGRPInputText>
 <IGRPInputNumber
   id={ `inputNumber1` }
-  label={ `Sequence Length` }
+  label={ `Comprimento da sequência` }
 max={ 10 }
 step={ 1 }
 required={ false }
@@ -486,7 +505,7 @@ min={ 1 }
 </IGRPInputNumber></div>
   <div className={ cn(' rounded-lg bg-muted p-4',)}    >
 	<p className={ cn(' text-sm font-medium mb-2',)}    >
-	Sample Generated Number</p>
+	Exemplo de número gerado</p>
 <p className={ cn(' text-2xl font-mono',)}    >
 	{generateSampleNumber()}</p></div>
 </IGRPCardContent>
@@ -496,7 +515,7 @@ min={ 1 }
         
         {
           value: `tabsItem3-perT`,
-          label: `Task Configuration`,
+          label: `Configuração das tarefas`,
           icon: `Users`,
           badgeVariant: `solid`,
           badgeColor: `primary`,
@@ -513,8 +532,8 @@ content: (<>
 >
   <IGRPHeadline
   id={ `headline6` }
-  title={ `User Tasks` }
-description={ `Configure candidate groups and settings for each task in this process` }
+  title={ `Tarefas do utilizador` }
+description={ `Configure os grupos candidatos e as definições de cada tarefa deste processo` }
 variant={ `h6` }
 roleColor={ `solid` }
 color={ `primary` }
@@ -534,7 +553,7 @@ showIcon={ false }
   columns={
     [
         {
-          header: 'Task Name'
+          header: 'Nome da tarefa'
 ,accessorKey: 'name',
           cell: ({ row }) => {
           return row.getValue("name")
@@ -542,7 +561,7 @@ showIcon={ false }
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Task Key'
+          header: 'Chave da tarefa'
 ,accessorKey: 'key',
           cell: ({ row }) => {
           return row.getValue("key")
@@ -550,7 +569,7 @@ showIcon={ false }
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Candidate Groups'
+          header: 'Grupos candidatos'
 ,accessorKey: 'candidateGroups',
           cell: ({ row }) => {
           return row.getValue("candidateGroups")
@@ -558,7 +577,7 @@ showIcon={ false }
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Priority'
+          header: 'Prioridade'
 ,accessorKey: 'defaultPriority',
           cell: ({ row }) => {
           return row.getValue("defaultPriority")
@@ -566,7 +585,7 @@ showIcon={ false }
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Due Date'
+          header: 'Prazo'
 ,accessorKey: 'defaultDueDate',
           cell: ({ row }) => {
           return row.getValue("defaultDueDate")
@@ -581,7 +600,7 @@ showIcon={ false }
 return (
 <IGRPDataTableRowAction>
   <IGRPDataTableButtonLink
-  labelTrigger={ `Link` }
+  labelTrigger={ `Editar tarefa` }
   variant={ `ghost` }
   icon={ `Pencil` }
   className={ cn() }

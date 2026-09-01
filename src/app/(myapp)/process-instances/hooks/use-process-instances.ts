@@ -49,6 +49,12 @@ export function useProcessInstances() {
 
       const startedBy =
         instance.userProfileStartedBy?.fullName || instance.startedBy;
+      const updatedBy =
+        instance.status === "CANCELED"
+          ? instance.userProfileCancelledBy?.fullName || instance.canceledBy
+          : instance.status === "COMPLETED" || instance.status === "TERMINATED"
+            ? instance.userProfileEndedBy?.fullName || instance.endedBy
+            : instance.userProfileStartedBy?.fullName || instance.startedBy;
 
       return {
         processInfo: getProcessInfo(instance.name, instance.number),
@@ -76,6 +82,7 @@ export function useProcessInstances() {
         startedBy: startedBy,
         statusDesc: instance.statusDesc,
         businessKey: getBusinessKeyTemplate(instance.businessKey ?? ""),
+        updatedBy: updatedBy || "-",
       };
     });
   }, [processInstancesState.processInstances, getPriorityBadge]);

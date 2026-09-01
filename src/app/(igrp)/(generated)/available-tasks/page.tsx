@@ -40,6 +40,7 @@ export default function PageAvailabletasksComponent() {
     duration: string;
     priority: string;
     status: string;
+    updatedBy: string;
     taskId: string;
 }
 
@@ -293,6 +294,14 @@ badgeClassName={ `${bgClass} ${textClass} ${className}` }
 >
 
 </IGRPDataTableCellBadge>
+          },
+          filterFn: IGRPDataTableFacetedFilterFn
+        },
+        {
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Atualizado por` } />)
+,accessorKey: 'updatedBy',
+          cell: ({ row }) => {
+          return row.getValue("updatedBy")
           },
           filterFn: IGRPDataTableFacetedFilterFn
         },

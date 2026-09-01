@@ -116,7 +116,7 @@ export default function Taskeditor({ open, setOpen, editingTask, onSave, availab
 
 
               >
-                Edit Task Configuration
+                Editar configuração da tarefa
               </IGRPModalDialogTitle>
               <IGRPModalDialogDescription
                 id={`modalDialogDescription1`}
@@ -130,10 +130,10 @@ export default function Taskeditor({ open, setOpen, editingTask, onSave, availab
             <div className={cn('grid', 'md:grid-cols-2 ', ' gap-4',)}    >
               <IGRPCombobox
                 id={`combobox1`}
-                label={`Default Priority`}
+                label={`Prioridade predefinida`}
                 variant={`single`}
-                placeholder={`Select an option...`}
-                selectLabel={`No option found`}
+                placeholder={`Selecione uma opção...`}
+                selectLabel={`Nenhuma opção encontrada`}
                 showSearch={true}
                 showIcon={false}
                 iconName={`CornerDownRight`}
@@ -145,10 +145,10 @@ export default function Taskeditor({ open, setOpen, editingTask, onSave, availab
               </IGRPCombobox>
               <IGRPInputText
                 id={`inputText1`}
-                label={`Default Due Date (ISO Duration)`}
+                label={`Prazo predefinido (duração ISO)`}
                 showIcon={false}
                 required={false}
-                placeholder={`e.g., P3D for 3 days`}
+                placeholder={`ex.: P3D para 3 dias`}
                 className={cn('col-span-1',)}
                 onChange={(e) => setDefaultDueDate(e.target.value)}
                 value={defaultDueDate}
@@ -156,7 +156,7 @@ export default function Taskeditor({ open, setOpen, editingTask, onSave, availab
               </IGRPInputText></div>
             <IGRPInputText
               id={`inputText2`}
-              label={`Form Key`}
+              label={`Chave do formulário`}
               showIcon={false}
               required={false}
               className={cn('',)}
@@ -173,9 +173,9 @@ export default function Taskeditor({ open, setOpen, editingTask, onSave, availab
             >
             </IGRPSeparator>
             <SelectedItems items={candidateGroups} removeItem={handleRemoveGroup} ></SelectedItems>
-            <AddChecklistItem label={`Candidate Groups`} availableItems={availableItemsArray} items={groupsArray} addItem={handleAddGroup}
+            <AddChecklistItem label={`Grupos candidatos`} availableItems={availableItemsArray} items={groupsArray} addItem={handleAddGroup}
               removeItem={handleRemoveGroup} ></AddChecklistItem>
-            <AddItem label={`Add Custom Group`} placeholder={`Enter group name...`} value={newGroupInput} addItem={handleAddGroup}
+            <AddItem label={`Adicionar grupo personalizado`} placeholder={`Introduza o nome do grupo...`} value={newGroupInput} addItem={handleAddGroup}
               setValue={setNewGroupInput} ></AddItem>
             <IGRPModalDialogFooter
               className={cn('',)}
@@ -192,7 +192,7 @@ export default function Taskeditor({ open, setOpen, editingTask, onSave, availab
                   onClick={(open) => setOpen(!open)}
 
                 >
-                  Cancel
+                  Cancelar
                 </IGRPButton>
                 <IGRPButton
                   id={`button1`}
@@ -203,7 +203,7 @@ export default function Taskeditor({ open, setOpen, editingTask, onSave, availab
                   onClick={handleSave}
 
                 >
-                  Save Changes
+                  Guardar alterações
                 </IGRPButton></div>
             </IGRPModalDialogFooter>
           </IGRPModalDialogContent>

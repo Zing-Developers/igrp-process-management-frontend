@@ -40,6 +40,7 @@ export default function PageProcessinstancesComponent() {
     daysWaiting: string;
     status: string;
     priority: string;
+    updatedBy: string;
     processInstanceId: string;
   }
 
@@ -390,6 +391,14 @@ export default function PageProcessinstancesComponent() {
               , accessorKey: 'priority',
               cell: ({ row }) => {
                 return row.getValue("priority")
+              },
+              filterFn: IGRPDataTableFacetedFilterFn
+            },
+            {
+              header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={`Atualizado por`} />)
+              , accessorKey: 'updatedBy',
+              cell: ({ row }) => {
+                return row.getValue("updatedBy")
               },
               filterFn: IGRPDataTableFacetedFilterFn
             },

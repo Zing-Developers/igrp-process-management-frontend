@@ -35,4 +35,5 @@ export interface TaskTableRow {
   //taskKey: string;
   taskId: string;
   processName: string;
+  updatedBy: string;
 }

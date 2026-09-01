@@ -14,7 +14,18 @@ let clientInstance: ProcessManagementClient | null = null;
 export async function getIGRPProcessClient(): Promise<ProcessManagementClient> {
   // Always create a fresh client instance to ensure we have the latest configuration
   clientInstance = null;
-  // Always get fresh config to ensure we have the latest token
+  const config = await getIGRPProcessApiRequestConfig();
+  clientInstance = ProcessManagementClient.create(config);
+
+  return clientInstance;
+}
+
+export async function getIGRPProcessApiRequestConfig(): Promise<{
+  baseUrl: string;
+  timeout: number;
+  headers: Record<string, string>;
+}> {
+  // Always get fresh configuration to ensure we have the latest token.
   const { baseUrl, timeout = 45000 } = getIGRPProcessClientConfig();
 
   let token = await getAccessToken();
@@ -68,14 +79,11 @@ export async function getIGRPProcessClient(): Promise<ProcessManagementClient> {
         }),
   };
 
-  // Create new client instance with current token
-  clientInstance = ProcessManagementClient.create({
+  return {
     baseUrl,
     timeout,
     headers,
-  });
-
-  return clientInstance;
+  };
 }
 
 export function resetIGRPProcessClient() {

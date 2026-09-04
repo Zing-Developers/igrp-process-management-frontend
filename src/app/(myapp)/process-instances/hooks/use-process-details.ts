@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getProcessInstanceById } from "../../client/process-instances";
 import { getActivityProgress } from "../../client/activity";
-import { ActivityProgress } from "@igrp/platform-process-management-types";
+import { ActivityProgress } from "@irn/platform-process-management-types";
 import { formatDuration } from "../../utils/columns-template";
 import { IGRPColorVariants } from "@igrp/igrp-framework-react-design-system";
 

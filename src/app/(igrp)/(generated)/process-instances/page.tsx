@@ -27,6 +27,25 @@ import { urlConfig } from '@/app/(myapp)/utils/url-config'
 import { useDashboard } from '@/app/(myapp)/dashboard/hooks/use-dashboard'
 import { useProcessInstances } from '@/app/(myapp)/process-instances/hooks/use-process-instances'
 import { PageHeader } from '@/app/(myapp)/components/PageHeader';
+import { UserCell } from '@/app/(myapp)/components/user-cell';
+import type { UserProfileDTO } from '@irn/platform-process-management-types';
+
+const formatAuditDate = (value?: string) => {
+  if (!value) return '-';
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '-';
+
+  return new Intl.DateTimeFormat('pt-PT', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23',
+  }).format(date);
+};
 
 export default function PageProcessinstancesComponent() {
 
@@ -40,7 +59,8 @@ export default function PageProcessinstancesComponent() {
     daysWaiting: string;
     status: string;
     priority: string;
-    updatedBy: string;
+    updatedAt?: string;
+    updatedBy?: UserProfileDTO | string;
     processInstanceId: string;
   }
 
@@ -395,11 +415,15 @@ export default function PageProcessinstancesComponent() {
               filterFn: IGRPDataTableFacetedFilterFn
             },
             {
-              header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={`Atualizado por`} />)
-              , accessorKey: 'updatedBy',
-              cell: ({ row }) => {
-                return row.getValue("updatedBy")
-              },
+              header: 'Última modificação',
+              accessorKey: 'updatedAt',
+              cell: ({ row }) => formatAuditDate(row.original.updatedAt),
+              filterFn: IGRPDataTableFacetedFilterFn
+            },
+            {
+              header: 'Modificado por',
+              accessorKey: 'updatedBy',
+              cell: ({ row }) => <UserCell user={row.original.updatedBy} />,
               filterFn: IGRPDataTableFacetedFilterFn
             },
             {

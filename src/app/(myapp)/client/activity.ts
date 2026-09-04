@@ -3,7 +3,7 @@ import { getIGRPProcessClient } from "@/lib/api-client";
 import {
   ActivityEvent,
   ActivityProgress,
-} from "@igrp/platform-process-management-types";
+} from "@irn/platform-process-management-types";
 
 /**
  * Fetches the progress of an activity by its ID.

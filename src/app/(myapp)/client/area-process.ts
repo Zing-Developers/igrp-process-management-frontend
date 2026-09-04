@@ -4,7 +4,8 @@ import { getIGRPProcessClient } from "@/lib/api-client";
 import {
   PaginatedResponse,
   Process,
-} from "@igrp/platform-process-management-types";
+  ProcessData,
+} from "@irn/platform-process-management-types";
 
 /**
  * Fetches all processes associated with a specific area.
@@ -26,12 +27,7 @@ export const getAreaProcesses = async (
  */
 export const associateProcessToArea = async (
   areaId: string,
-  processData: {
-    processKey: string;
-    releaseId: string;
-    version: string;
-    name: string;
-  },
+  processData: ProcessData,
 ): Promise<Process> => {
   const processManagementClient = await getIGRPProcessClient();
   return (

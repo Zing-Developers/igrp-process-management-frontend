@@ -18,7 +18,7 @@ import {
   exportProcessDefinition,
   importProcessDefinition,
 } from "../../client/process";
-import { ProcessDefinitionSchema } from "@igrp/platform-process-management-types";
+import { ProcessDefinitionSchema } from "@irn/platform-process-management-types";
 
 export function ActionsItem({
   processDefinitionId,

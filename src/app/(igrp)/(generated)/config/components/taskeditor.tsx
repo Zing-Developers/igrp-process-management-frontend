@@ -25,7 +25,7 @@ import {
   IGRPButton
 } from "@igrp/igrp-framework-react-design-system";
 import { PRIORITY_OPTIONS } from '@/app/(myapp)/config/constants'
-import { CreateProcessArtifactRequest } from '@igrp/platform-process-management-types';
+import { CreateProcessArtifactRequest } from '@irn/platform-process-management-types';
 
 export default function Taskeditor({ open, setOpen, editingTask, onSave, availableGroups }: { open: boolean, setOpen: (open: boolean) => void, editingTask: any, onSave: (req: any) => string, availableGroups?: string }) {
 

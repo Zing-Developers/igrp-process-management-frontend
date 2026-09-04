@@ -1,4 +1,7 @@
-import { ProcessInstance } from "@igrp/platform-process-management-types";
+import type {
+  ProcessInstance,
+  UserProfileDTO,
+} from "@irn/platform-process-management-types";
 
 export interface ProcessInstancesFilters {
   processNumber: string;
@@ -10,7 +13,6 @@ export interface ProcessInstancesFilters {
     | "SUSPENDED"
     | "CANCELED"
     | "COMPLETED"
-    | "TERMINATED"
     | undefined;
   dateFrom: string;
   dateTo: string;
@@ -59,5 +61,6 @@ export interface ProcessInstanceTableRow {
   procReleaseKey: string;
   startedBy: string;
   businessKey: string;
-  updatedBy: string;
+  updatedAt?: string;
+  updatedBy?: UserProfileDTO | string;
 }

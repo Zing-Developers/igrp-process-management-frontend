@@ -5,14 +5,15 @@ import {
   IGRPInputPrimitive,
   IGRPLabelPrimitive,
 } from "@igrp/igrp-framework-react-design-system";
+import type { VariableOperator } from "@irn/platform-process-management-types";
 import { useEffect, useState } from "react";
 import { OperatorOptions } from "./types";
 
 export interface VariableFilter {
   id: string;
   name: string;
-  operator: string;
-  value: string;
+  operator: VariableOperator;
+  value: unknown;
 }
 
 function FilterData({
@@ -33,7 +34,7 @@ function FilterData({
   }, [value]);
 
   const addVariableFilter = () => {
-    const nextFilters = [
+    const nextFilters: VariableFilter[] = [
       ...variableFilters,
       {
         id: crypto.randomUUID(),
@@ -144,7 +145,7 @@ function FilterData({
                 <IGRPInputPrimitive
                   className="h-8 text-sm"
                   placeholder="Digite o valor..."
-                  value={filter.value}
+                  value={filter.value == null ? "" : String(filter.value)}
                   onChange={(event) =>
                     updateVariableFilter(filter.id, {
                       value: event.target.value,

@@ -7,7 +7,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { use, useState, useEffect, useRef } from 'react';
-import { cn, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
+import { cn, IGRPIcon, useIGRPMenuNavigation, useIGRPToast } from '@igrp/igrp-framework-react-design-system';
 import {ProcessItem} from '@/app/(myapp)/config/components/process-item'
 import {ActionsItem} from '@/app/(myapp)/config/components/actions-item'
 import { PageHeader } from '@/app/(myapp)/components/PageHeader';
@@ -43,6 +43,7 @@ import {
 } from "@igrp/igrp-framework-react-design-system";
 import {useConfigPage} from '@/app/(myapp)/config/hooks/use-config-page'
 import { DATE_FORMAT_OPTIONS } from '@/app/(myapp)/config/constants'
+import Link from 'next/link';
 
 
 export default function PageConfigComponent() {
@@ -292,24 +293,26 @@ showIcon={ false }
   Guardar configuração
 </IGRPButton>
 
- <IGRPDropdownMenu>
-    <IGRPDropdownMenuTrigger asChild>
-      <IGRPButton
-        id="m2mKeysMenu"
-        variant="outline"
-        size="default"
-        showIcon={true}
-        iconName="ChevronDown"
-      >
-        Segurança
-      </IGRPButton>
-    </IGRPDropdownMenuTrigger>
-    <IGRPDropdownMenuContent align="end">
-      <IGRPDropdownMenuItem asChild>
-        <a href="/api-keys">Chaves M2M</a>
-      </IGRPDropdownMenuItem>
-    </IGRPDropdownMenuContent>
-  </IGRPDropdownMenu>
+  <IGRPDropdownMenu>
+            <IGRPDropdownMenuTrigger asChild>
+              <IGRPButton
+                name={`m2mKeysMenu`}
+                variant={`outline`}
+                size={`default`}
+                showIcon={true}
+                iconName={`Settings2`}
+                className={cn("gap-4")}
+              >
+                <span>Configurações</span>
+                <IGRPIcon iconName='ChevronDown' />
+              </IGRPButton>
+            </IGRPDropdownMenuTrigger>
+            <IGRPDropdownMenuContent align="end">
+              <IGRPDropdownMenuItem asChild>
+                <Link href="/api-keys">  <IGRPIcon iconName='Key' />  <span> API Keys</span></Link>
+              </IGRPDropdownMenuItem>
+            </IGRPDropdownMenuContent>
+          </IGRPDropdownMenu>
 
 </div></div>
 <IGRPTabs

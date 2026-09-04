@@ -8,8 +8,8 @@ import {
 import type {
   CreateProcessArtifactRequest,
   Process,
-  ProcessDefinition,
-} from "@igrp/platform-process-management-types";
+  ProcessDefinitionDTO,
+} from "@irn/platform-process-management-types";
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
 import { useProcessConfig } from "./use-process-config";
 
@@ -31,7 +31,7 @@ export function useConfigPage({
   processSelected,
   filterProcess,
 }: {
-  processSelected?: ProcessDefinition;
+  processSelected?: ProcessDefinitionDTO;
   filterProcess?: string;
 } = {}) {
   const processConfig = useProcessConfig({ processSelected });

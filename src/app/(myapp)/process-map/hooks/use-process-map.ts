@@ -6,7 +6,7 @@ import { usePriorityModal } from "./use-priority-modal";
 import { useTreeSearch } from "./use-tree-search";
 import { useTreeComputed } from "./use-tree-computed";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { Area, Process } from "@igrp/platform-process-management-types";
+import { Area, Process } from "@irn/platform-process-management-types";
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
 import { useAccessManagement } from "../../access-management/hooks";
 import { useAreaHandlers } from "./area/use-area-handlers";

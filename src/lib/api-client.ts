@@ -1,4 +1,4 @@
-import { ProcessManagementClient } from "@igrp/platform-process-management-client-ts";
+import { ProcessManagementClient } from "@irn/platform-process-management-client-ts";
 import { getIGRPProcessClientConfig } from "./api-config";
 import { getAccessToken, refreshAccessToken } from "./auth-helpers";
 import { LRUCache } from "lru-cache";

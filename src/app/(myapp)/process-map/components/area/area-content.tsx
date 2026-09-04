@@ -1,6 +1,6 @@
 import React from "react";
 import { ExtendedArea } from "../../types";
-import { Area, Process } from "@igrp/platform-process-management-types";
+import { Area, Process } from "@irn/platform-process-management-types";
 import { AreaActions } from "./area-actions";
 
 interface NodeContentProps {

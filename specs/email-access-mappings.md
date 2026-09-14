@@ -28,7 +28,7 @@ Add an authenticated page at `/email-access-mappings` where authorized administr
 3. The reference's Process Management permission catalogue is provided as static quick-add suggestions, while valid free-form permission entry remains supported.
 4. Authorization is enforced by the API. A list request rejected with 401 or 403 produces the application's access-denied page; all other API failures, including rejected create, edit, or revoke operations, display the API-provided error message in a Toast.
 5. Each table row initially displays at most three permission chips. Rows with additional permissions provide an inline control for expanding and collapsing the complete permission list.
-6. Expiration date selection uses `IRNDatePicker` in controlled single-selection mode. A companion IGRP time control preserves the API's local date-and-time contract.
+6. Expiration date selection uses `IGRPDatePickerSingle` with the companion `IGRPInputTime` control, preserving the API's local date-and-time contract.
 7. Descriptions are displayed inline using a 46-character preview. Longer descriptions are truncated with `...` and can be expanded and collapsed within their row; notes remain hidden behind their existing discoverable indicator/tooltip.
 
 ## 4. Scope
@@ -105,7 +105,7 @@ Add an authenticated page at `/email-access-mappings` where authorized administr
 
 - Description and notes are optional free-text values.
 - Notes are administrative context only and do not participate in access decisions.
-- Expiration is optional and is entered with `IRNDatePicker` in `single` mode for the date and `IGRPInputTime` for the time.
+- Expiration is optional and is entered with `IGRPDatePickerSingle` for the date and `IGRPInputTime` for the time.
 - When supplied, expiration is sent as a `LocalDateTime`-style string without a timezone offset, consistent with the reference and platform API contract.
 - Clearing description, notes, or expiration during editing must omit that optional property from the PUT request and must clear the value on the saved mapping, as expected from the current full-replacement PUT contract.
 - The frontend does not introduce a future-only expiration rule that is absent from the reference. Backend validation errors remain authoritative.
@@ -181,7 +181,7 @@ Add an authenticated page at `/email-access-mappings` where authorized administr
 
 **FR-12** A revoked row shall also show the revocation date and resolved revoking user, falling back to raw `revokedBy`, and shall visually communicate that the row is inactive.
 
-**FR-13** The create/edit dialog shall implement all Email, Permissions, Description, Notes, and Expiration rules defined in this specification and shall change its title, explanatory text, submit label, and email editability according to mode. The expiration date field shall use `IRNDatePicker` with `mode="single"`; when a date is selected, an `IGRPInputTime` value shall complete the local date and time sent to the API. Because `IRNDatePicker` has no built-in clear action, the field shall provide an explicit **Limpar data** control.
+**FR-13** The create/edit dialog shall implement all Email, Permissions, Description, Notes, and Expiration rules defined in this specification and shall change its title, explanatory text, submit label, and email editability according to mode. Its optional date field shall use `IGRPDatePickerSingle` with `id="mapping-expires-date"`, `name="mappingExpiresDate"`, label **Data de expiração**, `dd/MM/yyyy` format, and helper text **Opcional**. Its companion `IGRPInputTime` shall use `id="mapping-expires-time"`, `name="mappingExpiresTime"`, and label **Hora de expiração**. A selected date and time complete the local date-time sent to the API.
 
 **FR-14** Permission entry shall support quick-add suggestions and removable chips. Free-form input shall add a valid permission on Enter or comma; duplicate values shall be ignored. Invalid values shall display a field/form error and shall not be added.
 
@@ -381,7 +381,7 @@ The UI must tolerate optional response fields. A missing optional value must ren
 
 - Given the create or edit mapping dialog
 - When the expiration controls render
-- Then the date is selected through `IRNDatePicker` in single-selection mode, the time is entered through `IGRPInputTime`, and **Limpar data** clears the complete expiration value.
+- Then the date is selected through `IGRPDatePickerSingle` using `dd/MM/yyyy`, the time is entered through `IGRPInputTime`, and the date picker is disabled while a save is pending.
 - When the user saves a selected date and valid time
 - Then the request contains their combined local date-time value without a timezone offset.
 

@@ -1,5 +1,8 @@
 import "@/styles/globals.css";
 
+import "@igrp/framework-next-ui/dist/styles.css";
+import "@igrp/igrp-framework-react-design-system/dist/styles.css";
+
 import { IGRPRootLayout } from "@igrp/framework-next";
 import type { IGRPLayoutConfigArgs } from "@igrp/framework-next-types";
 import {

@@ -10,7 +10,7 @@ import {
   CreateAreaRequest,
   Process,
   UpdateAreaRequest,
-} from "@igrp/platform-process-management-types";
+} from "@irn/platform-process-management-types";
 import { findAreaById } from "../../utils/area-hierarchy";
 import { AreaFormData, ExtendedArea } from "../../types";
 

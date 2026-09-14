@@ -1,4 +1,7 @@
-import { Task } from "@igrp/platform-process-management-types";
+import type {
+  Task,
+  UserProfileDTO,
+} from "@irn/platform-process-management-types";
 
 export interface MyTasksFilters {
   processNumber: string;
@@ -35,4 +38,6 @@ export interface TaskTableRow {
   //taskKey: string;
   taskId: string;
   processName: string;
+  updatedAt?: string;
+  updatedBy?: UserProfileDTO | string;
 }

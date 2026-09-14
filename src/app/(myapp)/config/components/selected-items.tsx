@@ -27,7 +27,7 @@ export function SelectedItems({
         ))}
       {itemsArray.length === 0 && (
         <p className="text-sm text-muted-foreground">
-          No candidate groups assigned
+          Não existem grupos candidatos atribuídos
         </p>
       )}
     </div>

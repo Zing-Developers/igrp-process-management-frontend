@@ -1,7 +1,7 @@
 import React from "react";
 import { ExtendedArea } from "../types";
 import { NodeActions } from "./node-actions";
-import { Area, Process } from "@igrp/platform-process-management-types";
+import { Area, Process } from "@irn/platform-process-management-types";
 import { IGRPBadgePrimitive } from "@igrp/igrp-framework-react-design-system";
 
 interface NodeContentProps {

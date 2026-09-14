@@ -2,12 +2,13 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { StickyNote } from "lucide-react";
+import { CheckCircle2, Clock3, ShieldOff, StickyNote } from "lucide-react";
 import { z } from "zod";
 import {
   cn,
   IGRPAlertDialog,
   IGRPButton,
+  IGRPDatePickerSingle,
   IGRPInputPrimitive,
   IGRPInputText,
   IGRPInputTime,
@@ -20,7 +21,6 @@ import {
   IGRPTextarea,
   useIGRPToast,
 } from "@igrp/igrp-framework-react-design-system";
-import { IRNDatePicker } from "@irn/irn-backoffice-design-system";
 import type {
   EmailAccessMapping,
   EmailAccessMappingRequest,
@@ -108,21 +108,6 @@ function parseLocalDateTime(value?: string): Date | undefined {
 
 function expirationTimeFromApi(value?: string): string {
   return /T(\d{2}:\d{2})/.exec(value ?? "")?.[1] ?? "";
-}
-
-function toPickerDate(date?: Date): string | undefined {
-  if (!date) return undefined;
-  const pad = (value: number) => String(value).padStart(2, "0");
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-}
-
-function fromPickerDate(value: string): Date | undefined {
-  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
-  if (!match) return undefined;
-
-  const [, year, month, day] = match;
-  const date = new Date(Number(year), Number(month) - 1, Number(day));
-  return Number.isNaN(date.getTime()) ? undefined : date;
 }
 
 function toApiLocalDateTime(
@@ -466,16 +451,23 @@ export default function EmailAccessMappingsPage() {
         </PageHeader>
 
         <div className="grid gap-3 sm:grid-cols-3">
-          <SummaryCard label="Activos" value={summary.active} />
-          <SummaryCard
+           <SummaryStat
+            label="Activos"
+            value={summary.active}
+            icon={<CheckCircle2 className="size-5" aria-hidden="true" />}
+            className="border-emerald-200 bg-emerald-50/60 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950/30 dark:text-emerald-200"
+          />
+          <SummaryStat
             label="A expirar em 30 dias"
             value={summary.expiring}
-            tone="warning"
+            icon={<Clock3 className="size-5" aria-hidden="true" />}
+            className="border-amber-200 bg-amber-50/60 text-amber-900 dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-200"
           />
-          <SummaryCard
+          <SummaryStat
             label="Revogados"
             value={summary.revoked}
-            tone="danger"
+            icon={<ShieldOff className="size-5" aria-hidden="true" />}
+            className="border-rose-200 bg-rose-50/60 text-rose-800 dark:border-rose-900 dark:bg-rose-950/30 dark:text-rose-200"
           />
         </div>
 
@@ -704,66 +696,30 @@ export default function EmailAccessMappingsPage() {
               />
 
               <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_10rem]">
-                <div
-                  className="space-y-2"
-                  role="group"
-                  aria-labelledby="mappingExpiresAtLabel"
-                >
-                  <div
-                    id="mappingExpiresAtLabel"
-                    className="text-sm font-medium"
-                  >
-                    Expira em (opcional)
-                  </div>
-                  <IRNDatePicker
-                    mode="single"
-                    value={toPickerDate(expiresAt)}
-                    onChange={(value) => {
-                      const date = fromPickerDate(value);
-                      setExpiresAt(date);
-                      if (date && !expirationTime) setExpirationTime("23:59");
-                      setFormErrors((current) => ({
-                        ...current,
-                        expiresAt: undefined,
-                        expirationTime: undefined,
-                      }));
-                    }}
+                <IGRPDatePickerSingle
+                  id="mapping-expires-date"
+                  name="mappingExpiresDate"
+                  label="Data de expiração"
                     placeholder="Selecione uma data"
-                    disabled={isSaving}
-                    align="start"
-                    triggerClassName="w-full justify-between font-normal"
-                    className="w-full"
-                    applyLabel="Aplicar"
-                    cancelLabel="Cancelar"
-                  />
-                  <div className="flex min-h-5 items-center justify-between gap-2">
-                    
-                    {expiresAt && (
-                      <IGRPButton
-                        name="clearEmailAccessExpiration"
-                        type="button"
-                        variant="link"
-                        size="sm"
-                        className="h-auto p-0 text-xs"
-                        disabled={isSaving}
-                        onClick={() => {
-                          setExpiresAt(undefined);
-                          setExpirationTime("");
-                          setFormErrors((current) => ({
-                            ...current,
-                            expiresAt: undefined,
-                            expirationTime: undefined,
-                          }));
-                        }}
-                      >
-                        Limpar data
-                      </IGRPButton>
-                    )}
-                  </div>
-                </div>
+                  date={expiresAt}
+                  onDateChange={(date) => {
+                    setExpiresAt(date);
+                    if (!date) setExpirationTime("");
+                    if (date && !expirationTime) setExpirationTime("23:59");
+                    setFormErrors((current) => ({
+                      ...current,
+                      expiresAt: undefined,
+                      expirationTime: undefined,
+                    }));
+                  }}
+                  dateFormat="dd/MM/yyyy"
+                  disabled={isSaving}
+                  disabledPicker={isSaving}
+                />
                 <IGRPInputTime
-                  id="mappingExpirationTime"
-                  label="Hora"
+                  id="mapping-expires-time"
+                  name="mappingExpiresTime"
+                  label="Hora de expiração"
                   value={expirationTime}
                   onChange={(value) => {
                     setExpirationTime(value);
@@ -773,8 +729,7 @@ export default function EmailAccessMappingsPage() {
                     }));
                   }}
                   error={formErrors.expirationTime}
-                  disabled={isSaving || !expiresAt}
-                  required={Boolean(expiresAt)}
+                  disabled={isSaving}
                 />
               </div>
             </div>
@@ -808,39 +763,43 @@ export default function EmailAccessMappingsPage() {
           if (!open && !revokeInFlight.current) setRevokingMapping(null);
         }}
         title="Revogar este acesso?"
-        description={`O sistema que usa ${revokingMapping?.email ?? "este email"} passa a receber 403 no próximo pedido. Não é possível anular esta ação; para voltar a dar acesso, crie um novo mapeamento. Fica registado quem revogou e quando.`}
+        description={`O sistema que usa ${revokingMapping?.email ?? "este email"} passa a receber 403 no próximo pedido. Não é possível anular esta ação; para voltar a dar acesso, crie um novo mapeamento.`}
         actionLabel={isRevoking ? "A revogar..." : "Revogar"}
         cancelLabel="Cancelar"
         showCancel
         variant="destructive"
         actionProps={{ disabled: isRevoking }}
         onAction={() => void confirmRevoke()}
-      />
+      >
+          <div className="rounded border-l-[3px] border-amber-500 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:bg-amber-950/40 dark:text-amber-100">
+          Fica registado quem revogou e quando. O mapeamento continua na lista, como revogado.
+        </div>
+      </IGRPAlertDialog>
     </div>
   );
 }
 
-function SummaryCard({
+function SummaryStat({
   label,
   value,
-  tone = "default",
+  icon,
+  className,
 }: {
   label: string;
   value: number;
-  tone?: "default" | "warning" | "danger";
+  icon: React.ReactNode;
+  className: string;
 }) {
   return (
-    <div className="rounded-lg border bg-card p-4 text-card-foreground">
-      <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-        {label}
+    <div
+      className={cn('flex min-h-24 items-center justify-between rounded-md border p-4', className)}
+    >
+      <div>
+        <p className="text-xs font-medium uppercase text-current/75">{label}</p>
+        <p className="mt-2 text-2xl font-semibold tabular-nums">{value}</p>
       </div>
-      <div
-        className={cn("mt-1 text-2xl font-semibold tabular-nums", {
-          "text-amber-600 dark:text-amber-400": tone === "warning",
-          "text-destructive": tone === "danger",
-        })}
-      >
-        {value}
+      <div className="flex size-10 items-center justify-center rounded-md bg-background/70">
+        {icon}
       </div>
     </div>
   );
@@ -933,7 +892,7 @@ function MappingRow({
               }
               onClick={() => setShowAllPermissions((current) => !current)}
             >
-              {showAllPermissions ? "Ver menos" : "Ver todos"}
+              {showAllPermissions ? "Ver menos" : `Ver todos (+${mappingPermissions.length - 3})`}
             </button>
           )}
         </div>

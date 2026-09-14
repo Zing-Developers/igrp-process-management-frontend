@@ -83,7 +83,7 @@ function FilterActives({
                 <span className="text-muted-foreground">
                   {getSymbol(filter.operator)}
                 </span>
-                <span className="font-medium">{filter.value}</span>
+                <span className="font-medium">{String(filter.value)}</span>
                 <button
                   onClick={() => removeVariableFilter(filter.id)}
                   className="ml-1 hover:bg-muted rounded p-0.5"

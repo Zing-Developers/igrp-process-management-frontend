@@ -1,12 +1,12 @@
 import { useMemo } from "react";
 import { ExtendedArea } from "../types";
 import { buildProcessTree, flattenTreeNodes } from "../utils/tree-utils";
-import { Process } from "@igrp/platform-process-management-types";
+import { ProcessDeploymentListItem } from "@irn/platform-process-management-types";
 
 export function useTreeComputed(
   areas: ExtendedArea[],
   expandedNodes: Set<string>,
-  allProcesses: Process[],
+  allProcesses: ProcessDeploymentListItem[],
 ) {
   const treeNodes = useMemo(() => {
     return buildProcessTree(areas, allProcesses);

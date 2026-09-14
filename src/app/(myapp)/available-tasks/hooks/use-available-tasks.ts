@@ -1,15 +1,15 @@
-import { useMemo, useCallback } from "react";
-import { useAvailableTasksData } from "./use-available-tasks-data";
+import { format, formatDistanceToNow } from "date-fns";
+import { useCallback, useMemo } from "react";
 import { claimTask } from "../../client/task";
-import { TaskTableRow } from "../types";
+import { useProcessPriorities } from "../../hooks/use-process-priorities";
 import {
-  getProcessInfo,
   getPriorityTemplate,
+  getProcessInfo,
   getUserInfo,
 } from "../../utils/columns-template";
-import { useProcessPriorities } from "../../hooks/use-process-priorities";
-import { format, formatDistanceToNow } from "date-fns";
 import { formatDuration } from "../../utils/shared";
+import type { TaskTableRow } from "../types";
+import { useAvailableTasksData } from "./use-available-tasks-data";
 
 export function useAvailableTasks() {
   const {
@@ -40,7 +40,7 @@ export function useAvailableTasks() {
       const createdDate = new Date(task.startedAt);
       const now = new Date();
       const diffTime = Math.abs(now.getTime() - createdDate.getTime());
-      const priorityValue = task.priority + "";
+      const priorityValue = `${task.priority}`;
 
       return {
         processInfo: getProcessInfo(task.processName, task.processNumber),
@@ -58,6 +58,12 @@ export function useAvailableTasks() {
         processInstanceId: task.processInstanceId,
         createdDate: task.startedAt,
         assignedBy: task.assignedBy,
+        updatedAt: task.updatedAt ?? task.createdAt,
+        updatedBy:
+          task.userProfileUpdatedBy ??
+          task.userProfileCreatedBy ??
+          task.updatedBy ??
+          task.createdBy,
         priority: getPriorityTemplate(
           getPriorityBadge(task.processKey, priorityValue),
           priorityValue,
@@ -82,7 +88,7 @@ export function useAvailableTasks() {
         };
       }
     },
-    [fetchTasks],
+    [refetchTasks],
   );
 
   const handleSearch = (searchTerm: string) => {

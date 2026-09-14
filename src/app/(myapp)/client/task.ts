@@ -4,8 +4,7 @@ import {
   PaginatedResponse,
   Task,
   TaskStats,
-} from "@igrp/platform-process-management-types";
-import { PostResponse } from "@igrp/platform-process-management-types/dist/response";
+} from "@irn/platform-process-management-types";
 import { getIGRPProcessClient } from "@/lib/api-client";
 import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
 import { TaskManagementFilters } from "@/app/(myapp)/task-management/types";
@@ -123,9 +122,9 @@ export const getTasksByProcessInstance = async (
  * @param note Optional note for the claim action.
  * @returns A promise that resolves to a PostResponse.
  */
-export const claimTask = async (taskId: string): Promise<PostResponse> => {
+export const claimTask = async (taskId: string): Promise<void> => {
   const processManagementClient = await getIGRPProcessClient();
-  return (await processManagementClient.tasks.claimTask(taskId, {})).data;
+  return (await processManagementClient.tasks.claimTask(taskId)).data;
 };
 
 /**
@@ -139,7 +138,7 @@ export const unassignTask = async (
   taskId: string,
   user: string,
   note?: string,
-): Promise<PostResponse> => {
+): Promise<void> => {
   const processManagementClient = await getIGRPProcessClient();
   return (
     await processManagementClient.tasks.assignTask(taskId, { user, note })
@@ -159,7 +158,7 @@ export const assignTask = async (
   priority: string,
   note?: string,
   candidateGroups?: string,
-): Promise<PostResponse> => {
+): Promise<void> => {
   const processManagementClient = await getIGRPProcessClient();
   const response = await processManagementClient.tasks.assignTask(taskId, {
     user,
@@ -180,7 +179,7 @@ export const assignTask = async (
 export const unclaimTask = async (
   taskId: string,
   note?: string,
-): Promise<PostResponse> => {
+): Promise<void> => {
   const processManagementClient = await getIGRPProcessClient();
   return (await processManagementClient.tasks.unclaimTask(taskId, { note }))
     .data;
@@ -198,7 +197,7 @@ export const completeTask = async (
     name: string;
     value: string;
   }>,
-): Promise<PostResponse> => {
+): Promise<Task> => {
   const processManagementClient = await getIGRPProcessClient();
   return (
     await processManagementClient.tasks.completeTask(taskId, { variables })

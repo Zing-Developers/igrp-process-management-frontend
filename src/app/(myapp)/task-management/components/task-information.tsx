@@ -8,7 +8,7 @@ import {
   IGRPLink,
   IGRPSeparator,
 } from "@igrp/igrp-framework-react-design-system";
-import { Task } from "@igrp/platform-process-management-types";
+import { Task } from "@irn/platform-process-management-types";
 import { format } from "date-fns";
 
 interface TaskInformationProps extends Task {

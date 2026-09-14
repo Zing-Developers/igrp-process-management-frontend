@@ -3,7 +3,7 @@
 import { IGRPIcon } from "@igrp/igrp-framework-react-design-system";
 import { format } from "date-fns";
 import { formatDuration } from "../utils/shared";
-import { ActivityProgress } from "@igrp/platform-process-management-types";
+import { ActivityProgress } from "@irn/platform-process-management-types";
 
 export function ActivityTimeline({
   activities = [],
@@ -60,10 +60,10 @@ export function ActivityTimeline({
     <div className="space-y-6">
       {activities.length > 0 ? (
         activities.map((activity, index) => {
-          const Icon = activityIcons[activity.type] || (
+          const Icon = activityIcons[activity.type ?? ""] || (
             <IGRPIcon iconName="Cog" />
           );
-          const color = activityColors[activity.type] || "bg-muted";
+          const color = activityColors[activity.type ?? ""] || "bg-muted";
 
           const status = activity.status ? activity.status.toLowerCase() : "";
 

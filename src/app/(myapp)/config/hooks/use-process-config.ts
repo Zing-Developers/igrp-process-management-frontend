@@ -20,12 +20,12 @@ import {
   type AssignGroupsValues,
   type ProcessNumberingValues,
 } from "../schemas";
-import {
+import type {
   CreateProcessArtifactRequest,
   Priority,
   ProcessArtifact,
-  ProcessDefinition,
-} from "@igrp/platform-process-management-types";
+  ProcessDefinitionDTO,
+} from "@irn/platform-process-management-types";
 import { getCandidateGroupsTemplate } from "../../utils/columns-template";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { PRIORITY_OPTIONS } from "../constants";
@@ -44,7 +44,7 @@ const numberingDefaultValues: ProcessNumberingValues = {
 export function useProcessConfig({
   processSelected,
 }: {
-  processSelected?: ProcessDefinition;
+  processSelected?: ProcessDefinitionDTO;
 } = {}) {
   const { igrpToast } = useIGRPToast();
   const queryClient = useQueryClient();
@@ -362,9 +362,10 @@ export function useProcessConfig({
             .filter(Boolean)
         : [];
 
-      const defaultPriorityDesc = source.priority
+      const sourcePriority = source.priority;
+      const defaultPriorityDesc = sourcePriority
         ? PRIORITY_OPTIONS.find(
-            (o) => o.value.toString() === source.priority.toString(),
+            (o) => o.value.toString() === sourcePriority.toString(),
           )?.label
         : "";
 

@@ -20,7 +20,7 @@ import { getPriorityColor } from "../utils/status-badge";
 import {
   ActivityProgress,
   TaskVariables,
-} from "@igrp/platform-process-management-types";
+} from "@irn/platform-process-management-types";
 
 interface TaskHistory extends ActivityProgress {
   priority?: number;

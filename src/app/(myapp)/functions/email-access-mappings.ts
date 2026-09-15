@@ -2,7 +2,9 @@
 
 import type {
   EmailAccessMapping,
+  EmailAccessMappingQuery,
   EmailAccessMappingRequest,
+  PaginatedResponse,
 } from "@irn/platform-process-management-types";
 import { getIGRPProcessClient } from "@/lib/api-client";
 
@@ -51,12 +53,15 @@ const getErrorResult = (
   };
 };
 
-export const getEmailAccessMappings = async (): Promise<
-  EmailAccessMappingsActionResult<EmailAccessMapping[]>
+export const getEmailAccessMappings = async (
+  params: EmailAccessMappingQuery,
+): Promise<
+  EmailAccessMappingsActionResult<PaginatedResponse<EmailAccessMapping>>
 > => {
   try {
     const client = await getIGRPProcessClient();
-    const response = await client.emailAccessMappings.getEmailAccessMappings();
+    const response =
+      await client.emailAccessMappings.getEmailAccessMappings(params);
     return { success: true, data: response.data };
   } catch (error) {
     return getErrorResult(error);

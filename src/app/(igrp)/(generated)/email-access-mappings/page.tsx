@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { CheckCircle2, Clock3, ShieldOff, StickyNote } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { StickyNote } from "lucide-react";
 import { z } from "zod";
 import {
   cn,
@@ -28,7 +28,6 @@ import type {
 } from "@irn/platform-process-management-types";
 import {
   createEmailAccessMapping,
-  getEmailAccessMappings,
   revokeEmailAccessMapping,
   updateEmailAccessMapping,
 } from "@/app/(myapp)/functions/email-access-mappings";
@@ -36,8 +35,11 @@ import { AccessDeniedPage } from "@/app/(myapp)/components/access-denied-page";
 import { IgrpLoading } from "@/app/(myapp)/components/igrp-loading";
 import { PageHeader } from "@/app/(myapp)/components/PageHeader";
 import { UserCell } from "@/app/(myapp)/components/user-cell";
+import {
+  EMAIL_ACCESS_MAPPINGS_QUERY_KEY,
+  useEmailAccessMappings,
+} from "@/app/(myapp)/hooks/use-email-access-mappings";
 
-const QUERY_KEY = ["email-access-mappings"] as const;
 const permissionPattern = /^[A-Z0-9_.]+:[a-z_]+$/;
 const localTimePattern = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
 
@@ -174,45 +176,13 @@ export default function EmailAccessMappingsPage() {
   const [isRevoking, setIsRevoking] = useState(false);
   const revokeInFlight = useRef(false);
   const reportedListError = useRef<string | null>(null);
-
-  const mappingsQuery = useQuery({
-    queryKey: QUERY_KEY,
-    queryFn: getEmailAccessMappings,
-  });
-  const mappingsResult = mappingsQuery.data;
-  const mappings = useMemo(
-    () => (mappingsResult?.success ? mappingsResult.data : []),
-    [mappingsResult],
-  );
-
-  const summary = useMemo(() => {
-    const now = new Date();
-    const thirtyDaysFromNow = now.getTime() + 30 * 24 * 60 * 60 * 1000;
-    let active = 0;
-    let expiring = 0;
-    let revoked = 0;
-
-    for (const mapping of mappings) {
-      const state = mappingState(mapping, now);
-      if (state === "revoked") {
-        revoked += 1;
-        continue;
-      }
-      if (state !== "active") continue;
-
-      active += 1;
-      const expiration = parseLocalDateTime(mapping.expiresAt);
-      if (
-        expiration &&
-        expiration.getTime() > now.getTime() &&
-        expiration.getTime() <= thirtyDaysFromNow
-      ) {
-        expiring += 1;
-      }
-    }
-
-    return { active, expiring, revoked };
-  }, [mappings]);
+  const {
+    mappings,
+    mappingsPage,
+    mappingsQuery,
+    mappingsResult,
+    setPage,
+  } = useEmailAccessMappings();
 
   const queryAccessErrorStatus =
     mappingsResult &&
@@ -364,7 +334,9 @@ export default function EmailAccessMappingsPage() {
         return;
       }
 
-      await queryClient.invalidateQueries({ queryKey: QUERY_KEY });
+      await queryClient.invalidateQueries({
+        queryKey: EMAIL_ACCESS_MAPPINGS_QUERY_KEY,
+      });
       const savedEmail = request.email ?? email;
       setFormOpen(false);
       clearForm();
@@ -399,7 +371,9 @@ export default function EmailAccessMappingsPage() {
         return;
       }
 
-      await queryClient.invalidateQueries({ queryKey: QUERY_KEY });
+      await queryClient.invalidateQueries({
+        queryKey: EMAIL_ACCESS_MAPPINGS_QUERY_KEY,
+      });
       const revokedEmail = revokingMapping.email ?? "este email";
       setRevokingMapping(null);
       igrpToast({
@@ -438,7 +412,7 @@ export default function EmailAccessMappingsPage() {
         <PageHeader
           name="Mapeamentos de acesso por email"
           description="Sistemas externos com o seu próprio token Keycloak recebem as permissões mapeadas ao email do token."
-          badgeCount={mappings.length}
+          badgeCount={mappingsPage?.totalElements ?? 0}
         >
           <IGRPButton
             name="createEmailAccessMapping"
@@ -449,27 +423,6 @@ export default function EmailAccessMappingsPage() {
             Novo mapeamento
           </IGRPButton>
         </PageHeader>
-
-        <div className="grid gap-3 sm:grid-cols-3">
-           <SummaryStat
-            label="Activos"
-            value={summary.active}
-            icon={<CheckCircle2 className="size-5" aria-hidden="true" />}
-            className="border-emerald-200 bg-emerald-50/60 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950/30 dark:text-emerald-200"
-          />
-          <SummaryStat
-            label="A expirar em 30 dias"
-            value={summary.expiring}
-            icon={<Clock3 className="size-5" aria-hidden="true" />}
-            className="border-amber-200 bg-amber-50/60 text-amber-900 dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-200"
-          />
-          <SummaryStat
-            label="Revogados"
-            value={summary.revoked}
-            icon={<ShieldOff className="size-5" aria-hidden="true" />}
-            className="border-rose-200 bg-rose-50/60 text-rose-800 dark:border-rose-900 dark:bg-rose-950/30 dark:text-rose-200"
-          />
-        </div>
 
         <IgrpLoading
           loading={mappingsQuery.isLoading}
@@ -488,7 +441,8 @@ export default function EmailAccessMappingsPage() {
           </p>
         )}
 
-        {mappingsResult?.success && (
+        {mappingsPage && (
+          <>
           <div className="overflow-x-auto rounded-lg border">
             <table className="w-full min-w-[1100px] text-sm">
               <thead className="bg-muted/50 text-left">
@@ -511,7 +465,7 @@ export default function EmailAccessMappingsPage() {
                     onRevoke={setRevokingMapping}
                   />
                 ))}
-                {mappings.length === 0 && (
+                {mappings.length === 0 && mappingsPage.totalElements === 0 && (
                   <tr>
                     <td
                       colSpan={7}
@@ -524,6 +478,22 @@ export default function EmailAccessMappingsPage() {
               </tbody>
             </table>
           </div>
+          {mappingsPage.totalPages > 1 && (
+            <EmailAccessMappingsPagination
+              currentPage={mappingsPage.pageNumber}
+              totalPages={mappingsPage.totalPages}
+              isFirstPage={
+                mappingsPage.first ?? mappingsPage.pageNumber <= 0
+              }
+              isLastPage={
+                mappingsPage.last ??
+                mappingsPage.pageNumber >= mappingsPage.totalPages - 1
+              }
+              disabled={mappingsQuery.isFetching}
+              onPageChange={setPage}
+            />
+          )}
+          </>
         )}
       </div>
 
@@ -779,29 +749,83 @@ export default function EmailAccessMappingsPage() {
   );
 }
 
-function SummaryStat({
-  label,
-  value,
-  icon,
-  className,
+
+
+
+function getPaginationPages(currentPage: number, totalPages: number): number[] {
+  const pageWindowSize = Math.min(totalPages, 5);
+  const firstPage = Math.min(
+    Math.max(currentPage - Math.floor(pageWindowSize / 2), 0),
+    totalPages - pageWindowSize,
+  );
+
+  return Array.from({ length: pageWindowSize }, (_, index) => firstPage + index);
+}
+
+function EmailAccessMappingsPagination({
+  currentPage,
+  totalPages,
+  isFirstPage,
+  isLastPage,
+  disabled,
+  onPageChange,
 }: {
-  label: string;
-  value: number;
-  icon: React.ReactNode;
-  className: string;
+  currentPage: number;
+  totalPages: number;
+  isFirstPage: boolean;
+  isLastPage: boolean;
+  disabled: boolean;
+  onPageChange: (page: number) => void;
 }) {
+  const pages = getPaginationPages(currentPage, totalPages);
+
   return (
-    <div
-      className={cn('flex min-h-24 items-center justify-between rounded-md border p-4', className)}
+    <nav
+      className="flex flex-wrap items-center justify-between gap-3 border-t px-3 py-3"
+      aria-label="Paginação dos mapeamentos de acesso por email"
     >
-      <div>
-        <p className="text-xs font-medium uppercase text-current/75">{label}</p>
-        <p className="mt-2 text-2xl font-semibold tabular-nums">{value}</p>
+      <p className="text-sm text-muted-foreground" aria-live="polite">
+        Página <span className="font-medium text-foreground">{currentPage + 1}</span> de{" "}
+        <span className="font-medium text-foreground">{totalPages}</span>
+      </p>
+      <div className="flex items-center gap-1" aria-label="Navegação entre páginas">
+        <IGRPButton
+          name="previousEmailAccessMappingsPage"
+          type="button"
+          variant="outline"
+          size="sm"
+          disabled={disabled || isFirstPage}
+          onClick={() => onPageChange(currentPage - 1)}
+        >
+          Anterior
+        </IGRPButton>
+        {pages.map((page) => (
+          <IGRPButton
+            key={page}
+            name={`emailAccessMappingsPage${page + 1}`}
+            type="button"
+            variant={page === currentPage ? "default" : "outline"}
+            size="sm"
+            disabled={disabled}
+            aria-current={page === currentPage ? "page" : undefined}
+            aria-label={`Página ${page + 1}`}
+            onClick={() => onPageChange(page)}
+          >
+            {page + 1}
+          </IGRPButton>
+        ))}
+        <IGRPButton
+          name="nextEmailAccessMappingsPage"
+          type="button"
+          variant="outline"
+          size="sm"
+          disabled={disabled || isLastPage}
+          onClick={() => onPageChange(currentPage + 1)}
+        >
+          Seguinte
+        </IGRPButton>
       </div>
-      <div className="flex size-10 items-center justify-center rounded-md bg-background/70">
-        {icon}
-      </div>
-    </div>
+    </nav>
   );
 }
 

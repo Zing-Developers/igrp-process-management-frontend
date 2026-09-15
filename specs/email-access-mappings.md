@@ -1,6 +1,6 @@
 # Email Access Mappings Management
 
-**SPEC STATUS: READY FOR APPROVAL**
+**SPEC STATUS: APPROVED FOR IMPLEMENTATION**
 
 ## 1. Objective
 
@@ -10,12 +10,13 @@ Add an authenticated page at `/email-access-mappings` where authorized administr
 
 - The visual and behavioral reference is `_resources/Consola de Acessos por Email.htm`; the rendered application is embedded in `_resources/Consola de Acessos por Email_files/saved_resource.html`.
 - The related implementation precedent is `src/app/(igrp)/(generated)/api-keys/page.tsx` and its server-action integration in `src/app/(myapp)/functions/m2m-keys.ts`.
-- `@irn/platform-process-management-client-ts` version `0.1.0-beta.23` exposes the required operations through `ProcessManagementClient.emailAccessMappings`:
-  - `getEmailAccessMappings()`
+- `@irn/platform-process-management-client-ts` and `@irn/platform-process-management-types` version `0.1.0-beta.24` expose the required operations through `ProcessManagementClient.emailAccessMappings`:
+  - `getEmailAccessMappings({ page, size })`
   - `createEmailAccessMapping(body)`
   - `updateEmailAccessMapping(id, body)`
   - `revokeEmailAccessMapping(id)`
 - The package's `EmailAccessMapping` response contract provides mapping identity, email, permissions, description, notes, active and expiration state, revocation metadata, and standard create/update audit metadata. The create/update request contract provides email, permissions, description, notes, and expiration.
+- The list operation returns `PaginatedResponse<EmailAccessMapping>`, not an array. Its contract contains `content`, `pageNumber`, `pageSize`, `totalElements`, `totalPages`, `first`, and `last`; its optional query accepts `page` and `size`.
 - The configured client targets Process Management only. Process Studio is not available through this client.
 - No repository source currently provides a dynamic permission catalogue or client-side `EMAIL_ACCESS_MAPPINGS:*` capability model. The API remains the authorization authority.
 - The page must use the project's existing application shell, design-system components, query/mutation conventions, API client configuration, toast behavior, access-denied component, loading treatment, and user/audit presentation where applicable. It must not recreate the standalone reference's global top bar or custom theme.
@@ -30,6 +31,8 @@ Add an authenticated page at `/email-access-mappings` where authorized administr
 5. Each table row initially displays at most three permission chips. Rows with additional permissions provide an inline control for expanding and collapsing the complete permission list.
 6. Expiration date selection uses `IGRPDatePickerSingle` with the companion `IGRPInputTime` control, preserving the API's local date-and-time contract.
 7. Descriptions are displayed inline using a 46-character preview. Longer descriptions are truncated with `...` and can be expanded and collapsed within their row; notes remain hidden behind their existing discoverable indicator/tooltip.
+8. The page uses server-side pagination with a fixed page size of 10. The pagination control provides Previous and Next buttons, a current-page/total-pages status, and up to five numeric page links; it has no page-size selector.
+9. Summary cards are omitted because a paginated list response cannot provide meaningful global active, expiring, and revoked totals. The header badge uses the API's `totalElements` value as the cross-page total.
 
 ## 4. Scope
 
@@ -38,7 +41,7 @@ Add an authenticated page at `/email-access-mappings` where authorized administr
 - A client-rendered page reachable directly at `/email-access-mappings` within the existing generated application layout.
 - Server-side wrappers around all four email-access-mapping client operations.
 - Loading, populated, empty, denied, and error states.
-- Summary counts for active, expiring, and revoked mappings.
+- Server-side pagination of mappings, using a fixed size of 10 and simple Previous/Next controls.
 - A mapping table with state, expiration, audit information, and row actions.
 - Create and edit dialogs with email, permissions, description, notes, and expiration fields.
 - Static permission suggestions plus free-form permission entry and validation.
@@ -55,7 +58,7 @@ Add an authenticated page at `/email-access-mappings` where authorized administr
 - Restoring or reactivating a revoked mapping.
 - Deleting revoked mappings from history.
 - Changing a mapping's email after creation.
-- Search, filtering, sorting controls, pagination, or bulk actions.
+- Search, filtering, sorting controls, bulk actions, and page-size selection.
 - Adding or changing global navigation entries unless route discovery in the existing application requires it for the route to function.
 - Recreating the reference's standalone administration/session header or its bespoke CSS theme.
 
@@ -69,13 +72,6 @@ Add an authenticated page at `/email-access-mappings` where authorized administr
 - Revoked state takes precedence over expiration state.
 - An expired mapping remains editable and revocable.
 - A revoked mapping remains visible but cannot be edited or revoked again.
-
-### Summary counts
-
-- **Activos** counts mappings currently in the Active state.
-- **A expirar em 30 dias** counts Active mappings with an expiration after the current time and no later than 30 days from the current time.
-- **Revogados** counts mappings whose `active` value is explicitly `false`.
-- Expired mappings are not included in any of these three counts.
 
 ### Email
 
@@ -121,11 +117,18 @@ Add an authenticated page at `/email-access-mappings` where authorized administr
 ### Load and review mappings
 
 1. The user opens `/email-access-mappings`.
-2. The page requests mappings through the server-side wrapper and displays a loading state.
-3. On success, it calculates summary values and renders all returned mappings.
-4. When no mappings exist, the table area displays the empty-state message.
+2. The page requests the first page through the server-side wrapper with `page: 0` and `size: 10`, and displays a loading state.
+3. On success, it renders the page's `content` mappings and uses `totalElements` for the header count.
+4. When `content` is empty and `totalElements` is zero, the table area displays the empty-state message.
 5. If the list request returns 401 or 403, the normal content is replaced by the application's access-denied page.
 6. Other failures display the API-provided error message in an error Toast, retain the in-page error as persistent feedback, and allow the normal query retry behavior supported by the application.
+
+### Change page
+
+1. When the API reports more than one page, the page displays a pagination control below the table with **Anterior**, **Página N de M**, and **Seguinte**.
+2. Selecting **Seguinte** requests the next zero-based API page; selecting **Anterior** requests the prior API page.
+3. **Anterior** is disabled on the first page and **Seguinte** is disabled on the last page. Both controls are disabled while the requested page is loading.
+4. Changing page retains the fixed page size of 10 and does not change any form or revocation-dialog state.
 
 ### Create a mapping
 
@@ -163,9 +166,9 @@ Add an authenticated page at `/email-access-mappings` where authorized administr
 
 **FR-03** The server-side functions shall wrap list, create, update, and revoke operations in the same discriminated success/error result pattern used by the API-key feature, preserving HTTP status and the backend error text from `details.error`, `details.message`, `details.detail`, or a non-empty string response, in that order when available.
 
-**FR-04** The page header shall use the existing application component pattern, display **Mapeamentos de acesso por email**, explain how Keycloak service-account emails receive mapped permissions, and show the total returned mapping count.
+**FR-04** The page header shall use the existing application component pattern, display **Mapeamentos de acesso por email**, explain how Keycloak service-account emails receive mapped permissions, and show the cross-page total from `PaginatedResponse.totalElements`.
 
-**FR-05** The content shall provide a primary **Novo mapeamento** action and three summary cards: **Activos**, **A expirar em 30 dias**, and **Revogados**.
+**FR-05** The content shall provide a primary **Novo mapeamento** action. It shall not display active, expiring, or revoked summary cards because the paginated endpoint does not provide global aggregates.
 
 **FR-06** The page shall not display a backend selector or a Process Studio option.
 
@@ -199,11 +202,17 @@ Add an authenticated page at `/email-access-mappings` where authorized administr
 
 **FR-21** The root application layout shall mount exactly one `IGRPToaster` so all error and success Toast events emitted by the page can be rendered.
 
+**FR-22** The list server function shall accept a typed `EmailAccessMappingQuery` containing `page` and `size`, pass those values unchanged to `client.emailAccessMappings.getEmailAccessMappings`, and return the resulting `PaginatedResponse<EmailAccessMapping>` without flattening or locally recreating its pagination metadata.
+
+**FR-23** The page shall initially request `page: 0, size: 10`. Its React Query key shall include the requested page and fixed size so a page change fetches the corresponding API page rather than slicing or paginating previously fetched data in the browser.
+
+**FR-24** When `totalPages` exceeds one, the page shall render an accessible pagination control below the table with **Anterior**, **Página N de M**, **Seguinte**, and a window of no more than five numeric page links centered on the current page where possible. It shall use the API's `first` and `last` flags, with metadata-safe fallbacks derived from `pageNumber` and `totalPages`, to disable unavailable navigation. The current numeric link shall expose `aria-current="page"`. It shall not offer a page-size selector.
+
 ## 8. Data and API Contracts
 
 | UI operation | Client method | Required request behavior | Success behavior |
 |---|---|---|---|
-| List | `getEmailAccessMappings()` | No request body | Use returned `EmailAccessMapping[]` as the authoritative list |
+| List | `getEmailAccessMappings({ page, size })` | Send zero-based `page` and fixed `size: 10`; return `PaginatedResponse<EmailAccessMapping>` | Render `content` as the authoritative current page; use its metadata for pagination and `totalElements` for the overall badge |
 | Create | `createEmailAccessMapping(body)` | Lowercase normalized email, at least one validated permission, optional description/notes/expiration | Refresh list and report success |
 | Edit | `updateEmailAccessMapping(id, body)` | Existing ID; email remains unchanged; send the complete desired permission set, include populated optional fields, and omit cleared optional fields | Refresh list and report success |
 | Revoke | `revokeEmailAccessMapping(id)` | Existing ID; no body | Refresh list and report success |
@@ -222,7 +231,9 @@ The UI must tolerate optional response fields. A missing optional value must ren
 - Transport or unexpected failures use a generic Portuguese retry message.
 - Failed mutations do not optimistically alter counts, rows, or statuses.
 - Missing audit profiles fall back to raw audit identifiers; missing identifiers render a neutral unavailable state.
-- A successful response with an empty array is an empty state, not an error.
+- A successful page response with empty `content` and `totalElements: 0` is an empty state, not an error.
+- The UI must not render an impossible page navigator for an empty result (`totalPages` of zero). It may omit pagination whenever `totalPages` is one or fewer.
+- While navigating, the current page's rows may remain visible with a loading treatment or be replaced by the normal loading treatment, but the next/previous buttons must prevent duplicate page requests.
 
 ## 10. Technical Impact
 
@@ -236,6 +247,7 @@ The UI must tolerate optional response fields. A missing optional value must ren
 
 - Add server-side email-access-mapping functions alongside the project's existing function modules.
 - Obtain the client through `getIGRPProcessClient()` and call `client.emailAccessMappings` methods.
+- Add a small application-native pagination component or page-local equivalent using existing design-system controls. It controls server-side page state only; it must not use the design system data table's client-side pagination.
 - Keep authentication, gateway headers, timeout, and token refresh behavior centralized in the existing API client configuration.
 
 ### Data and persistence
@@ -254,8 +266,8 @@ The UI must tolerate optional response fields. A missing optional value must ren
 - The repository currently has no automated test runner or test script. Introducing a test framework is outside this feature's scope.
 - Static verification shall include a production Next.js build/type check and a non-mutating Biome check of affected files.
 - Manual verification using mocked or development API responses shall cover:
-  - email normalization, permission validation, role/group rejection, duplicate suppression, state precedence, and all three summary calculations including the 30-day boundary;
-  - loading, populated, and empty list states;
+  - email normalization, permission validation, role/group rejection, duplicate suppression, and mapping-state precedence;
+  - initial `page: 0, size: 10` request, populated page, zero-result empty state, and Previous/Next navigation including first/last disabled states;
   - 401/403 list handling;
   - create validation and successful request normalization;
   - edit initialization, immutable email, optional-field clearing, and update payload;
@@ -269,13 +281,13 @@ The UI must tolerate optional response fields. A missing optional value must ren
 
 - Given an authenticated user whose list request is authorized
 - When the user opens `/email-access-mappings`
-- Then the page loads mappings through `client.emailAccessMappings.getEmailAccessMappings()` and renders inside the existing application shell.
+- Then the page requests `client.emailAccessMappings.getEmailAccessMappings({ page: 0, size: 10 })`, receives a `PaginatedResponse<EmailAccessMapping>`, and renders inside the existing application shell.
 
 **AC-02**
 
 - Given a returned list containing active, soon-expiring, expired, and revoked mappings
 - When the list renders
-- Then the three summary cards follow the state and 30-day counting rules in this specification and the header badge shows the total number of mappings.
+- Then no active, expiring, or revoked summary cards are displayed, and the header badge shows `totalElements`.
 
 **AC-03**
 
@@ -411,15 +423,34 @@ The UI must tolerate optional response fields. A missing optional value must ren
 - When the page emits its error Toast
 - Then the root-mounted `IGRPToaster` renders it visibly to the user.
 
+**AC-22**
+
+- Given a list response with `pageNumber: 0`, `pageSize: 10`, `totalPages: 3`, `first: true`, and `last: false`
+- When the table renders
+- Then the page displays **Página 1 de 3**, numeric links 1 through 3 with page 1 marked current, disables **Anterior**, and enables **Seguinte**.
+- When the user selects **Seguinte**
+- Then the next list request uses `{ page: 1, size: 10 }` and renders its returned `content` without client-side slicing.
+
+**AC-23**
+
+- Given the final response page has `last: true`
+- When the pagination control renders
+- Then **Seguinte** is disabled.
+- Given a response with zero or one total page
+- Then no unusable pagination navigation is displayed.
+
 ## 14. Definition of Done
 
 - [ ] `/email-access-mappings` is reachable within the existing authenticated layout and contains no Process Studio/backend switcher.
 - [ ] All four operations use `@irn/platform-process-management-client-ts` through `getIGRPProcessClient()` and server-side wrappers.
-- [ ] The page implements the reference-derived header, three summary cards, mapping table, create/edit dialog, revoke confirmation, and feedback states using application-native components.
-- [ ] Every functional requirement FR-01 through FR-21 is satisfied.
-- [ ] Every acceptance criterion AC-01 through AC-21 passes documented manual verification and any applicable automated tests available at implementation time.
+- [ ] The page implements the reference-derived header, mapping table, create/edit dialog, revoke confirmation, and feedback states using application-native components, without summary cards.
+- [ ] Every functional requirement FR-01 through FR-24 is satisfied.
+- [ ] Every acceptance criterion AC-01 through AC-23 passes documented manual verification and any applicable automated tests available at implementation time.
 - [ ] Exactly one `IGRPToaster` is mounted by the root layout.
 - [ ] Mapping, form, and API request code uses the package's exported types without duplicating incompatible local API models.
+- [ ] The list integration uses the beta.24 `PaginatedResponse<EmailAccessMapping>` type, renders only `content`, and retains all response pagination metadata needed by the page.
+- [ ] The first list request uses `page: 0, size: 10`; Previous/Next and up to five numeric page links use API pagination, with unavailable controls correctly disabled at their bounds.
+- [ ] The page displays no active, expiring, or revoked summary cards, while the header badge renders `totalElements`.
 - [ ] The production build/type check and non-mutating Biome check pass for all affected files without introducing new warnings or suppressions.
 - [ ] Manual verification covers every case listed in Testing Expectations, including optional-field clearing against the actual PUT behavior.
 - [ ] No backend, database, shared-types package, client-package, Process Studio, or unrelated navigation behavior is changed.

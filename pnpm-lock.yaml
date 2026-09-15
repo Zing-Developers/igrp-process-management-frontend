@@ -42,11 +42,11 @@ importers:
         specifier: ^2.1.1
         version: 2.1.15(@types/node@24.13.3)(typescript@5.9.3)
       '@irn/platform-process-management-client-ts':
-        specifier: 0.1.0-beta.23
-        version: 0.1.0-beta.23
+        specifier: 0.1.0-beta.24
+        version: 0.1.0-beta.24
       '@irn/platform-process-management-types':
-        specifier: 0.1.0-beta.23
-        version: 0.1.0-beta.23
+        specifier: 0.1.0-beta.24
+        version: 0.1.0-beta.24
       '@tanstack/react-query':
         specifier: ^5.90.20
         version: 5.102.8(react@19.2.3)
@@ -501,11 +501,11 @@ packages:
     resolution: {integrity: sha512-ydMYr1rFQENs44Ep19e1/zBCHxihEKNYIemQNHRHijf/hHATq8BzKh1Hye0T4uBgvBycXTZer7Q0N40zxxgVLA==}
     engines: {node: '>=18'}
 
-  '@irn/platform-process-management-client-ts@0.1.0-beta.23':
-    resolution: {integrity: sha512-zre2rBNZU4V38fUN/JTW8FDSysWv9v5MFKNsjngD0qy5YfT8/GFEsfGiGok2h002CsXSX2LO+dfYuo/xcKAuRg==}
+  '@irn/platform-process-management-client-ts@0.1.0-beta.24':
+    resolution: {integrity: sha512-iX9JRLTyNKk+IZ5BPPLsXFdRvF0oYPqc9PuLhjRcYLRu9HXYLFGENY4t5SQY51Ydm4eWmT5e1F17zsYY2ypupQ==}
 
-  '@irn/platform-process-management-types@0.1.0-beta.23':
-    resolution: {integrity: sha512-GZyBzu0aat7JUO7jJzZCF25syb/0x6MNXxDXTvBhC1xEVeBxWuPHCbnc/5bnCL/SnM07Wk45uz40sL+RyLcg8g==}
+  '@irn/platform-process-management-types@0.1.0-beta.24':
+    resolution: {integrity: sha512-XbbRIeXWmNGfkR6gVy2LvrWgShP/OiCJq/LzLV2r5zPf5K9t/1A+95GdipiDGwx0OtvnC5rfRD+ZdFTpKwBReg==}
     engines: {node: '>=20.x.x'}
 
   '@jridgewell/gen-mapping@0.3.13':
@@ -2432,11 +2432,11 @@ snapshots:
       - '@types/node'
       - typescript
 
-  '@irn/platform-process-management-client-ts@0.1.0-beta.23':
+  '@irn/platform-process-management-client-ts@0.1.0-beta.24':
     dependencies:
-      '@irn/platform-process-management-types': 0.1.0-beta.23
+      '@irn/platform-process-management-types': 0.1.0-beta.24
 
-  '@irn/platform-process-management-types@0.1.0-beta.23': {}
+  '@irn/platform-process-management-types@0.1.0-beta.24': {}
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:

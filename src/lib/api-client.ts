@@ -1,6 +1,7 @@
 import { ProcessManagementClient } from "@irn/platform-process-management-client-ts";
-import { LRUCache } from "lru-cache";
 import { getIGRPProcessClientConfig } from "./api-config";
+import { getAccessToken, refreshAccessToken } from "./auth-helpers";
+import { LRUCache } from "lru-cache";
 import { getValidAccessToken } from "./auth-helpers";
 import { getOrFetchToken } from "./rsa-token-handlers";
 

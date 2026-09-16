@@ -505,6 +505,7 @@ badgeClassName={ `${bgClass} ${textClass} ${className}` }
           header: 'Modificado por',
           accessorKey: 'updatedBy',
           cell: ({ row }) => <UserCell user={row.original.updatedBy} />,
+
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
@@ -550,3 +551,4 @@ return (
 onSave={ handleAssignTaskSave } ></CommonUserTaskModalForm></div>
   );
 }
+

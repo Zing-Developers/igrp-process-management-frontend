@@ -9,7 +9,7 @@ import {
   IGRPCopyTo,
   IGRPBadgePrimitive,
 } from "@igrp/igrp-framework-react-design-system";
-import { TaskVariables } from "@igrp/platform-process-management-types";
+import { TaskVariables } from "@irn/platform-process-management-types";
 import {
   getTypeColor,
   getTypeFromValue,

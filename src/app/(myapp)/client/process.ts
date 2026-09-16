@@ -2,6 +2,7 @@
 import { DEFAULT_PAGE_SIZE } from "@/app/(myapp)/utils/shared";
 import { getIGRPProcessClient } from "@/lib/api-client";
 import {
+  CreateAndStartProcessRequest,
   CreateProcessArtifactRequest,
   CreateProcessInstanceRequest,
   CreateProcessSequenceRequest,
@@ -9,13 +10,14 @@ import {
   PaginatedResponse,
   Process,
   ProcessArtifact,
+  ProcessDeploymentListItem,
   ProcessInstance,
   ProcessSequence,
   ProcessStats,
   ProcessDefinitionSchema,
   Priority,
   ProcessFilter,
-} from "@igrp/platform-process-management-types";
+} from "@irn/platform-process-management-types";
 
 /**
  * Fetches a paginated list of processes.
@@ -25,7 +27,7 @@ import {
  */
 export const getProcesses = async (
   filter?: ProcessFilter,
-): Promise<PaginatedResponse<Process>> => {
+): Promise<PaginatedResponse<ProcessDeploymentListItem>> => {
   const processManagementClient = await getIGRPProcessClient();
   const response = await processManagementClient.processes.getProcesses({
     ...filter,
@@ -140,14 +142,12 @@ export const createProcessInstance = async (
   applicationBase: string,
   priority: number,
   businessKey?: string,
-  variables?: Array<{ name: string; value: string }>,
 ): Promise<ProcessInstance> => {
   const body: CreateProcessInstanceRequest = {
     processDefinitionId,
     processKey,
     applicationBase: applicationBase,
     businessKey,
-    variables,
     priority: priority,
   };
 
@@ -199,7 +199,7 @@ export const createAndStartProcess = async (
   businessKey?: string,
   variables?: Array<{ name: string; value: string }>,
 ): Promise<ProcessInstance> => {
-  const body: CreateProcessInstanceRequest = {
+  const body: CreateAndStartProcessRequest = {
     processDefinitionId,
     processKey,
     applicationBase: applicationBase,

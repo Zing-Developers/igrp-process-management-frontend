@@ -3,7 +3,7 @@ import { ExtendedArea } from "../types";
 import { NodeIcon } from "./node-icon";
 import { NodeContent } from "./node-content";
 import { ExpandButton } from "./expand-button";
-import { Process } from "@igrp/platform-process-management-types";
+import { Process } from "@irn/platform-process-management-types";
 
 interface TreeNodeProps {
   node: ExtendedArea;

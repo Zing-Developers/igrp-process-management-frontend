@@ -1,7 +1,7 @@
-import { ProcessManagementClient } from "@igrp/platform-process-management-client-ts";
-import { getIGRPProcessClientConfig } from "./api-config";
-import { getAccessToken, refreshAccessToken } from "./auth-helpers";
+import { ProcessManagementClient } from "@irn/platform-process-management-client-ts";
 import { LRUCache } from "lru-cache";
+import { getIGRPProcessClientConfig } from "./api-config";
+import { getValidAccessToken } from "./auth-helpers";
 import { getOrFetchToken } from "./rsa-token-handlers";
 
 const cache = new LRUCache<string, string>({
@@ -14,10 +14,21 @@ let clientInstance: ProcessManagementClient | null = null;
 export async function getIGRPProcessClient(): Promise<ProcessManagementClient> {
   // Always create a fresh client instance to ensure we have the latest configuration
   clientInstance = null;
-  // Always get fresh config to ensure we have the latest token
+  const config = await getIGRPProcessApiRequestConfig();
+  clientInstance = ProcessManagementClient.create(config);
+
+  return clientInstance;
+}
+
+export async function getIGRPProcessApiRequestConfig(): Promise<{
+  baseUrl: string;
+  timeout: number;
+  headers: Record<string, string>;
+}> {
+  // Always get fresh configuration to ensure we have the latest token.
   const { baseUrl, timeout = 45000 } = getIGRPProcessClientConfig();
 
-  let token = await getAccessToken();
+  const token = await getValidAccessToken();
 
   // Check if token is missing or expired
   if (!token) {
@@ -25,15 +36,9 @@ export async function getIGRPProcessClient(): Promise<ProcessManagementClient> {
     throw new Error("Authentication token not available");
   }
 
-  // Check if token is expired and refresh if needed
-  if (token.expiresAt && token.expiresAt < Date.now()) {
-    console.log("[API Client] Token expired, refreshing...");
-    token = await refreshAccessToken(token);
-
-    if (token.error) {
-      console.error("[API Client] Failed to refresh token:", token.error);
-      throw new Error("Failed to refresh authentication token");
-    }
+  if (token.error && token.expiresAt && token.expiresAt < Date.now()) {
+    console.error("[API Client] Failed to refresh token:", token.error);
+    throw new Error("Failed to refresh authentication token");
   }
 
   // Ensure we have an access token
@@ -68,14 +73,11 @@ export async function getIGRPProcessClient(): Promise<ProcessManagementClient> {
         }),
   };
 
-  // Create new client instance with current token
-  clientInstance = ProcessManagementClient.create({
+  return {
     baseUrl,
     timeout,
     headers,
-  });
-
-  return clientInstance;
+  };
 }
 
 export function resetIGRPProcessClient() {

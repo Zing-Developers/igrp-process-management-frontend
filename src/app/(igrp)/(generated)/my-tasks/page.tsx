@@ -50,7 +50,6 @@ const formatAuditDate = (value?: string) => {
   }).format(date);
 };
 
-
 export default function PageMytasksComponent() {
 
 
@@ -156,7 +155,7 @@ export default function PageMytasksComponent() {
     const [year, month, day] = value.split('-');
     return `${day}-${month}-${year}`;
   };
-
+ 
   const selectedValue = (value: string | string[]) =>
     Array.isArray(value) ? value[0] : value;
 
@@ -463,6 +462,7 @@ export default function PageMytasksComponent() {
             },
             {
               id: 'tableActionListCell1',
+
               enableHiding: false, cell: ({ row }) => {
                 const rowData = row.original;
 

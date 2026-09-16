@@ -113,7 +113,7 @@ const { igrpToast } = useIGRPToast()
       dateFrom: null, dateTo: null, organic: '', user: '', variables: [],
     }));
   };
-
+ 
   const toPickerDate = (value: string | null) => {
     if (!value) return undefined;
     const [day, month, year] = value.split('-');

@@ -1,6 +1,10 @@
+import { reissueJwtClaims } from "@irn/irn-auth-sdk/server";
 import type { NextApiRequest } from "next";
 import { cookies } from "next/headers";
 import { getToken, type JWT } from "next-auth/jwt";
+
+const NEXTAUTH_SESSION_MAX_AGE_SECONDS = 30 * 24 * 60 * 60;
+const refreshesInFlight = new Map<string, Promise<JWT>>();
 
 export async function getAccessToken() {
   const cookieStore = await cookies();
@@ -18,11 +22,54 @@ export async function getAccessToken() {
 }
 
 /**
+ * Returns a usable token and persists refresh-token rotation in the NextAuth
+ * cookie before the Server Action response is sent back to the browser.
+ */
+export async function getValidAccessToken(): Promise<JWT | null> {
+  const token = await getAccessToken();
+
+  if (!token || !token.expiresAt || token.expiresAt >= Date.now()) {
+    return token;
+  }
+
+  const refreshedToken = await refreshAccessToken(token);
+  if (refreshedToken.error) return refreshedToken;
+
+  await reissueJwtClaims(
+    {
+      accessToken: refreshedToken.accessToken,
+      refreshToken: refreshedToken.refreshToken,
+      expiresAt: refreshedToken.expiresAt,
+      error: undefined,
+      errorCode: undefined,
+    },
+    { maxAgeSeconds: NEXTAUTH_SESSION_MAX_AGE_SECONDS },
+  );
+
+  return refreshedToken;
+}
+
+/**
  * Refreshes the access token using the refresh token from Keycloak
  * @param token The JWT token to refresh
  * @returns Promise with refreshed token data
  */
 export async function refreshAccessToken(token: JWT): Promise<JWT> {
+  const refreshKey = String(token.session_id ?? token.refreshToken ?? "");
+  const refreshInFlight = refreshesInFlight.get(refreshKey);
+  if (refreshInFlight) return refreshInFlight;
+
+  const refreshPromise = performTokenRefresh(token);
+  refreshesInFlight.set(refreshKey, refreshPromise);
+
+  try {
+    return await refreshPromise;
+  } finally {
+    refreshesInFlight.delete(refreshKey);
+  }
+}
+
+async function performTokenRefresh(token: JWT): Promise<JWT> {
   try {
     const issuer = process.env.KEYCLOAK_ISSUER;
     const clientId = process.env.KEYCLOAK_CLIENT_ID;
@@ -66,6 +113,7 @@ export async function refreshAccessToken(token: JWT): Promise<JWT> {
       accessToken: refreshedTokens.access_token,
       expiresAt: Date.now() + refreshedTokens.expires_in * 1000,
       refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Fall back to old refresh token
+      error: undefined,
     };
   } catch (error) {
     console.error("[Auth] Error refreshing token:", error);

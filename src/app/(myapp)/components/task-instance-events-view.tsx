@@ -12,7 +12,7 @@ import {
   IGRPPopoverTriggerPrimitive,
   IGRPPopoverContentPrimitive,
 } from "@igrp/igrp-framework-react-design-system";
-import { TaskInstanceEvent } from "@igrp/platform-process-management-types";
+import { TaskInstanceEvent } from "@irn/platform-process-management-types";
 import { format } from "date-fns";
 
 interface TaskInstanceEventsViewProps {

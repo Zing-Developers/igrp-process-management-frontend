@@ -30,7 +30,25 @@ import { urlConfig } from '@/app/(myapp)/utils/url-config'
 import { useDashboard } from '@/app/(myapp)/dashboard/hooks/use-dashboard'
 import { useMyTasks } from '@/app/(myapp)/my-tasks/hooks/use-my-tasks'
 import { PageHeader } from '@/app/(myapp)/components/PageHeader';
+import { UserCell } from '@/app/(myapp)/components/user-cell';
+import type { UserProfileDTO } from '@irn/platform-process-management-types';
 
+const formatAuditDate = (value?: string) => {
+  if (!value) return '-';
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '-';
+
+  return new Intl.DateTimeFormat('pt-PT', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23',
+  }).format(date);
+};
 
 export default function PageMytasksComponent() {
 
@@ -42,6 +60,8 @@ export default function PageMytasksComponent() {
     startedAt: string;
     duration: string;
     priority: string;
+    updatedAt?: string;
+    updatedBy?: UserProfileDTO | string;
     taskId: string;
     processName: string;
   }
@@ -135,7 +155,7 @@ export default function PageMytasksComponent() {
     const [year, month, day] = value.split('-');
     return `${day}-${month}-${year}`;
   };
-
+ 
   const selectedValue = (value: string | string[]) =>
     Array.isArray(value) ? value[0] : value;
 
@@ -429,7 +449,20 @@ export default function PageMytasksComponent() {
               filterFn: IGRPDataTableFacetedFilterFn
             },
             {
+              header: 'Última modificação',
+              accessorKey: 'updatedAt',
+              cell: ({ row }) => formatAuditDate(row.original.updatedAt),
+              filterFn: IGRPDataTableFacetedFilterFn
+            },
+            {
+              header: 'Modificado por',
+              accessorKey: 'updatedBy',
+              cell: ({ row }) => <UserCell user={row.original.updatedBy} />,
+              filterFn: IGRPDataTableFacetedFilterFn
+            },
+            {
               id: 'tableActionListCell1',
+
               enableHiding: false, cell: ({ row }) => {
                 const rowData = row.original;
 

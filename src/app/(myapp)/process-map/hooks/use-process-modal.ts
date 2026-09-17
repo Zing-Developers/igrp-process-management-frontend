@@ -1,4 +1,4 @@
-import { Process } from "@igrp/platform-process-management-types";
+import { Process } from "@irn/platform-process-management-types";
 import { useState, useCallback } from "react";
 
 export function useProcessModal() {

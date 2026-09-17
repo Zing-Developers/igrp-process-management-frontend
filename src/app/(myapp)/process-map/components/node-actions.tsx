@@ -1,6 +1,6 @@
 import React from "react";
 import { ExtendedArea } from "../types";
-import { Process } from "@igrp/platform-process-management-types";
+import { Process } from "@irn/platform-process-management-types";
 import { IGRPButton } from "@igrp/igrp-framework-react-design-system";
 
 interface NodeActionsProps {

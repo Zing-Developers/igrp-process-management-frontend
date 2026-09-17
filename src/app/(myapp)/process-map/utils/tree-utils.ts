@@ -1,4 +1,7 @@
-import { Process } from "@igrp/platform-process-management-types";
+import {
+  Process,
+  ProcessDeploymentListItem,
+} from "@irn/platform-process-management-types";
 import { ExtendedArea } from "../types";
 
 /**
@@ -7,7 +10,7 @@ import { ExtendedArea } from "../types";
  */
 export function buildProcessTree(
   areas: ExtendedArea[],
-  allProcesses: Process[],
+  allProcesses: ProcessDeploymentListItem[],
 ): ExtendedArea[] {
   const treeNodes: ExtendedArea[] = [];
 
@@ -44,7 +47,8 @@ export function buildProcessTree(
           ...process,
           id: `process-${process.id}`,
           name: process.name || process.processKey || "Unnamed Process",
-          type: "process",
+          type: "process" as const,
+          status: "ACTIVE" as const,
           level: level + 1,
           parentId: area.id,
           data: process,

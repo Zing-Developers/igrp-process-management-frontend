@@ -1,4 +1,4 @@
-import { Process } from "@igrp/platform-process-management-types";
+import { Process } from "@irn/platform-process-management-types";
 import { useState, useCallback } from "react";
 import { getProcessDefinitionPriorities } from "../../client/process";
 import { useQuery } from "@tanstack/react-query";

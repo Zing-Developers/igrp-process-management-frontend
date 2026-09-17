@@ -7,7 +7,7 @@ import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
 import {
   PaginatedResponse,
   ProcessInstance,
-} from "@igrp/platform-process-management-types";
+} from "@irn/platform-process-management-types";
 
 /**
  * Fetches a paginated list of process instances with optional filters.
@@ -19,13 +19,7 @@ import {
 export const getProcessInstances = async (filters?: {
   processType?: string;
   processNumber?: string;
-  status?:
-    | "CREATED"
-    | "RUNNING"
-    | "SUSPENDED"
-    | "CANCELED"
-    | "COMPLETED"
-    | "TERMINATED";
+  status?: "CREATED" | "RUNNING" | "SUSPENDED" | "CANCELED" | "COMPLETED";
   businessKey?: string;
   dateFrom?: string | null;
   dateTo?: string | null;

@@ -2,7 +2,7 @@ import React from "react";
 import { NodeIcon } from "../node-icon";
 import { AreaContent } from "./area-content";
 import { ExpandButton } from "./expand-button";
-import { Process } from "@igrp/platform-process-management-types";
+import { Process } from "@irn/platform-process-management-types";
 import { ExtendedArea } from "../../types";
 
 interface TreeNodeProps {

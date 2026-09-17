@@ -1,21 +1,21 @@
+import { format, formatDistanceToNow } from "date-fns";
 import { useMemo } from "react";
-import { useProcessInstancesData } from "./use-process-instances-data";
-import {
-  getProcessInstanceStatusVariant,
-  ProcessInstanceStatus,
-} from "../../utils/status-helpers";
-import { ProcessInstanceTableRow } from "../types";
+import { useProcessPriorities } from "../../hooks/use-process-priorities";
 import {
   formatDuration,
   getBusinessKeyTemplate,
   getDateTemplate,
-  getProcessInfo,
   getPriorityTemplate,
+  getProcessInfo,
   getProcessStatusTemplate,
   getProgressTemplate,
 } from "../../utils/columns-template";
-import { useProcessPriorities } from "../../hooks/use-process-priorities";
-import { format, formatDistanceToNow } from "date-fns";
+import {
+  getProcessInstanceStatusVariant,
+  type ProcessInstanceStatus,
+} from "../../utils/status-helpers";
+import type { ProcessInstanceTableRow } from "../types";
+import { useProcessInstancesData } from "./use-process-instances-data";
 
 export function useProcessInstances() {
   const {
@@ -45,11 +45,10 @@ export function useProcessInstances() {
       const createdDate = new Date(instance.startedAt);
       const now = instance.endedAt ? new Date(instance.endedAt) : new Date();
       const diffTime = Math.abs(now.getTime() - createdDate.getTime());
-      const priorityValue = instance.priority + "";
+      const priorityValue = `${instance.priority}`;
 
       const startedBy =
         instance.userProfileStartedBy?.fullName || instance.startedBy;
-
       return {
         processInfo: getProcessInfo(instance.name, instance.number),
         createBy: undefined,
@@ -76,6 +75,12 @@ export function useProcessInstances() {
         startedBy: startedBy,
         statusDesc: instance.statusDesc,
         businessKey: getBusinessKeyTemplate(instance.businessKey ?? ""),
+        updatedAt: instance.updatedAt ?? instance.createdAt,
+        updatedBy:
+          instance.userProfileUpdatedBy ??
+          instance.userProfileCreatedBy ??
+          instance.updatedBy ??
+          instance.createdBy,
       };
     });
   }, [processInstancesState.processInstances, getPriorityBadge]);

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useDashboardData } from "./use-dashboard-data";
 import { RecentItemsCardItem } from "../types";
-import { ProcessInstance } from "@igrp/platform-process-management-types";
+import { ProcessInstance } from "@irn/platform-process-management-types";
 import {
   getProcessInstanceStatusLabel,
   getProcessInstanceStatusVariant,

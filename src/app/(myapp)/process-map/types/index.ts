@@ -1,5 +1,5 @@
 import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
-import { Area, Process } from "@igrp/platform-process-management-types";
+import { Area, Process } from "@irn/platform-process-management-types";
 
 // Use the same structure as process configuration - no need for ProcessMapArea
 

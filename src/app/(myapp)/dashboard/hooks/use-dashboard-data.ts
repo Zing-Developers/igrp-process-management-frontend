@@ -13,7 +13,7 @@ import {
   getTaskStats,
   getMyTaskStats,
 } from "../../client/task";
-import { Task } from "@igrp/platform-process-management-types";
+import { Task } from "@irn/platform-process-management-types";
 import {
   getTaskStatusLabel,
   getTaskStatusVariant,

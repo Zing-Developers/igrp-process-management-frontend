@@ -1,3 +1,13 @@
+# [1.1.0](https://gitlab.tools.irn.internal/plataforma-de-registos/backoffice-componentes-transversais/igrp-process-runtime-frontend/compare/v1.0.0...v1.1.0) (2026-09-17)
+
+
+### Features
+
+* remove registry ([248ca4e](https://gitlab.tools.irn.internal/plataforma-de-registos/backoffice-componentes-transversais/igrp-process-runtime-frontend/commit/248ca4e61082ee84fb82a6512ce0b30028311e99))
+* remove registry ([8b519ab](https://gitlab.tools.irn.internal/plataforma-de-registos/backoffice-componentes-transversais/igrp-process-runtime-frontend/commit/8b519abd62ee76f7eb271e0415da0c5f30c5b80b))
+* update node versions ([da04530](https://gitlab.tools.irn.internal/plataforma-de-registos/backoffice-componentes-transversais/igrp-process-runtime-frontend/commit/da04530de121b55e8d21c02804abfb70fe3d07a3))
+* update node versions ([df6c14a](https://gitlab.tools.irn.internal/plataforma-de-registos/backoffice-componentes-transversais/igrp-process-runtime-frontend/commit/df6c14ab6e70a09cf312b46c3d8a3b5e82207e9f))
+
 # 1.0.0 (2026-06-15)
 
 

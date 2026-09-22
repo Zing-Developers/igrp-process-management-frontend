@@ -31,7 +31,7 @@ import {
   revokeEmailAccessMapping,
   updateEmailAccessMapping,
 } from "@/app/(myapp)/functions/email-access-mappings";
-import { AccessDeniedPage } from "@/app/(myapp)/components/access-denied-page";
+import { IRNErrorPage } from '@irn/irn-backoffice-design-system';
 import { IgrpLoading } from "@/app/(myapp)/components/igrp-loading";
 import { PageHeader } from "@/app/(myapp)/components/PageHeader";
 import { UserCell } from "@/app/(myapp)/components/user-cell";
@@ -186,8 +186,8 @@ export default function EmailAccessMappingsPage() {
 
   const queryAccessErrorStatus =
     mappingsResult &&
-    !mappingsResult.success &&
-    isAccessErrorStatus(mappingsResult.status)
+      !mappingsResult.success &&
+      isAccessErrorStatus(mappingsResult.status)
       ? mappingsResult.status
       : null;
 
@@ -314,11 +314,11 @@ export default function EmailAccessMappingsPage() {
       ...(values.notes.trim() ? { notes: values.notes.trim() } : {}),
       ...(toApiLocalDateTime(values.expiresAt, values.expirationTime)
         ? {
-            expiresAt: toApiLocalDateTime(
-              values.expiresAt,
-              values.expirationTime,
-            ),
-          }
+          expiresAt: toApiLocalDateTime(
+            values.expiresAt,
+            values.expirationTime,
+          ),
+        }
         : {}),
     };
 
@@ -395,9 +395,9 @@ export default function EmailAccessMappingsPage() {
 
   if (queryAccessErrorStatus) {
     return (
-      <AccessDeniedPage
-        status={queryAccessErrorStatus}
-        description={
+      <IRNErrorPage
+        errorCode={queryAccessErrorStatus}
+        title={
           queryAccessErrorStatus === 401
             ? "A sua sessão não é válida ou expirou. Inicie sessão novamente para continuar."
             : "Não tem permissão para gerir mapeamentos de acesso por email."
@@ -443,56 +443,56 @@ export default function EmailAccessMappingsPage() {
 
         {mappingsPage && (
           <>
-          <div className="overflow-x-auto rounded-lg border">
-            <table className="w-full min-w-[1100px] text-sm">
-              <thead className="bg-muted/50 text-left">
-                <tr>
-                  <th className="p-3 font-medium">Email</th>
-                  <th className="p-3 font-medium">Permissões</th>
-                  <th className="p-3 font-medium">Estado</th>
-                  <th className="p-3 font-medium">Expira</th>
-                  <th className="p-3 font-medium">Criado</th>
-                  <th className="p-3 font-medium">Última alteração</th>
-                  <th className="p-3 font-medium text-right">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {mappings.map((mapping, index) => (
-                  <MappingRow
-                    key={mapping.id ?? `${mapping.email ?? "mapping"}-${index}`}
-                    mapping={mapping}
-                    onEdit={openEditForm}
-                    onRevoke={setRevokingMapping}
-                  />
-                ))}
-                {mappings.length === 0 && mappingsPage.totalElements === 0 && (
+            <div className="overflow-x-auto rounded-lg border">
+              <table className="w-full min-w-[1100px] text-sm">
+                <thead className="bg-muted/50 text-left">
                   <tr>
-                    <td
-                      colSpan={7}
-                      className="p-8 text-center text-muted-foreground"
-                    >
-                      Ainda não há mapeamentos neste backend.
-                    </td>
+                    <th className="p-3 font-medium">Email</th>
+                    <th className="p-3 font-medium">Permissões</th>
+                    <th className="p-3 font-medium">Estado</th>
+                    <th className="p-3 font-medium">Expira</th>
+                    <th className="p-3 font-medium">Criado</th>
+                    <th className="p-3 font-medium">Última alteração</th>
+                    <th className="p-3 font-medium text-right">Ações</th>
                   </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-          {mappingsPage.totalPages > 1 && (
-            <EmailAccessMappingsPagination
-              currentPage={mappingsPage.pageNumber}
-              totalPages={mappingsPage.totalPages}
-              isFirstPage={
-                mappingsPage.first ?? mappingsPage.pageNumber <= 0
-              }
-              isLastPage={
-                mappingsPage.last ??
-                mappingsPage.pageNumber >= mappingsPage.totalPages - 1
-              }
-              disabled={mappingsQuery.isFetching}
-              onPageChange={setPage}
-            />
-          )}
+                </thead>
+                <tbody>
+                  {mappings.map((mapping, index) => (
+                    <MappingRow
+                      key={mapping.id ?? `${mapping.email ?? "mapping"}-${index}`}
+                      mapping={mapping}
+                      onEdit={openEditForm}
+                      onRevoke={setRevokingMapping}
+                    />
+                  ))}
+                  {mappings.length === 0 && mappingsPage.totalElements === 0 && (
+                    <tr>
+                      <td
+                        colSpan={7}
+                        className="p-8 text-center text-muted-foreground"
+                      >
+                        Ainda não há mapeamentos neste backend.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+            {mappingsPage.totalPages > 1 && (
+              <EmailAccessMappingsPagination
+                currentPage={mappingsPage.pageNumber}
+                totalPages={mappingsPage.totalPages}
+                isFirstPage={
+                  mappingsPage.first ?? mappingsPage.pageNumber <= 0
+                }
+                isLastPage={
+                  mappingsPage.last ??
+                  mappingsPage.pageNumber >= mappingsPage.totalPages - 1
+                }
+                disabled={mappingsQuery.isFetching}
+                onPageChange={setPage}
+              />
+            )}
           </>
         )}
       </div>
@@ -670,7 +670,7 @@ export default function EmailAccessMappingsPage() {
                   id="mapping-expires-date"
                   name="mappingExpiresDate"
                   label="Data de expiração"
-                    placeholder="Selecione uma data"
+                  placeholder="Selecione uma data"
                   date={expiresAt}
                   onDateChange={(date) => {
                     setExpiresAt(date);
@@ -741,7 +741,7 @@ export default function EmailAccessMappingsPage() {
         actionProps={{ disabled: isRevoking }}
         onAction={() => void confirmRevoke()}
       >
-          <div className="rounded border-l-[3px] border-amber-500 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:bg-amber-950/40 dark:text-amber-100">
+        <div className="rounded border-l-[3px] border-amber-500 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:bg-amber-950/40 dark:text-amber-100">
           Fica registado quem revogou e quando. O mapeamento continua na lista, como revogado.
         </div>
       </IGRPAlertDialog>

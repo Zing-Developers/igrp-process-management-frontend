@@ -1,9 +1,9 @@
-import { ApplicationDTO } from "@igrp/platform-access-management-client-ts";
-import { getApplications } from "./applications";
 import { useEffect, useState } from "react";
+import { getApplications } from "./applications";
+import type { Application } from "./types";
 
 export const useAccessManagement = () => {
-  const [applications, setApplications] = useState<ApplicationDTO[]>([]);
+  const [applications, setApplications] = useState<Application[]>([]);
 
   useEffect(() => {
     getApplications().then((applications) => {

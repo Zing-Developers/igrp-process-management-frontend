@@ -1,10 +1,10 @@
-import { getAccessToken } from "@/lib/auth-helpers";
 import {
   igrpGetAccessClient,
   igrpResetAccessClientConfig,
   igrpSetAccessClientConfig,
 } from "@igrp/framework-next";
-import { AccessManagementClient } from "@igrp/platform-access-management-client-ts";
+import { getAccessToken } from "@/lib/auth-helpers";
+import type { AccessManagementClient } from "./types";
 
 export async function getClientAccess(): Promise<AccessManagementClient> {
   const igrpAccessManagementApi = process.env.IGRP_ACCESS_MANAGEMENT_API || "";

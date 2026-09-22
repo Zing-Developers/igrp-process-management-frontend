@@ -30,9 +30,6 @@ importers:
       '@igrp/igrp-framework-react-design-system':
         specifier: 0.1.0-beta.91
         version: 0.1.0-beta.91(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(next@15.5.25(@types/node@24.13.6)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      '@igrp/platform-access-management-client-ts':
-        specifier: 0.1.0-beta.63
-        version: 0.1.0-beta.63
       '@irn/irn-auth-sdk':
         specifier: ^2.2.3
         version: 2.2.3(next-auth@4.24.15(next@15.5.25(@types/node@24.13.6)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(next@15.5.25(@types/node@24.13.6)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)

@@ -1,15 +1,15 @@
 import {
   IGRPBadgePrimitive,
   IGRPCopyTo,
-  IGRPIcon,
   IGRPDataTableCellBadge,
+  IGRPIcon,
   Progress,
-  cn,
 } from "@igrp/igrp-framework-react-design-system";
+import { cn } from "@irn/irn-backoffice-design-system";
 import { format } from "date-fns";
 import {
   getProcessInstanceStatusLabel,
-  ProcessInstanceStatus,
+  type ProcessInstanceStatus,
 } from "./status-helpers";
 
 const statusConfig = {

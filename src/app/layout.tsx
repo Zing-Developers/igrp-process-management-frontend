@@ -2,11 +2,9 @@ import "@/styles/globals.css";
 
 import "@igrp/igrp-framework-react-design-system/dist/styles.css";
 
-import {
-  IGRP_META_THEME_COLORS,
-  IGRPToaster,
-} from "@igrp/igrp-framework-react-design-system";
-import { IRNRootLayout } from "@irn/irn-core-framework";
+import { IGRPToaster } from "@igrp/igrp-framework-react-design-system";
+import { IRNToastContainer } from "@irn/irn-backoffice-design-system";
+import { IRN_META_THEME_COLORS, IRNRootLayout } from "@irn/irn-core-framework";
 
 import type { Metadata, Viewport } from "next";
 
@@ -47,7 +45,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: IGRP_META_THEME_COLORS.light,
+  themeColor: IRN_META_THEME_COLORS.light,
 };
 
 export default async function RootLayout({
@@ -66,6 +64,7 @@ export default async function RootLayout({
       }}
     >
       {children}
+      <IRNToastContainer />
       <IGRPToaster closeButton />
     </IRNRootLayout>
   );

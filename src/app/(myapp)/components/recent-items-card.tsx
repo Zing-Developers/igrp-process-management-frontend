@@ -1,7 +1,8 @@
+import { IGRPIcon } from "@igrp/igrp-framework-react-design-system";
+import { cn } from "@irn/irn-backoffice-design-system";
 import React from "react";
-import { cn, IGRPIcon } from "@igrp/igrp-framework-react-design-system";
 
-import { BadgeVariant } from "../utils/status-helpers";
+import type { BadgeVariant } from "../utils/status-helpers";
 
 interface RecentItem {
   id: string;
@@ -47,10 +48,12 @@ export function RecentItemsCard({
       <div className="space-y-3">
         {items.length > 0 ? (
           items.map((item) => (
-            <div
+            <button
               key={item.id}
+              type="button"
+              disabled={!onItemClick}
               className={cn(
-                "flex items-center justify-between p-3 bg-muted rounded-lg",
+                "flex w-full items-center justify-between rounded-lg bg-muted p-3 text-left",
                 onItemClick &&
                   "cursor-pointer hover:bg-accent transition-colors",
               )}
@@ -75,7 +78,7 @@ export function RecentItemsCard({
                   {item.badge.text}
                 </span>
               )}
-            </div>
+            </button>
           ))
         ) : (
           <p className="text-muted-foreground text-center py-4">

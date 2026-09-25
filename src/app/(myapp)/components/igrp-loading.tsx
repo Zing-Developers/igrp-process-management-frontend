@@ -1,4 +1,4 @@
-import { IGRPLoadingSpinner } from "@igrp/igrp-framework-react-design-system";
+import { IRNSpinner } from "@irn/irn-backoffice-design-system";
 
 function IgrpLoading({
   loading,
@@ -10,8 +10,8 @@ function IgrpLoading({
   if (!loading) return null;
 
   return (
-    <div className="flex items-center gap2 flex-col">
-      <IGRPLoadingSpinner />
+    <div className="flex flex-col items-center gap-2">
+      <IRNSpinner size="lg" />
       <span>{message}</span>
     </div>
   );

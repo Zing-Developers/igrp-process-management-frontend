@@ -1,4 +1,4 @@
-import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
+import { toast } from "@irn/irn-backoffice-design-system";
 import type { Area, Process } from "@irn/platform-process-management-types";
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useCallback, useMemo, useState } from "react";
@@ -38,8 +38,6 @@ export function useProcessMap(
     allProcesses,
   } = useProcessOperations(refreshData, router);
 
-  const { igrpToast } = useIGRPToast();
-
   // Modal management
   const { priorityModal, priorities, loadingPriorities } = usePriorityModal({
     processKey,
@@ -73,15 +71,14 @@ export function useProcessMap(
         try {
           await loadSubareas(nodeId);
         } catch (error) {
-          igrpToast({
-            type: "error",
+          toast.error({
             title: "Erro",
             description: "Erro ao carregar subáreas. Tente novamente.",
           });
         }
       }
     },
-    [expandedNodes, originalToggleNode, loadedNodes, loadSubareas, igrpToast],
+    [expandedNodes, originalToggleNode, loadedNodes, loadSubareas],
   );
 
   // New startProcess function that opens priority modal first
@@ -118,14 +115,13 @@ export function useProcessMap(
         await startProcessWithPriority(priority);
         priorityModal.close();
       } else {
-        igrpToast({
-          type: "error",
+        toast.error({
           title: "Erro",
           description: "Por favor, selecione uma prioridade válida.",
         });
       }
     },
-    [startProcessWithPriority, priorityModal, igrpToast],
+    [startProcessWithPriority, priorityModal],
   );
 
   const flatAreas = getAllAreasFlat(areas);

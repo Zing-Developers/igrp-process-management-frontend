@@ -1,5 +1,5 @@
 "use client";
-import { IGRPLoadingSpinner } from "@igrp/igrp-framework-react-design-system";
+import { IRNSpinner } from "@irn/irn-backoffice-design-system";
 import { signInIRN } from "@irn/irn-core-framework/client";
 import { useEffect } from "react";
 
@@ -18,10 +18,8 @@ function RenegotiateSession() {
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="flex flex-col items-center justify-center">
-        <IGRPLoadingSpinner />
-        <p className="text-slate-600 font-medium -mt-20">
-          Checking session, ...
-        </p>
+        <IRNSpinner size="lg" />
+        <p className="mt-3 font-medium text-slate-600">Checking session, ...</p>
       </div>
     </div>
   );

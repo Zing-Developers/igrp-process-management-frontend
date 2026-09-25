@@ -1,13 +1,13 @@
 "use client";
 
 import {
-  cn,
   IGRPButton,
   IGRPIcon,
   IGRPPopoverContentPrimitive,
   IGRPPopoverPrimitive,
   IGRPPopoverTriggerPrimitive,
 } from "@igrp/igrp-framework-react-design-system";
+import { cn } from "@irn/irn-backoffice-design-system";
 import { type ReactNode, useState } from "react";
 
 export type AppliedFilter = {

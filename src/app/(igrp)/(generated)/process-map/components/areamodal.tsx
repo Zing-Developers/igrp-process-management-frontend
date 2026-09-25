@@ -19,7 +19,6 @@ import {
   IGRPModalDialogTitle,
   IGRPModalDialogDescription,
   IGRPForm,
-  IGRPCombobox,
   IGRPInputText,
   IGRPInputColor,
   IGRPTextarea,
@@ -38,7 +37,6 @@ export default function Areamodal({ open, setOpen, isEditing, formData, onFormCh
 
   const form1 = z.object({
     applicationBase: z.string().nonempty(),
-    applicationBaseText: z.string().nonempty(),
     name: z.string().nonempty(),
     code: z.string().nonempty(),
     color: z.string().optional(),
@@ -51,7 +49,6 @@ export default function Areamodal({ open, setOpen, isEditing, formData, onFormCh
 
   const initForm1: z.infer<Form1ZodType> = {
     applicationBase: ``,
-    applicationBaseText: ``,
     name: ``,
     code: ``,
     color: `#3b82f6`,
@@ -107,72 +104,13 @@ export default function Areamodal({ open, setOpen, isEditing, formData, onFormCh
 
   }
 
-  const isUpdatingRef = useRef<boolean>(false);
   useEffect(() => {
     if (formData)
-      setForm1Data({
-        ...formData,
-        applicationBaseText: (formData as any).applicationBase,
-      });
+      setForm1Data(formData);
   }, [formData]);
 
   const title = isEditing ? 'Editar Área' : 'Adicionar Nova Área';
   const modalDescription = isEditing ? 'Atualize os detalhes da área e as atribuições de processos' : 'Crie uma nova área ou sub-área no mapa de processos';
-
-
-  useEffect(() => {
-    let cleanup: (() => void) | undefined;
-    let rafId = 0;
-
-    const trySubscribe = () => {
-      const handle = formform1Ref.current;
-      if (handle && typeof (handle as any).watch === "function") {
-        const subscription = (handle as any).watch((value: any) => {
-          if (isUpdatingRef.current) return;
-
-          if (options?.applications.length > 0) {
-            const currentValue = (value as any)?.applicationBase;
-            const currentText = (value as any)?.applicationBaseText;
-            if (currentValue && currentValue !== currentText) {
-              isUpdatingRef.current = true;
-              formform1Ref.current?.setValue(
-                "applicationBaseText",
-                currentValue
-              );
-              setTimeout(() => {
-                isUpdatingRef.current = false;
-              }, 0);
-            }
-          } else {
-            const currentText = (value as any)?.applicationBaseText;
-            const currentValue = (value as any)?.applicationBase;
-            if (currentText && currentText !== currentValue) {
-              isUpdatingRef.current = true;
-              formform1Ref.current?.setValue("applicationBase", currentText);
-              setTimeout(() => {
-                isUpdatingRef.current = false;
-              }, 0);
-            }
-          }
-        });
-
-        cleanup = () => {
-          if (subscription && typeof subscription.unsubscribe === "function") {
-            subscription.unsubscribe();
-          }
-        };
-      } else {
-        rafId = window.requestAnimationFrame(trySubscribe);
-      }
-    };
-
-    trySubscribe();
-
-    return () => {
-      if (rafId) window.cancelAnimationFrame(rafId);
-      if (cleanup) cleanup();
-    };
-  }, [options.applications]);
 
 
   const processesItems = (allProcesses || []).map((process: any) => ({
@@ -231,31 +169,16 @@ export default function Areamodal({ open, setOpen, isEditing, formData, onFormCh
             defaultValues={form1Data}
           >
             <>
-              {options?.applications.length > 0 && (<IGRPCombobox
+              <IGRPInputText
                 id={`applicationBase`}
                 label={`Aplicação`}
-                variant={`single`}
-                placeholder={`Select an option...`}
-                required={true}
-                selectLabel={`No option found`}
-                showSearch={true}
-                showIcon={false}
-                iconName={`CornerDownRight`}
-                className={cn()}
-                onChange={() => { }}
-                options={options?.applications || []}
-              >
-              </IGRPCombobox>)}
-              {options?.applications.length === 0 && (<IGRPInputText
-                id={`applicationBaseText`}
-                label={`Aplicação`}
                 showIcon={false}
                 required={true}
                 className={cn()}
 
 
               >
-              </IGRPInputText>)}
+              </IGRPInputText>
               <IGRPInputText
                 id={`name`}
                 label={`Nome`}

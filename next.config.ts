@@ -10,6 +10,11 @@ const getRemotePatterns = () => {
     hostname: RemotePattern["hostname"];
   }> = [];
 
+  patterns.push({
+    protocol: "https",
+    hostname: "minio-bucket-fnsx-staging-1.up.railway.app",
+  });
+
   // Add extra domains via env (comma-separated)
   // Ex: NEXT_PUBLIC_ALLOWED_DOMAINS=example.com,cdn.example.com
   const extraDomains =

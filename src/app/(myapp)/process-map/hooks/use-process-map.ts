@@ -1,17 +1,16 @@
-import { useCallback, useMemo, useState } from "react";
-import { ExtendedArea, ProcessMapHookReturn } from "../types";
-import { useProcessMapData } from "./use-process-map-data";
-import { useTreeExpansion } from "./use-tree-expansion";
-import { usePriorityModal } from "./use-priority-modal";
-import { useTreeSearch } from "./use-tree-search";
-import { useTreeComputed } from "./use-tree-computed";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { Area, Process } from "@irn/platform-process-management-types";
 import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
-import { useAccessManagement } from "../../access-management/hooks";
-import { useAreaHandlers } from "./area/use-area-handlers";
-import { useProcessOperations } from "./use-process-operations";
+import type { Area, Process } from "@irn/platform-process-management-types";
+import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { useCallback, useMemo, useState } from "react";
+import type { ExtendedArea, ProcessMapHookReturn } from "../types";
 import { getAllAreasFlat } from "../utils/area-hierarchy";
+import { useAreaHandlers } from "./area/use-area-handlers";
+import { usePriorityModal } from "./use-priority-modal";
+import { useProcessMapData } from "./use-process-map-data";
+import { useProcessOperations } from "./use-process-operations";
+import { useTreeComputed } from "./use-tree-computed";
+import { useTreeExpansion } from "./use-tree-expansion";
+import { useTreeSearch } from "./use-tree-search";
 
 export function useProcessMap(
   router?: AppRouterInstance,
@@ -129,8 +128,6 @@ export function useProcessMap(
     [startProcessWithPriority, priorityModal, igrpToast],
   );
 
-  const { applicationsOptions } = useAccessManagement();
-
   const flatAreas = getAllAreasFlat(areas);
 
   const mapOptions = useMemo(() => {
@@ -190,7 +187,6 @@ export function useProcessMap(
       areas: filteredNodes,
       expandedNodes,
       options: {
-        applications: applicationsOptions,
         areas: mapOptions,
       },
       ...areaHandlers,

@@ -1,7 +1,7 @@
 "use client";
 
+import { useIRNSession } from "@irn/irn-core-framework/client";
 import { useEffect } from "react";
-import { useSession } from "next-auth/react";
 import { updateIGRPProcessClientToken } from "@/lib/api-config";
 
 /**
@@ -9,7 +9,7 @@ import { updateIGRPProcessClientToken } from "@/lib/api-config";
  * This ensures the API client always has the latest authentication token
  */
 export function useApiClientRefresh() {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useIRNSession();
 
   useEffect(() => {
     if (status === "loading") {

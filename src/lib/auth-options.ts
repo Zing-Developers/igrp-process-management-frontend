@@ -1,11 +1,11 @@
-import type { AuthOptions } from "next-auth";
-import KeycloakProvider from "next-auth/providers/keycloak";
-import { refreshAccessToken, signOut } from "./auth-helpers";
+import type { IRNAuthOptions } from "@irn/irn-core-framework/server/auth";
+import { createIRNKeycloakProvider } from "@irn/irn-core-framework/server/keycloak";
 import { expSystemAdminAPIClient } from "@/app/(myapp)/client/sdk-clients";
+import { refreshAccessToken, signOut } from "./auth-helpers";
 
-export const authOptions: AuthOptions = {
+export const authOptions: IRNAuthOptions = {
   providers: [
-    KeycloakProvider({
+    createIRNKeycloakProvider({
       clientId: process.env.KEYCLOAK_CLIENT_ID || "",
       clientSecret: process.env.KEYCLOAK_CLIENT_SECRET || "",
       issuer: process.env.KEYCLOAK_ISSUER || "",

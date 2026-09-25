@@ -1,7 +1,10 @@
-import { IGRPTemplateLoading } from "@igrp/framework-next-ui";
-
 export default function Loading() {
-  const appCode = process.env.IGRP_APP_CODE || "";
-
-  return <IGRPTemplateLoading appCode={appCode} />;
+  return (
+    <output
+      aria-label="Aguarde..."
+      className="flex min-h-screen items-center justify-center"
+    >
+      <span className="size-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+    </output>
+  );
 }

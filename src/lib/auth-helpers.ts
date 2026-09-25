@@ -1,15 +1,15 @@
 import { reissueJwtClaims } from "@irn/irn-auth-sdk/server";
+import { getIRNToken, type IRNJWT } from "@irn/irn-core-framework/server/token";
 import type { NextApiRequest } from "next";
 import { cookies } from "next/headers";
-import { getToken, type JWT } from "next-auth/jwt";
 
 const NEXTAUTH_SESSION_MAX_AGE_SECONDS = 30 * 24 * 60 * 60;
-const refreshesInFlight = new Map<string, Promise<JWT>>();
+const refreshesInFlight = new Map<string, Promise<IRNJWT>>();
 
 export async function getAccessToken() {
   const cookieStore = await cookies();
 
-  const token = await getToken({
+  const token = await getIRNToken({
     req: {
       cookies: Object.fromEntries(
         cookieStore.getAll().map((c) => [c.name, c.value]),
@@ -25,7 +25,7 @@ export async function getAccessToken() {
  * Returns a usable token and persists refresh-token rotation in the NextAuth
  * cookie before the Server Action response is sent back to the browser.
  */
-export async function getValidAccessToken(): Promise<JWT | null> {
+export async function getValidAccessToken(): Promise<IRNJWT | null> {
   const token = await getAccessToken();
 
   if (!token || !token.expiresAt || token.expiresAt >= Date.now()) {
@@ -54,7 +54,7 @@ export async function getValidAccessToken(): Promise<JWT | null> {
  * @param token The JWT token to refresh
  * @returns Promise with refreshed token data
  */
-export async function refreshAccessToken(token: JWT): Promise<JWT> {
+export async function refreshAccessToken(token: IRNJWT): Promise<IRNJWT> {
   const refreshKey = String(token.session_id ?? token.refreshToken ?? "");
   const refreshInFlight = refreshesInFlight.get(refreshKey);
   if (refreshInFlight) return refreshInFlight;
@@ -69,7 +69,7 @@ export async function refreshAccessToken(token: JWT): Promise<JWT> {
   }
 }
 
-async function performTokenRefresh(token: JWT): Promise<JWT> {
+async function performTokenRefresh(token: IRNJWT): Promise<IRNJWT> {
   try {
     const issuer = process.env.KEYCLOAK_ISSUER;
     const clientId = process.env.KEYCLOAK_CLIENT_ID;
@@ -121,7 +121,7 @@ async function performTokenRefresh(token: JWT): Promise<JWT> {
   }
 }
 
-export async function signOut(token: JWT) {
+export async function signOut(token: IRNJWT) {
   if (token.refreshToken) {
     try {
       const url = `${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/logout`;
@@ -131,8 +131,8 @@ export async function signOut(token: JWT) {
           "Content-Type": "application/x-www-form-urlencoded",
         },
         body: new URLSearchParams({
-          client_id: process.env.KEYCLOAK_CLIENT_ID!,
-          client_secret: process.env.KEYCLOAK_CLIENT_SECRET!,
+          client_id: process.env.KEYCLOAK_CLIENT_ID || "",
+          client_secret: process.env.KEYCLOAK_CLIENT_SECRET || "",
           refresh_token: token.refreshToken as string,
         }),
       });

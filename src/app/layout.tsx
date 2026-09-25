@@ -1,19 +1,17 @@
 import "@/styles/globals.css";
 
-import "@igrp/framework-next-ui/dist/styles.css";
 import "@igrp/igrp-framework-react-design-system/dist/styles.css";
 
-import { IGRPRootLayout } from "@igrp/framework-next";
-import type { IGRPLayoutConfigArgs } from "@igrp/framework-next-types";
 import {
   IGRP_META_THEME_COLORS,
   IGRPToaster,
 } from "@igrp/igrp-framework-react-design-system";
+import { IRNRootLayout } from "@irn/irn-core-framework";
 
 import type { Metadata, Viewport } from "next";
 
 import { configLayout } from "@/actions/igrp/layout";
-import { createConfig } from "@/igrp.template.config";
+import { fontVariables } from "@/lib/fonts";
 import { withBasePath } from "@/lib/url";
 
 export const metadata: Metadata = {
@@ -55,13 +53,20 @@ export const viewport: Viewport = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const layoutConfig = await configLayout();
-  const config = await createConfig(layoutConfig as IGRPLayoutConfigArgs);
+  const { session, activeThemeValue, isScaled } = await configLayout();
 
   return (
-    <IGRPRootLayout config={config}>
+    <IRNRootLayout
+      config={{
+        session,
+        activeThemeValue,
+        isScaled,
+        font: fontVariables,
+        basePath: process.env.NEXT_PUBLIC_BASE_PATH,
+      }}
+    >
       {children}
       <IGRPToaster closeButton />
-    </IGRPRootLayout>
+    </IRNRootLayout>
   );
 }

@@ -1,12 +1,12 @@
 "use client";
 
-import { signOut } from "@igrp/framework-next-auth/client";
+import { signOutIRN } from "@irn/irn-core-framework/client";
 import { useEffect } from "react";
 
 export default function LogoutPage() {
   useEffect(() => {
     (async () => {
-      await signOut({ redirect: false });
+      await signOutIRN({ redirect: false });
     })();
   }, []);
 

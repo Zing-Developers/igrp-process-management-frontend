@@ -1,7 +1,7 @@
 "use client";
-import { signOut } from "next-auth/react";
-import React, { useEffect } from "react";
 import { IGRPLoadingSpinner } from "@igrp/igrp-framework-react-design-system";
+import { signOutIRN } from "@irn/irn-core-framework/client";
+import { useEffect } from "react";
 
 /**
  * Close session in keycloak (primary credentials) from the client-side
@@ -10,7 +10,7 @@ import { IGRPLoadingSpinner } from "@igrp/igrp-framework-react-design-system";
  */
 function CloseSession() {
   useEffect(() => {
-    signOut({
+    signOutIRN({
       redirect: true,
     });
   }, []);

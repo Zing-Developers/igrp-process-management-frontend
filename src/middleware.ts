@@ -1,5 +1,5 @@
+import { getIRNToken } from "@irn/irn-core-framework/server/token";
 import { type NextRequest, NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
 import { isPreviewMode } from "@/lib/utils";
 
 const PUBLIC_PATHS = ["/login", "/logout", "/api/auth"];
@@ -33,7 +33,7 @@ export async function middleware(request: NextRequest) {
 
     if (isPublicPath(pathname)) return NextResponse.next();
 
-    const token = await getToken({ req: request });
+    const token = await getIRNToken({ req: request });
 
     if (token?.error === "RefreshAccessTokenError") {
       return NextResponse.redirect(

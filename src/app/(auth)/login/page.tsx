@@ -1,5 +1,4 @@
-import { IGRPAuthCarousel, IGRPAuthForm } from "@igrp/framework-next-ui";
-
+import { LoginForm } from "@/components/auth/login-form";
 import { carouselItems, loginConfig } from "@/config/login";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
@@ -27,13 +26,22 @@ export default async function AuthPage({
           sliderPosition === "right" && "lg:order-last",
         )}
       >
-        <IGRPAuthCarousel carouselItems={carouselItems} />
+        <div className="h-full overflow-hidden bg-muted">
+          {/* biome-ignore lint/performance/noImgElement: the configured remote banner is not a Next-managed image asset. */}
+          <img
+            alt={carouselItems[0].title}
+            className="h-full w-full object-cover"
+            src={carouselItems[0].image.trim()}
+          />
+        </div>
       </div>
-      <IGRPAuthForm
-        texts={texts}
+      <LoginForm
+        callbackUrl={callbackUrl as string | undefined}
+        description={texts.description}
+        loginButton={texts.loginButton}
         logo={logo}
         name={name}
-        callbackUrl={callbackUrl as string}
+        welcome={texts.welcome}
       />
     </section>
   );

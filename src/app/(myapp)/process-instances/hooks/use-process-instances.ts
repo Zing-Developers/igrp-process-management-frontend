@@ -1,4 +1,4 @@
-import { format, formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import { useMemo } from "react";
 import { useProcessPriorities } from "../../hooks/use-process-priorities";
 import {
@@ -57,7 +57,7 @@ export function useProcessInstances() {
             ? formatDuration(diffTime)
             : formatDistanceToNow(instance.startedAt, { addSuffix: false }),
         version: `v${instance.version}`,
-        startedAt: format(instance.startedAt, "dd MMM, HH:mm"),
+        startedAt: instance.startedAt,
         endedAt: getDateTemplate(instance.endedAt),
         progress: getProgressTemplate(
           instance.progress,

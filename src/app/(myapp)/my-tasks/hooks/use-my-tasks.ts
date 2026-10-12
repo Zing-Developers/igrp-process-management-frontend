@@ -1,4 +1,3 @@
-import { format } from "date-fns";
 import { useMemo } from "react";
 import { unclaimTask } from "../../client/task";
 import { useProcessPriorities } from "../../hooks/use-process-priorities";
@@ -47,7 +46,7 @@ export function useMyTasks() {
       return {
         currentStep: task.name,
         process: getProcessInfo(task.processName, task.processNumber),
-        startedAt: format(task.startedAt, "dd MMM, HH:mm"),
+        startedAt: task.startedAt,
         duration: formatDuration(diffTime),
         priority: getPriorityTemplate(
           getPriorityBadge(task.processKey, priorityValue),

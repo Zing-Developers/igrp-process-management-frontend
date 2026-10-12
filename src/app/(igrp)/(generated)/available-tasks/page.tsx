@@ -28,24 +28,8 @@ import {useAvailableTasks} from '@/app/(myapp)/available-tasks/hooks/use-availab
 import {getTaskStatusColor} from '@/app/(myapp)/utils/status-badge'
 import { PageHeader } from '@/app/(myapp)/components/PageHeader';
 import { UserCell } from '@/app/(myapp)/components/user-cell';
+import { compareTableDateTimes, formatTableDateTime } from '@/app/(myapp)/utils/table-date-time';
 import type { UserProfileDTO } from '@irn/platform-process-management-types';
-
-const formatAuditDate = (value?: string) => {
-  if (!value) return '-';
-
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return '-';
-
-  return new Intl.DateTimeFormat('pt-PT', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hourCycle: 'h23',
-  }).format(date);
-};
 
 
 export default function PageAvailabletasksComponent() {
@@ -278,9 +262,8 @@ onFiltersChange={ handleApplyFilters } ></TaskProcessFilter></div>
         {
           header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Data Inicio` } />)
 ,accessorKey: 'startedAt',
-          cell: ({ row }) => {
-          return row.getValue("startedAt")
-          },
+          cell: ({ row }) => formatTableDateTime(row.original.startedAt),
+          sortingFn: (rowA, rowB) => compareTableDateTimes(rowA.original.startedAt, rowB.original.startedAt),
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
@@ -318,9 +301,10 @@ badgeClassName={ `${bgClass} ${textClass} ${className}` }
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {
-          header: 'Última modificação',
+          header: ({ column }) => (<IGRPDataTableHeaderSortToggle column={column} title={ `Última modificação` } />),
           accessorKey: 'updatedAt',
-          cell: ({ row }) => formatAuditDate(row.original.updatedAt),
+          cell: ({ row }) => formatTableDateTime(row.original.updatedAt),
+          sortingFn: (rowA, rowB) => compareTableDateTimes(rowA.original.updatedAt, rowB.original.updatedAt),
           filterFn: IGRPDataTableFacetedFilterFn
         },
         {

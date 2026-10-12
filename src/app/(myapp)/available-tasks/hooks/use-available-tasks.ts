@@ -1,4 +1,4 @@
-import { format, formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import { useCallback, useMemo } from "react";
 import { claimTask } from "../../client/task";
 import { useProcessPriorities } from "../../hooks/use-process-priorities";
@@ -45,7 +45,7 @@ export function useAvailableTasks() {
       return {
         processInfo: getProcessInfo(task.processName, task.processNumber),
         processNumber: task.processNumber,
-        startedAt: format(task.startedAt, "dd MMM, HH:mm"),
+        startedAt: task.startedAt,
         endAt: null,
         createBy: getUserInfo(task.assignedBy),
         taskName: task.name,

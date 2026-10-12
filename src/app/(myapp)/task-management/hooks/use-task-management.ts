@@ -79,7 +79,7 @@ export function useTaskManagement() {
         currentStep: task.name,
         process: getProcessInfo(task.processName, task.processNumber),
         assignedBy: assignedBy || "",
-        startedAt: getDateTemplate(task.startedAt),
+        startedAt: task.startedAt,
         endedAt: getDateTemplate(task.endedAt),
         duration: formatDuration(diffTime),
         status: task.status,

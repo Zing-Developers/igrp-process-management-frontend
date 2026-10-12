@@ -28,7 +28,7 @@ export function LoginForm({
     <IRNAuthForm
       backgroundImage={backgroundImage}
       btnText={loginButton}
-      description={description} 
+      description={description}
       logo={{ src: logo.src, alt: name }}
       onAuthenticate={async () => {
         await signInIRN("keycloak", { callbackUrl });

@@ -1,11 +1,10 @@
-import React from "react";
-import { IRNHeader } from "@irn/irn-backoffice-integration";
-import { irnHeaderConfig } from "./server/irn-header-functions";
 import { buildPublicUrlResource, normalizeURL } from "@/lib/url";
+import { irnHeaderConfig } from "./server/irn-header-functions";
+import { StableIRNHeader } from "./stable-irn-header";
 
 export async function Header() {
   return (
-    <IRNHeader
+    <StableIRNHeader
       handlers={{
         getUserData: irnHeaderConfig.getUserData,
         getUserMenu: irnHeaderConfig.getUserMenu,

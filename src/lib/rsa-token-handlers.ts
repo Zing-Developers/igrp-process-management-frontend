@@ -1,6 +1,6 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
-import fs from "fs";
-import { LRUCache } from "lru-cache";
+import jwt, { type JwtPayload } from "jsonwebtoken";
+import type { LRUCache } from "lru-cache";
+import { resolveJwtPrivateKey } from "./jwt-private-key";
 
 export async function getOrFetchToken(
   key: string,
@@ -17,16 +17,7 @@ export async function getOrFetchToken(
 }
 
 export function getAPISecretKey(): string | boolean {
-  const keyPath = process.env.JWT_PRIVATE_KEY;
-  if (!keyPath) {
-    return false;
-  }
-  try {
-    return fs.readFileSync(keyPath, "utf-8");
-  } catch (error) {
-    console.error("Failed to read JWT private key file:", error);
-    return false;
-  }
+  return resolveJwtPrivateKey();
 }
 
 export async function fetchNewToken(): Promise<string> {

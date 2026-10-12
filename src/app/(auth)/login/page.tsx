@@ -14,7 +14,9 @@ export default async function AuthPage({
 }: {
   searchParams: PageProps<"/login">["searchParams"];
 }) {
-  const { callbackUrl } = await searchParams;
+  const resolvedSearchParams = await searchParams;
+  const callbackUrl = (resolvedSearchParams?.callbackUrl ??
+    resolvedSearchParams?.returnUrl) as string | undefined;
 
   return (
     <LoginForm
@@ -22,7 +24,7 @@ export default async function AuthPage({
         src: carouselItems[0].image.trim(),
         alt: carouselItems[0].title,
       }}
-      callbackUrl={callbackUrl as string | undefined}
+      callbackUrl={callbackUrl}
       description={texts.description}
       loginButton={texts.loginButton}
       logo={logo}

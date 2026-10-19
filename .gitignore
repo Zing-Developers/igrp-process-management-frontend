@@ -12,7 +12,7 @@
 
 # testing
 /coverage
-
+*.log
 # next.js
 /.next/
 /out/
@@ -46,3 +46,4 @@ config
 
 # docker
 # docker-compose.yml  
+_resources

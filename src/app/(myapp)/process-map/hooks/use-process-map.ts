@@ -1,17 +1,16 @@
+import { toast } from "@irn/irn-backoffice-design-system";
+import type { Area, Process } from "@irn/platform-process-management-types";
+import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useCallback, useMemo, useState } from "react";
-import { ExtendedArea, ProcessMapHookReturn } from "../types";
-import { useProcessMapData } from "./use-process-map-data";
-import { useTreeExpansion } from "./use-tree-expansion";
-import { usePriorityModal } from "./use-priority-modal";
-import { useTreeSearch } from "./use-tree-search";
-import { useTreeComputed } from "./use-tree-computed";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { Area, Process } from "@igrp/platform-process-management-types";
-import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
-import { useAccessManagement } from "../../access-management/hooks";
-import { useAreaHandlers } from "./area/use-area-handlers";
-import { useProcessOperations } from "./use-process-operations";
+import type { ExtendedArea, ProcessMapHookReturn } from "../types";
 import { getAllAreasFlat } from "../utils/area-hierarchy";
+import { useAreaHandlers } from "./area/use-area-handlers";
+import { usePriorityModal } from "./use-priority-modal";
+import { useProcessMapData } from "./use-process-map-data";
+import { useProcessOperations } from "./use-process-operations";
+import { useTreeComputed } from "./use-tree-computed";
+import { useTreeExpansion } from "./use-tree-expansion";
+import { useTreeSearch } from "./use-tree-search";
 
 export function useProcessMap(
   router?: AppRouterInstance,
@@ -38,8 +37,6 @@ export function useProcessMap(
     handleAssociateProcess,
     allProcesses,
   } = useProcessOperations(refreshData, router);
-
-  const { igrpToast } = useIGRPToast();
 
   // Modal management
   const { priorityModal, priorities, loadingPriorities } = usePriorityModal({
@@ -74,15 +71,14 @@ export function useProcessMap(
         try {
           await loadSubareas(nodeId);
         } catch (error) {
-          igrpToast({
-            type: "error",
+          toast.error({
             title: "Erro",
             description: "Erro ao carregar subáreas. Tente novamente.",
           });
         }
       }
     },
-    [expandedNodes, originalToggleNode, loadedNodes, loadSubareas, igrpToast],
+    [expandedNodes, originalToggleNode, loadedNodes, loadSubareas],
   );
 
   // New startProcess function that opens priority modal first
@@ -119,17 +115,14 @@ export function useProcessMap(
         await startProcessWithPriority(priority);
         priorityModal.close();
       } else {
-        igrpToast({
-          type: "error",
+        toast.error({
           title: "Erro",
           description: "Por favor, selecione uma prioridade válida.",
         });
       }
     },
-    [startProcessWithPriority, priorityModal, igrpToast],
+    [startProcessWithPriority, priorityModal],
   );
-
-  const { applicationsOptions } = useAccessManagement();
 
   const flatAreas = getAllAreasFlat(areas);
 
@@ -190,7 +183,6 @@ export function useProcessMap(
       areas: filteredNodes,
       expandedNodes,
       options: {
-        applications: applicationsOptions,
         areas: mapOptions,
       },
       ...areaHandlers,

@@ -1,25 +1,25 @@
-import { useState, useCallback } from "react";
-import {
-  claimTask,
-  getTasksByProcessInstance,
-} from "@/app/(myapp)/client/task";
-import {
+import { toast } from "@irn/irn-backoffice-design-system";
+import type {
   Process,
   ProcessData,
   ProcessInstance,
-} from "@igrp/platform-process-management-types";
-import { urlConfig } from "../../utils/url-config";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
+} from "@irn/platform-process-management-types";
+import { useQuery } from "@tanstack/react-query";
+import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { useCallback, useState } from "react";
 import {
   createAndStartProcess,
   getProcesses,
 } from "@/app/(myapp)/client/process";
 import {
+  claimTask,
+  getTasksByProcessInstance,
+} from "@/app/(myapp)/client/task";
+import {
   associateProcessToArea,
   removeProcessFromArea,
 } from "../../client/area-process";
-import { useQuery } from "@tanstack/react-query";
+import { urlConfig } from "../../utils/url-config";
 
 export function useProcessOperations(
   refreshData: () => void,
@@ -33,8 +33,6 @@ export function useProcessOperations(
     businessKey?: string;
     variables?: Array<{ name: string; value: string }>;
   } | null>(null);
-
-  const { igrpToast } = useIGRPToast();
 
   const selectProcess = useCallback((process: Process) => {
     setSelectedProcess(process);
@@ -93,8 +91,7 @@ export function useProcessOperations(
         // Clear pending process start
         setPendingProcessStart(null);
 
-        igrpToast({
-          type: "success",
+        toast.success({
           title: "Processo Iniciado",
           description: pendingProcessStart.processKey
             ? `O processo ${pendingProcessStart.processKey} foi iniciado com sucesso.`
@@ -138,8 +135,7 @@ export function useProcessOperations(
         // Clear pending process start on error
         setPendingProcessStart(null);
 
-        igrpToast({
-          type: "error",
+        toast.error({
           title: "Erro ao Iniciar Processo",
           description: "Ocorreu um erro ao tentar iniciar o processo.",
         });
@@ -147,7 +143,7 @@ export function useProcessOperations(
         return null;
       }
     },
-    [pendingProcessStart],
+    [pendingProcessStart, router],
   );
 
   const handleRemoveProcess = async (
@@ -158,15 +154,13 @@ export function useProcessOperations(
       await removeProcessFromArea(areaId, processDefinitionId);
 
       await refreshData();
-      igrpToast({
-        type: "success",
+      toast.success({
         title: "Sucesso",
         description: "Processo removido com sucesso!",
       });
     } catch (error) {
       console.error("Error removing process:", error);
-      igrpToast({
-        type: "error",
+      toast.error({
         title: "Erro",
         description: "Erro ao remover processo. Tente novamente.",
       });

@@ -1,14 +1,13 @@
 import { useMemo } from "react";
-import { useMyTasksData } from "./use-my-tasks-data";
-import { TaskTableRow } from "../types";
 import { unclaimTask } from "../../client/task";
-import {
-  getProcessInfo,
-  getPriorityTemplate,
-} from "../../utils/columns-template";
 import { useProcessPriorities } from "../../hooks/use-process-priorities";
-import { format } from "date-fns";
+import {
+  getPriorityTemplate,
+  getProcessInfo,
+} from "../../utils/columns-template";
 import { formatDuration } from "../../utils/shared";
+import type { TaskTableRow } from "../types";
+import { useMyTasksData } from "./use-my-tasks-data";
 
 export function useMyTasks() {
   const {
@@ -42,12 +41,12 @@ export function useMyTasks() {
       const createdDate = new Date(task.startedAt);
       const currentDate = new Date();
       const diffTime = Math.abs(currentDate.getTime() - createdDate.getTime());
-      const priorityValue = task.priority + "";
+      const priorityValue = `${task.priority}`;
 
       return {
         currentStep: task.name,
         process: getProcessInfo(task.processName, task.processNumber),
-        startedAt: format(task.startedAt, "dd MMM, HH:mm"),
+        startedAt: task.startedAt,
         duration: formatDuration(diffTime),
         priority: getPriorityTemplate(
           getPriorityBadge(task.processKey, priorityValue),
@@ -59,6 +58,12 @@ export function useMyTasks() {
         taskId: task.id,
         processName: task.processName,
         applicationBase: task.applicationBase,
+        updatedAt: task.updatedAt ?? task.createdAt,
+        updatedBy:
+          task.userProfileUpdatedBy ??
+          task.userProfileCreatedBy ??
+          task.updatedBy ??
+          task.createdBy,
       };
     });
   }, [myTasksState.tasks, getPriorityBadge]);

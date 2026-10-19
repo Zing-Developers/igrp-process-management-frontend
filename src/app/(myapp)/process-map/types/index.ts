@@ -1,5 +1,5 @@
-import { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
-import { Area, Process } from "@igrp/platform-process-management-types";
+import type { IGRPOptionsProps } from "@igrp/igrp-framework-react-design-system";
+import type { Area, Process } from "@irn/platform-process-management-types";
 
 // Use the same structure as process configuration - no need for ProcessMapArea
 
@@ -77,10 +77,6 @@ export interface ProcessMapHookReturn
     areas: ExtendedArea[];
     expandedNodes: Set<string>;
     options: {
-      applications: {
-        label: string;
-        value: string;
-      }[];
       areas: {
         label: string;
         value: string;

@@ -2,29 +2,24 @@
  * Centralized URL configuration for process management
  */
 
-import { getApplication } from "../access-management/applications";
-
 export function formatSlug(slug: string): string {
-  let baseUrl = "";
-  if (slug.startsWith("/apps")) {
-    baseUrl = slug;
-  } else {
-    baseUrl = `/apps/${slug}`;
+  if (/^https?:\/\//.test(slug)) {
+    return slug.replace(/\/$/, "");
   }
 
-  // Check if baseUrl is already a full URL
-  if (baseUrl.startsWith("http://") || baseUrl.startsWith("https://")) {
-    return baseUrl;
-  }
+  return (slug.startsWith("/apps/") ? slug : `/apps/${slug}`).replace(
+    /\/$/,
+    "",
+  );
+}
 
-  // If it's a relative path, construct a full URL using the current origin
-  // In browser context, use window.location.origin; otherwise return as relative path
-  if (typeof window !== "undefined" && window.location) {
-    return `${window.location.origin}${baseUrl}`;
-  }
-
-  // Server-side or fallback: return relative path (will work with Next.js router)
-  return baseUrl;
+function runtimeBase(applicationBase: string): string {
+  const configuredBase = process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL;
+  return configuredBase
+    ? configuredBase.replace(/\/$/, "")
+    : applicationBase
+      ? formatSlug(applicationBase)
+      : "";
 }
 
 /**
@@ -42,19 +37,7 @@ export const urlConfig = {
     applicationBase: string,
     processKey: string,
   ): Promise<string> => {
-    if (process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL) {
-      return `${process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL}/process/view/${processKey}/${processInstanceId}`;
-    }
-    const application = await getApplication(applicationBase);
-    const { slug, url } = application;
-
-    const href = process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL
-      ? process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL
-      : slug
-        ? formatSlug(slug)
-        : (url ?? "");
-
-    return `${href}/process/view/${processKey}/${processInstanceId}`;
+    return `${runtimeBase(applicationBase)}/process/view/${processKey}/${processInstanceId}`;
   },
 
   /**
@@ -72,19 +55,7 @@ export const urlConfig = {
     taskId: string,
     applicationBase: string,
   ): Promise<string> => {
-    if (process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL) {
-      return `${process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL}/process/${procReleaseKey}/${processInstanceId}/${taskKey}/${taskId}`;
-    }
-    const application = await getApplication(applicationBase);
-    const { slug, url } = application;
-
-    const href = process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL
-      ? process.env.NEXT_PUBLIC_APP_BASE_RUNTIME_URL
-      : slug
-        ? formatSlug(slug)
-        : (url ?? "");
-
-    return `${href}/process/${procReleaseKey}/${processInstanceId}/${taskKey}/${taskId}`;
+    return `${runtimeBase(applicationBase)}/process/${procReleaseKey}/${processInstanceId}/${taskKey}/${taskId}`;
   },
 
   /**

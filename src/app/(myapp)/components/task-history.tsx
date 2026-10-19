@@ -1,26 +1,26 @@
 "use client";
 
 import {
-  IGRPIcon,
+  IGRPBadgePrimitive,
   IGRPButton,
+  IGRPCopyTo,
   IGRPDataTable,
   IGRPDataTableFacetedFilterFn,
-  IGRPCopyTo,
-  cn,
-  IGRPBadgePrimitive,
+  IGRPIcon,
 } from "@igrp/igrp-framework-react-design-system";
+import { cn } from "@irn/irn-backoffice-design-system";
+import type {
+  ActivityProgress,
+  TaskVariables,
+} from "@irn/platform-process-management-types";
 import {
   formatDuration,
   getTypeColor,
   getTypeFromValue,
   getTypeIcon,
 } from "../utils/columns-template";
-import { getPriorityLabel } from "../utils/status-helpers";
 import { getPriorityColor } from "../utils/status-badge";
-import {
-  ActivityProgress,
-  TaskVariables,
-} from "@igrp/platform-process-management-types";
+import { getPriorityLabel } from "../utils/status-helpers";
 
 interface TaskHistory extends ActivityProgress {
   priority?: number;
@@ -214,20 +214,20 @@ function TaskHistory({ tasks }: TaskHistoryProps) {
         }}
         renderSubComponent={(row) => {
           const task = row.original;
-          const hasVariables = task.variables && task.variables.length > 0;
+          const variables = task.variables ?? [];
 
-          if (!hasVariables) return undefined;
+          if (variables.length === 0) return undefined;
 
           return (
             <div className="px-4 py-3 bg-muted/20 rounded-b-md">
               <div className="ml-10">
                 <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-3">
-                  Variáveis da Tarefa ({task.variables!.length})
+                  Variáveis da Tarefa ({variables.length})
                 </h4>
                 <div className="space-y-2">
-                  {task.variables!.map((variable, idx) => (
+                  {variables.map((variable) => (
                     <div
-                      key={idx}
+                      key={`${task.activityInstanceId ?? task.taskId ?? ""}-${variable.name}`}
                       className="flex items-center gap-3 p-2 rounded-md bg-background border border-border"
                     >
                       <div className="flex items-center gap-2 min-w-[180px]">

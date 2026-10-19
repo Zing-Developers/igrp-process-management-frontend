@@ -7,7 +7,7 @@ export default function Home() {
     throw new Error("Root redirect must be a valid path");
 
   if (root === "/") {
-    return <div className="text-3xl font-bold">IGRP NEXT.js Template</div>;
+    return <div className="text-3xl font-bold">PIR NEXT.js Template</div>;
   }
 
   redirect(root as Parameters<typeof redirect>[0]);

@@ -1,6 +1,6 @@
 import React from "react";
 import { AreaTree } from "./area-tree";
-import { Process } from "@igrp/platform-process-management-types";
+import { Process } from "@irn/platform-process-management-types";
 import { ExtendedArea } from "../../types";
 
 function AreaTreeNodeComponent({

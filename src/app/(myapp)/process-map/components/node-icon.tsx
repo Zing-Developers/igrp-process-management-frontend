@@ -1,6 +1,7 @@
+import { IGRPIcon } from "@igrp/igrp-framework-react-design-system";
+import { cn } from "@irn/irn-backoffice-design-system";
 import React from "react";
-import { ExtendedArea } from "../types";
-import { cn, IGRPIcon } from "@igrp/igrp-framework-react-design-system";
+import type { ExtendedArea } from "../types";
 
 interface NodeIconProps {
   node: ExtendedArea;

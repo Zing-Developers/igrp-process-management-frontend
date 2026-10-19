@@ -1,14 +1,14 @@
-import { useState, useCallback, useMemo } from "react";
-import { getTasks, assignTask } from "../../client/task";
-import {
-  getDateTemplate,
-  getProcessInfo,
-  getPriorityTemplate,
-  formatDuration,
-} from "../../utils/columns-template";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useCallback, useMemo, useState } from "react";
+import { assignTask, getTasks } from "../../client/task";
 import { useProcessPriorities } from "../../hooks/use-process-priorities";
 import {
+  formatDuration,
+  getDateTemplate,
+  getPriorityTemplate,
+  getProcessInfo,
+} from "../../utils/columns-template";
+import type {
   AssignTaskModalState,
   TaskManagementFilters,
   TaskManagementState,
@@ -70,7 +70,7 @@ export function useTaskManagement() {
       const createdDate = new Date(task.startedAt);
       const currentDate = new Date();
       const diffTime = Math.abs(currentDate.getTime() - createdDate.getTime());
-      const priorityValue = task.priority + "";
+      const priorityValue = `${task.priority}`;
 
       const assignedBy =
         task.userProfileAssignedBy?.fullName || task.assignedBy;
@@ -79,7 +79,7 @@ export function useTaskManagement() {
         currentStep: task.name,
         process: getProcessInfo(task.processName, task.processNumber),
         assignedBy: assignedBy || "",
-        startedAt: getDateTemplate(task.startedAt),
+        startedAt: task.startedAt,
         endedAt: getDateTemplate(task.endedAt),
         duration: formatDuration(diffTime),
         status: task.status,
@@ -94,6 +94,12 @@ export function useTaskManagement() {
         ),
         statusDesc: task.statusDesc,
         applicationBase: task.applicationBase,
+        updatedAt: task.updatedAt ?? task.createdAt,
+        updatedBy:
+          task.userProfileUpdatedBy ??
+          task.userProfileCreatedBy ??
+          task.updatedBy ??
+          task.createdBy,
       };
     });
   }, [state.tasks, getPriorityBadge]);

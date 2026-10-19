@@ -1,29 +1,71 @@
 import "@/styles/globals.css";
 
-import { IGRPRootLayout } from "@igrp/framework-next";
-import type { IGRPLayoutConfigArgs } from "@igrp/framework-next-types";
-import { IGRP_META_THEME_COLORS } from "@igrp/igrp-framework-react-design-system";
+import "@igrp/igrp-framework-react-design-system/dist/styles.css";
+
+import { IGRPToaster } from "@igrp/igrp-framework-react-design-system";
+import { IRNToastContainer } from "@irn/irn-backoffice-design-system";
+import { IRN_META_THEME_COLORS, IRNRootLayout } from "@irn/irn-core-framework";
 
 import type { Metadata, Viewport } from "next";
 
 import { configLayout } from "@/actions/igrp/layout";
-import { createConfig } from "@/igrp.template.config";
+import { fontVariables } from "@/lib/fonts";
+import { withBasePath } from "@/lib/url";
 
 export const metadata: Metadata = {
-  title: "IGRP | Centro de Aplicações",
-  description: "IGRP | Centro de Aplicações",
-  icons: { icon: "/igrp/logo-no-text.png" },
+  title: {
+    default: "Home - PIR | Gestão de Processos",
+    template: "%s - PIR | Gestão de Processos",
+  },
+  description: "PIR | Gestão de Processos",
+  manifest: withBasePath("/site.webmanifest"),
+  icons: {
+    icon: [
+      { url: withBasePath("/favicon.ico") },
+      {
+        url: withBasePath("/favicon-16x16.png"),
+        sizes: "16x16",
+        type: "image/png",
+      },
+      {
+        url: withBasePath("/favicon-32x32.png"),
+        sizes: "32x32",
+        type: "image/png",
+      },
+    ],
+    apple: [
+      {
+        url: withBasePath("/apple-touch-icon.png"),
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
+    shortcut: [withBasePath("/favicon.ico")],
+  },
 };
 
 export const viewport: Viewport = {
-  themeColor: IGRP_META_THEME_COLORS.light,
+  themeColor: IRN_META_THEME_COLORS.light,
 };
 
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const layoutConfig = await configLayout();
-  const config = await createConfig(layoutConfig as IGRPLayoutConfigArgs);
+  const { session, activeThemeValue, isScaled } = await configLayout();
 
-  return <IGRPRootLayout config={config}>{children}</IGRPRootLayout>;
+  return (
+    <IRNRootLayout
+      config={{
+        session,
+        activeThemeValue,
+        isScaled,
+        font: fontVariables,
+        basePath: process.env.NEXT_PUBLIC_BASE_PATH,
+      }}
+    >
+      {children}
+      <IRNToastContainer />
+      <IGRPToaster closeButton />
+    </IRNRootLayout>
+  );
 }

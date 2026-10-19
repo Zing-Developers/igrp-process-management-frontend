@@ -1,19 +1,15 @@
+import type { IGRPBadgeProps } from "@igrp/igrp-framework-react-design-system";
+import { toast } from "@irn/irn-backoffice-design-system";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useCallback, useMemo } from "react";
 import { assignTask, getTaskById, unclaimTask } from "../../client/task";
 import {
   getPriorityLabel,
   getPriorityVariant,
   getTaskStatusVariant,
 } from "../../utils/status-helpers";
-import {
-  IGRPBadgeProps,
-  useIGRPToast,
-} from "@igrp/igrp-framework-react-design-system";
-import { useCallback, useMemo } from "react";
 
 export const useTaskDetails = (taskId: string) => {
-  const { igrpToast } = useIGRPToast();
-
   const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery({
@@ -54,8 +50,7 @@ export const useTaskDetails = (taskId: string) => {
     onSuccess?: () => void,
   ): Promise<void> => {
     if (taskId === "") {
-      igrpToast({
-        type: "error",
+      toast.error({
         title: "Erro",
         description: "Nenhuma tarefa selecionada",
       });
@@ -65,8 +60,7 @@ export const useTaskDetails = (taskId: string) => {
     try {
       await unclaimTask(taskId, note);
 
-      igrpToast({
-        type: "success",
+      toast.success({
         title: "Sucesso",
         description: "Tarefa libertada com sucesso!",
       });
@@ -77,8 +71,7 @@ export const useTaskDetails = (taskId: string) => {
       refetchTask();
     } catch (error) {
       console.error("Error unclaiming task:", error);
-      igrpToast({
-        type: "error",
+      toast.error({
         title: "Erro",
         description: "Erro ao libertar tarefa",
       });
@@ -97,16 +90,14 @@ export const useTaskDetails = (taskId: string) => {
     onSuccess?: () => void,
   ) => {
     if (formData.assigneTo === "user" && formData.user === "") {
-      igrpToast({
-        type: "error",
+      toast.error({
         title: "Erro",
         description: "O utilizador é obrigatório",
       });
       return;
     }
     if (formData.assigneTo === "group" && formData.candidateGroups === "") {
-      igrpToast({
-        type: "error",
+      toast.error({
         title: "Erro",
         description: "O grupo é obrigatório",
       });
@@ -122,8 +113,7 @@ export const useTaskDetails = (taskId: string) => {
         formData.candidateGroups ?? "",
       );
 
-      igrpToast({
-        type: "success",
+      toast.success({
         title: "Sucesso",
         description: "Tarefa atribuída com sucesso!",
       });
@@ -134,8 +124,7 @@ export const useTaskDetails = (taskId: string) => {
       refetchTask();
     } catch (error) {
       console.error("Error assigning task:", error);
-      igrpToast({
-        type: "error",
+      toast.error({
         title: "Erro",
         description: "Erro ao atribuir tarefa",
       });

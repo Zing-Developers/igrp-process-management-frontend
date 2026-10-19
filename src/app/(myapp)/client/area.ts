@@ -5,7 +5,7 @@ import {
   CreateAreaRequest,
   PaginatedResponse,
   UpdateAreaRequest,
-} from "@igrp/platform-process-management-types";
+} from "@irn/platform-process-management-types";
 import { DEFAULT_PAGE_SIZE } from "../utils/shared";
 
 // Area Management

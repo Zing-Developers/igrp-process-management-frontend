@@ -1,25 +1,18 @@
-import { IGRPLayout } from "@igrp/framework-next";
-import type { IGRPLayoutConfigArgs } from "@igrp/framework-next-types";
-import { createConfig } from "@igrp/template-config";
-
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { configLayout } from "@/actions/igrp/layout";
-import { isPreviewMode as checkPreviewMode } from "@/lib/utils";
+import IRNLayout from "@/components/irn-ui-commons/irn-layout";
 import { QueryProvider } from "@/components/providers";
+import { isPreviewMode as checkPreviewMode } from "@/lib/utils";
 
 export default async function IGRPRootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const layoutConfig = await configLayout();
-  const config = await createConfig(layoutConfig as IGRPLayoutConfigArgs);
-
-  const { layout, previewMode } = config;
-  const { session } = layout || {};
+  const { session } = await configLayout();
 
   const envPreviewMode = checkPreviewMode();
-  const isPreviewMode = envPreviewMode || previewMode;
+  const isPreviewMode = envPreviewMode;
 
   const headersList = await headers();
   const currentPath =
@@ -42,8 +35,10 @@ export default async function IGRPRootLayout({
   }
 
   return (
-    <IGRPLayout config={config}>
-      <QueryProvider>{children}</QueryProvider>
-    </IGRPLayout>
+    <IRNLayout>
+      <main className="px-4">
+        <QueryProvider>{children}</QueryProvider>
+      </main>
+    </IRNLayout>
   );
 }

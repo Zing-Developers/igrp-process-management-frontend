@@ -1,18 +1,18 @@
-import { useIGRPToast } from "@igrp/igrp-framework-react-design-system";
-import { useAreaForm } from "./use-area-form";
+import { toast } from "@irn/irn-backoffice-design-system";
+import type {
+  CreateAreaRequest,
+  Process,
+  UpdateAreaRequest,
+} from "@irn/platform-process-management-types";
 import {
   createArea,
   deleteArea,
   getSubareas,
   updateArea,
 } from "@/app/(myapp)/client/area";
-import {
-  CreateAreaRequest,
-  Process,
-  UpdateAreaRequest,
-} from "@igrp/platform-process-management-types";
+import type { AreaFormData, ExtendedArea } from "../../types";
 import { findAreaById } from "../../utils/area-hierarchy";
-import { AreaFormData, ExtendedArea } from "../../types";
+import { useAreaForm } from "./use-area-form";
 
 export function useAreaHandlers(
   areas: ExtendedArea[],
@@ -26,8 +26,6 @@ export function useAreaHandlers(
   ) => Promise<void>,
   refreshData: () => void | Promise<void>,
 ) {
-  const { igrpToast } = useIGRPToast();
-
   const areaForm = useAreaForm();
 
   const handleCreateArea = async (formData: AreaFormData) => {
@@ -43,8 +41,7 @@ export function useAreaHandlers(
 
       refreshData();
 
-      igrpToast({
-        type: "success",
+      toast.success({
         title: "Sucesso",
         description: "Área criada com sucesso!",
       });
@@ -72,8 +69,7 @@ export function useAreaHandlers(
 
       refreshData();
 
-      igrpToast({
-        type: "success",
+      toast.success({
         title: "Sucesso",
         description: "Área atualizada com sucesso!",
       });
@@ -90,15 +86,13 @@ export function useAreaHandlers(
       await deleteArea(areaId);
 
       refreshData();
-      igrpToast({
-        type: "success",
+      toast.success({
         title: "Sucesso",
         description: "Área excluída com sucesso!",
       });
     } catch (error) {
       console.error("Error deleting area:", error);
-      igrpToast({
-        type: "error",
+      toast.error({
         title: "Erro",
         description: "Erro ao excluir área. Tente novamente.",
       });

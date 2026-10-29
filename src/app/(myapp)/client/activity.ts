@@ -25,6 +25,7 @@ export const getActivityProgress = async (
 };
 
 /**
+ * @deprecated
  * Fetches the instances of an activity by its ID.
  * @param processInstanceId The ID of the process instance to fetch.
  * @param type The type of the activity to fetch.

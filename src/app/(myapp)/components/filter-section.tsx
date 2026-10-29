@@ -19,7 +19,8 @@ export type AppliedFilter = {
 type FiltersSectionProps = {
   children: ReactNode;
   hasAppliedFilters?: boolean;
-  onApply?: () => void;
+  /** Return false to keep the popover open when validation fails. */
+  onApply?: () => unknown;
   onClear?: () => void;
   title?: string;
 };
@@ -86,8 +87,7 @@ export function FiltersSection({
             </IGRPButton>
             <IGRPButton
               onClick={() => {
-                onApply?.();
-                setIsOpen(false);
+                if (onApply?.() !== false) setIsOpen(false);
               }}
             >
               Mostrar resultados

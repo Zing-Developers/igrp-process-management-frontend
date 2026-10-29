@@ -19,6 +19,8 @@
 
 # production
 /build
+.codegraph
+.codex
 
 # misc
 .DS_Store

@@ -1,0 +1,18 @@
+- [x] T-01 Carregar os jobs falhados da instância junto com o progresso de atividades — FR-03.
+- [x] T-02 Substituir a linha do tempo vertical pela tabela de atividades e detalhe de falha — FR-01, FR-02, FR-04.
+- [x] T-03 Ligar as ações de stack trace e reprocessamento, com atualização da consulta — FR-05.
+- [x] T-04 Executar verificação de tipos e registar evidência — AC-01 a AC-05.
+- [x] T-06 Extrair e reutilizar o fluxo de erro/reprocessamento de `/failed-jobs` — AC-06.
+- [ ] T-05 Validar a associação, ações e histórico de reprocessamento com dados reais num ambiente autenticado — AC-02 a AC-05, AC-07.
+- [x] T-07 Usar os novos metadados nas vistas — FR-07, AC-07.
+- [x] T-09 Respeitar o estado atual da atividade e ocultar o detalhe de erro quando já não está falhada, mesmo com dados antigos do job — AC-08.
+- [x] T-10 Verificar estaticamente os estados falhado e não falhado e registar evidência — AC-08.
+- [x] T-11 Adicionar ação de atualização manual na linha do tempo usando a consulta existente da instância — AC-09.
+- [x] T-12 Verificar estaticamente o percurso da atualização e registar evidência — AC-09.
+- [x] T-13 Substituir o aviso e os estados manuais pelos primitivos Alert e Badge do design system — AC-10.
+- [x] T-14 Verificar estaticamente as variantes dos estados, tipos e formatação e registar evidência — AC-10.
+- [x] T-15 Usar `FailedJob.lastReprocessedBy` como fallback do responsável na linha da atividade correspondente — AC-02.
+- [x] T-16 Reutilizar a atualização visível da linha do tempo após reprocessamento bem-sucedido e verificar o percurso — AC-05, AC-09.
+- [x] T-16 Verificar estaticamente a prioridade dos campos e registar evidência — AC-02.
+- [x] T-17 Remover o JSON e o texto de diagnóstico da linha de erro, preservando os detalhes e ações úteis — AC-07.
+- [x] T-18 Verificar estaticamente a ausência do diagnóstico na linha do tempo e registar evidência — AC-07.

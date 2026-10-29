@@ -37,8 +37,18 @@ export default function PageViewComponent({
 
   const { igrpToast } = useIGRPToast();
 
-  const { process, activityProgress, taskHistory, variables, isLoading } =
-    useProcessDetails(processInstanceId);
+  const {
+    process,
+    activityProgress,
+    failedJobs,
+    taskHistory,
+    variables,
+    isLoading,
+    refetch,
+  } = useProcessDetails(processInstanceId);
+
+  console.log("failedJobs", failedJobs)
+  console.log("activityProgress", activityProgress)
 
   return (
     <div className={cn("page", "space-y-6")}>
@@ -120,27 +130,11 @@ export default function PageViewComponent({
               badgeVariant: `solid`,
               badgeColor: `primary`,
               content: (
-                <>
-                  <IGRPCard id={`card1`} className={cn()}>
-                    <IGRPCardContent className={cn("space-x-3", "space-y-3")}>
-                      <IGRPHeadline
-                        id={`headline2`}
-                        title={`Ocorrência dos Eventos`}
-                        variant={`h6`}
-                        roleColor={`solid`}
-                        color={`primary`}
-                        showIcon={false}
-                        className={cn("")}
-                        description={
-                          activityProgress?.length + " eventos registadas"
-                        }
-                      ></IGRPHeadline>
-                      <ActivityTimeline
-                        activities={activityProgress}
-                      ></ActivityTimeline>
-                    </IGRPCardContent>
-                  </IGRPCard>
-                </>
+                <ActivityTimeline
+                  activities={activityProgress}
+                  failedJobs={failedJobs}
+                  onRefresh={refetch}
+                />
               ),
             },
 

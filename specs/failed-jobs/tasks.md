@@ -1,0 +1,20 @@
+- [x] T-01 Criar a página `/failed-jobs`, os dados de apresentação e o filtro local — FR-01 a FR-04.
+- [x] T-02 Implementar o modal de confirmação e validação do reprocessamento sem chamada ao backend — FR-07 e FR-08.
+- [x] T-03 Executar a verificação de tipos/lint aplicável e registar a evidência — AC-01 a AC-05.
+- [x] T-04 Reutilizar o cabeçalho e a tabela de `process-instances` — FR-06.
+- [x] T-05 Implementar o drawer de detalhe e cópia de stack trace — FR-05.
+- [x] T-06 Substituir os dados de apresentação pela API de jobs falhados — FR-02, FR-03.
+- [x] T-07 Integrar stack trace e reprocessamento com o cliente beta.25 — FR-08, FR-09.
+- [ ] T-08 Validar a integração num ambiente autenticado com jobs falhados reais — AC-02, AC-03, AC-05, AC-08, AC-09, AC-10, AC-11.
+- [x] T-09 Ligar o filtro e a paginação do servidor à lista, com contador total e controlos de navegação — FR-03, FR-04, FR-10.
+- [x] T-10 Verificar tipos, estado dos controlos e regressão dos consumidores existentes de `getFailedJobs` — AC-03, AC-04, AC-10.
+- [x] T-11 Adicionar `businessKey` opcional ao pedido e ao formulário de filtros, mantendo compatibilidade dos consumidores — FR-11.
+- [x] T-12 Verificar envio/omissão dos filtros e tipagem da integração — AC-11.
+- [x] T-13 Remover a extensão local de `FailedJobQuery` após atualização para o SDK beta.27 e verificar a compilação — AC-11.
+- [x] T-14 Reutilizar `FiltersSection` e `AppliedFiltersSection` na lista de jobs falhados, com aplicação, limpeza e remoção individual — FR-12.
+- [x] T-15 Verificar que o novo fluxo visual preserva os parâmetros de API e a paginação — AC-03, AC-10 a AC-12.
+- [x] T-16 Validar o UUID opcional do popover com Zod e manter o popover aberto em caso de erro — FR-13.
+- [x] T-17 Verificar aceitação de UUID/vazio, rejeição de valor inválido e regressão dos consumidores de `FiltersSection` — AC-13.
+- [x] T-18 Substituir mensagens de validação e erro de consulta no corpo da página por toasts — FR-13, FR-14.
+- [x] T-19 Verificar que os erros não desencadeiam consultas inválidas nem exibem dados antigos — AC-13, AC-14.
+- [x] T-20 Mostrar também o erro de UUID por baixo do campo mantendo o toast — AC-13.
